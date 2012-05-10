@@ -1,0 +1,27 @@
+<?php
+
+namespace LorNgDevelopers\RulinuxBundle\Entity;
+
+use Doctrine\ORM\Mapping as ORM;
+
+/**
+ * @ORM\Entity
+ * @ORM\Table(name="blocks")
+ */
+class Block/* implements Serializable*/
+{
+	/**
+	 * @ORM\Id
+	 * @ORM\Column(name="id", type="integer")
+	 * @ORM\GeneratedValue(strategy="AUTO")
+	 */
+	protected $id;
+	/**
+	 * @ORM\Column(name="name", type="string", length=256)
+	 */
+	protected $name;
+	/**
+	 * @ORM\Column(name="description", type="string", length=512, unique="true", nullable="false")
+	 */
+	protected $description;
+}

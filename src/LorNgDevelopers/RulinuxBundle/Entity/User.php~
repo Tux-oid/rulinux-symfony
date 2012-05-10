@@ -1,0 +1,207 @@
+<?php
+namespace LorNgDevelopers\RulinuxBundle\Entity;
+
+use Symfony\Component\Security\Core\User\UserInterface;
+use Doctrine\ORM\Mapping as ORM;
+
+
+/**
+ * @ORM\Entity
+ * @ORM\Table(name="users")
+ */
+class User implements UserInterface/*, Serializable*/
+{
+	/**
+	 * @ORM\Id
+	 * @ORM\Column(name="id", type="integer")
+	 * @ORM\GeneratedValue(strategy="AUTO")
+	 */
+	protected $id;
+	/**
+	 * @ORM\ManyToOne(targetEntity="Group", inversedBy="users")
+	 * @ORM\JoinColumn(name="gid", referencedColumnName="id")
+	 */
+	protected $group;
+	/**
+	 * @ORM\Column(name="nick", type="string", length=100, unique="true", nullable="false")
+	 */
+	protected $username;
+	/**
+	* @ORM\Column(type="string", length=32)
+	*/
+	private $salt;
+	/**
+	 * @ORM\Column(name="password", type="string", length=255)
+	 */
+	protected $password;
+	/**
+	 * @ORM\Column(name="name", type="string", length=255, nullable="true")
+	 */
+	protected $name;
+	/**
+	 * @ORM\Column(name="lastname", type="string", length=255, nullable="true")
+	 */
+	protected $lastname;
+	/**
+	 * @ORM\Column(name="country", type="string", length=512, nullable="true")
+	 */
+	protected $country;
+	/**
+	 * @ORM\Column(name="city", type="string", length=512, nullable="true")
+	 */
+	protected $city;
+	/**
+	 * @ORM\Column(name="photo", type="string", length=512, nullable="true")
+	 */
+	protected $photo;
+	/**
+	 * @ORM\Column(name="birthday", type="datetime", nullable="true")
+	 */
+	protected $birthday;
+	/**
+	 * @ORM\Column(name="gender", type="boolean")
+	 */
+	protected $gender;
+	/**
+	 * @ORM\Column(name="additional", type="text")
+	 */
+	protected $additional;
+	/**
+	 * @ORM\Column(name="raw_additional", type="text", nullable="true")
+	 */
+	protected $additionalRaw;
+	/**
+	 * @ORM\Column(name="email", type="string", length=512, unique="true", nullable="false")
+	 */
+	protected $email;
+	/**
+	 * @ORM\Column(name="im", type="string", length=512, nullable="true")
+	 */
+	protected $im;
+	/**
+	 * @ORM\Column(name="register_date", type="datetime")
+	 */
+	protected $registrationDate;
+	/**
+	 * @ORM\Column(name="last_visit", type="datetime")
+	 */
+	protected $lastVisitDate;
+	/**
+	 * @ORM\Column(name="banned", type="boolean")
+	 */
+	protected $isActive;
+	/**
+	 * @ORM\Column(name="captcha", type="integer")
+	 */
+	protected $captchaLevel;
+	/**
+	 * @ORM\Column(name="openid", type="string", length=1024, nullable="true")
+	 */
+	protected $openid;
+	//Settings
+	/**
+	 * @ORM\Column(name="blocks", type="array")
+	 */
+	protected $blocks;
+	/**
+	 * @ORM\Column(name="theme", type="string", length=512)
+	 */
+	protected $theme;
+	/**
+	 * @ORM\Column(name="gmt", type="string", length=3)
+	 */
+	protected $gmt;
+	/**
+	 * @ORM\Column(name="filters", type="array")
+	 */
+	protected $filters;
+	/**
+	 * @ORM\ManyToOne(targetEntity="Mark", inversedBy="users")
+	 * @ORM\JoinColumn(name="mark", referencedColumnName="id")
+	 */
+	protected $mark;
+	/**
+	 * @ORM\Column(name="sort_to", type="string", length=512)
+	 */
+	protected $sortingType;
+	/**
+	 * @ORM\Column(name="news_on_page", type="integer")
+	 */
+	protected $newsOnPage;
+	/**
+	 * @ORM\Column(name="comments_on_page", type="integer")
+	 */
+	protected $commentsOnPage;
+	/**
+	 * @ORM\Column(name="threads_on_page", type="integer")
+	 */
+	protected $threadsOnPage;
+	/**
+	 * @ORM\Column(name="show_email", type="boolean")
+	 */
+	protected $showEmail;
+	/**
+	 * @ORM\Column(name="show_im", type="boolean")
+	 */
+	protected $showIm;
+	/**
+	 * @ORM\Column(name="show_avatars", type="boolean")
+	 */
+	protected $showAvatars;
+	/**
+	 * @ORM\Column(name="show_ua", type="boolean")
+	 */
+	protected $showUa;
+	/**
+	 * @ORM\Column(name="show_resp", type="boolean")
+	 */
+	protected $showResp;
+	 public function __construct()
+	{
+		$this->isActive = true;
+		$this->salt = md5(uniqid(null, true));
+	}
+	/**
+	* @inheritDoc
+	*/
+	public function getUsername()
+	{
+		return $this->username;
+	}
+	/**
+	* @inheritDoc
+	*/
+	public function getSalt()
+	{
+		return $this->salt;
+	}
+	/**
+	* @inheritDoc
+	*/
+	public function getPassword()
+	{
+		return $this->password;
+	}
+	/**
+	* @inheritDoc
+	*/
+	public function getRoles()
+	{
+		return array('ROLE_USER');
+	}
+	/**
+	* @inheritDoc
+	*/
+	public function eraseCredentials()
+	{
+		
+	}
+	/**
+	* @inheritDoc
+	*/
+	public function equals(UserInterface $user)
+	{
+		return $this->username === $user->getUsername();
+	}
+}
+?>
