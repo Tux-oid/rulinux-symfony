@@ -1,0 +1,10 @@
+RewriteEngine On
+
+RewriteBase /
+
+Options +FollowSymlinks
+
+RewriteRule ^.htaccess$ - [F]
+
+#RewriteRule ^(.*)$ web/app_dev.php/$1
+
