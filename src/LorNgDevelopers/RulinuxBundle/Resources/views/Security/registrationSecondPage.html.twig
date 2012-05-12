@@ -1,0 +1,14 @@
+{%extends '::base.html.twig'%}
+
+{%block title%}
+Registration of new user
+{%endblock%}
+
+{%block body%}
+<form action="{{path('index')}}" method="post" {{form_enctype(form)}}>
+{{form_errors(form)}}
+
+{{form_rest(form)}}
+<input type="submit">
+</form>
+{%endblock%}

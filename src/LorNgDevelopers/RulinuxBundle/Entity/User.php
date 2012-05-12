@@ -102,6 +102,10 @@ class User implements AdvancedUserInterface/*, Serializable*/
 	protected $openid;
 	//Settings
 	/**
+	 * @ORM\Column(name="language", type="text")
+	 */
+	protected $language;
+	/**
 	 * @ORM\Column(name="blocks", type="array")
 	 */
 	protected $blocks;
@@ -818,5 +822,41 @@ class User implements AdvancedUserInterface/*, Serializable*/
 	public function getMark()
 	{
 		return $this->mark;
+	}
+	/**
+	* Add groups
+	*
+	* @param LorNgDevelopers\RulinuxBundle\Entity\Group $groups
+	*/
+	public function addGroup(\LorNgDevelopers\RulinuxBundle\Entity\Group $groups)
+	{
+		$this->groups[] = $groups;
+	}
+	/**
+	* Get groups
+	*
+	* @return Doctrine\Common\Collections\Collection
+	*/
+	public function getGroups()
+	{
+		return $this->groups;
+	}
+	/**
+	* Set language
+	*
+	* @param text $language
+	*/
+	public function setLanguage($language)
+	{
+		$this->language = $language;
+	}
+	/**
+	* Get language
+	*
+	* @return text
+	*/
+	public function getLanguage()
+	{
+		return $this->language;
 	}
 }
