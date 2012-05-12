@@ -99,11 +99,6 @@ class SecurityController extends Controller
 			->add('language', 'language')
 			->add('gmt', 'timezone')
 			->getForm();
-
-$builder->add('gender_code', new GenderType(), array(
-            'empty_value' => 'Choose a gender',
-        ));
-			
 			return $this->render('LorNgDevelopersRulinuxBundle:Security:registrationSecondPage.html.twig',array('username'=>$username, 'password'=>$password, 'email'=>$email, 'form'=>$form->createView()));
 		}
 		else
