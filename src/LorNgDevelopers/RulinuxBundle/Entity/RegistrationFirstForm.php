@@ -2,11 +2,27 @@
 
 namespace LorNgDevelopers\RulinuxBundle\Entity;
 
+use Symfony\Component\Validator\Constraints as Assert;
+
 class RegistrationFirstForm
 {
+	/**
+	 * @Assert\NotBlank()
+	 * @Assert\Regex("#([a-zA-Z0-9\_\-\/\.]{2,})$#")
+	 */
 	protected $name;
+	/**
+	 * @Assert\NotBlank()
+	 */
 	protected $password;
+	/**
+	 * @Assert\NotBlank()
+	 */
 	protected $validation;
+	/**
+	 * @Assert\NotBlank()
+	 * @Assert\Email
+	 */
 	protected $email;
 
 	public function getName()

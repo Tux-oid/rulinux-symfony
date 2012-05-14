@@ -3,6 +3,7 @@
 namespace LorNgDevelopers\RulinuxBundle\Entity;
 
 use Symfony\Component\Security\Core\Role\RoleInterface;
+use Symfony\Component\Validator\Constraints as Assert;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 
@@ -20,6 +21,7 @@ class Group implements RoleInterface/*, Serializable*/
 	protected $id;
 	/**
 	 * @ORM\Column(name="name", type="string", length=255)
+	 * @Assert\NotBlank()
 	 */
 	protected $name;
 	/**

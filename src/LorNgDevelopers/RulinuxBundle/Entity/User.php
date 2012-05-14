@@ -3,6 +3,7 @@ namespace LorNgDevelopers\RulinuxBundle\Entity;
 
 use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Security\Core\User\AdvancedUserInterface;
+use Symfony\Component\Validator\Constraints as Assert;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 
@@ -29,6 +30,8 @@ class User implements AdvancedUserInterface/*, Serializable*/
 	protected $groups;
 	/**
 	 * @ORM\Column(name="nick", type="string", length=100, unique="true", nullable="false")
+	 * @Assert\NotBlank()
+	 * @Assert\Regex("#([a-zA-Z0-9\_\-\/\.]{2,})$#")
 	 */
 	protected $username;
 	/**
@@ -37,6 +40,7 @@ class User implements AdvancedUserInterface/*, Serializable*/
 	private $salt;
 	/**
 	 * @ORM\Column(name="password", type="string", length=255)
+	 * @Assert\NotBlank()
 	 */
 	protected $password;
 	/**
@@ -49,6 +53,7 @@ class User implements AdvancedUserInterface/*, Serializable*/
 	protected $lastname;
 	/**
 	 * @ORM\Column(name="country", type="string", length=512, nullable="true")
+	 * @Assert\Country
 	 */
 	protected $country;
 	/**
@@ -57,10 +62,12 @@ class User implements AdvancedUserInterface/*, Serializable*/
 	protected $city;
 	/**
 	 * @ORM\Column(name="photo", type="string", length=512, nullable="true")
+	 * * @Assert\Image
 	 */
 	protected $photo;
 	/**
 	 * @ORM\Column(name="birthday", type="datetime", nullable="true")
+	 * * @Assert\DateTime
 	 */
 	protected $birthday;
 	/**
@@ -77,18 +84,22 @@ class User implements AdvancedUserInterface/*, Serializable*/
 	protected $additionalRaw;
 	/**
 	 * @ORM\Column(name="email", type="string", length=512, unique="true", nullable="false")
+	 * * @Assert\Email
 	 */
 	protected $email;
 	/**
 	 * @ORM\Column(name="im", type="string", length=512, nullable="true")
+	 * @Assert\Email
 	 */
 	protected $im;
 	/**
 	 * @ORM\Column(name="register_date", type="datetime")
+	 * @Assert\DateTime
 	 */
 	protected $registrationDate;
 	/**
 	 * @ORM\Column(name="last_visit", type="datetime")
+	 * @Assert\DateTime
 	 */
 	protected $lastVisitDate;
 	/**
@@ -110,6 +121,7 @@ class User implements AdvancedUserInterface/*, Serializable*/
 	protected $language;
 	/**
 	 * @ORM\Column(name="blocks", type="array")
+	 * @Assert\Language
 	 */
 	protected $blocks;
 	/**

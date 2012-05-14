@@ -15,12 +15,16 @@ class FixtureLoader implements FixtureInterface
 	{
 		$userRole = new Group();
 		$userRole->setName('ROLE_USER');
+		$userRole->setDescription('site users');
 		$manager->persist($userRole);
 		$moderRole = new Group();
 		$moderRole->setName('ROLE_MODER');
+		$moderRole->setDescription('site moderators');
 		$manager->persist($moderRole);
 		$adminRole = new Group();
 		$adminRole->setName('ROLE_ADMIN');
+		$adminRole->setDescription('site administrators');
+		//TODO: add super admin role
 		$manager->persist($adminRole);
 		$captchaLevel = 0;
 		$captchaSetting = new Settings();
