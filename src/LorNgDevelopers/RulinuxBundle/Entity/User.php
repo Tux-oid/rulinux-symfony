@@ -21,6 +21,10 @@ class User implements AdvancedUserInterface/*, Serializable*/
 	protected $id;
 	/**
 	* @ORM\ManyToMany(targetEntity="Group", inversedBy="users")
+	* @ORM\JoinTable(name="user_role",
+	*     joinColumns={@ORM\JoinColumn(name="user_id", referencedColumnName="id")},
+	*     inverseJoinColumns={@ORM\JoinColumn(name="role_id", referencedColumnName="id")}
+	* )
 	*
 	*/
 	protected $groups;
@@ -65,7 +69,7 @@ class User implements AdvancedUserInterface/*, Serializable*/
 	 */
 	protected $gender;
 	/**
-	 * @ORM\Column(name="additional", type="text")
+	 * @ORM\Column(name="additional", type="text", nullable="true")
 	 */
 	protected $additional;
 	/**
@@ -91,7 +95,7 @@ class User implements AdvancedUserInterface/*, Serializable*/
 	/**
 	 * @ORM\Column(name="banned", type="boolean")
 	 */
-	protected $isActive;
+	protected $active;
 	/**
 	 * @ORM\Column(name="captcha", type="integer")
 	 */
@@ -114,7 +118,7 @@ class User implements AdvancedUserInterface/*, Serializable*/
 	 */
 	protected $theme;
 	/**
-	 * @ORM\Column(name="gmt", type="string", length=3)
+	 * @ORM\Column(name="gmt", type="string", length=64)
 	 */
 	protected $gmt;
 	/**
@@ -164,7 +168,7 @@ class User implements AdvancedUserInterface/*, Serializable*/
 	protected $showResp;
 	 public function __construct()
 	{
-		$this->isActive = true;
+		$this->active = true;
 		$this->salt = md5(uniqid(null, true));
 		$this->group = new ArrayCollection();
 	}
@@ -185,7 +189,7 @@ class User implements AdvancedUserInterface/*, Serializable*/
 
 	public function isEnabled()
 	{
-		return $this->isActive;
+		return $this->active;
 	}
 	/**
 	* @inheritDoc
@@ -498,24 +502,6 @@ class User implements AdvancedUserInterface/*, Serializable*/
 	public function getLastVisitDate()
 	{
 		return $this->lastVisitDate;
-	}
-	/**
-	* Set isActive
-	*
-	* @param boolean $isActive
-	*/
-	public function setIsActive($isActive)
-	{
-		$this->isActive = $isActive;
-	}
-	/**
-	* Get isActive
-	*
-	* @return boolean
-	*/
-	public function getIsActive()
-	{
-		return $this->isActive;
 	}
 	/**
 	* Set captchaLevel
@@ -858,5 +844,23 @@ class User implements AdvancedUserInterface/*, Serializable*/
 	public function getLanguage()
 	{
 		return $this->language;
+	}
+	/**
+	* Set active
+	*
+	* @param boolean $active
+	*/
+	public function setActive($active)
+	{
+		$this->active = $active;
+	}
+	/**
+	* Get active
+	*
+	* @return boolean
+	*/
+	public function getActive()
+	{
+		return $this->active;
 	}
 }

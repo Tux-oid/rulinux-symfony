@@ -7,6 +7,7 @@ use Symfony\Component\Security\Core\SecurityContext;
 use Symfony\Component\HttpFoundation\Request;
 use LorNgDevelopers\RulinuxBundle\Entity\RegistrationFirstForm;
 use LorNgDevelopers\RulinuxBundle\Entity\User;
+use LorNgDevelopers\RulinuxBundle\Entity\SettingsRepository;
 
 class SecurityController extends Controller
 {
@@ -28,7 +29,7 @@ class SecurityController extends Controller
 		'error'         => $error,
 		));
 	}
-	public function registerAction()
+	public function registrationAction()
 	{
 		$regForm = new RegistrationFirstForm;
 		$form = $this->createFormBuilder($regForm)
@@ -39,7 +40,7 @@ class SecurityController extends Controller
 		->getForm();
 		return $this->render('LorNgDevelopersRulinuxBundle:Security:registrationFirstPage.html.twig', array('form' => $form->createView()));
 	}
-	public function registerSendAction(Request $request)
+	public function registrationSendAction(Request $request)
 	{
 		$method = $request->getMethod();
 		if($method == 'POST')
@@ -74,9 +75,11 @@ class SecurityController extends Controller
 			else
 				throw new \Exception('Registration form is invalid.');
 		}
+		else
+			$this->redirect($this->generateUrl('index'));
 		
 	}
-	public function registerConfirmAction($username, $password, $email, $hash)
+	public function registrationConfirmAction($username, $password, $email, $hash)
 	{
 		$secret = $this->container->getParameter('secret');
 		if($hash == md5(md5($username.$password.$email.$secret)))
@@ -103,6 +106,64 @@ class SecurityController extends Controller
 		}
 		else
 			throw new Exception('Hash is invalid');
+	}
+
+	public function registrationSaveAction(Request $request)
+	{
+		$method = $request->getMethod();
+		if($method == 'POST')
+		{
+			$regForm = new User;
+			$form = $this->createFormBuilder($regForm)
+			->add('username', 'text')
+			->add('password', 'password')
+			->add('name', 'text')
+			->add('lastname', 'text')
+			->add('country', 'country')
+			->add('city', 'text')
+			->add('photo', 'file')
+			->add('birthday', 'birthday')
+			->add('gender', 'checkbox')
+			->add('additional', 'textarea')
+			->add('email', 'email')
+			->add('im', 'email')
+			->add('openid', 'text')
+			->add('language', 'language')
+			->add('gmt', 'timezone')
+			->getForm();
+			$form->bindRequest($request);
+			if($form->isValid())
+			{
+				$settings = $this->getDoctrine()->getRepository('LorNgDevelopersRulinuxBundle:Settings');
+				$regForm->setPassword(md5($regForm->getPassword()));
+				//TODO: set additional marked
+				$regForm->setAdditionalRaw($regForm->getAdditional());
+				$regForm->setRegistrationDate(new \DateTime('now'));
+				$regForm->setLastVisitDate(new \DateTime('now'));
+				$regForm->setCaptchaLevel($settings->findOneByName('captcha_level')->getValue());
+				$regForm->setTheme($settings->findOneByName('theme')->getValue());
+				$regForm->setSortingType($settings->findOneByName('sortingType')->getValue());
+				$regForm->setNewsOnPage($settings->findOneByName('news_on_page')->getValue());
+				$regForm->setThreadsOnPage($settings->findOneByName('threads_on_page')->getValue());
+				$regForm->setCommentsOnPage($settings->findOneByName('comments_on_page')->getValue());
+				$regForm->setShowEmail($settings->findOneByName('showEmail')->getValue());
+				$regForm->setShowIm($settings->findOneByName('showIm')->getValue());
+				$regForm->setShowAvatars($settings->findOneByName('showAvatars')->getValue());
+				$regForm->setShowUa($settings->findOneByName('showUa')->getValue());
+				$regForm->setShowResp($settings->findOneByName('showResp')->getValue());
+				$em = $this->getDoctrine()->getEntityManager();
+				$em->persist($regForm);
+				$em->flush();
+				$legend = 'Registration completed.';
+				$text = 'Registration completed. Now you can <a href="'.$this->generateUrl('login').'">login</a> on this site.';
+				$title='';
+				return $this->render('LorNgDevelopersRulinuxBundle:Default:fieldset.html.twig', array('legend'=>$legend, 'text'=>$text, 'title'=>$title));
+			}
+			else
+				throw new \Exception('Registration form is invalid.');
+		}
+		else
+			$this->redirect($this->generateUrl('index'));
 	}
 }
 ?>

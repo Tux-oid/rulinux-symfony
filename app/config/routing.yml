@@ -3,30 +3,37 @@ LorNgDevelopersRulinuxBundle:
         type:     annotation
         prefix:   /
 
-index:
-        pattern: /
-        defaults: {_controller: LorNgDevelopersRulinuxBundle:Default:index}
-        
-logout:
-        pattern: /logout
-login:
-        pattern:   /login
-        defaults:  { _controller: LorNgDevelopersRulinuxBundle:Security:login }
-login_check:
-        pattern:   /login_check
 # Internal routing configuration to handle ESI
 #_internal:
 #       resource: "@FrameworkBundle/Resources/config/routing/internal.xml"
 #       prefix:   /_internal
 
+index:
+        pattern: /
+        defaults: {_controller: LorNgDevelopersRulinuxBundle:Default:index}
+
+logout:
+        pattern: /logout
+
+login:
+        pattern:   /login
+        defaults:  { _controller: LorNgDevelopersRulinuxBundle:Security:login }
+
+login_check:
+        pattern:   /login_check
+
 register:
         pattern: /register
-        defaults: { _controller: LorNgDevelopersRulinuxBundle:Security:register }
+        defaults: { _controller: LorNgDevelopersRulinuxBundle:Security:registration }
 
 register_send:
         pattern: /register_send
-        defaults: { _controller: LorNgDevelopersRulinuxBundle:Security:registerSend }
+        defaults: { _controller: LorNgDevelopersRulinuxBundle:Security:registrationSend }
 
 register_confirm:
         pattern: /register_confirm/{username}/{password}/{email}/{hash}
-        defaults: { _controller: LorNgDevelopersRulinuxBundle:Security:registerConfirm}
+        defaults: { _controller: LorNgDevelopersRulinuxBundle:Security:registrationConfirm}
+
+registration_save:
+        pattern: /register_save
+        defaults: { _controller: LorNgDevelopersRulinuxBundle:Security:registrationSave}

@@ -7,8 +7,10 @@ security:
         ROLE_SUPER_ADMIN: [ROLE_USER, ROLE_ADMIN, ROLE_ALLOWED_TO_SWITCH]
 
     encoders:
-        LorNgDevelopers\RulinuxBundle\Entity\User: md5
-        encode_as_base64: false
+        LorNgDevelopers\RulinuxBundle\Entity\User:
+                algorithm:   md5
+                iterations: 1
+                encode_as_base64: false
 
     providers:
          main:
