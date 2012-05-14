@@ -1,6 +1,7 @@
 <?php
 
 use Symfony\Component\ClassLoader\UniversalClassLoader;
+use Symfony\Component\ClassLoader\MapClassLoader;
 use Doctrine\Common\Annotations\AnnotationRegistry;
 
 $loader = new UniversalClassLoader();
@@ -44,3 +45,5 @@ AnnotationRegistry::registerFile(__DIR__.'/../vendor/doctrine/lib/Doctrine/ORM/M
 require_once __DIR__.'/../vendor/swiftmailer/lib/classes/Swift.php';
 Swift::registerAutoload(__DIR__.'/../vendor/swiftmailer/lib/swift_init.php');
 
+$mapClassLoader = new MapClassLoader(array('LightOpenID' => __DIR__ . '/../vendor/LightOpenId/openid.php'));
+$mapClassLoader->register();

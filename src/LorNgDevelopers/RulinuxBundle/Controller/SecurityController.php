@@ -10,6 +10,7 @@ use LorNgDevelopers\RulinuxBundle\Entity\RegistrationFirstForm;
 use LorNgDevelopers\RulinuxBundle\Entity\User;
 use LorNgDevelopers\RulinuxBundle\Entity\Group;
 use LorNgDevelopers\RulinuxBundle\Entity\SettingsRepository;
+use LightOpenID\openid;
 
 class SecurityController extends Controller
 {
@@ -109,7 +110,6 @@ class SecurityController extends Controller
 		else
 			throw new Exception('Hash is invalid');
 	}
-
 	public function registrationSaveAction(Request $request)
 	{
 		$method = $request->getMethod();
@@ -171,6 +171,64 @@ class SecurityController extends Controller
 		}
 		else
 			$this->redirect($this->generateUrl('index'));
+	}
+	public function openidCheckAction(Request $request)
+	{
+		try
+		{
+			$openid = new \LightOpenID($request->getHttpHost());
+			if(!$openid->mode)
+			{
+				$identifier = $request->request->get('openid_identifier');
+				if(isset($identifier))
+				{
+					$openid->identity = $identifier;
+					$openid->required = array('contact/email');
+					$openid->optional = array('namePerson', 'namePerson/friendly');
+// 					header('Location: ' . $openid->authUrl());
+					return $this->redirect($openid->authUrl());
+				}
+				else
+					throw new Exception('OpenID identifier is empty');
+			}
+			elseif($openid->mode == 'cancel')
+			{
+				return $this->redirect($this->generateUrl('login'));
+			}
+			else
+			{
+				$userRepository = $this->getDoctrine()->getRepository('LorNgDevelopersRulinuxBundle:User');
+				if($openid->validate())
+				{
+					$identity = $openid->identity;
+					$user = $userRepository->findOneByOpenid($identity);
+					if(isset($user))
+					{
+						$legend = 'msg';
+						$text = 'login user';
+						$title='';
+						return $this->render('LorNgDevelopersRulinuxBundle:Default:fieldset.html.twig', array('legend'=>$legend, 'text'=>$text, 'title'=>$title));
+					}
+					else
+					{
+//		 				echo 'User ' . ($openid->validate() ? $openid->identity . ' has ' : 'has not ') . 'logged in.';
+// 						print_r($openid->getAttributes());
+						$legend = 'msg';
+						$text = 'register info about user';
+						$title='';
+						return $this->render('LorNgDevelopersRulinuxBundle:Default:fieldset.html.twig', array('legend'=>$legend, 'text'=>$text, 'title'=>$title));
+					}
+					
+				}
+				else
+					throw new Exception('OpenID is invalid');
+			}
+
+		}
+		catch(ErrorException $e)
+		{
+			throw new Exception($e->getMessage());
+		}
 	}
 }
 ?>

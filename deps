@@ -67,3 +67,6 @@
 [DoctrineFixturesBundle]
     git=http://github.com/symfony/DoctrineFixturesBundle.git
     target=/bundles/Symfony/Bundle/DoctrineFixturesBundle
+
+[LightOpenId]
+    git=git://github.com/formapro/LightOpenID.git
