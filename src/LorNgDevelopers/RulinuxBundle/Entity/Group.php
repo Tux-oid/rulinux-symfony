@@ -39,7 +39,7 @@ class Group implements RoleInterface/*, Serializable*/
 	*/
 	public function getRole()
 	{
-		return $this->role;
+		return $this->getName();
 	}
 	/**
 	* Get id

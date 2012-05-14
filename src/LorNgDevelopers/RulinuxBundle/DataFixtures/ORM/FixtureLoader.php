@@ -2,6 +2,7 @@
 
 namespace LorNgDevelopers\RulinuxBundle\DataFixtures\ORM;
 
+use Doctrine\Common\Persistence\ObjectManager;
 use Doctrine\Common\DataFixtures\FixtureInterface;
 use LorNgDevelopers\RulinuxBundle\Entity\User;
 use LorNgDevelopers\RulinuxBundle\Entity\Group;
@@ -10,18 +11,83 @@ use Symfony\Component\Security\Core\Encoder\MessageDigestPasswordEncoder;
 
 class FixtureLoader implements FixtureInterface
 {
-	public function load($manager)
+	public function load(ObjectManager $manager)
 	{
-		$userRole = new Role();
+		$userRole = new Group();
 		$userRole->setName('ROLE_USER');
 		$manager->persist($userRole);
-		$moderRole = new Role();
+		$moderRole = new Group();
 		$moderRole->setName('ROLE_MODER');
 		$manager->persist($moderRole);
-		$adminRole = new Role();
+		$adminRole = new Group();
 		$adminRole->setName('ROLE_ADMIN');
 		$manager->persist($adminRole);
-
+		$captchaLevel = 0;
+		$captchaSetting = new Settings();
+		$captchaSetting->setName('captchaLevel');
+		$captchaSetting->setValue($captchaLevel);
+		$manager->persist($captchaSetting);
+		$theme = 'default';
+		$themeSetting = new Settings();
+		$themeSetting->setName('theme');
+		$themeSetting->setValue($theme);
+		$manager->persist($themeSetting);
+		$sortingType = 0;
+		$sortingTypeSetting = new Settings();
+		$sortingTypeSetting->setName('sortingType');
+		$sortingTypeSetting->setValue($sortingType);
+		$manager->persist($sortingTypeSetting);
+		$newsOnPage = 10;
+		$newsOnPageSetting = new Settings();
+		$newsOnPageSetting->setName('newsOnPage');
+		$newsOnPageSetting->setValue($newsOnPage);
+		$manager->persist($newsOnPageSetting);
+		$threadsOnPage = 30;
+		$threadsOnPageSetting = new Settings();
+		$threadsOnPageSetting->setName('threadsOnPage');
+		$threadsOnPageSetting->setValue($threadsOnPage);
+		$manager->persist($threadsOnPageSetting);
+		$commentsOnPage = 50;
+		$commentsOnPageSetting = new Settings();
+		$commentsOnPageSetting->setName('commentsOnPage');
+		$commentsOnPageSetting->setValue($commentsOnPage);
+		$manager->persist($commentsOnPageSetting);
+		$showEmail = 0;
+		$showEmailSetting = new Settings();
+		$showEmailSetting->setName('showEmail');
+		$showEmailSetting->setValue($showEmail);
+		$manager->persist($showEmailSetting);
+		$showIm = 0;
+		$showImSetting = new Settings();
+		$showImSetting->setName('showIm');
+		$showImSetting->setValue($showIm);
+		$manager->persist($showImSetting);
+		$showAvatars = 1;
+		$showAvatarsSetting = new Settings();
+		$showAvatarsSetting->setName('showAvatars');
+		$showAvatarsSetting->setValue($showAvatars);
+		$manager->persist($showAvatarsSetting);
+		$showUa = 1;
+		$showUaSetting = new Settings();
+		$showUaSetting->setName('showUa');
+		$showUaSetting->setValue($showUa);
+		$manager->persist($showUaSetting);
+		$showResp = 1;
+		$showRespSetting = new Settings();
+		$showRespSetting->setName('showResp');
+		$showRespSetting->setValue($showResp);
+		$manager->persist($showRespSetting);
+		$language = 'en';
+		$languageSetting = new Settings();
+		$languageSetting->setName('language');
+		$languageSetting->setValue($language);
+		$manager->persist($languageSetting);
+		$gmt = 'Europe/London';
+		$gmtSetting = new Settings();
+		$gmtSetting->setName('gmt');
+		$gmtSetting->setValue($gmt);
+		$manager->persist($gmtSetting);
+		//TODO: other values
 		$admin = new User();
 		$admin->setUsername('Admin');
 		$admin->setName('Site Administrator');
@@ -31,24 +97,26 @@ class FixtureLoader implements FixtureInterface
 		$admin->setAdditional('');
 		$admin->setAdditionalRaw('');
 		$admin->setBirthday(new \DateTime('now'));
-		$admin->setGender(true);
+		$admin->setGender(1);
 		$admin->setRegistrationDate(new \DateTime('now'));
 		$admin->setLastVisitDate(new \DateTime('now'));
-		$admin->setCaptchaLevel($settings->findOneByName('captcha_level')->getValue());
-		$admin->setTheme($settings->findOneByName('theme')->getValue());
-		$admin->setSortingType($settings->findOneByName('sortingType')->getValue());
-		$admin->setNewsOnPage($settings->findOneByName('news_on_page')->getValue());
-		$admin->setThreadsOnPage($settings->findOneByName('threads_on_page')->getValue());
-		$admin->setCommentsOnPage($settings->findOneByName('comments_on_page')->getValue());
-		$admin->setShowEmail($settings->findOneByName('showEmail')->getValue());
-		$admin->setShowIm($settings->findOneByName('showIm')->getValue());
-		$admin->setShowAvatars($settings->findOneByName('showAvatars')->getValue());
-		$admin->setShowUa($settings->findOneByName('showUa')->getValue());
-		$admin->setShowResp($settings->findOneByName('showResp')->getValue());
+		$admin->setCaptchaLevel($captchaLevel);
+		$admin->setTheme($theme);
+		$admin->setSortingType($sortingType);
+		$admin->setNewsOnPage($newsOnPage);
+		$admin->setThreadsOnPage($threadsOnPage);
+		$admin->setCommentsOnPage($commentsOnPage);
+		$admin->setShowEmail($showEmail);
+		$admin->setShowIm($showIm);
+		$admin->setShowAvatars($showAvatars);
+		$admin->setShowUa($showUa);
+		$admin->setShowResp($showResp);
+		$admin->setLanguage($language);
+		$admin->setGmt($gmt);
 		$encoder = new MessageDigestPasswordEncoder('md5', false, 1);
 		$password = $encoder->encodePassword('admin', $admin->getSalt());
 		$admin->setPassword($password);
-		$admin->getUserRoles()->add($adminRole);
+		$admin->getGroups()->add($adminRole);
 		$manager->persist($admin);
 		$manager->flush();
 	}

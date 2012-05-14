@@ -8,7 +8,7 @@ use Doctrine\ORM\Mapping as ORM;
 
 
 /**
- * @ORM\Entity
+ * @ORM\Entity(repositoryClass="LorNgDevelopers\RulinuxBundle\Entity\UserRepository")
  * @ORM\Table(name="users")
  */
 class User implements AdvancedUserInterface/*, Serializable*/
@@ -20,13 +20,12 @@ class User implements AdvancedUserInterface/*, Serializable*/
 	 */
 	protected $id;
 	/**
-	* @ORM\ManyToMany(targetEntity="Group", inversedBy="users")
-	* @ORM\JoinTable(name="user_role",
-	*     joinColumns={@ORM\JoinColumn(name="user_id", referencedColumnName="id")},
-	*     inverseJoinColumns={@ORM\JoinColumn(name="role_id", referencedColumnName="id")}
-	* )
-	*
-	*/
+	 * @ORM\ManyToMany(targetEntity="Group")
+	 * @ORM\JoinTable(name="user_group",
+	 *     joinColumns={@ORM\JoinColumn(name="user_id", referencedColumnName="id")},
+	 *     inverseJoinColumns={@ORM\JoinColumn(name="group_id", referencedColumnName="id")}
+	 * )
+	 */
 	protected $groups;
 	/**
 	 * @ORM\Column(name="nick", type="string", length=100, unique="true", nullable="false")
@@ -170,9 +169,10 @@ class User implements AdvancedUserInterface/*, Serializable*/
 	{
 		$this->active = true;
 		$this->salt = md5(uniqid(null, true));
-		$this->group = new ArrayCollection();
+		$this->groups = new ArrayCollection();
 	}
-	 public function isAccountNonExpired()
+
+	public function isAccountNonExpired()
 	{
 		return true;
 	}
@@ -772,24 +772,6 @@ class User implements AdvancedUserInterface/*, Serializable*/
 	public function getShowResp()
 	{
 		return $this->showResp;
-	}
-	/**
-	* Set group
-	*
-	* @param LorNgDevelopers\RulinuxBundle\Entity\Group $group
-	*/
-	public function setGroup(\LorNgDevelopers\RulinuxBundle\Entity\Group $group)
-	{
-		$this->group = $group;
-	}
-	/**
-	* Get group
-	*
-	* @return LorNgDevelopers\RulinuxBundle\Entity\Group
-	*/
-	public function getGroup()
-	{
-		return $this->group;
 	}
 	/**
 	* Set mark
