@@ -108,7 +108,7 @@ class SecurityController extends Controller
 			return $this->render('LorNgDevelopersRulinuxBundle:Security:registrationSecondPage.html.twig',array('username'=>$username, 'password'=>$password, 'email'=>$email, 'form'=>$form->createView()));
 		}
 		else
-			throw new Exception('Hash is invalid');
+			throw new \Exception('Hash is invalid');
 	}
 	public function registrationSaveAction(Request $request)
 	{
@@ -140,6 +140,7 @@ class SecurityController extends Controller
 				$groupsRepository = $this->getDoctrine()->getRepository('LorNgDevelopersRulinuxBundle:Group');
 				$userRole = $groupsRepository->findOneByName('ROLE_USER');
 				//TODO: set additional marked
+				//TODO: save image file
 				$newUser->setAdditionalRaw($newUser->getAdditional());
 				$newUser->setRegistrationDate(new \DateTime('now'));
 				$newUser->setLastVisitDate(new \DateTime('now'));
@@ -189,7 +190,7 @@ class SecurityController extends Controller
 					return $this->redirect($openid->authUrl());
 				}
 				else
-					throw new Exception('OpenID identifier is empty');
+					throw new \Exception('OpenID identifier is empty');
 			}
 			elseif($openid->mode == 'cancel')
 			{
@@ -201,6 +202,9 @@ class SecurityController extends Controller
 				if($openid->validate())
 				{
 					$identity = $openid->identity;
+					$identity = preg_replace('#^http://(.*)#sim', '$1', $identity);
+					$identity = preg_replace('#^https://(.*)#sim', '$1', $identity);
+					$identity = preg_replace('#(.*)\/$#sim', '$1', $identity);
 					$user = $userRepository->findOneByOpenid($identity);
 					if(isset($user))
 					{
@@ -211,24 +215,40 @@ class SecurityController extends Controller
 					}
 					else
 					{
-//		 				echo 'User ' . ($openid->validate() ? $openid->identity . ' has ' : 'has not ') . 'logged in.';
-// 						print_r($openid->getAttributes());
-						$legend = 'msg';
-						$text = 'register info about user';
-						$title='';
-						return $this->render('LorNgDevelopersRulinuxBundle:Default:fieldset.html.twig', array('legend'=>$legend, 'text'=>$text, 'title'=>$title));
+						$attr = $openid->getAttributes();
+						$email = '';
+						$newUser = new User;
+						$form = $this->createFormBuilder($newUser)
+						->add('username', 'text', array('required' => true))
+						->add('password', 'password', array('required' => true))
+						->add('name', 'text', array('required' => false))
+						->add('lastname', 'text', array('required' => false))
+						->add('country', 'country', array('required' => true))
+						->add('city', 'text', array('required' => false))
+						->add('photo', 'file', array('required' => false))
+						->add('birthday', 'birthday', array('required' => true))
+						->add('gender', 'checkbox', array('required' => false))
+						->add('additional', 'textarea', array('required' => false))
+						->add('email', 'email', array('required' => true))
+						->add('im', 'email', array('required' => false))
+						->add('openid', 'text', array('required' => false))
+						->add('language', 'language', array('required' => true))
+						->add('gmt', 'timezone', array('required' => true))
+						->getForm();
+						return $this->render('LorNgDevelopersRulinuxBundle:Security:openIDRegistration.html.twig',array('openid'=>$identity, 'password'=>'', 'email'=>$email, 'form'=>$form->createView()));
 					}
 					
 				}
 				else
-					throw new Exception('OpenID is invalid');
+					throw new \Exception('OpenID is invalid');
 			}
 
 		}
 		catch(ErrorException $e)
 		{
-			throw new Exception($e->getMessage());
+			throw new \Exception($e->getMessage());
 		}
 	}
+	//TODO:add password repairing function
 }
 ?>
