@@ -208,6 +208,7 @@ class SecurityController extends Controller
 					$user = $userRepository->findOneByOpenid($identity);
 					if(isset($user))
 					{
+						//TODO: login user by openid
 						$legend = 'msg';
 						$text = 'login user';
 						$title='';

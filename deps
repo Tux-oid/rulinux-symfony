@@ -70,3 +70,6 @@
 
 [LightOpenId]
     git=git://github.com/formapro/LightOpenID.git
+[OpenIDAuthBundle]
+    git=git://github.com/KainHaart/OpenIDAuthBundle.git
+    target=/bundles/KainHaart/OpenIDAuthBundle
