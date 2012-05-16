@@ -1,23 +1,27 @@
 <?php
 
-namespace LorNgDevelopers\RulinuxBundle\Entity;
+namespace RL\SecurityBundle\Entity;
 
+use Symfony\Component\Security\Core\Role\RoleInterface;
+use Symfony\Component\Validator\Constraints as Assert;
+use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
  * @ORM\Entity
- * @ORM\Table(name="marks")
+ * @ORM\Table(name="groups")
  */
-class Mark /*implements Serializable*/
+class Group implements RoleInterface/*, Serializable*/
 {
 	/**
-	 * @ORM\Id
+	 * @ORM\Id()
 	 * @ORM\Column(name="id", type="integer")
 	 * @ORM\GeneratedValue(strategy="AUTO")
 	 */
 	protected $id;
 	/**
-	 * @ORM\Column(name="name", type="string", length=256)
+	 * @ORM\Column(name="name", type="string", length=255)
+	 * @Assert\NotBlank()
 	 */
 	protected $name;
 	/**
@@ -25,12 +29,19 @@ class Mark /*implements Serializable*/
 	 */
 	protected $description;
 	/**
-	 * @ORM\OneToMany(targetEntity="User", mappedBy="mark")
+	 * @ORM\ManyToMany(targetEntity="User", mappedBy="groups")
 	 */
 	protected $users;
 	public function __construct()
 	{
 		$this->users = new \Doctrine\Common\Collections\ArrayCollection();
+	}
+	/**
+	* @see RoleInterface
+	*/
+	public function getRole()
+	{
+		return $this->getName();
 	}
 	/**
 	* Get id
@@ -80,9 +91,9 @@ class Mark /*implements Serializable*/
 	/**
 	* Add users
 	*
-	* @param LorNgDevelopers\RulinuxBundle\Entity\User $users
+	* @param RL\SecurityBundle\Entity\User $users
 	*/
-	public function addUser(\LorNgDevelopers\RulinuxBundle\Entity\User $users)
+	public function addUser(\RL\SecurityBundle\Entity\User $users)
 	{
 		$this->users[] = $users;
 	}

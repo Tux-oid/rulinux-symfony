@@ -1,6 +1,6 @@
 <?php
 
-namespace LorNgDevelopers\RulinuxBundle\Entity;
+namespace RL\SecurityBundle\Entity;
 
 use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Security\Core\User\UserProviderInterface;
@@ -28,7 +28,7 @@ class UserRepository extends EntityRepository implements UserProviderInterface
 		}
 		catch (NoResultException $e)
 		{
-			throw new UsernameNotFoundException(sprintf('Unable to find an active admin LorNgDevelopersRulinuxBundle:User object identified by "%s".', $username), null, 0, $e);
+			throw new UsernameNotFoundException(sprintf('Unable to find an active admin RLSecurityBundle:User object identified by "%s".', $username), null, 0, $e);
 		}
 		return $user;
 	}

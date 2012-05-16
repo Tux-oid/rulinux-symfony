@@ -19,7 +19,7 @@ class AppKernel extends Kernel
             new JMS\SecurityExtraBundle\JMSSecurityExtraBundle(),
             new Symfony\Bundle\DoctrineFixturesBundle\DoctrineFixturesBundle(),
             new KainHaart\OpenIDAuthBundle\OpenIDAuthBundle(),
-            new LorNgDevelopers\RulinuxBundle\LorNgDevelopersRulinuxBundle(),
+            new RL\SecurityBundle\RLSecurityBundle(),
         );
 
         if (in_array($this->getEnvironment(), array('dev', 'test'))) {

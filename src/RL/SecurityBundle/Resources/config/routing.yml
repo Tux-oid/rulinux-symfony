@@ -1,0 +1,29 @@
+logout:
+        pattern: /logout
+
+login:
+        pattern:   /login
+        defaults:  { _controller: RLSecurityBundle:Security:login }
+
+login_check:
+        pattern:   /login_check
+
+openid_check:
+        pattern: /openid_check
+        defaults: { _controller: RLSecurityBundle:Security:openidCheck }
+
+register:
+        pattern: /register
+        defaults: { _controller: RLSecurityBundle:Security:registration }
+
+register_send:
+        pattern: /register_send
+        defaults: { _controller: RLSecurityBundle:Security:registrationSend }
+
+register_confirm:
+        pattern: /register_confirm/{username}/{password}/{email}/{hash}
+        defaults: { _controller: RLSecurityBundle:Security:registrationConfirm}
+
+registration_save:
+        pattern: /register_save
+        defaults: { _controller: RLSecurityBundle:Security:registrationSave}

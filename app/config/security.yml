@@ -8,14 +8,14 @@ security:
                 ROLE_SUPER_ADMIN: [ROLE_USER, ROLE_ADMIN, ROLE_ALLOWED_TO_SWITCH]
 
         encoders:
-                LorNgDevelopers\RulinuxBundle\Entity\User:
+                RL\SecurityBundle\Entity\User:
                         algorithm:   md5
                         iterations: 1
                         encode_as_base64: false
 
         providers:
                 main:
-                        entity: {class: LorNgDevelopers\RulinuxBundle\Entity\User, property: username}
+                        entity: {class: RL\SecurityBundle\Entity\User, property: username}
 
 
         firewalls:

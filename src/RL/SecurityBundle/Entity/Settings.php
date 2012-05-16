@@ -1,6 +1,6 @@
 <?php
 
-namespace LorNgDevelopers\RulinuxBundle\Entity;
+namespace RL\SecurityBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 

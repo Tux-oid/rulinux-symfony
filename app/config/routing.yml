@@ -1,8 +1,8 @@
-LorNgDevelopersRulinuxBundle:
-#         resource: "@LorNgDevelopersRulinuxBundle/Controller/"
+RLSecurityBundle:
+#         resource: "@RLSecurityBundle/Controller/"
 #         type:     annotation
 #         prefix:   /
-        resource: "@LorNgDevelopersRulinuxBundle/Resources/config/routing.yml"
+        resource: "@RLSecurityBundle/Resources/config/routing.yml"
         prefix:   /
 
 # Internal routing configuration to handle ESI
@@ -12,5 +12,5 @@ LorNgDevelopersRulinuxBundle:
 
 index:
         pattern: /
-        defaults: {_controller: LorNgDevelopersRulinuxBundle:Default:index}
+        defaults: {_controller: RLSecurityBundle:Default:index}
 

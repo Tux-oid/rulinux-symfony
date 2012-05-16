@@ -1,6 +1,6 @@
 <?php
 
-namespace LorNgDevelopers\RulinuxBundle\Controller;
+namespace RL\SecurityBundle\Controller;
 
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;

@@ -1,5 +1,5 @@
 <?php
-namespace LorNgDevelopers\RulinuxBundle\Entity;
+namespace RL\SecurityBundle\Entity;
 
 use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Security\Core\User\AdvancedUserInterface;
@@ -9,7 +9,7 @@ use Doctrine\ORM\Mapping as ORM;
 
 
 /**
- * @ORM\Entity(repositoryClass="LorNgDevelopers\RulinuxBundle\Entity\UserRepository")
+ * @ORM\Entity(repositoryClass="RL\SecurityBundle\Entity\UserRepository")
  * @ORM\Table(name="users")
  */
 class User implements AdvancedUserInterface/*, Serializable*/
@@ -114,6 +114,14 @@ class User implements AdvancedUserInterface/*, Serializable*/
 	 * @ORM\Column(name="openid", type="string", length=1024, nullable="true")
 	 */
 	protected $openid;
+	/**
+	 * @ORM\Column(name="question", type="string", length="1024", nullable="false")
+	 */
+	protected $question;
+	/**
+	 * @ORM\Column(name="answer", type="string", length="1024", nullable="false")
+	 */
+	protected $answer;
 	//Settings
 	/**
 	 * @ORM\Column(name="language", type="text")
@@ -788,16 +796,16 @@ class User implements AdvancedUserInterface/*, Serializable*/
 	/**
 	* Set mark
 	*
-	* @param LorNgDevelopers\RulinuxBundle\Entity\Mark $mark
+	* @param RL\SecurityBundle\Entity\Mark $mark
 	*/
-	public function setMark(\LorNgDevelopers\RulinuxBundle\Entity\Mark $mark)
+	public function setMark(\RL\SecurityBundle\Entity\Mark $mark)
 	{
 		$this->mark = $mark;
 	}
 	/**
 	* Get mark
 	*
-	* @return LorNgDevelopers\RulinuxBundle\Entity\Mark
+	* @return RL\SecurityBundle\Entity\Mark
 	*/
 	public function getMark()
 	{
@@ -806,9 +814,9 @@ class User implements AdvancedUserInterface/*, Serializable*/
 	/**
 	* Add groups
 	*
-	* @param LorNgDevelopers\RulinuxBundle\Entity\Group $groups
+	* @param RL\SecurityBundle\Entity\Group $groups
 	*/
-	public function addGroup(\LorNgDevelopers\RulinuxBundle\Entity\Group $groups)
+	public function addGroup(\RL\SecurityBundle\Entity\Group $groups)
 	{
 		$this->groups[] = $groups;
 	}
@@ -856,5 +864,41 @@ class User implements AdvancedUserInterface/*, Serializable*/
 	public function getActive()
 	{
 		return $this->active;
+	}
+	/**
+	* Set question
+	*
+	* @param string $question
+	*/
+	public function setQuestion($question)
+	{
+		$this->question = $question;
+	}
+	/**
+	* Get question
+	*
+	* @return string
+	*/
+	public function getQuestion()
+	{
+		return $this->question;
+	}
+	/**
+	* Set answer
+	*
+	* @param string $answer
+	*/
+	public function setAnswer($answer)
+	{
+		$this->answer = $answer;
+	}
+	/**
+	* Get answer
+	*
+	* @return string
+	*/
+	public function getAnswer()
+	{
+		return $this->answer;
 	}
 }

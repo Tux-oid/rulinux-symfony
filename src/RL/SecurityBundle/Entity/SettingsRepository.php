@@ -1,5 +1,5 @@
 <?php	
-namespace LorNgDevelopers\RulinuxBundle\Entity;
+namespace RL\SecurityBundle\Entity;
 
 use Doctrine\ORM\EntityRepository;
 use Doctrine\ORM\NoResultException;

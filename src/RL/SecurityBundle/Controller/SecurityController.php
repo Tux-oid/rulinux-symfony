@@ -1,15 +1,15 @@
 <?php
 
-namespace LorNgDevelopers\RulinuxBundle\Controller;
+namespace RL\SecurityBundle\Controller;
 
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\Security\Core\SecurityContext;
 use Symfony\Component\Security\Core\Encoder\MessageDigestPasswordEncoder;
 use Symfony\Component\HttpFoundation\Request;
-use LorNgDevelopers\RulinuxBundle\Entity\RegistrationFirstForm;
-use LorNgDevelopers\RulinuxBundle\Entity\User;
-use LorNgDevelopers\RulinuxBundle\Entity\Group;
-use LorNgDevelopers\RulinuxBundle\Entity\SettingsRepository;
+use RL\SecurityBundle\Entity\RegistrationFirstForm;
+use RL\SecurityBundle\Entity\User;
+use RL\SecurityBundle\Entity\Group;
+use RL\SecurityBundle\Entity\SettingsRepository;
 use LightOpenID\openid;
 
 class SecurityController extends Controller
@@ -27,7 +27,7 @@ class SecurityController extends Controller
 			$error = $session->get(SecurityContext::AUTHENTICATION_ERROR);
 			$session->remove(SecurityContext::AUTHENTICATION_ERROR);
 		}
-		return $this->render('LorNgDevelopersRulinuxBundle:Security:login.html.twig', array(
+		return $this->render('RLSecurityBundle:Security:login.html.twig', array(
 		'last_username' => $session->get(SecurityContext::LAST_USERNAME),
 		'error'         => $error,
 		));
@@ -41,7 +41,7 @@ class SecurityController extends Controller
 		->add('validation', 'password')
 		->add('email', 'text')
 		->getForm();
-		return $this->render('LorNgDevelopersRulinuxBundle:Security:registrationFirstPage.html.twig', array('form' => $form->createView()));
+		return $this->render('RLSecurityBundle:Security:registrationFirstPage.html.twig', array('form' => $form->createView()));
 	}
 	public function registrationSendAction(Request $request)
 	{
@@ -68,12 +68,12 @@ class SecurityController extends Controller
 				->setFrom('noemail@rulinux.net')
 				->setTo($newUser->getEmail())
 				->setContentType('text/html')
-				->setBody($this->renderView('LorNgDevelopersRulinuxBundle:Security:registrationLetter.html.twig', array('link' =>$link, 'user'=>$user, 'site'=>$site)));
+				->setBody($this->renderView('RLSecurityBundle:Security:registrationLetter.html.twig', array('link' =>$link, 'user'=>$user, 'site'=>$site)));
 				$mailer->send($message);
 				$legend = 'Registration mail is sended.';
 				$text = 'Registration mail is sended. Please check your email.';
 				$title='';
-				return $this->render('LorNgDevelopersRulinuxBundle:Default:fieldset.html.twig', array('legend'=>$legend, 'text'=>$text, 'title'=>$title));
+				return $this->render('RLSecurityBundle:Default:fieldset.html.twig', array('legend'=>$legend, 'text'=>$text, 'title'=>$title));
 			}
 			else
 				throw new \Exception('Registration form is invalid.');
@@ -104,8 +104,10 @@ class SecurityController extends Controller
 			->add('openid', 'text', array('required' => false))
 			->add('language', 'language', array('required' => true))
 			->add('gmt', 'timezone', array('required' => true))
+			->add('question', 'text', array('required' => true))
+			->add('answer', 'text', array('required' => true))
 			->getForm();
-			return $this->render('LorNgDevelopersRulinuxBundle:Security:registrationSecondPage.html.twig',array('username'=>$username, 'password'=>$password, 'email'=>$email, 'form'=>$form->createView()));
+			return $this->render('RLSecurityBundle:Security:registrationSecondPage.html.twig',array('username'=>$username, 'password'=>$password, 'email'=>$email, 'form'=>$form->createView()));
 		}
 		else
 			throw new \Exception('Hash is invalid');
@@ -132,12 +134,14 @@ class SecurityController extends Controller
 			->add('openid', 'text', array('required' => false))
 			->add('language', 'language', array('required' => true))
 			->add('gmt', 'timezone', array('required' => true))
+			->add('question', 'text', array('required' => true))
+			->add('answer', 'text', array('required' => true))
 			->getForm();
 			$form->bindRequest($request);
 			if($form->isValid())
 			{
-				$settingsRepository = $this->getDoctrine()->getRepository('LorNgDevelopersRulinuxBundle:Settings');
-				$groupsRepository = $this->getDoctrine()->getRepository('LorNgDevelopersRulinuxBundle:Group');
+				$settingsRepository = $this->getDoctrine()->getRepository('RLSecurityBundle:Settings');
+				$groupsRepository = $this->getDoctrine()->getRepository('RLSecurityBundle:Group');
 				$userRole = $groupsRepository->findOneByName('ROLE_USER');
 				//TODO: set additional marked
 				//TODO: save image file
@@ -165,7 +169,7 @@ class SecurityController extends Controller
 				$legend = 'Registration completed.';
 				$text = 'Registration completed. Now you can <a href="'.$this->generateUrl('login').'">login</a> on this site.';
 				$title='';
-				return $this->render('LorNgDevelopersRulinuxBundle:Default:fieldset.html.twig', array('legend'=>$legend, 'text'=>$text, 'title'=>$title));
+				return $this->render('RLSecurityBundle:Default:fieldset.html.twig', array('legend'=>$legend, 'text'=>$text, 'title'=>$title));
 			}
 			else
 				throw new \Exception('Registration form is invalid.');
@@ -198,7 +202,7 @@ class SecurityController extends Controller
 			}
 			else
 			{
-				$userRepository = $this->getDoctrine()->getRepository('LorNgDevelopersRulinuxBundle:User');
+				$userRepository = $this->getDoctrine()->getRepository('RLSecurityBundle:User');
 				if($openid->validate())
 				{
 					$identity = $openid->identity;
@@ -212,7 +216,7 @@ class SecurityController extends Controller
 						$legend = 'msg';
 						$text = 'login user';
 						$title='';
-						return $this->render('LorNgDevelopersRulinuxBundle:Default:fieldset.html.twig', array('legend'=>$legend, 'text'=>$text, 'title'=>$title));
+						return $this->render('RLSecurityBundle:Default:fieldset.html.twig', array('legend'=>$legend, 'text'=>$text, 'title'=>$title));
 					}
 					else
 					{
@@ -235,8 +239,10 @@ class SecurityController extends Controller
 						->add('openid', 'text', array('required' => false))
 						->add('language', 'language', array('required' => true))
 						->add('gmt', 'timezone', array('required' => true))
+						->add('question', 'text', array('required' => true))
+						->add('answer', 'text', array('required' => true))
 						->getForm();
-						return $this->render('LorNgDevelopersRulinuxBundle:Security:openIDRegistration.html.twig',array('openid'=>$identity, 'password'=>'', 'email'=>$email, 'form'=>$form->createView()));
+						return $this->render('RLSecurityBundle:Security:openIDRegistration.html.twig',array('openid'=>$identity, 'password'=>'', 'email'=>$email, 'form'=>$form->createView()));
 					}
 					
 				}

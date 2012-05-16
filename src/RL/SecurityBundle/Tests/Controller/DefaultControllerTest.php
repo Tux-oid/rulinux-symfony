@@ -1,6 +1,6 @@
 <?php
 
-namespace LorNgDevelopers\RulinuxBundle\Tests\Controller;
+namespace RL\SecurityBundle\Tests\Controller;
 
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 

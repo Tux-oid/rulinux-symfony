@@ -1,12 +1,12 @@
 <?php
 
-namespace LorNgDevelopers\RulinuxBundle\DataFixtures\ORM;
+namespace RL\SecurityBundle\DataFixtures\ORM;
 
 use Doctrine\Common\Persistence\ObjectManager;
 use Doctrine\Common\DataFixtures\FixtureInterface;
-use LorNgDevelopers\RulinuxBundle\Entity\User;
-use LorNgDevelopers\RulinuxBundle\Entity\Group;
-use LorNgDevelopers\RulinuxBundle\Entity\Settings;
+use RL\SecurityBundle\Entity\User;
+use RL\SecurityBundle\Entity\Group;
+use RL\SecurityBundle\Entity\Settings;
 use Symfony\Component\Security\Core\Encoder\MessageDigestPasswordEncoder;
 
 class FixtureLoader implements FixtureInterface

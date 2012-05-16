@@ -1,6 +1,6 @@
 <?php
 
-namespace LorNgDevelopers\RulinuxBundle\Entity;
+namespace RL\SecurityBundle\Entity;
 
 use Symfony\Component\Validator\Constraints as Assert;
 
