@@ -12,7 +12,7 @@ use Doctrine\ORM\Mapping as ORM;
  * @ORM\Entity(repositoryClass="RL\SecurityBundle\Entity\UserRepository")
  * @ORM\Table(name="users")
  */
-class User implements AdvancedUserInterface/*, Serializable*/
+class User implements AdvancedUserInterface, \Serializable
 {
 	/**
 	 * @ORM\Id()
@@ -191,7 +191,94 @@ class User implements AdvancedUserInterface/*, Serializable*/
 		$this->salt = md5(uniqid(null, true));
 		$this->groups = new ArrayCollection();
 	}
-
+	public function serialize()
+	{
+		return serialize(
+				array(
+					'id'			=>$this->id,
+					'username'		=>$this->username,
+					'groups'		=> $this->groups,
+					'salt'			=> $this->salt,
+					'password'		=> $this->password,
+					'name'			=> $this->name,
+					'lastname'		=> $this->lastname,
+					'country'		=> $this->country,
+					'city'			=> $this->city,
+					'photo'			=> $this->photo,
+					'birthday'		=> $this->birthday,
+					'gender'		=> $this->gender,
+					'additional'		=> $this->additional,
+					'additionalRaw'		=> $this->additionalRaw,
+					'email'			=> $this->email,
+					'im'			=> $this->im,
+					'registrationDate'	=> $this->registrationDate,
+					'lastVisitDate'		=> $this->lastVisitDate,
+					'active'		=> $this->active,
+					'captchaLevel'		=> $this->captchaLevel,
+					'openid'		=> $this->openid,
+					'question'		=> $this->question,
+					'answer'		=> $this->answer,
+					'language'		=> $this->language,
+					'blocks'		=> $this->blocks,
+					'theme'			=> $this->theme,
+					'gmt'			=> $this->gmt,
+					'filters'		=> $this->filters,
+					'mark'			=> $this->mark,
+					'sortingType'		=> $this->sortingType,
+					'newsOnPage'		=> $this->newsOnPage,
+					'commentsOnPage'	=> $this->commentsOnPage,
+					'threadsOnPage'		=> $this->threadsOnPage,
+					'showEmail'		=> $this->showEmail,
+					'showIm'		=> $this->showIm,
+					'showAvatars'		=> $this->showAvatars,
+					'showUa'		=> $this->showUa,
+					'showResp'		=> $this->showResp
+				)
+			);
+	}
+	public function unserialize($serializedData)
+	{
+		$unserializedData     = unserialize($serializedData);
+		$this->id        = isset($unserializedData['id']) ? $unserializedData['id'] : null;
+		$this->username        = isset($unserializedData['username']) ? $unserializedData['username'] : null;
+		$this->groups        = isset($unserializedData['groups']) ? $unserializedData['groups'] : null;
+		$this->salt        = isset($unserializedData['salt']) ? $unserializedData['salt'] : null;
+		$this->password        = isset($unserializedData['password']) ? $unserializedData['password'] : null;
+		$this->name        = isset($unserializedData['name']) ? $unserializedData['name'] : null;
+		$this->lastname        = isset($unserializedData['lastname']) ? $unserializedData['lastname'] : null;
+		$this->country        = isset($unserializedData['country']) ? $unserializedData['country'] : null;
+		$this->city        = isset($unserializedData['city']) ? $unserializedData['city'] : null;
+		$this->photo        = isset($unserializedData['photo']) ? $unserializedData['photo'] : null;
+		$this->birthday        = isset($unserializedData['birthday']) ? $unserializedData['birthday'] : null;
+		$this->gender        = isset($unserializedData['gender']) ? $unserializedData['gender'] : null;
+		$this->additional        = isset($unserializedData['additional']) ? $unserializedData['additional'] : null;
+		$this->additionalRaw        = isset($unserializedData['additionalRaw']) ? $unserializedData['additionalRaw'] : null;
+		$this->email        = isset($unserializedData['email']) ? $unserializedData['email'] : null;
+		$this->im        = isset($unserializedData['im']) ? $unserializedData['im'] : null;
+		$this->registrationDate        = isset($unserializedData['registrationDate']) ? $unserializedData['registrationDate'] : null;
+		$this->lastVisitDate        = isset($unserializedData['lastVisitDate']) ? $unserializedData['lastVisitDate'] : null;
+		$this->active        = isset($unserializedData['active']) ? $unserializedData['active'] : null;
+		$this->captchaLevel        = isset($unserializedData['captchaLevel']) ? $unserializedData['captchaLevel'] : null;
+		$this->openid        = isset($unserializedData['openid']) ? $unserializedData['openid'] : null;
+		$this->question        = isset($unserializedData['question']) ? $unserializedData['question'] : null;
+		$this->answer        = isset($unserializedData['answer']) ? $unserializedData['answer'] : null;
+		$this->language        = isset($unserializedData['language']) ? $unserializedData['language'] : null;
+		$this->blocks        = isset($unserializedData['blocks']) ? $unserializedData['blocks'] : null;
+		$this->theme        = isset($unserializedData['theme']) ? $unserializedData['theme'] : null;
+		$this->gmt        = isset($unserializedData['gmt']) ? $unserializedData['gmt'] : null;
+		$this->filters        = isset($unserializedData['filters']) ? $unserializedData['filters'] : null;
+		$this->mark        = isset($unserializedData['mark']) ? $unserializedData['mark'] : null;
+		$this->sortingType        = isset($unserializedData['sortingType']) ? $unserializedData['sortingType'] : null;
+		$this->newsOnPage        = isset($unserializedData['newsOnPage']) ? $unserializedData['newsOnPage'] : null;
+		$this->commentsOnPage        = isset($unserializedData['commentsOnPage']) ? $unserializedData['commentsOnPage'] : null;
+		$this->threadsOnPage        = isset($unserializedData['threadsOnPage']) ? $unserializedData['threadsOnPage'] : null;
+		$this->showEmail        = isset($unserializedData['showEmail']) ? $unserializedData['showEmail'] : null;
+		$this->showIm        = isset($unserializedData['showIm']) ? $unserializedData['showIm'] : null;
+		$this->showAvatars        = isset($unserializedData['showAvatars']) ? $unserializedData['showAvatars'] : null;
+		$this->showUa        = isset($unserializedData['showUa']) ? $unserializedData['showUa'] : null;
+		$this->showResp        = isset($unserializedData['showResp']) ? $unserializedData['showResp'] : null;
+		
+	}
 	public function isAccountNonExpired()
 	{
 		return true;
@@ -252,6 +339,15 @@ class User implements AdvancedUserInterface/*, Serializable*/
 	public function equals(UserInterface $user)
 	{
 		return $this->username === $user->getUsername();
+	}
+	public function eq(UserInterface $user)
+	{
+		$thisHash = md5($this->serialize());
+		$userHash = md5($this->serialize());
+		if($thisHash == $userHash)
+			return true;
+		else
+			return false;
 	}
 	/**
 	* Get id

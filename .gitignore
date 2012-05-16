@@ -6,3 +6,6 @@
 /app/config/parameters.ini
 /htdocs.kdev4
 /.kdev4
+/.settings
+/.project
+/.buildpath

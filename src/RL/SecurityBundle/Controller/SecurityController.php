@@ -291,39 +291,42 @@ class SecurityController extends Controller
 				{
 					throw new \Exception($e->getMessage());
 				}
-				$testUser = $user;
-				$testUser->setEmail($resForm->getEmail());
-				$testUser->setQuestion($resForm->getQuestion());
-				$testUser->setAnswer($resForm->getAnswer());
-				if($user->equals($testUser))
+				if($user->getEmail() != $resForm->getEmail())
 				{
-					
-					$password = md5(uniqid(rand(),true));
-					$password = substr($password, 1, 6);
-					$encoder = new MessageDigestPasswordEncoder('md5', false, 1);
-					$encodedPassword = $encoder->encodePassword($password, $user->getSalt());
-					$user->setPassword($encodedPassword);
-					$username = $user->getUsername();
-					$em = $this->getDoctrine()->getEntityManager();
-					$em->persist($user);
-					$em->flush();
-					$mailer = $this->get('mailer');
-					$message = \Swift_Message::newInstance()
-					->setSubject('Password restoring')
-					->setFrom('noemail@rulinux.net')//FIXME:load email from settings
-					->setTo($resForm->getEmail())
-					->setContentType('text/html')
-					->setBody($this->renderView('RLSecurityBundle:Security:passwordRestoringLetter.html.twig', array('username'=>$username, 'password'=>$password)));
-					$mailer->send($message);
-					$legend = 'Mail with your new password is sended.';
-					$text = 'Mail with your new password is sended. Please check your email.';
-					$title='Mail sended';
-					return $this->render('RLSecurityBundle:Default:fieldset.html.twig', array('legend'=>$legend, 'text'=>$text, 'title'=>$title));
+					throw new \Exception('Email is wrong');
 					
 				}
-				else
-					throw new \Exception('user is not equals');//FIXME:write normal error message
-				
+				if($user->getQuestion() != $resForm->getQuestion())
+				{
+					throw new \Exception('Question is wrong');
+					
+				}
+				if($user->getAnswer() != $resForm->getAnswer())
+				{
+					throw new \Exception('Answer is wrong');
+					
+				}
+				$password = md5(uniqid(rand(),true));
+				$password = substr($password, 1, 9);
+				$encoder = new MessageDigestPasswordEncoder('md5', false, 1);
+				$encodedPassword = $encoder->encodePassword($password, $user->getSalt());
+				$user->setPassword($encodedPassword);
+				$username = $user->getUsername();
+				$em = $this->getDoctrine()->getEntityManager();
+				$em->persist($user);
+				$em->flush();
+				$mailer = $this->get('mailer');
+				$message = \Swift_Message::newInstance()
+				->setSubject('Password restoring')
+				->setFrom('noemail@rulinux.net')//FIXME:load email from settings
+				->setTo($resForm->getEmail())
+				->setContentType('text/html')
+				->setBody($this->renderView('RLSecurityBundle:Security:passwordRestoringLetter.html.twig', array('username'=>$username, 'password'=>$password)));
+				$mailer->send($message);
+				$legend = 'Mail with your new password is sended.';
+				$text = 'Mail with your new password is sended. Please check your email.';
+				$title='Mail sended';
+				return $this->render('RLSecurityBundle:Default:fieldset.html.twig', array('legend'=>$legend, 'text'=>$text, 'title'=>$title));
 			}
 			else
 				throw new \Exception('Password restoring form is invalid');
