@@ -7,6 +7,7 @@ use Symfony\Component\Security\Core\SecurityContext;
 use Symfony\Component\Security\Core\Encoder\MessageDigestPasswordEncoder;
 use Symfony\Component\HttpFoundation\Request;
 use RL\SecurityBundle\Entity\RegistrationFirstForm;
+use RL\SecurityBundle\Entity\PasswordRestoringForm;
 use RL\SecurityBundle\Entity\User;
 use RL\SecurityBundle\Entity\Group;
 use RL\SecurityBundle\Entity\SettingsRepository;
@@ -39,7 +40,7 @@ class SecurityController extends Controller
 		->add('name', 'text')
 		->add('password', 'password')
 		->add('validation', 'password')
-		->add('email', 'text')
+		->add('email', 'email')
 		->getForm();
 		return $this->render('RLSecurityBundle:Security:registrationFirstPage.html.twig', array('form' => $form->createView()));
 	}
@@ -64,7 +65,7 @@ class SecurityController extends Controller
 				$user=$newUser->getName();
 				$site=$request->getHttpHost();
 				$message = \Swift_Message::newInstance()
-				->setSubject('Registration letter')
+				->setSubject('Registration letter')//FIXME:load email from settings
 				->setFrom('noemail@rulinux.net')
 				->setTo($newUser->getEmail())
 				->setContentType('text/html')
@@ -72,14 +73,14 @@ class SecurityController extends Controller
 				$mailer->send($message);
 				$legend = 'Registration mail is sended.';
 				$text = 'Registration mail is sended. Please check your email.';
-				$title='';
+				$title='Mail sended';
 				return $this->render('RLSecurityBundle:Default:fieldset.html.twig', array('legend'=>$legend, 'text'=>$text, 'title'=>$title));
 			}
 			else
 				throw new \Exception('Registration form is invalid.');
 		}
 		else
-			$this->redirect($this->generateUrl('index'));
+			return $this->redirect($this->generateUrl('index'));
 		
 	}
 	public function registrationConfirmAction($username, $password, $email, $hash)
@@ -175,7 +176,7 @@ class SecurityController extends Controller
 				throw new \Exception('Registration form is invalid.');
 		}
 		else
-			$this->redirect($this->generateUrl('index'));
+			return $this->redirect($this->generateUrl('index'));
 	}
 	public function openidCheckAction(Request $request)
 	{
@@ -190,7 +191,6 @@ class SecurityController extends Controller
 					$openid->identity = $identifier;
 					$openid->required = array('contact/email');
 					$openid->optional = array('namePerson', 'namePerson/friendly');
-// 					header('Location: ' . $openid->authUrl());
 					return $this->redirect($openid->authUrl());
 				}
 				else
@@ -212,7 +212,7 @@ class SecurityController extends Controller
 					$user = $userRepository->findOneByOpenid($identity);
 					if(isset($user))
 					{
-						//TODO: login user by openid
+						//FIXME: login user by openid
 						$legend = 'msg';
 						$text = 'login user';
 						$title='';
@@ -256,6 +256,80 @@ class SecurityController extends Controller
 			throw new \Exception($e->getMessage());
 		}
 	}
-	//TODO:add password repairing function
+	public function restorePasswordAction()
+	{
+		$resForm = new PasswordRestoringForm;
+		$form = $this->createFormBuilder($resForm)
+		->add('username', 'text')
+		->add('email', 'email')
+		->add('question', 'text')
+		->add('answer', 'text')
+		->getForm();
+		return $this->render('RLSecurityBundle:Security:passwordRestoringForm.html.twig', array('form' => $form->createView()));
+	}
+	public function restorePasswordCheckAction(Request $request)
+	{
+		$method = $request->getMethod();
+		if($method == 'POST')
+		{
+			$resForm = new PasswordRestoringForm;
+			$form = $this->createFormBuilder($resForm)
+			->add('username', 'text')
+			->add('email', 'email')
+			->add('question', 'text')
+			->add('answer', 'text')
+			->getForm();
+			$form->bindRequest($request);
+			if($form->isValid())
+			{
+				$userRepository = $this->getDoctrine()->getRepository('RLSecurityBundle:User');
+				try
+				{
+					$user = $userRepository->findOneByUsername($resForm->getUsername());
+				}
+				catch(ErrorException $e)
+				{
+					throw new \Exception($e->getMessage());
+				}
+				$testUser = $user;
+				$testUser->setEmail($resForm->getEmail());
+				$testUser->setQuestion($resForm->getQuestion());
+				$testUser->setAnswer($resForm->getAnswer());
+				if($user->equals($testUser))
+				{
+					
+					$password = md5(uniqid(rand(),true));
+					$password = substr($password, 1, 6);
+					$encoder = new MessageDigestPasswordEncoder('md5', false, 1);
+					$encodedPassword = $encoder->encodePassword($password, $user->getSalt());
+					$user->setPassword($encodedPassword);
+					$username = $user->getUsername();
+					$em = $this->getDoctrine()->getEntityManager();
+					$em->persist($user);
+					$em->flush();
+					$mailer = $this->get('mailer');
+					$message = \Swift_Message::newInstance()
+					->setSubject('Password restoring')
+					->setFrom('noemail@rulinux.net')//FIXME:load email from settings
+					->setTo($resForm->getEmail())
+					->setContentType('text/html')
+					->setBody($this->renderView('RLSecurityBundle:Security:passwordRestoringLetter.html.twig', array('username'=>$username, 'password'=>$password)));
+					$mailer->send($message);
+					$legend = 'Mail with your new password is sended.';
+					$text = 'Mail with your new password is sended. Please check your email.';
+					$title='Mail sended';
+					return $this->render('RLSecurityBundle:Default:fieldset.html.twig', array('legend'=>$legend, 'text'=>$text, 'title'=>$title));
+					
+				}
+				else
+					throw new \Exception('user is not equals');//FIXME:write normal error message
+				
+			}
+			else
+				throw new \Exception('Password restoring form is invalid');
+		}
+		else
+			return $this->redirect($this->generateUrl('index'));
+	}
 }
 ?>

@@ -27,3 +27,11 @@ register_confirm:
 registration_save:
         pattern: /register_save
         defaults: { _controller: RLSecurityBundle:Security:registrationSave}
+
+restore_password:
+        pattern: /restore_password
+        defaults: { _controller: RLSecurityBundle:Security:restorePassword}
+
+restore_password_check:
+        pattern: /restore_password_check
+        defaults: { _controller: RLSecurityBundle:Security:restorePasswordCheck}
