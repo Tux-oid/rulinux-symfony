@@ -12,5 +12,5 @@ RLSecurityBundle:
 
 index:
         pattern: /
-        defaults: {_controller: RLSecurityBundle:Default:index}
+        defaults: {_controller: RLSecurityBundle:Security:registration}
 

@@ -11,6 +11,9 @@ use RL\SecurityBundle\Entity\PasswordRestoringForm;
 use RL\SecurityBundle\Entity\User;
 use RL\SecurityBundle\Entity\Group;
 use RL\SecurityBundle\Entity\SettingsRepository;
+use RL\SecurityBundle\Form\RegisterType;
+use RL\SecurityBundle\Form\RegisterFirstType;
+use RL\SecurityBundle\Form\RestorePasswordType;
 use LightOpenID\openid;
 
 class SecurityController extends Controller
@@ -36,12 +39,7 @@ class SecurityController extends Controller
 	public function registrationAction()
 	{
 		$newUser = new RegistrationFirstForm;
-		$form = $this->createFormBuilder($newUser)
-		->add('name', 'text')
-		->add('password', 'password')
-		->add('validation', 'password')
-		->add('email', 'email')
-		->getForm();
+		$form = $this->createForm(new RegisterFirstType(), array());
 		return $this->render('RLSecurityBundle:Security:registrationFirstPage.html.twig', array('form' => $form->createView()));
 	}
 	public function registrationSendAction(Request $request)
@@ -50,12 +48,7 @@ class SecurityController extends Controller
 		if($method == 'POST')
 		{
 			$newUser = new RegistrationFirstForm;
-			$form = $this->createFormBuilder($newUser)
-			->add('name', 'text')
-			->add('password', 'password')
-			->add('validation', 'password')
-			->add('email', 'email')
-			->getForm();
+			$form = $this->createForm(new RegisterFirstType(), array());
 			$form->bindRequest($request);
 			if($form->isValid())
 			{
@@ -89,25 +82,7 @@ class SecurityController extends Controller
 		if($hash == md5(md5($username.$password.$email.$secret)))
 		{
 			$newUser = new User;
-			$form = $this->createFormBuilder($newUser)
-			->add('username', 'text', array('required' => true))
-			->add('password', 'password', array('required' => true))
-			->add('name', 'text', array('required' => false))
-			->add('lastname', 'text', array('required' => false))
-			->add('country', 'country', array('required' => true))
-			->add('city', 'text', array('required' => false))
-			->add('photo', 'file', array('required' => false))
-			->add('birthday', 'birthday', array('required' => true))
-			->add('gender', 'checkbox', array('required' => false))
-			->add('additional', 'textarea', array('required' => false))
-			->add('email', 'email', array('required' => true))
-			->add('im', 'email', array('required' => false))
-			->add('openid', 'text', array('required' => false))
-			->add('language', 'language', array('required' => true))
-			->add('gmt', 'timezone', array('required' => true))
-			->add('question', 'text', array('required' => true))
-			->add('answer', 'text', array('required' => true))
-			->getForm();
+			$form = $this->createForm(new RegisterType(), array());
 			return $this->render('RLSecurityBundle:Security:registrationSecondPage.html.twig',array('username'=>$username, 'password'=>$password, 'email'=>$email, 'form'=>$form->createView()));
 		}
 		else
@@ -119,25 +94,7 @@ class SecurityController extends Controller
 		if($method == 'POST')
 		{
 			$newUser = new User;
-			$form = $this->createFormBuilder($newUser)
-			->add('username', 'text', array('required' => true))
-			->add('password', 'password', array('required' => true))
-			->add('name', 'text', array('required' => false))
-			->add('lastname', 'text', array('required' => false))
-			->add('country', 'country', array('required' => true))
-			->add('city', 'text', array('required' => false))
-			->add('photo', 'file', array('required' => false))
-			->add('birthday', 'birthday', array('required' => true))
-			->add('gender', 'checkbox', array('required' => false))
-			->add('additional', 'textarea', array('required' => false))
-			->add('email', 'email', array('required' => true))
-			->add('im', 'email', array('required' => false))
-			->add('openid', 'text', array('required' => false))
-			->add('language', 'language', array('required' => true))
-			->add('gmt', 'timezone', array('required' => true))
-			->add('question', 'text', array('required' => true))
-			->add('answer', 'text', array('required' => true))
-			->getForm();
+			$form = $this->createForm(new RegisterType(), array());
 			$form->bindRequest($request);
 			if($form->isValid())
 			{
@@ -223,25 +180,7 @@ class SecurityController extends Controller
 						$attr = $openid->getAttributes();
 						$email = '';
 						$newUser = new User;
-						$form = $this->createFormBuilder($newUser)
-						->add('username', 'text', array('required' => true))
-						->add('password', 'password', array('required' => true))
-						->add('name', 'text', array('required' => false))
-						->add('lastname', 'text', array('required' => false))
-						->add('country', 'country', array('required' => true))
-						->add('city', 'text', array('required' => false))
-						->add('photo', 'file', array('required' => false))
-						->add('birthday', 'birthday', array('required' => true))
-						->add('gender', 'checkbox', array('required' => false))
-						->add('additional', 'textarea', array('required' => false))
-						->add('email', 'email', array('required' => true))
-						->add('im', 'email', array('required' => false))
-						->add('openid', 'text', array('required' => false))
-						->add('language', 'language', array('required' => true))
-						->add('gmt', 'timezone', array('required' => true))
-						->add('question', 'text', array('required' => true))
-						->add('answer', 'text', array('required' => true))
-						->getForm();
+						$form = $this->createForm(new RegisterType(), array());
 						return $this->render('RLSecurityBundle:Security:openIDRegistration.html.twig',array('openid'=>$identity, 'password'=>'', 'email'=>$email, 'form'=>$form->createView()));
 					}
 					
@@ -259,12 +198,7 @@ class SecurityController extends Controller
 	public function restorePasswordAction()
 	{
 		$resForm = new PasswordRestoringForm;
-		$form = $this->createFormBuilder($resForm)
-		->add('username', 'text')
-		->add('email', 'email')
-		->add('question', 'text')
-		->add('answer', 'text')
-		->getForm();
+		$form = $this->createForm(new RestorePasswordType(), array());
 		return $this->render('RLSecurityBundle:Security:passwordRestoringForm.html.twig', array('form' => $form->createView()));
 	}
 	public function restorePasswordCheckAction(Request $request)
@@ -273,12 +207,7 @@ class SecurityController extends Controller
 		if($method == 'POST')
 		{
 			$resForm = new PasswordRestoringForm;
-			$form = $this->createFormBuilder($resForm)
-			->add('username', 'text')
-			->add('email', 'email')
-			->add('question', 'text')
-			->add('answer', 'text')
-			->getForm();
+			$form = $this->createForm(new RestorePasswordType(), array());
 			$form->bindRequest($request);
 			if($form->isValid())
 			{
