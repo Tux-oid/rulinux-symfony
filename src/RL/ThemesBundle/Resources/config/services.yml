@@ -6,3 +6,4 @@ services:
     class: %rl_themes.theme.provider.class%
     arguments: 
       - "@security.context"
+      - "@kernel"

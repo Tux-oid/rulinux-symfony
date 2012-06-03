@@ -35,7 +35,7 @@ class BlockController extends Controller
 			}
 			$defaults = array('_username' => $session->get(SecurityContext::LAST_USERNAME));
 			$form = $this->createForm(new LoginType(), $defaults);
-			return $this->render($theme->getPath('authenticationBlock.html.twig'), array('error' => $error, 'form' => $form->createView()));
+			return $this->render($theme->getPath('RLMainBundle','authenticationBlock.html.twig'), array('error' => $error, 'form' => $form->createView()));
 		}
 	}
 }

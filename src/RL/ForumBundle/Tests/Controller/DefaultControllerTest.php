@@ -1,6 +1,6 @@
 <?php
 
-namespace RL\SecurityBundle\Tests\Controller;
+namespace RL\ForumBundle\Tests\Controller;
 
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 

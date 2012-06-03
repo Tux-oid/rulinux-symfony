@@ -1,7 +1,11 @@
+RLForumBundle:
+    resource: "@RLForumBundle/Controller/"
+    type:     annotation
+    prefix:   /
+
 RLThemesBundle:
-    resource: "@RLThemesBundle/Resources/config/routing.yml"
-#    resource: "@RLThemesBundle/Controller/"
-#    type:     annotation
+    resource: "@RLThemesBundle/Controller/"
+    type:     annotation
     prefix:   /
 
 RLMainBundle:

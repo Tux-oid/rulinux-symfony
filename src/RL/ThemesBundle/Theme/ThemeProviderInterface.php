@@ -17,12 +17,12 @@ interface ThemeProviderInterface
     /**
      * Returns current theme
      */
-    function getTheme();
+    function getTheme($bundleName, $templateName);
     
     /**
      * Returns full template names with current layout part.
      * 
      * @param string $templateName short template name (without bundle location).
      */
-    function getPath($templateName);
+    function getPath($bundleName, $templateName);
 }

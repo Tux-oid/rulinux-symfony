@@ -11,13 +11,14 @@ class MainController extends Controller
 {
 	/**
 	 * @Route("/", name="index")
-	 * @Route("/login")
 	 * @Template()
 	 */
 	public function homepageAction()
 	{
+		$user = $this->get('security.context')->getToken()->getUser();
+		$user->setTheme('Default');
 		$theme = $this->get('rl_themes.theme.provider');
-		return $this->render($theme->getPath('index.html.twig'), array(
+		return $this->render($theme->getPath('RLMainBundle', 'index.html.twig'), array(
 				'user' => $this->get('security.context')->getToken()->getUser(),
 				'theme' => $this->get('rl_themes.theme.provider')
 			));

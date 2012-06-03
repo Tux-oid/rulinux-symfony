@@ -6,16 +6,16 @@
         </tr>
     {% endif %}
         <tr>
-            <td>Username</td>
+            <td>{%trans%}Username{%endtrans%}</td>
             <td>{{ form_widget(form._username) }}</td>
         </tr>
         <tr>
-            <td>Password</td>
+            <td>{%trans%}Password{%endtrans%}</td>
             <td>{{ form_widget(form._password) }}</td>
         </tr>
         <tr>
 			<td>&nbsp;</td>
-            <td>Remember me {{ form_widget(form._remember_me) }}</td>
+            <td>{%trans%}Remember me{%endtrans%} {{ form_widget(form._remember_me) }}</td>
         </tr>
         <tr>
 			<td>&nbsp;</td>
@@ -24,7 +24,7 @@
         <tr>
             <td colspan="2">
                 {{ form_rest(form) }}
-                <input type="submit" value="Enter" />
+                <input type="submit"/>
             </td>
         </tr>
     </table>

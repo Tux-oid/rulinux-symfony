@@ -1,5 +1,7 @@
 <?php
-
+/**
+ * @author Tux-oid 
+ */
 namespace RL\ThemesBundle\DependencyInjection;
 use Symfony\Component\Config\Definition\Builder\TreeBuilder;
 use Symfony\Component\Config\Definition\ConfigurationInterface;

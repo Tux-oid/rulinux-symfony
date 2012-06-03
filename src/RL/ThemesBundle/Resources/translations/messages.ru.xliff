@@ -1,0 +1,35 @@
+<?xml version="1.0"?>
+<xliff version="1.2" xmlns="urn:oasis:names:tc:xliff:document:1.2">
+    <file source-language="en" datatype="plaintext" original="file.ext">
+        <body>
+            <trans-unit id="1">
+                <source>Username</source>
+                <target>Имя пользователя</target>
+            </trans-unit>
+            <trans-unit id="2">
+                <source>Password</source>
+                <target>Пароль</target>
+            </trans-unit>
+            <trans-unit id="3">
+                <source>Registration of new user</source>
+                <target>Регистрация нового пользователя</target>
+            </trans-unit>
+            <trans-unit id="4">
+                <source>Name</source>
+                <target>Имя</target>
+            </trans-unit>
+            <trans-unit id="54">
+                <source>Validation</source>
+                <target>Повторите пароль</target>
+            </trans-unit>
+            <trans-unit id="6">
+                <source>Email</source>
+                <target>Электронная почта</target>
+            </trans-unit>
+             <trans-unit id="7">
+                <source>Remember me</source>
+                <target>Запомнить меня</target>
+            </trans-unit>
+        </body>
+    </file>
+</xliff>
