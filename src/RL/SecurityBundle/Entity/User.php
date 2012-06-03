@@ -1,18 +1,21 @@
 <?php
-namespace RL\SecurityBundle\Entity;
+/**
+ * @author Tux-oid
+ */
 
+namespace RL\SecurityBundle\Entity;
+use RL\SecurityBundle\Security\User\RLUserInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
-use Symfony\Component\Security\Core\User\AdvancedUserInterface;
 use Symfony\Component\Validator\Constraints as Assert;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
-
+use \RL\SecurityBundle\Entity\Group;
 
 /**
- * @ORM\Entity(repositoryClass="RL\SecurityBundle\Entity\UserRepository")
+ * @ORM\Entity()
  * @ORM\Table(name="users")
  */
-class User implements AdvancedUserInterface, \Serializable
+class User implements RLUserInterface, \Serializable
 {
 	/**
 	 * @ORM\Id()
@@ -35,8 +38,8 @@ class User implements AdvancedUserInterface, \Serializable
 	 */
 	protected $username;
 	/**
-	* @ORM\Column(type="string", length=32)
-	*/
+	 * @ORM\Column(type="string", length=32)
+	 */
 	private $salt;
 	/**
 	 * @ORM\Column(name="password", type="string", length=255)
@@ -185,7 +188,7 @@ class User implements AdvancedUserInterface, \Serializable
 	 * @ORM\Column(name="show_resp", type="boolean")
 	 */
 	protected $showResp;
-	 public function __construct()
+	public function __construct()
 	{
 		$this->active = true;
 		$this->salt = md5(uniqid(null, true));
@@ -195,147 +198,143 @@ class User implements AdvancedUserInterface, \Serializable
 	{
 		return serialize(
 				array(
-					'id'			=>$this->id,
-					'username'		=>$this->username,
-					'groups'		=> $this->groups,
-					'salt'			=> $this->salt,
-					'password'		=> $this->password,
-					'name'			=> $this->name,
-					'lastname'		=> $this->lastname,
-					'country'		=> $this->country,
-					'city'			=> $this->city,
-					'photo'			=> $this->photo,
-					'birthday'		=> $this->birthday,
-					'gender'		=> $this->gender,
-					'additional'		=> $this->additional,
-					'additionalRaw'		=> $this->additionalRaw,
-					'email'			=> $this->email,
-					'im'			=> $this->im,
-					'registrationDate'	=> $this->registrationDate,
-					'lastVisitDate'		=> $this->lastVisitDate,
-					'active'		=> $this->active,
-					'captchaLevel'		=> $this->captchaLevel,
-					'openid'		=> $this->openid,
-					'question'		=> $this->question,
-					'answer'		=> $this->answer,
-					'language'		=> $this->language,
-					'blocks'		=> $this->blocks,
-					'theme'			=> $this->theme,
-					'gmt'			=> $this->gmt,
-					'filters'		=> $this->filters,
-					'mark'			=> $this->mark,
-					'sortingType'		=> $this->sortingType,
-					'newsOnPage'		=> $this->newsOnPage,
-					'commentsOnPage'	=> $this->commentsOnPage,
-					'threadsOnPage'		=> $this->threadsOnPage,
-					'showEmail'		=> $this->showEmail,
-					'showIm'		=> $this->showIm,
-					'showAvatars'		=> $this->showAvatars,
-					'showUa'		=> $this->showUa,
-					'showResp'		=> $this->showResp
+					'id' => $this->id,
+					'username' => $this->username,
+					'groups' => $this->groups,
+					'salt' => $this->salt,
+					'password' => $this->password,
+					'name' => $this->name,
+					'lastname' => $this->lastname,
+					'country' => $this->country,
+					'city' => $this->city,
+					'photo' => $this->photo,
+					'birthday' => $this->birthday,
+					'gender' => $this->gender,
+					'additional' => $this->additional,
+					'additionalRaw' => $this->additionalRaw,
+					'email' => $this->email,
+					'im' => $this->im,
+					'registrationDate' => $this->registrationDate,
+					'lastVisitDate' => $this->lastVisitDate,
+					'active' => $this->active,
+					'captchaLevel' => $this->captchaLevel,
+					'openid' => $this->openid,
+					'question' => $this->question,
+					'answer' => $this->answer,
+					'language' => $this->language,
+					'blocks' => $this->blocks,
+					'theme' => $this->theme,
+					'gmt' => $this->gmt,
+					'filters' => $this->filters,
+					'mark' => $this->mark,
+					'sortingType' => $this->sortingType,
+					'newsOnPage' => $this->newsOnPage,
+					'commentsOnPage' => $this->commentsOnPage,
+					'threadsOnPage' => $this->threadsOnPage,
+					'showEmail' => $this->showEmail,
+					'showIm' => $this->showIm,
+					'showAvatars' => $this->showAvatars,
+					'showUa' => $this->showUa,
+					'showResp' => $this->showResp
 				)
-			);
+		);
 	}
 	public function unserialize($serializedData)
 	{
-		$unserializedData     = unserialize($serializedData);
-		$this->id        = isset($unserializedData['id']) ? $unserializedData['id'] : null;
-		$this->username        = isset($unserializedData['username']) ? $unserializedData['username'] : null;
-		$this->groups        = isset($unserializedData['groups']) ? $unserializedData['groups'] : null;
-		$this->salt        = isset($unserializedData['salt']) ? $unserializedData['salt'] : null;
-		$this->password        = isset($unserializedData['password']) ? $unserializedData['password'] : null;
-		$this->name        = isset($unserializedData['name']) ? $unserializedData['name'] : null;
-		$this->lastname        = isset($unserializedData['lastname']) ? $unserializedData['lastname'] : null;
-		$this->country        = isset($unserializedData['country']) ? $unserializedData['country'] : null;
-		$this->city        = isset($unserializedData['city']) ? $unserializedData['city'] : null;
-		$this->photo        = isset($unserializedData['photo']) ? $unserializedData['photo'] : null;
-		$this->birthday        = isset($unserializedData['birthday']) ? $unserializedData['birthday'] : null;
-		$this->gender        = isset($unserializedData['gender']) ? $unserializedData['gender'] : null;
-		$this->additional        = isset($unserializedData['additional']) ? $unserializedData['additional'] : null;
-		$this->additionalRaw        = isset($unserializedData['additionalRaw']) ? $unserializedData['additionalRaw'] : null;
-		$this->email        = isset($unserializedData['email']) ? $unserializedData['email'] : null;
-		$this->im        = isset($unserializedData['im']) ? $unserializedData['im'] : null;
-		$this->registrationDate        = isset($unserializedData['registrationDate']) ? $unserializedData['registrationDate'] : null;
-		$this->lastVisitDate        = isset($unserializedData['lastVisitDate']) ? $unserializedData['lastVisitDate'] : null;
-		$this->active        = isset($unserializedData['active']) ? $unserializedData['active'] : null;
-		$this->captchaLevel        = isset($unserializedData['captchaLevel']) ? $unserializedData['captchaLevel'] : null;
-		$this->openid        = isset($unserializedData['openid']) ? $unserializedData['openid'] : null;
-		$this->question        = isset($unserializedData['question']) ? $unserializedData['question'] : null;
-		$this->answer        = isset($unserializedData['answer']) ? $unserializedData['answer'] : null;
-		$this->language        = isset($unserializedData['language']) ? $unserializedData['language'] : null;
-		$this->blocks        = isset($unserializedData['blocks']) ? $unserializedData['blocks'] : null;
-		$this->theme        = isset($unserializedData['theme']) ? $unserializedData['theme'] : null;
-		$this->gmt        = isset($unserializedData['gmt']) ? $unserializedData['gmt'] : null;
-		$this->filters        = isset($unserializedData['filters']) ? $unserializedData['filters'] : null;
-		$this->mark        = isset($unserializedData['mark']) ? $unserializedData['mark'] : null;
-		$this->sortingType        = isset($unserializedData['sortingType']) ? $unserializedData['sortingType'] : null;
-		$this->newsOnPage        = isset($unserializedData['newsOnPage']) ? $unserializedData['newsOnPage'] : null;
-		$this->commentsOnPage        = isset($unserializedData['commentsOnPage']) ? $unserializedData['commentsOnPage'] : null;
-		$this->threadsOnPage        = isset($unserializedData['threadsOnPage']) ? $unserializedData['threadsOnPage'] : null;
-		$this->showEmail        = isset($unserializedData['showEmail']) ? $unserializedData['showEmail'] : null;
-		$this->showIm        = isset($unserializedData['showIm']) ? $unserializedData['showIm'] : null;
-		$this->showAvatars        = isset($unserializedData['showAvatars']) ? $unserializedData['showAvatars'] : null;
-		$this->showUa        = isset($unserializedData['showUa']) ? $unserializedData['showUa'] : null;
-		$this->showResp        = isset($unserializedData['showResp']) ? $unserializedData['showResp'] : null;
-		
+		$unserializedData = unserialize($serializedData);
+		$this->id = isset($unserializedData['id']) ? $unserializedData['id'] : null;
+		$this->username = isset($unserializedData['username']) ? $unserializedData['username'] : null;
+		$this->groups = isset($unserializedData['groups']) ? $unserializedData['groups'] : null;
+		$this->salt = isset($unserializedData['salt']) ? $unserializedData['salt'] : null;
+		$this->password = isset($unserializedData['password']) ? $unserializedData['password'] : null;
+		$this->name = isset($unserializedData['name']) ? $unserializedData['name'] : null;
+		$this->lastname = isset($unserializedData['lastname']) ? $unserializedData['lastname'] : null;
+		$this->country = isset($unserializedData['country']) ? $unserializedData['country'] : null;
+		$this->city = isset($unserializedData['city']) ? $unserializedData['city'] : null;
+		$this->photo = isset($unserializedData['photo']) ? $unserializedData['photo'] : null;
+		$this->birthday = isset($unserializedData['birthday']) ? $unserializedData['birthday'] : null;
+		$this->gender = isset($unserializedData['gender']) ? $unserializedData['gender'] : null;
+		$this->additional = isset($unserializedData['additional']) ? $unserializedData['additional'] : null;
+		$this->additionalRaw = isset($unserializedData['additionalRaw']) ? $unserializedData['additionalRaw'] : null;
+		$this->email = isset($unserializedData['email']) ? $unserializedData['email'] : null;
+		$this->im = isset($unserializedData['im']) ? $unserializedData['im'] : null;
+		$this->registrationDate = isset($unserializedData['registrationDate']) ? $unserializedData['registrationDate'] : null;
+		$this->lastVisitDate = isset($unserializedData['lastVisitDate']) ? $unserializedData['lastVisitDate'] : null;
+		$this->active = isset($unserializedData['active']) ? $unserializedData['active'] : null;
+		$this->captchaLevel = isset($unserializedData['captchaLevel']) ? $unserializedData['captchaLevel'] : null;
+		$this->openid = isset($unserializedData['openid']) ? $unserializedData['openid'] : null;
+		$this->question = isset($unserializedData['question']) ? $unserializedData['question'] : null;
+		$this->answer = isset($unserializedData['answer']) ? $unserializedData['answer'] : null;
+		$this->language = isset($unserializedData['language']) ? $unserializedData['language'] : null;
+		$this->blocks = isset($unserializedData['blocks']) ? $unserializedData['blocks'] : null;
+		$this->theme = isset($unserializedData['theme']) ? $unserializedData['theme'] : null;
+		$this->gmt = isset($unserializedData['gmt']) ? $unserializedData['gmt'] : null;
+		$this->filters = isset($unserializedData['filters']) ? $unserializedData['filters'] : null;
+		$this->mark = isset($unserializedData['mark']) ? $unserializedData['mark'] : null;
+		$this->sortingType = isset($unserializedData['sortingType']) ? $unserializedData['sortingType'] : null;
+		$this->newsOnPage = isset($unserializedData['newsOnPage']) ? $unserializedData['newsOnPage'] : null;
+		$this->commentsOnPage = isset($unserializedData['commentsOnPage']) ? $unserializedData['commentsOnPage'] : null;
+		$this->threadsOnPage = isset($unserializedData['threadsOnPage']) ? $unserializedData['threadsOnPage'] : null;
+		$this->showEmail = isset($unserializedData['showEmail']) ? $unserializedData['showEmail'] : null;
+		$this->showIm = isset($unserializedData['showIm']) ? $unserializedData['showIm'] : null;
+		$this->showAvatars = isset($unserializedData['showAvatars']) ? $unserializedData['showAvatars'] : null;
+		$this->showUa = isset($unserializedData['showUa']) ? $unserializedData['showUa'] : null;
+		$this->showResp = isset($unserializedData['showResp']) ? $unserializedData['showResp'] : null;
 	}
 	public function isAccountNonExpired()
 	{
 		return true;
 	}
-
 	public function isAccountNonLocked()
 	{
 		return true;
 	}
-
 	public function isCredentialsNonExpired()
 	{
 		return true;
 	}
-
 	public function isEnabled()
 	{
 		return $this->active;
 	}
 	/**
-	* @inheritDoc
-	*/
+	 * @inheritDoc
+	 */
 	public function getUsername()
 	{
 		return $this->username;
 	}
 	/**
-	* @inheritDoc
-	*/
+	 * @inheritDoc
+	 */
 	public function getSalt()
 	{
 		return $this->salt;
 	}
 	/**
-	* @inheritDoc
-	*/
+	 * @inheritDoc
+	 */
 	public function getPassword()
 	{
 		return $this->password;
 	}
 	/**
-	* @inheritDoc
-	*/
+	 * @inheritDoc
+	 */
 	public function getRoles()
 	{
 		return $this->groups->toArray();
 	}
 	/**
-	* @inheritDoc
-	*/
+	 * @inheritDoc
+	 */
 	public function eraseCredentials()
 	{
 		
 	}
 	/**
-	* @inheritDoc
-	*/
+	 * @inheritDoc
+	 */
 	public function equals(UserInterface $user)
 	{
 		return $this->username === $user->getUsername();
@@ -350,651 +349,704 @@ class User implements AdvancedUserInterface, \Serializable
 			return false;
 	}
 	/**
-	* Get id
-	*
-	* @return integer
-	*/
+	 * Get id
+	 *
+	 * @return integer
+	 */
 	public function getId()
 	{
 		return $this->id;
 	}
 	/**
-	* Set username
-	*
-	* @param string $username
-	*/
+	 * Set username
+	 *
+	 * @param string $username
+	 */
 	public function setUsername($username)
 	{
 		$this->username = $username;
 	}
 	/**
-	* Set salt
-	*
-	* @param string $salt
-	*/
+	 * Set salt
+	 *
+	 * @param string $salt
+	 */
 	public function setSalt($salt)
 	{
 		$this->salt = $salt;
 	}
 	/**
-	* Set password
-	*
-	* @param string $password
-	*/
+	 * Set password
+	 *
+	 * @param string $password
+	 */
 	public function setPassword($password)
 	{
 		$this->password = $password;
 	}
 	/**
-	* Set name
-	*
-	* @param string $name
-	*/
+	 * Set name
+	 *
+	 * @param string $name
+	 */
 	public function setName($name)
 	{
 		$this->name = $name;
 	}
 	/**
-	* Get name
-	*
-	* @return string
-	*/
+	 * Get name
+	 *
+	 * @return string
+	 */
 	public function getName()
 	{
 		return $this->name;
 	}
 	/**
-	* Set lastname
-	*
-	* @param string $lastname
-	*/
+	 * Set lastname
+	 *
+	 * @param string $lastname
+	 */
 	public function setLastname($lastname)
 	{
 		$this->lastname = $lastname;
 	}
 	/**
-	* Get lastname
-	*
-	* @return string
-	*/
+	 * Get lastname
+	 *
+	 * @return string
+	 */
 	public function getLastname()
 	{
 		return $this->lastname;
 	}
 	/**
-	* Set country
-	*
-	* @param string $country
-	*/
+	 * Set country
+	 *
+	 * @param string $country
+	 */
 	public function setCountry($country)
 	{
 		$this->country = $country;
 	}
 	/**
-	* Get country
-	*
-	* @return string
-	*/
+	 * Get country
+	 *
+	 * @return string
+	 */
 	public function getCountry()
 	{
 		return $this->country;
 	}
 	/**
-	* Set city
-	*
-	* @param string $city
-	*/
+	 * Set city
+	 *
+	 * @param string $city
+	 */
 	public function setCity($city)
 	{
 		$this->city = $city;
 	}
 	/**
-	* Get city
-	*
-	* @return string
-	*/
+	 * Get city
+	 *
+	 * @return string
+	 */
 	public function getCity()
 	{
 		return $this->city;
 	}
 	/**
-	* Set photo
-	*
-	* @param string $photo
-	*/
+	 * Set photo
+	 *
+	 * @param string $photo
+	 */
 	public function setPhoto($photo)
 	{
 		$this->photo = $photo;
 	}
 	/**
-	* Get photo
-	*
-	* @return string
-	*/
+	 * Get photo
+	 *
+	 * @return string
+	 */
 	public function getPhoto()
 	{
 		return $this->photo;
 	}
 	/**
-	* Set birthday
-	*
-	* @param datetime $birthday
-	*/
+	 * Set birthday
+	 *
+	 * @param datetime $birthday
+	 */
 	public function setBirthday($birthday)
 	{
 		$this->birthday = $birthday;
 	}
 	/**
-	* Get birthday
-	*
-	* @return datetime
-	*/
+	 * Get birthday
+	 *
+	 * @return datetime
+	 */
 	public function getBirthday()
 	{
 		return $this->birthday;
 	}
 	/**
-	* Set gender
-	*
-	* @param boolean $gender
-	*/
+	 * Set gender
+	 *
+	 * @param boolean $gender
+	 */
 	public function setGender($gender)
 	{
 		$this->gender = $gender;
 	}
 	/**
-	* Get gender
-	*
-	* @return boolean
-	*/
+	 * Get gender
+	 *
+	 * @return boolean
+	 */
 	public function getGender()
 	{
 		return $this->gender;
 	}
 	/**
-	* Set additional
-	*
-	* @param text $additional
-	*/
+	 * Set additional
+	 *
+	 * @param text $additional
+	 */
 	public function setAdditional($additional)
 	{
 		$this->additional = $additional;
 	}
 	/**
-	* Get additional
-	*
-	* @return text
-	*/
+	 * Get additional
+	 *
+	 * @return text
+	 */
 	public function getAdditional()
 	{
 		return $this->additional;
 	}
 	/**
-	* Set additionalRaw
-	*
-	* @param text $additionalRaw
-	*/
+	 * Set additionalRaw
+	 *
+	 * @param text $additionalRaw
+	 */
 	public function setAdditionalRaw($additionalRaw)
 	{
 		$this->additionalRaw = $additionalRaw;
 	}
 	/**
-	* Get additionalRaw
-	*
-	* @return text
-	*/
+	 * Get additionalRaw
+	 *
+	 * @return text
+	 */
 	public function getAdditionalRaw()
 	{
 		return $this->additionalRaw;
 	}
 	/**
-	* Set email
-	*
-	* @param string $email
-	*/
+	 * Set email
+	 *
+	 * @param string $email
+	 */
 	public function setEmail($email)
 	{
 		$this->email = $email;
 	}
 	/**
-	* Get email
-	*
-	* @return string
-	*/
+	 * Get email
+	 *
+	 * @return string
+	 */
 	public function getEmail()
 	{
 		return $this->email;
 	}
 	/**
-	* Set im
-	*
-	* @param string $im
-	*/
+	 * Set im
+	 *
+	 * @param string $im
+	 */
 	public function setIm($im)
 	{
 		$this->im = $im;
 	}
 	/**
-	* Get im
-	*
-	* @return string
-	*/
+	 * Get im
+	 *
+	 * @return string
+	 */
 	public function getIm()
 	{
 		return $this->im;
 	}
 	/**
-	* Set registrationDate
-	*
-	* @param datetime $registrationDate
-	*/
+	 * Set registrationDate
+	 *
+	 * @param datetime $registrationDate
+	 */
 	public function setRegistrationDate($registrationDate)
 	{
 		$this->registrationDate = $registrationDate;
 	}
 	/**
-	* Get registrationDate
-	*
-	* @return datetime
-	*/
+	 * Get registrationDate
+	 *
+	 * @return datetime
+	 */
 	public function getRegistrationDate()
 	{
 		return $this->registrationDate;
 	}
 	/**
-	* Set lastVisitDate
-	*
-	* @param datetime $lastVisitDate
-	*/
+	 * Set lastVisitDate
+	 *
+	 * @param datetime $lastVisitDate
+	 */
 	public function setLastVisitDate($lastVisitDate)
 	{
 		$this->lastVisitDate = $lastVisitDate;
 	}
 	/**
-	* Get lastVisitDate
-	*
-	* @return datetime
-	*/
+	 * Get lastVisitDate
+	 *
+	 * @return datetime
+	 */
 	public function getLastVisitDate()
 	{
 		return $this->lastVisitDate;
 	}
 	/**
-	* Set captchaLevel
-	*
-	* @param integer $captchaLevel
-	*/
+	 * Set captchaLevel
+	 *
+	 * @param integer $captchaLevel
+	 */
 	public function setCaptchaLevel($captchaLevel)
 	{
 		$this->captchaLevel = $captchaLevel;
 	}
 	/**
-	* Get captchaLevel
-	*
-	* @return integer
-	*/
+	 * Get captchaLevel
+	 *
+	 * @return integer
+	 */
 	public function getCaptchaLevel()
 	{
 		return $this->captchaLevel;
 	}
 	/**
-	* Set openid
-	*
-	* @param string $openid
-	*/
+	 * Set openid
+	 *
+	 * @param string $openid
+	 */
 	public function setOpenid($openid)
 	{
 		$this->openid = $openid;
 	}
 	/**
-	* Get openid
-	*
-	* @return string
-	*/
+	 * Get openid
+	 *
+	 * @return string
+	 */
 	public function getOpenid()
 	{
 		return $this->openid;
 	}
 	/**
-	* Set blocks
-	*
-	* @param array $blocks
-	*/
+	 * Set blocks
+	 *
+	 * @param array $blocks
+	 */
 	public function setBlocks($blocks)
 	{
 		$this->blocks = $blocks;
 	}
 	/**
-	* Get blocks
-	*
-	* @return array
-	*/
+	 * Get blocks
+	 *
+	 * @return array
+	 */
 	public function getBlocks()
 	{
 		return $this->blocks;
 	}
 	/**
-	* Set theme
-	*
-	* @param string $theme
-	*/
+	 * Set theme
+	 *
+	 * @param string $theme
+	 */
 	public function setTheme($theme)
 	{
 		$this->theme = $theme;
 	}
 	/**
-	* Get theme
-	*
-	* @return string
-	*/
+	 * Get theme
+	 *
+	 * @return string
+	 */
 	public function getTheme()
 	{
 		return $this->theme;
 	}
 	/**
-	* Set gmt
-	*
-	* @param string $gmt
-	*/
+	 * Set gmt
+	 *
+	 * @param string $gmt
+	 */
 	public function setGmt($gmt)
 	{
 		$this->gmt = $gmt;
 	}
 	/**
-	* Get gmt
-	*
-	* @return string
-	*/
+	 * Get gmt
+	 *
+	 * @return string
+	 */
 	public function getGmt()
 	{
 		return $this->gmt;
 	}
 	/**
-	* Set filters
-	*
-	* @param array $filters
-	*/
+	 * Set filters
+	 *
+	 * @param array $filters
+	 */
 	public function setFilters($filters)
 	{
 		$this->filters = $filters;
 	}
 	/**
-	* Get filters
-	*
-	* @return array
-	*/
+	 * Get filters
+	 *
+	 * @return array
+	 */
 	public function getFilters()
 	{
 		return $this->filters;
 	}
 	/**
-	* Set sortingType
-	*
-	* @param string $sortingType
-	*/
+	 * Set sortingType
+	 *
+	 * @param string $sortingType
+	 */
 	public function setSortingType($sortingType)
 	{
 		$this->sortingType = $sortingType;
 	}
 	/**
-	* Get sortingType
-	*
-	* @return string
-	*/
+	 * Get sortingType
+	 *
+	 * @return string
+	 */
 	public function getSortingType()
 	{
 		return $this->sortingType;
 	}
 	/**
-	* Set newsOnPage
-	*
-	* @param integer $newsOnPage
-	*/
+	 * Set newsOnPage
+	 *
+	 * @param integer $newsOnPage
+	 */
 	public function setNewsOnPage($newsOnPage)
 	{
 		$this->newsOnPage = $newsOnPage;
 	}
 	/**
-	* Get newsOnPage
-	*
-	* @return integer
-	*/
+	 * Get newsOnPage
+	 *
+	 * @return integer
+	 */
 	public function getNewsOnPage()
 	{
 		return $this->newsOnPage;
 	}
 	/**
-	* Set commentsOnPage
-	*
-	* @param integer $commentsOnPage
-	*/
+	 * Set commentsOnPage
+	 *
+	 * @param integer $commentsOnPage
+	 */
 	public function setCommentsOnPage($commentsOnPage)
 	{
 		$this->commentsOnPage = $commentsOnPage;
 	}
 	/**
-	* Get commentsOnPage
-	*
-	* @return integer
-	*/
+	 * Get commentsOnPage
+	 *
+	 * @return integer
+	 */
 	public function getCommentsOnPage()
 	{
 		return $this->commentsOnPage;
 	}
 	/**
-	* Set threadsOnPage
-	*
-	* @param integer $threadsOnPage
-	*/
+	 * Set threadsOnPage
+	 *
+	 * @param integer $threadsOnPage
+	 */
 	public function setThreadsOnPage($threadsOnPage)
 	{
 		$this->threadsOnPage = $threadsOnPage;
 	}
 	/**
-	* Get threadsOnPage
-	*
-	* @return integer
-	*/
+	 * Get threadsOnPage
+	 *
+	 * @return integer
+	 */
 	public function getThreadsOnPage()
 	{
 		return $this->threadsOnPage;
 	}
 	/**
-	* Set showEmail
-	*
-	* @param boolean $showEmail
-	*/
+	 * Set showEmail
+	 *
+	 * @param boolean $showEmail
+	 */
 	public function setShowEmail($showEmail)
 	{
 		$this->showEmail = $showEmail;
 	}
 	/**
-	* Get showEmail
-	*
-	* @return boolean
-	*/
+	 * Get showEmail
+	 *
+	 * @return boolean
+	 */
 	public function getShowEmail()
 	{
 		return $this->showEmail;
 	}
 	/**
-	* Set showIm
-	*
-	* @param boolean $showIm
-	*/
+	 * Set showIm
+	 *
+	 * @param boolean $showIm
+	 */
 	public function setShowIm($showIm)
 	{
 		$this->showIm = $showIm;
 	}
 	/**
-	* Get showIm
-	*
-	* @return boolean
-	*/
+	 * Get showIm
+	 *
+	 * @return boolean
+	 */
 	public function getShowIm()
 	{
 		return $this->showIm;
 	}
 	/**
-	* Set showAvatars
-	*
-	* @param boolean $showAvatars
-	*/
+	 * Set showAvatars
+	 *
+	 * @param boolean $showAvatars
+	 */
 	public function setShowAvatars($showAvatars)
 	{
 		$this->showAvatars = $showAvatars;
 	}
 	/**
-	* Get showAvatars
-	*
-	* @return boolean
-	*/
+	 * Get showAvatars
+	 *
+	 * @return boolean
+	 */
 	public function getShowAvatars()
 	{
 		return $this->showAvatars;
 	}
 	/**
-	* Set showUa
-	*
-	* @param boolean $showUa
-	*/
+	 * Set showUa
+	 *
+	 * @param boolean $showUa
+	 */
 	public function setShowUa($showUa)
 	{
 		$this->showUa = $showUa;
 	}
 	/**
-	* Get showUa
-	*
-	* @return boolean
-	*/
+	 * Get showUa
+	 *
+	 * @return boolean
+	 */
 	public function getShowUa()
 	{
 		return $this->showUa;
 	}
 	/**
-	* Set showResp
-	*
-	* @param boolean $showResp
-	*/
+	 * Set showResp
+	 *
+	 * @param boolean $showResp
+	 */
 	public function setShowResp($showResp)
 	{
 		$this->showResp = $showResp;
 	}
 	/**
-	* Get showResp
-	*
-	* @return boolean
-	*/
+	 * Get showResp
+	 *
+	 * @return boolean
+	 */
 	public function getShowResp()
 	{
 		return $this->showResp;
 	}
 	/**
-	* Set mark
-	*
-	* @param RL\SecurityBundle\Entity\Mark $mark
-	*/
-	public function setMark(\RL\SecurityBundle\Entity\Mark $mark)
+	 * Set mark
+	 *
+	 * @param RL\SecurityBundle\Entity\Mark $mark
+	 */
+	public function setMark(Mark $mark)
 	{
 		$this->mark = $mark;
 	}
 	/**
-	* Get mark
-	*
-	* @return RL\SecurityBundle\Entity\Mark
-	*/
+	 * Get mark
+	 *
+	 * @return RL\SecurityBundle\Entity\Mark
+	 */
 	public function getMark()
 	{
 		return $this->mark;
 	}
 	/**
-	* Add groups
-	*
-	* @param RL\SecurityBundle\Entity\Group $groups
-	*/
-	public function addGroup(\RL\SecurityBundle\Entity\Group $groups)
+	 * Add groups
+	 *
+	 * @param RL\SecurityBundle\Entity\Group $groups
+	 */
+	public function addGroup(Group $groups)
 	{
 		$this->groups[] = $groups;
 	}
 	/**
-	* Get groups
-	*
-	* @return Doctrine\Common\Collections\Collection
-	*/
+	 * Get groups
+	 *
+	 * @return Doctrine\Common\Collections\Collection
+	 */
 	public function getGroups()
 	{
 		return $this->groups;
 	}
 	/**
-	* Set language
-	*
-	* @param text $language
-	*/
+	 * Set language
+	 *
+	 * @param text $language
+	 */
 	public function setLanguage($language)
 	{
 		$this->language = $language;
 	}
 	/**
-	* Get language
-	*
-	* @return text
-	*/
+	 * Get language
+	 *
+	 * @return text
+	 */
 	public function getLanguage()
 	{
 		return $this->language;
 	}
 	/**
-	* Set active
-	*
-	* @param boolean $active
-	*/
+	 * Set active
+	 *
+	 * @param boolean $active
+	 */
 	public function setActive($active)
 	{
 		$this->active = $active;
 	}
 	/**
-	* Get active
-	*
-	* @return boolean
-	*/
+	 * Get active
+	 *
+	 * @return boolean
+	 */
 	public function getActive()
 	{
 		return $this->active;
 	}
 	/**
-	* Set question
-	*
-	* @param string $question
-	*/
+	 * Set question
+	 *
+	 * @param string $question
+	 */
 	public function setQuestion($question)
 	{
 		$this->question = $question;
 	}
 	/**
-	* Get question
-	*
-	* @return string
-	*/
+	 * Get question
+	 *
+	 * @return string
+	 */
 	public function getQuestion()
 	{
 		return $this->question;
 	}
 	/**
-	* Set answer
-	*
-	* @param string $answer
-	*/
+	 * Set answer
+	 *
+	 * @param string $answer
+	 */
 	public function setAnswer($answer)
 	{
 		$this->answer = $answer;
 	}
 	/**
-	* Get answer
-	*
-	* @return string
-	*/
+	 * Get answer
+	 *
+	 * @return string
+	 */
 	public function getAnswer()
 	{
 		return $this->answer;
+	}
+	public function getAttributes()
+	{
+		return array('id' => $this->id,
+			'username' => $this->username,
+			'groups' => $this->groups,
+			'salt' => $this->salt,
+			'password' => $this->password,
+			'name' => $this->name,
+			'lastname' => $this->lastname,
+			'country' => $this->country,
+			'city' => $this->city,
+			'photo' => $this->photo,
+			'birthday' => $this->birthday,
+			'gender' => $this->gender,
+			'additional' => $this->additional,
+			'additionalRaw' => $this->additionalRaw,
+			'email' => $this->email,
+			'im' => $this->im,
+			'registrationDate' => $this->registrationDate,
+			'lastVisitDate' => $this->lastVisitDate,
+			'active' => $this->active,
+			'captchaLevel' => $this->captchaLevel,
+			'openid' => $this->openid,
+			'question' => $this->question,
+			'answer' => $this->answer,
+			'language' => $this->language,
+			'blocks' => $this->blocks,
+			'theme' => $this->theme,
+			'gmt' => $this->gmt,
+			'filters' => $this->filters,
+			'mark' => $this->mark,
+			'sortingType' => $this->sortingType,
+			'newsOnPage' => $this->newsOnPage,
+			'commentsOnPage' => $this->commentsOnPage,
+			'threadsOnPage' => $this->threadsOnPage,
+			'showEmail' => $this->showEmail,
+			'showIm' => $this->showIm,
+			'showAvatars' => $this->showAvatars,
+			'showUa' => $this->showUa,
+			'showResp' => $this->showResp);
+	}
+	public function getIdentity()
+	{
+		return md5($this->username);
+	}
+	public function isAnonymous()
+	{
+		return FALSE;
+	}
+	public function isActive()
+	{
+		return $this->active;
 	}
 }

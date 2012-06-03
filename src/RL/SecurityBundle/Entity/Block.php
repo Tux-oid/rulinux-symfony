@@ -1,14 +1,16 @@
 <?php
+/**
+ * @author Tux-oid
+ */
 
 namespace RL\SecurityBundle\Entity;
-
 use Doctrine\ORM\Mapping as ORM;
 
 /**
  * @ORM\Entity
  * @ORM\Table(name="blocks")
  */
-class Block/* implements Serializable*/
+class Block implements \Serializable
 {
 	/**
 	 * @ORM\Id
@@ -25,48 +27,56 @@ class Block/* implements Serializable*/
 	 */
 	protected $description;
 	/**
-	* Get id
-	*
-	* @return integer
-	*/
+	 * Get id
+	 *
+	 * @return integer
+	 */
 	public function getId()
 	{
 		return $this->id;
 	}
 	/**
-	* Set name
-	*
-	* @param string $name
-	*/
+	 * Set name
+	 *
+	 * @param string $name
+	 */
 	public function setName($name)
 	{
 		$this->name = $name;
 	}
 	/**
-	* Get name
-	*
-	* @return string
-	*/
+	 * Get name
+	 *
+	 * @return string
+	 */
 	public function getName()
 	{
 		return $this->name;
 	}
 	/**
-	* Set description
-	*
-	* @param string $description
-	*/
+	 * Set description
+	 *
+	 * @param string $description
+	 */
 	public function setDescription($description)
 	{
 		$this->description = $description;
 	}
 	/**
-	* Get description
-	*
-	* @return string
-	*/
+	 * Get description
+	 *
+	 * @return string
+	 */
 	public function getDescription()
 	{
 		return $this->description;
+	}
+	public function serialize()
+	{
+		
+	}
+	public function unserialize($serialized)
+	{
+		
 	}
 }

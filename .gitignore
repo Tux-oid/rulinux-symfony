@@ -9,3 +9,5 @@
 /.settings
 /.project
 /.buildpath
+/error.log
+/access.log

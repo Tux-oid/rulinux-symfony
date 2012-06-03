@@ -1,44 +1,60 @@
 security:
-        encoders:
-                Symfony\Component\Security\Core\User\User: plaintext
+    factories: # подключение security расширений RL
+          - "%kernel.root_dir%/../src/RL/SecurityBundle/Resources/config/factories.yml"
+          
+    encoders:
+#        RL\SecurityBundle\Security\User\SampleUser: plaintext
+        RL\SecurityBundle\Entity\User:
+          algorithm: md5
+          iterations: 1
+          encode_as_base64: false
 
-        role_hierarchy:
-                ROLE_MODER:       ROLE_USER
-                ROLE_ADMIN:       ROLE_MODER
-                ROLE_SUPER_ADMIN: [ROLE_USER, ROLE_ADMIN, ROLE_ALLOWED_TO_SWITCH]
+    role_hierarchy:
+        ROLE_ADMIN:       [ROLE_MODER, ROLE_ALLOWED_TO_SWITCH]
+        ROLE_MODER:       ROLE_USER
+        ROLE_ANONYMOUS:   ROLE_USER
+#        ROLE_SUPER_ADMIN: [ROLE_ADMIN, ROLE_ALLOWED_TO_SWITCH]
 
-        encoders:
-                RL\SecurityBundle\Entity\User:
-                        algorithm:   md5
-                        iterations: 1
-                        encode_as_base64: false
+    providers:
+#        in_memory:
+#            users:
+#                user:  { password: userpass, roles: [ 'ROLE_USER' ] }
+#                admin: { password: adminpass, roles: [ 'ROLE_ADMIN' ] }
+          chain_provider: 
+                  providers: [team_blog.anonymous.user.provider, db_users]
+          team_blog.anonymous.user.provider:
+          db_users:
+            entity: {class: RL\SecurityBundle\Entity\User, property: username}
 
-        providers:
-                main:
-                        entity: {class: RL\SecurityBundle\Entity\User, property: username}
+    firewalls: 
+
+        default: 
+            
+            pattern: ^/  
+
+            form-login: 
+                login_path: /login
+                check_path: /login_check
+
+            logout:
+                path: /logout
+                target: /
+
+            remember-me:
+                key: %secret%
+                lifetime: 2592000
+                path: /
+                domain: ~
+
+            # RL Авторизация ананимусов
+            team-blog-anonymous:
+                key: %secret%
+                lifetime: 2592000
+                path: /
+                domain: ~
 
 
-        firewalls:
-                dev:
-                        pattern:  ^/(_(profiler|wdt)|css|images|js)/
-                        security: false
+    access_control:
+        #- { path: ^/login, roles: IS_AUTHENTICATED_ANONYMOUSLY, requires_channel: https }
+        #- { path: ^/_internal, roles: IS_AUTHENTICATED_ANONYMOUSLY, ip: 127.0.0.1 }
 
-                login:
-                        pattern:  ^/login$
-                        security: false
-
-                secured_area:
-                        pattern:    ^/
-                        form_login:
-                                check_path: /login_check
-                                login_path: /login
-                        logout:
-                                path:   /logout
-                                target: /
-                        anonymous: ~
-                        #http_basic:
-                        #    realm: "Secured Demo Area"
-
-        access_control:
-                #- { path: ^/login, roles: IS_AUTHENTICATED_ANONYMOUSLY, requires_channel: https }
-                #- { path: ^/_internal, roles: IS_AUTHENTICATED_ANONYMOUSLY, ip: 127.0.0.1 }

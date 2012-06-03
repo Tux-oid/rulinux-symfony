@@ -1,13 +1,17 @@
 <?php
+/**
+ * @author Ax-xa-xa 
+ * @author Tux-oid
+ */
 
 namespace RL\SecurityBundle\Controller;
-
-use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\Security\Core\SecurityContext;
+use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Component\Security\Core\Encoder\MessageDigestPasswordEncoder;
 use Symfony\Component\HttpFoundation\Request;
-use RL\SecurityBundle\Entity\RegistrationFirstForm;
-use RL\SecurityBundle\Entity\PasswordRestoringForm;
+use RL\SecurityBundle\Form\RegistrationFirstForm;
+use RL\SecurityBundle\Form\PasswordRestoringForm;
 use RL\SecurityBundle\Entity\User;
 use RL\SecurityBundle\Entity\Group;
 use RL\SecurityBundle\Entity\SettingsRepository;
@@ -16,13 +20,29 @@ use RL\SecurityBundle\Form\RegisterFirstType;
 use RL\SecurityBundle\Form\RestorePasswordType;
 use LightOpenID\openid;
 
+/**
+ * Security controller
+ */
 class SecurityController extends Controller
 {
+	/**
+	 * Declares Symfony Security routes.
+	 *
+	 * @Route("/logout", name="logout")
+	 * @Route("/login_check", name="login_check")
+	 */
+	public function fakeAction()
+	{
+	}
+	/**
+	 * @Route("/login", name="login")
+	 */
 	public function loginAction()
 	{
+		$theme = $this->get('rl_themes.theme.provider');
 		$request = $this->getRequest();
 		$session = $request->getSession();
-		if ($request->attributes->has(SecurityContext::AUTHENTICATION_ERROR))
+		if($request->attributes->has(SecurityContext::AUTHENTICATION_ERROR))
 		{
 			$error = $request->attributes->get(SecurityContext::AUTHENTICATION_ERROR);
 		}
@@ -31,70 +51,85 @@ class SecurityController extends Controller
 			$error = $session->get(SecurityContext::AUTHENTICATION_ERROR);
 			$session->remove(SecurityContext::AUTHENTICATION_ERROR);
 		}
-		return $this->render('RLSecurityBundle:Security:login.html.twig', array(
-		'last_username' => $session->get(SecurityContext::LAST_USERNAME),
-		'error'         => $error,
-		));
+		return $this->render($theme->getPath('login.html.twig'), array(
+				'last_username' => $session->get(SecurityContext::LAST_USERNAME),
+				'error' => $error,
+			));
 	}
+	/**
+	 * @Route("/register", name="register")
+	 */
 	public function registrationAction()
 	{
 		$newUser = new RegistrationFirstForm;
-		$form = $this->createForm(new RegisterFirstType(), array());
-		return $this->render('RLSecurityBundle:Security:registrationFirstPage.html.twig', array('form' => $form->createView()));
+		$theme = $this->get('rl_themes.theme.provider');
+		$form = $this->createForm(new RegisterFirstType(), $newUser);
+		return $this->render($theme->getPath('registrationFirstPage.html.twig'), array('form' => $form->createView()));
 	}
+	/**
+	 * @Route("/register_send", name="register_send")
+	 */
 	public function registrationSendAction(Request $request)
 	{
+		$theme = $this->get('rl_themes.theme.provider');
 		$method = $request->getMethod();
 		if($method == 'POST')
 		{
 			$newUser = new RegistrationFirstForm;
-			$form = $this->createForm(new RegisterFirstType(), array());
+			$form = $this->createForm(new RegisterFirstType(), $newUser);
 			$form->bindRequest($request);
 			if($form->isValid())
 			{
 				$mailer = $this->get('mailer');
 				$secret = $this->container->getParameter('secret');
-				$link = $this->generateUrl('register_confirm', array('username'=>$newUser->getName(), 'password'=>$newUser->getPassword(), 'email'=>$newUser->getEmail(), 'hash'=>md5(md5($newUser->getName().$newUser->getPassword().$newUser->getEmail().$secret))), true);
-				$user=$newUser->getName();
-				$site=$request->getHttpHost();
+				$link = $this->generateUrl('register_confirm', array('username' => $newUser->getName(), 'password' => $newUser->getPassword(), 'email' => $newUser->getEmail(), 'hash' => md5(md5($newUser->getName().$newUser->getPassword().$newUser->getEmail().$secret))), true);
+				$user = $newUser->getName();
+				$site = $request->getHttpHost();
 				$message = \Swift_Message::newInstance()
-				->setSubject('Registration letter')//FIXME:load email from settings
-				->setFrom('noemail@rulinux.net')
-				->setTo($newUser->getEmail())
-				->setContentType('text/html')
-				->setBody($this->renderView('RLSecurityBundle:Security:registrationLetter.html.twig', array('link' =>$link, 'user'=>$user, 'site'=>$site)));
+					->setSubject('Registration letter')
+					->setFrom('noemail@rulinux.net')//FIXME:load email from settings
+					->setTo($newUser->getEmail())
+					->setContentType('text/html')
+					->setBody($this->renderView($theme->getPath('registrationLetter.html.twig'), array('link' => $link, 'user' => $user, 'site' => $site)));
 				$mailer->send($message);
 				$legend = 'Registration mail is sended.';
 				$text = 'Registration mail is sended. Please check your email.';
-				$title='Mail sended';
-				return $this->render('RLSecurityBundle:Default:fieldset.html.twig', array('legend'=>$legend, 'text'=>$text, 'title'=>$title));
+				$title = 'Mail sended';
+				return $this->render($theme->getPath('fieldset.html.twig'), array('legend' => $legend, 'text' => $text, 'title' => $title));
 			}
 			else
 				throw new \Exception('Registration form is invalid.');
 		}
 		else
 			return $this->redirect($this->generateUrl('index'));
-		
 	}
+	/**
+	 * @Route("/register_confirm/{username}/{password}/{email}/{hash}", name="register_confirm")
+	 */
 	public function registrationConfirmAction($username, $password, $email, $hash)
 	{
+		$theme = $this->get('rl_themes.theme.provider');
 		$secret = $this->container->getParameter('secret');
 		if($hash == md5(md5($username.$password.$email.$secret)))
 		{
 			$newUser = new User;
-			$form = $this->createForm(new RegisterType(), array());
-			return $this->render('RLSecurityBundle:Security:registrationSecondPage.html.twig',array('username'=>$username, 'password'=>$password, 'email'=>$email, 'form'=>$form->createView()));
+			$form = $this->createForm(new RegisterType(), $newUser);
+			return $this->render($theme->getPath('registrationSecondPage.html.twig'), array('username' => $username, 'password' => $password, 'email' => $email, 'form' => $form->createView()));
 		}
 		else
 			throw new \Exception('Hash is invalid');
 	}
+	/**
+	 * @Route("/registration_save", name="registration_save")
+	 */
 	public function registrationSaveAction(Request $request)
 	{
+		$theme = $this->get('rl_themes.theme.provider');
 		$method = $request->getMethod();
 		if($method == 'POST')
 		{
 			$newUser = new User;
-			$form = $this->createForm(new RegisterType(), array());
+			$form = $this->createForm(new RegisterType(), $newUser);
 			$form->bindRequest($request);
 			if($form->isValid())
 			{
@@ -126,8 +161,8 @@ class SecurityController extends Controller
 				$em->flush();
 				$legend = 'Registration completed.';
 				$text = 'Registration completed. Now you can <a href="'.$this->generateUrl('login').'">login</a> on this site.';
-				$title='';
-				return $this->render('RLSecurityBundle:Default:fieldset.html.twig', array('legend'=>$legend, 'text'=>$text, 'title'=>$title));
+				$title = '';
+				return $this->render($theme->getPath('fieldset.html.twig'), array('legend' => $legend, 'text' => $text, 'title' => $title));
 			}
 			else
 				throw new \Exception('Registration form is invalid.');
@@ -135,8 +170,12 @@ class SecurityController extends Controller
 		else
 			return $this->redirect($this->generateUrl('index'));
 	}
+	/**
+	 * @Route("/openid_check", name="openid_check")
+	 */
 	public function openidCheckAction(Request $request)
 	{
+		$theme = $this->get('rl_themes.theme.provider');
 		try
 		{
 			$openid = new \LightOpenID($request->getHttpHost());
@@ -172,42 +211,48 @@ class SecurityController extends Controller
 						//FIXME: login user by openid
 						$legend = 'msg';
 						$text = 'login user';
-						$title='';
-						return $this->render('RLSecurityBundle:Default:fieldset.html.twig', array('legend'=>$legend, 'text'=>$text, 'title'=>$title));
+						$title = '';
+						return $this->render($theme->getPath('fieldset.html.twig'), array('legend' => $legend, 'text' => $text, 'title' => $title));
 					}
 					else
 					{
 						$attr = $openid->getAttributes();
 						$email = '';
 						$newUser = new User;
-						$form = $this->createForm(new RegisterType(), array());
-						return $this->render('RLSecurityBundle:Security:openIDRegistration.html.twig',array('openid'=>$identity, 'password'=>'', 'email'=>$email, 'form'=>$form->createView()));
+						$form = $this->createForm(new RegisterType(), $newUser);
+						return $this->render($theme->getPath('openIDRegistration.html.twig'), array('openid' => $identity, 'password' => '', 'email' => $email, 'form' => $form->createView()));
 					}
-					
 				}
 				else
 					throw new \Exception('OpenID is invalid');
 			}
-
 		}
 		catch(ErrorException $e)
 		{
 			throw new \Exception($e->getMessage());
 		}
 	}
+	/**
+	 * @Route("/restore_password", name="restore_password")
+	 */
 	public function restorePasswordAction()
 	{
+		$theme = $this->get('rl_themes.theme.provider');
 		$resForm = new PasswordRestoringForm;
-		$form = $this->createForm(new RestorePasswordType(), array());
-		return $this->render('RLSecurityBundle:Security:passwordRestoringForm.html.twig', array('form' => $form->createView()));
+		$form = $this->createForm(new RestorePasswordType(), $resForm);
+		return $this->render($theme->getPath('passwordRestoringForm.html.twig'), array('form' => $form->createView()));
 	}
+	/**
+	 * @Route("/restore_password_check", name="restore_password_check")
+	 */
 	public function restorePasswordCheckAction(Request $request)
 	{
+		$theme = $this->get('rl_themes.theme.provider');
 		$method = $request->getMethod();
 		if($method == 'POST')
 		{
 			$resForm = new PasswordRestoringForm;
-			$form = $this->createForm(new RestorePasswordType(), array());
+			$form = $this->createForm(new RestorePasswordType(), $resForm);
 			$form->bindRequest($request);
 			if($form->isValid())
 			{
@@ -223,19 +268,16 @@ class SecurityController extends Controller
 				if($user->getEmail() != $resForm->getEmail())
 				{
 					throw new \Exception('Email is wrong');
-					
 				}
 				if($user->getQuestion() != $resForm->getQuestion())
 				{
 					throw new \Exception('Question is wrong');
-					
 				}
 				if($user->getAnswer() != $resForm->getAnswer())
 				{
 					throw new \Exception('Answer is wrong');
-					
 				}
-				$password = md5(uniqid(rand(),true));
+				$password = md5(uniqid(rand(), true));
 				$password = substr($password, 1, 9);
 				$encoder = new MessageDigestPasswordEncoder('md5', false, 1);
 				$encodedPassword = $encoder->encodePassword($password, $user->getSalt());
@@ -246,16 +288,16 @@ class SecurityController extends Controller
 				$em->flush();
 				$mailer = $this->get('mailer');
 				$message = \Swift_Message::newInstance()
-				->setSubject('Password restoring')
-				->setFrom('noemail@rulinux.net')//FIXME:load email from settings
-				->setTo($resForm->getEmail())
-				->setContentType('text/html')
-				->setBody($this->renderView('RLSecurityBundle:Security:passwordRestoringLetter.html.twig', array('username'=>$username, 'password'=>$password)));
+					->setSubject('Password restoring')
+					->setFrom('noemail@rulinux.net')//FIXME:load email from settings
+					->setTo($resForm->getEmail())
+					->setContentType('text/html')
+					->setBody($this->renderView($theme->getPath('passwordRestoringLetter.html.twig'), array('username' => $username, 'password' => $password)));
 				$mailer->send($message);
 				$legend = 'Mail with your new password is sended.';
 				$text = 'Mail with your new password is sended. Please check your email.';
-				$title='Mail sended';
-				return $this->render('RLSecurityBundle:Default:fieldset.html.twig', array('legend'=>$legend, 'text'=>$text, 'title'=>$title));
+				$title = 'Mail sended';
+				return $this->render($theme->getPath('fieldset.html.twig'), array('legend' => $legend, 'text' => $text, 'title' => $title));
 			}
 			else
 				throw new \Exception('Password restoring form is invalid');
@@ -264,4 +306,3 @@ class SecurityController extends Controller
 			return $this->redirect($this->generateUrl('index'));
 	}
 }
-?>

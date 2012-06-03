@@ -1,7 +1,9 @@
 <?php
+/**
+ * @author Tux-oid
+ */
 
 namespace RL\SecurityBundle\Entity;
-
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -25,46 +27,46 @@ class Settings
 	 */
 	protected $value;
 	/**
-	* Get id
-	*
-	* @return integer
-	*/
+	 * Get id
+	 *
+	 * @return integer
+	 */
 	public function getId()
 	{
 		return $this->id;
 	}
 	/**
-	* Set name
-	*
-	* @param text $name
-	*/
+	 * Set name
+	 *
+	 * @param text $name
+	 */
 	public function setName($name)
 	{
 		$this->name = $name;
 	}
 	/**
-	* Get name
-	*
-	* @return text
-	*/
+	 * Get name
+	 *
+	 * @return text
+	 */
 	public function getName()
 	{
 		return $this->name;
 	}
 	/**
-	* Set value
-	*
-	* @param text $value
-	*/
+	 * Set value
+	 *
+	 * @param text $value
+	 */
 	public function setValue($value)
 	{
 		$this->value = $value;
 	}
 	/**
-	* Get value
-	*
-	* @return text
-	*/
+	 * Get value
+	 *
+	 * @return text
+	 */
 	public function getValue()
 	{
 		return $this->value;

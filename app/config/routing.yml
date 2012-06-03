@@ -1,16 +1,20 @@
+RLThemesBundle:
+    resource: "@RLThemesBundle/Resources/config/routing.yml"
+#    resource: "@RLThemesBundle/Controller/"
+#    type:     annotation
+    prefix:   /
+
+RLMainBundle:
+    resource: "@RLMainBundle/Controller/"
+    type:     annotation
+    prefix:   /
+
 RLSecurityBundle:
-#         resource: "@RLSecurityBundle/Controller/"
-#         type:     annotation
-#         prefix:   /
-        resource: "@RLSecurityBundle/Resources/config/routing.yml"
-        prefix:   /
+    resource: "@RLSecurityBundle/Controller/"
+    type:     annotation
+    prefix:   /
 
 # Internal routing configuration to handle ESI
 #_internal:
-#       resource: "@FrameworkBundle/Resources/config/routing/internal.xml"
-#       prefix:   /_internal
-
-index:
-        pattern: /
-        defaults: {_controller: RLSecurityBundle:Security:registration}
-
+#   resource: "@FrameworkBundle/Resources/config/routing/internal.xml"
+#   prefix:   /_internal

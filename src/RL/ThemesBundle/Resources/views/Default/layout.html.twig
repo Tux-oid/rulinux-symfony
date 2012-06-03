@@ -1,0 +1,36 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+    "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+    <title>{% block title %}TITLE_BLOCK{% endblock %}</title>
+</head>
+<style>
+    * {margin:0px; padding:0px;}
+    html, body {width:100%; height:100%;}
+    table.layout {width:1000px; height: 100%; margin: auto;}
+    table td {vertical-align: text-top;}
+    tr.header {height:100px; background: silver;}
+    tr.footer {height:60px; background: gray;}
+    td.aside {width:330px; background: #CED4E5;}
+</style>
+<body>
+    <table class="layout" cellpadding="0" cellspacing="0">
+        <tr class="header">
+            <td colspan="2">{% block header %}HEADER_BLOCK{% endblock %}</td>
+        </tr>
+        <tr class="middle">
+        {% if user.blocks|length > 0 %}
+            <td class="aside">{% block aside %}ASIDE_BLOCK{% endblock %}</td>
+            <td class="content">
+		{% else %}
+            <td colspan="2" class="content">
+		{% endif %}
+                {% block content %}CONTENT_BLOCK{% endblock %}
+            </td>
+        </tr>
+        <tr class="footer">
+            <td colspan="2">FOOTER</td>
+        </tr>
+    </table>
+</body>
+</html>

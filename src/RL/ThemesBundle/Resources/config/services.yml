@@ -1,0 +1,8 @@
+parameters:
+  rl_themes.theme.provider.class: RL\ThemesBundle\Theme\ThemeProvider
+
+services:
+  rl_themes.theme.provider:
+    class: %rl_themes.theme.provider.class%
+    arguments: 
+      - "@security.context"

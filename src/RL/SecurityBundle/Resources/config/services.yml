@@ -1,0 +1,28 @@
+# src/RL/MainBundle/Resources/config/services.yml
+parameters:
+  security.authentication.listener.form.class: RL\SecurityBundle\Security\Firewall\UsernamePasswordFormAuthenticationListener
+  team_blog.anonymous.user.provider.class: RL\SecurityBundle\Security\User\AnonymousUserProvider
+  team_blog.anonymous.authentication.listener.class: RL\SecurityBundle\Security\Firewall\AnonymousAuthenticationListener
+  team_blog.anonymous.defaults:
+  team_blog.anonymous.class:
+
+services:
+  team_blog.anonymous.user.provider:
+    class: %team_blog.anonymous.user.provider.class%
+    arguments: 
+      - "@security.context"
+      - "%team_blog.anonymous.class%"
+      - "%team_blog.anonymous.defaults%"
+    tags: 
+     - {name: kernel.event_listener, event: kernel.response, method: saveUser}
+
+  team_blog.anonymous.authentication.listener:
+    class: %team_blog.anonymous.authentication.listener.class%
+    arguments: 
+      - "@security.context"
+      - "@team_blog.anonymous.user.provider"
+      - "%team_blog.anonymous.defaults%"
+      - "@doctrine"
+      - "@?logger"
+    tags:
+      - {name: monolog.logger, channel: security}

@@ -1,0 +1,59 @@
+{% extends '::base.html.twig'%}
+
+{%block title%}
+Registration of new user
+{%endblock%}
+
+{%block body%}
+<form action="{{path('register_send')}}" method="post" {{form_enctype(form)}}>
+{{form_errors(form)}}
+<table>
+<tr>
+<td>
+{{form_label(form.name)}}
+</td>
+<td>
+{{form_widget(form.name)}}
+</td>
+<td>
+{{form_errors(form.name)}}
+</td>
+</tr>
+<tr>
+<td>
+{{form_label(form.password)}}
+</td>
+<td>
+{{form_widget(form.password)}}
+</td>
+<td>
+{{form_errors(form.password)}}
+</td>
+</tr>
+<tr>
+<td>
+{{form_label(form.validation)}}
+</td>
+<td>
+{{form_widget(form.validation)}}
+</td>
+<td>
+{{form_errors(form.validation)}}
+</td>
+</tr>
+<tr>
+<td>
+{{form_label(form.email)}}
+</td>
+<td>
+{{form_widget(form.email)}}
+</td>
+<td>
+{{form_errors(form.email)}}
+</td>
+</tr>
+</table>
+{{form_rest(form)}}
+<input type="submit">
+</form>
+{%endblock%}

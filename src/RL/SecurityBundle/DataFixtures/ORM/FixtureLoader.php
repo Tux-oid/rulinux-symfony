@@ -1,7 +1,9 @@
 <?php
+/**
+ * @author Tux-oid 
+ */
 
 namespace RL\SecurityBundle\DataFixtures\ORM;
-
 use Doctrine\Common\Persistence\ObjectManager;
 use Doctrine\Common\DataFixtures\FixtureInterface;
 use RL\SecurityBundle\Entity\User;
@@ -13,6 +15,10 @@ class FixtureLoader implements FixtureInterface
 {
 	public function load(ObjectManager $manager)
 	{
+		$anonymousRole = new Group();
+		$anonymousRole->setName('ROLE_ANONYMOUS');
+		$anonymousRole->setDescription('anonymouses');
+		$manager->persist($anonymousRole);
 		$userRole = new Group();
 		$userRole->setName('ROLE_USER');
 		$userRole->setDescription('site users');
@@ -24,7 +30,6 @@ class FixtureLoader implements FixtureInterface
 		$adminRole = new Group();
 		$adminRole->setName('ROLE_ADMIN');
 		$adminRole->setDescription('site administrators');
-		//TODO: add super admin role
 		$manager->persist($adminRole);
 		$captchaLevel = 0;
 		$captchaSetting = new Settings();
@@ -92,11 +97,43 @@ class FixtureLoader implements FixtureInterface
 		$gmtSetting->setValue($gmt);
 		$manager->persist($gmtSetting);
 		//TODO: other values
+		//adding anonymous
+		$anonymous = new User();
+		$anonymous->setUsername('anonymous');
+		$anonymous->setName('unregistered users');
+		$anonymous->setLastName('');
+		$anonymous->setEmail('anonymous@example.com');
+		$anonymous->setSalt(md5(time()));
+		$anonymous->setAdditional('');
+		$anonymous->setAdditionalRaw('');
+		$anonymous->setBirthday(new \DateTime('now'));
+		$anonymous->setGender(1);
+		$anonymous->setRegistrationDate(new \DateTime('2009-02-12 14:42:51'));
+		$anonymous->setLastVisitDate(new \DateTime('now'));
+		$anonymous->setCaptchaLevel($captchaLevel);
+		$anonymous->setTheme($theme);
+		$anonymous->setSortingType($sortingType);
+		$anonymous->setNewsOnPage($newsOnPage);
+		$anonymous->setThreadsOnPage($threadsOnPage);
+		$anonymous->setCommentsOnPage($commentsOnPage);
+		$anonymous->setShowEmail($showEmail);
+		$anonymous->setShowIm($showIm);
+		$anonymous->setShowAvatars($showAvatars);
+		$anonymous->setShowUa($showUa);
+		$anonymous->setShowResp($showResp);
+		$anonymous->setLanguage($language);
+		$anonymous->setGmt($gmt);
+		$encoder = new MessageDigestPasswordEncoder('md5', false, 1);
+		$password = $encoder->encodePassword('anonymous', $anonymous->getSalt());
+		$anonymous->setPassword($password);
+		$anonymous->getGroups()->add($anonymousRole);
+		$manager->persist($anonymous);
+		//Adding admin 
 		$admin = new User();
 		$admin->setUsername('Admin');
 		$admin->setName('Site Administrator');
 		$admin->setLastName('');
-		$admin->setEmail('noemail@example.com');
+		$admin->setEmail('admin@example.com');
 		$admin->setSalt(md5(time()));
 		$admin->setAdditional('');
 		$admin->setAdditionalRaw('');

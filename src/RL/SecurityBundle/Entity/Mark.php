@@ -1,14 +1,16 @@
 <?php
+/**
+ * @author Tux-oid
+ */
 
 namespace RL\SecurityBundle\Entity;
-
 use Doctrine\ORM\Mapping as ORM;
 
 /**
  * @ORM\Entity
  * @ORM\Table(name="marks")
  */
-class Mark /*implements Serializable*/
+class Mark /* implements Serializable */
 {
 	/**
 	 * @ORM\Id
@@ -33,64 +35,64 @@ class Mark /*implements Serializable*/
 		$this->users = new \Doctrine\Common\Collections\ArrayCollection();
 	}
 	/**
-	* Get id
-	*
-	* @return integer
-	*/
+	 * Get id
+	 *
+	 * @return integer
+	 */
 	public function getId()
 	{
 		return $this->id;
 	}
 	/**
-	* Set name
-	*
-	* @param string $name
-	*/
+	 * Set name
+	 *
+	 * @param string $name
+	 */
 	public function setName($name)
 	{
 		$this->name = $name;
 	}
 	/**
-	* Get name
-	*
-	* @return string
-	*/
+	 * Get name
+	 *
+	 * @return string
+	 */
 	public function getName()
 	{
 		return $this->name;
 	}
 	/**
-	* Set description
-	*
-	* @param string $description
-	*/
+	 * Set description
+	 *
+	 * @param string $description
+	 */
 	public function setDescription($description)
 	{
 		$this->description = $description;
 	}
 	/**
-	* Get description
-	*
-	* @return string
-	*/
+	 * Get description
+	 *
+	 * @return string
+	 */
 	public function getDescription()
 	{
 		return $this->description;
 	}
 	/**
-	* Add users
-	*
-	* @param RL\SecurityBundle\Entity\User $users
-	*/
+	 * Add users
+	 *
+	 * @param RL\SecurityBundle\Entity\User $users
+	 */
 	public function addUser(\RL\SecurityBundle\Entity\User $users)
 	{
 		$this->users[] = $users;
 	}
 	/**
-	* Get users
-	*
-	* @return Doctrine\Common\Collections\Collection
-	*/
+	 * Get users
+	 *
+	 * @return Doctrine\Common\Collections\Collection
+	 */
 	public function getUsers()
 	{
 		return $this->users;

@@ -4,7 +4,7 @@ imports:
 
 framework:
     #esi:             ~
-    translator:      { fallback: en }
+    #translator:      { fallback: %locale% }
     secret:          %secret%
     charset:         UTF-8
     router:          { resource: "%kernel.root_dir%/config/routing.yml" }
@@ -58,3 +58,12 @@ swiftmailer:
 jms_security_extra:
     secure_controllers:  true
     secure_all_services: false
+
+rl_security:
+    anonymous:
+        class: RL\SecurityBundle\Security\User\AnonymousUser
+        defaults: 
+            username: anonymous
+            enabled: true
+            blocks: [Authentication, Links, Gallery, Tracker]
+

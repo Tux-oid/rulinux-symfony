@@ -61,6 +61,7 @@
     git=http://github.com/symfony/AsseticBundle.git
     target=/bundles/Symfony/Bundle/AsseticBundle
     version=v1.0.1
+
 [doctrine-fixtures]
     git=http://github.com/doctrine/data-fixtures.git
 
@@ -70,6 +71,3 @@
 
 [LightOpenId]
     git=git://github.com/formapro/LightOpenID.git
-[OpenIDAuthBundle]
-    git=git://github.com/KainHaart/OpenIDAuthBundle.git
-    target=/bundles/KainHaart/OpenIDAuthBundle

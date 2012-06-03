@@ -1,0 +1,6 @@
+services:
+  team_blog.anonymous.security.factory:
+    class: RL\SecurityBundle\Security\Factory\AnonymousSecurityFactory
+    public: false
+    tags: 
+      - {name: security.listener.factory}

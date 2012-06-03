@@ -1,0 +1,21 @@
+{% extends theme.path('layout.html.twig') %}
+
+{% block header %}
+{% endblock %}
+
+{% block aside %}
+
+  {# Authentication block #}
+  {% if 'Authentication' in user.blocks %}
+	{% render "RLMainBundle:Block:renderAuthentication" %}
+  {% endif %}
+
+{% endblock %}
+
+{% block content %}
+    <p>
+This is content! This is content! This is content! This is content! This is content! This is content!
+This is content! This is content! This is content! This is content! This is content! This is content!
+    </p>
+{% endblock %}
+  
