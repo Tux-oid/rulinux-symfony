@@ -46,7 +46,7 @@ class ThemeProvider implements ThemeProviderInterface
 				{
 					return $this->themes['Default'];
 				}
-				return $bundleName.':'.$themeName;
+				return $bundleName.':Default';
 			}
 			return $this->themes[$themeName];
 		}

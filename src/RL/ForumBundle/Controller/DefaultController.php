@@ -14,6 +14,12 @@ class DefaultController extends Controller
 	 */
 	public function forumAction()
 	{
-		return $this->render('RLForumBundle:Default:index.html.twig', array('name' => 'name'));
+		$theme = $this->get('rl_themes.theme.provider');
+		//'RLForumBundle:Default:index.html.twig'
+		return $this->render($theme->getPath('RLForumBundle', 'forum.html.twig'),
+		array('theme' => $theme, 
+		'user' => $this->get('security.context')->getToken()->getUser(),
+		)
+		);
 	}
 }

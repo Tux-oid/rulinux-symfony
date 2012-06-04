@@ -188,6 +188,10 @@ class User implements RLUserInterface, \Serializable
 	 * @ORM\Column(name="show_resp", type="boolean")
 	 */
 	protected $showResp;
+	/**
+	 * @ORM\OneToMany(targetEntity="RL\ForumBundle\Entity\Message", mappedBy="user")
+	 */
+	protected $comments;
 	public function __construct()
 	{
 		$this->active = true;
@@ -1048,5 +1052,23 @@ class User implements RLUserInterface, \Serializable
 	public function isActive()
 	{
 		return $this->active;
+	}
+	/**
+	 * Add comments
+	 *
+	 * @param RL\ForumBundle\Entity\Message $comments
+	 */
+	public function addMessage(\RL\ForumBundle\Entity\Message $comments)
+	{
+		$this->comments[] = $comments;
+	}
+	/**
+	 * Get comments
+	 *
+	 * @return Doctrine\Common\Collections\Collection 
+	 */
+	public function getComments()
+	{
+		return $this->comments;
 	}
 }

@@ -69,32 +69,11 @@ class Message
 	/**
 	 * @ORM\Column(type="boolean", name="show_ua")
 	 */
-	protected $showUa = 1;
+	protected $showUa;
 	/**
 	 * @ORM\Column(type="string", length="128", name="session_id", nullable="true")
 	 */
 	protected $sessionId;
-	
-	protected function __construct()
-	{
-		$this->postingTime = $this->changingTime = new \DateTime('now');
-	}
-	/**
-	 * @ORM\prePersist 
-	 */
-	public function setDefaultValues()
-	{
-		$this->postingTime = $this->changingTime = new \DateTime('now');
-		$this->sessionId = \session_id();
-	}
-	/**
-	 * @ORM\preUpdate 
-	 */
-	public function updateChangingTime()
-	{
-		$this->changingTime = new \DateTime('now');
-		$this->getThread()->setChangingTime($this->changingTime);
-	}
 	/**
 	 * Get id
 	 *
@@ -301,41 +280,5 @@ class Message
 	public function getUser()
 	{
 		return $this->user;
-	}
-	/**
-	 * Set sessionId
-	 *
-	 * @param string $sessionId
-	 */
-	public function setSessionId($sessionId)
-	{
-		$this->sessionId = $sessionId;
-	}
-	/**
-	 * Get sessionId
-	 *
-	 * @return string 
-	 */
-	public function getSessionId()
-	{
-		return $this->sessionId;
-	}
-	/**
-	 * Set thread
-	 *
-	 * @param RL\ForumBundle\Entity\Thread $thread
-	 */
-	public function setThread(\RL\ForumBundle\Entity\Thread $thread)
-	{
-		$this->thread = $thread;
-	}
-	/**
-	 * Get thread
-	 *
-	 * @return RL\ForumBundle\Entity\Thread 
-	 */
-	public function getThread()
-	{
-		return $this->thread;
 	}
 }
