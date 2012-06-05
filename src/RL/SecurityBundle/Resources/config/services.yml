@@ -1,6 +1,5 @@
 # src/RL/MainBundle/Resources/config/services.yml
 parameters:
-  security.authentication.listener.form.class: RL\SecurityBundle\Security\Firewall\UsernamePasswordFormAuthenticationListener
   team_blog.anonymous.user.provider.class: RL\SecurityBundle\Security\User\AnonymousUserProvider
   team_blog.anonymous.authentication.listener.class: RL\SecurityBundle\Security\Firewall\AnonymousAuthenticationListener
   team_blog.anonymous.defaults:

@@ -36,7 +36,7 @@ class FixtureLoader implements FixtureInterface
 		$captchaSetting->setName('captchaLevel');
 		$captchaSetting->setValue($captchaLevel);
 		$manager->persist($captchaSetting);
-		$theme = 'default';
+		$theme = 'Default';
 		$themeSetting = new Settings();
 		$themeSetting->setName('theme');
 		$themeSetting->setValue($theme);

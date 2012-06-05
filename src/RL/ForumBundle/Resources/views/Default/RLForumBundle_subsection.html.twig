@@ -3,64 +3,66 @@
 {%block content%}
 <br>
 <h1>{%trans%}Forum{%endtrans%} {{subsection.name}}</h1>
-<p style="margin-top: 0px;">
+<!--<p style="margin-top: 0px;">-->
 <em>{{subsection.description}}</em>
 <br/>
 <br/>
 <script type="text/javascript">
-var mins = 2;
-$(function()
-{		
-	$("#trigger").click(function(event) 
-	{
-		event.preventDefault();
-		$("#box").slideToggle();
-	});
+    var mins = 2;
+    $(function()
+    {		
+        $("#trigger").click(function(event) 
+        {
+            event.preventDefault();
+            $("#box").slideToggle();
+        });
 
-	$("#box a").click(function(event) 
-	{
-		event.preventDefault();
-		$("#box").slideUp();
-	});
-});
+        $("#box a").click(function(event) 
+        {
+            event.preventDefault();
+            $("#box").slideUp();
+        });
+    });
 </script>
 <div id="jq-wrapper">
-<div id="bodyContent" style="padding-bottom:10px">
-<a href="#" id="trigger">{%trans%}Subsection recomendations{%endtrans%}</a>
-<div id="box">
-{{subsection.shortfaq}}
+    <div id="bodyContent" style="padding-bottom:10px">
+        <a href="#" id="trigger">{%trans%}Subsection recomendations{%endtrans%}</a>
+        <div id="box">
+            {{subsection.shortfaq}}
+        </div>
+    </div>
 </div>
-</div>
-</div>
-</p>
+<!--</p>-->
 <div class=forum>
-<table width="100%" class="message-table">
-<thead>
-<tr>
-<th>Управление</th>
-<th width = "70%">Заголовок</th>
-<th>Число ответов
-<br>всего/день/час</th>
-</tr>
-</thead>
+    <table width="100%" class="message-table">
+        <thead>
+            <tr>
+                {%if is_granted('ROLE_MODER')%}
+                <th>Management</th>
+                {%endif%}
+                <th width = "70%">Title</th>
+                <th>Comments count
+                    <br>all/day/hour</th>
+            </tr>
+        </thead>
 
-<tfoot>
-<tr>
-<td colspan=2>
-<p>
-<div style="float: left"></div>
-<div style="float: right"></div>
-</td>
-</tr>
-</tfoot>
+        <tfoot>
+            <tr>
+                <td colspan=2>
+                    <p>
+                    <div style="float: left"></div>
+                    <div style="float: right"></div>
+                </td>
+            </tr>
+        </tfoot>
 
-<tbody>
-<tr>
-{% for thread in threads %}
-    <td align = center></td><td>-</td><td align=center><b>-</b>/<b>-</b>/<b>-</b></td>
-{% endfor %}
-</tr>
-</tbody>
-</table>
+        <tbody>
+            <tr>
+                {% for thread in threads %}
+                <td align = center></td><td>-</td><td align=center><b>-</b>/<b>-</b>/<b>-</b></td>
+                {% endfor %}
+            </tr>
+        </tbody>
+    </table>
 
-{%endblock%}
+    {%endblock%}
