@@ -1,10 +1,10 @@
-{%extends '::base.html.twig'%}
+{% extends theme.path('RLMainBundle', 'layout.html.twig') %}
 
 {%block title%}
-Registration of new user
+{{parent()}} - {%trans%}Registration of new user{%endtrans%}
 {%endblock%}
 
-{%block body%}
+{%block content%}
 <form action="{{path('registration_save')}}" method="post" {{form_enctype(form)}}>
 {{form_errors(form)}}
 <table>

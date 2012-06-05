@@ -6,8 +6,8 @@
 </head>
 <style>
     * {margin:0px; padding:0px;}
-    html, body {width:98%; height:100%;}
-    table.layout {width:1000px; height: 100%; margin: auto;}
+    html, body {width:100%; height:100%;}
+    table.layout {width:99%; height: 100%; margin: auto;}
     table td {vertical-align: text-top;}
     tr.header {height:100px; background: silver;}
     tr.footer {height:60px; background: gray;}
@@ -20,14 +20,9 @@
         </tr>
         <tr class="middle">
         {%block middle%}
-        {% if user.blocks|length > 0 %}
-            <td class="aside">{% block aside %}ASIDE_BLOCK{% endblock %}</td>
-            <td class="content">
-		{% else %}
-            <td colspan="2" class="content">
-		{% endif %}
-                {% block content %}CONTENT_BLOCK{% endblock %}
-            </td>
+        <td class="content">
+	{% block content %}CONTENT_BLOCK{% endblock %}
+        </td>
         {% endblock %}
         </tr>
         <tr class="footer">

@@ -1,9 +1,11 @@
-{%extends '::base.html.twig'%}
+{% extends theme.path('RLMainBundle', 'layout.html.twig') %}
 
 {%block title%}
-{{title}}
+{{parent()}} - {{title}}
 {%endblock%}
 
-{%block body%}
-<fieldset><legend>{{legend}}</legend><p align="center">{{text|raw}}</p></fieldset>
+{% block rblocks %}{%endblock%}
+
+{%block content%}
+<fieldset><legend>{{legend}}</legend><p align="center">{{text|raw}}</p><br></fieldset>
 {%endblock%}

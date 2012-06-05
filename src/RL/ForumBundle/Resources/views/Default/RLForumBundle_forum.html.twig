@@ -1,7 +1,11 @@
 {% extends theme.path('RLMainBundle', 'layout.html.twig') %}
 
-{% block header %}{% endblock %}
-
-{%block middle%}{%endblock%}
-
-{%block footer%}{%endblock%}
+{%block middle%}
+<td colspan="2" class="content">
+<ul>
+{% for subsection in subsections %}
+    <li><a href="{{path('subsection', {'name': subsection.rewrite})}}">{{ subsection.name|e }}</a> - {{ subsection.description|e }}</li>
+{% endfor %}
+</ul>
+</td>
+{%endblock%}

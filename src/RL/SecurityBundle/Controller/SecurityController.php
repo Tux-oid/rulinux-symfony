@@ -33,13 +33,14 @@ class SecurityController extends Controller
 	 */
 	public function fakeAction()
 	{
+		
 	}
 	/**
 	 * @Route("/login", name="login")
 	 */
 	public function loginAction()
 	{
-		$this->get('session')->setLocale('ru_RU');//FIXME: loale in user class
+		$this->get('session')->setLocale('ru_RU'); //FIXME: loale in user class
 		$theme = $this->get('rl_themes.theme.provider');
 		$request = $this->getRequest();
 		$session = $request->getSession();
@@ -52,7 +53,8 @@ class SecurityController extends Controller
 			$error = $session->get(SecurityContext::AUTHENTICATION_ERROR);
 			$session->remove(SecurityContext::AUTHENTICATION_ERROR);
 		}
-		return $this->render($theme->getPath('RLSecurityBundle', 'login.html.twig'), array(
+		return $this->render($theme->getPath('RLSecurityBundle', 'login.html.twig'), array('theme' => $theme,
+				'user' => $this->get('security.context')->getToken()->getUser(),
 				'last_username' => $session->get(SecurityContext::LAST_USERNAME),
 				'error' => $error,
 			));
@@ -65,7 +67,9 @@ class SecurityController extends Controller
 		$newUser = new RegistrationFirstForm;
 		$theme = $this->get('rl_themes.theme.provider');
 		$form = $this->createForm(new RegisterFirstType(), $newUser);
-		return $this->render($theme->getPath('RLSecurityBundle', 'registrationFirstPage.html.twig'), array('form' => $form->createView()));
+		return $this->render($theme->getPath('RLSecurityBundle', 'registrationFirstPage.html.twig'), array('theme' => $theme,
+				'user' => $this->get('security.context')->getToken()->getUser(),
+				'form' => $form->createView()));
 	}
 	/**
 	 * @Route("/register_send", name="register_send")
@@ -96,7 +100,11 @@ class SecurityController extends Controller
 				$legend = 'Registration mail is sended.';
 				$text = 'Registration mail is sended. Please check your email.';
 				$title = 'Mail sended';
-				return $this->render($theme->getPath('RLMainBundle', 'fieldset.html.twig'), array('legend' => $legend, 'text' => $text, 'title' => $title));
+				return $this->render($theme->getPath('RLMainBundle', 'fieldset.html.twig'), array('theme' => $theme,
+						'user' => $this->get('security.context')->getToken()->getUser(),
+						'legend' => $legend,
+						'text' => $text,
+						'title' => $title));
 			}
 			else
 				throw new \Exception('Registration form is invalid.');
@@ -115,7 +123,13 @@ class SecurityController extends Controller
 		{
 			$newUser = new User;
 			$form = $this->createForm(new RegisterType(), $newUser);
-			return $this->render($theme->getPath('RLSecurityBundle', 'registrationSecondPage.html.twig'), array('username' => $username, 'password' => $password, 'email' => $email, 'form' => $form->createView()));
+			return $this->render($theme->getPath('RLSecurityBundle', 'registrationSecondPage.html.twig'), array(
+					'theme' => $theme,
+					'user' => $this->get('security.context')->getToken()->getUser(),
+					'username' => $username,
+					'password' => $password,
+					'email' => $email,
+					'form' => $form->createView()));
 		}
 		else
 			throw new \Exception('Hash is invalid');
@@ -163,7 +177,11 @@ class SecurityController extends Controller
 				$legend = 'Registration completed.';
 				$text = 'Registration completed. Now you can <a href="'.$this->generateUrl('login').'">login</a> on this site.';
 				$title = '';
-				return $this->render($theme->getPath('RLMainBundle', 'fieldset.html.twig'), array('legend' => $legend, 'text' => $text, 'title' => $title));
+				return $this->render($theme->getPath('RLMainBundle', 'fieldset.html.twig'), array('theme' => $theme,
+						'user' => $this->get('security.context')->getToken()->getUser(),
+						'legend' => $legend,
+						'text' => $text,
+						'title' => $title));
 			}
 			else
 				throw new \Exception('Registration form is invalid.');
@@ -213,7 +231,11 @@ class SecurityController extends Controller
 						$legend = 'msg';
 						$text = 'login user';
 						$title = '';
-						return $this->render($theme->getPath('RLMainBundle', 'fieldset.html.twig'), array('legend' => $legend, 'text' => $text, 'title' => $title));
+						return $this->render($theme->getPath('RLMainBundle', 'fieldset.html.twig'), array('theme' => $theme,
+								'user' => $this->get('security.context')->getToken()->getUser(),
+								'legend' => $legend,
+								'text' => $text,
+								'title' => $title));
 					}
 					else
 					{
@@ -221,7 +243,12 @@ class SecurityController extends Controller
 						$email = '';
 						$newUser = new User;
 						$form = $this->createForm(new RegisterType(), $newUser);
-						return $this->render($theme->getPath('RLSecurityBundle', 'openIDRegistration.html.twig'), array('openid' => $identity, 'password' => '', 'email' => $email, 'form' => $form->createView()));
+						return $this->render($theme->getPath('RLSecurityBundle', 'openIDRegistration.html.twig'), array('theme' => $theme,
+								'user' => $this->get('security.context')->getToken()->getUser(),
+								'openid' => $identity,
+								'password' => '',
+								'email' => $email,
+								'form' => $form->createView()));
 					}
 				}
 				else
@@ -241,7 +268,9 @@ class SecurityController extends Controller
 		$theme = $this->get('rl_themes.theme.provider');
 		$resForm = new PasswordRestoringForm;
 		$form = $this->createForm(new RestorePasswordType(), $resForm);
-		return $this->render($theme->getPath('RLSecurityBundle', 'passwordRestoringForm.html.twig'), array('form' => $form->createView()));
+		return $this->render($theme->getPath('RLSecurityBundle', 'passwordRestoringForm.html.twig'), array('theme' => $theme,
+				'user' => $this->get('security.context')->getToken()->getUser(),
+				'form' => $form->createView()));
 	}
 	/**
 	 * @Route("/restore_password_check", name="restore_password_check")
@@ -298,7 +327,11 @@ class SecurityController extends Controller
 				$legend = 'Mail with your new password is sended.';
 				$text = 'Mail with your new password is sended. Please check your email.';
 				$title = 'Mail sended';
-				return $this->render($theme->getPath('RLMainBundle', 'fieldset.html.twig'), array('legend' => $legend, 'text' => $text, 'title' => $title));
+				return $this->render($theme->getPath('RLMainBundle', 'fieldset.html.twig'), array('theme' => $theme,
+						'user' => $this->get('security.context')->getToken()->getUser(),
+						'legend' => $legend,
+						'text' => $text,
+						'title' => $title));
 			}
 			else
 				throw new \Exception('Password restoring form is invalid');

@@ -1,5 +1,5 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
-"http://www.w3.org/TR/html4/loose.dtd">
+    "http://www.w3.org/TR/html4/loose.dtd">
 <html>
 <head>
     <title>{% block title %}TITLE_BLOCK{% endblock %}</title>
@@ -7,7 +7,7 @@
 <style>
     * {margin:0px; padding:0px;}
     html, body {width:100%; height:100%;}
-    table.layout {width:98%; height: 100%; margin: auto;}
+    table.layout {width:99%; height: 100%; margin: auto;}
     table td {vertical-align: text-top;}
     tr.header {height:100px; background: white;}
     tr.footer {height:60px; background: white;}
@@ -20,18 +20,13 @@
         </tr>
         <tr class="middle">
         {%block middle%}
-        {% if user.blocks|length > 0 %}
-            <td class="aside">{% block aside %}ASIDE_BLOCK{% endblock %}</td>
-            <td class="content">
-        {% else %}
-            <td colspan="2" class="content">
-        {% endif %}
-                {% block content %}CONTENT_BLOCK{% endblock %}
-            </td>
+        <td class="content">
+	{% block content %}CONTENT_BLOCK{% endblock %}
+        </td>
         {% endblock %}
         </tr>
         <tr class="footer">
-            <td colspan="2">FOOTER</td>
+            <td colspan="2">{%block footer%}FOOTER{%endblock%}</td>
         </tr>
     </table>
 </body>

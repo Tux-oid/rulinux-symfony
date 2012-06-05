@@ -1,22 +1,19 @@
 {% extends theme.path('RLMainBundle', 'layout.html.twig') %}
 
-{% block header %}
-{% endblock %}
+{% block header %}{% endblock %}
 
-{% block aside %}
-
-  {# Authentication block #}
-  {% if 'Authentication' in user.blocks %}
-	{% render "RLMainBundle:Block:renderAuthentication" %}
-  {% endif %}
-
-{% endblock %}
-
-{% block content %}
-    <p>
-This is content! This is content! This is content! This is content! This is content! This is content!
-This is content! This is content! This is content! This is content! This is content! This is content!
-    </p>
+{% block middle %}
+        <td class="aside">
+	{% block rblocks %}
+        {# Authentication block #}
+        {% if 'Authentication' in user.blocks %}
+                {% render "RLMainBundle:Block:renderAuthentication" %}
+        {% endif %}
+        {% endblock %}
+        </td>
+        <td class="content">
+	{% block content %}CONTENT_BLOCK{% endblock %}
+        </td>
 {% endblock %}
   
 {%block footer%}{%endblock%}
