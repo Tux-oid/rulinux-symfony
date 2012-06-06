@@ -23,7 +23,7 @@ class ThemeProvider implements ThemeProviderInterface
 		$this->httpKernel = $kernel;
 		//FIXME: set themes information located in database
 		$this->default = 'Default';
-		$this->themes = array("Default" => 'RLThemesBundle:Default', "White" => 'RLThemesBundle:White', "default" => 'RLThemesBundle:Default');
+		$this->themes = array("Default" => 'RLThemesBundle:Default', "White" => 'RLThemesBundle:White', "CozyGreen" => 'RLThemesBundle:CozyGreen');
 	}
 	public function getTheme($bundleName, $templateName)
 	{
@@ -37,20 +37,29 @@ class ThemeProvider implements ThemeProviderInterface
 			}
 			catch(\Exception $e)
 			{
-				$tpl = '@'.$bundleName.'/Resources/views/'.$themeName.'/'.$bundleName.'_'.$templateName;
+				$tpl = '@RLThemesBundle/Resources/views/Default/'.$bundleName.'_'.$templateName;
 				try
 				{
 					$this->httpKernel->locateResource($tpl);
 				}
 				catch(\Exception $e)
 				{
-					return $this->themes['Default'];
+					$tpl = '@'.$bundleName.'/Resources/views/Default/'.$bundleName.'_'.$templateName;
+					try
+					{
+						$this->httpKernel->locateResource($tpl);
+					}
+					catch(\Exception $e)
+					{
+						throw \Exception('Template not found');
+					}
+					return $bundleName.':Default';
 				}
-				return $bundleName.':Default';
+				return $this->themes['Default'];
 			}
 			return $this->themes[$themeName];
 		}
-		return $this->themes['Default'];
+		throw \Exception('Theme not found');
 	}
 	function getName()
 	{
