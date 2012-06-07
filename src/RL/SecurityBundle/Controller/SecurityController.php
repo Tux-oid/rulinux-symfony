@@ -339,4 +339,34 @@ class SecurityController extends Controller
 		else
 			return $this->redirect($this->generateUrl('index'));
 	}
+	/**
+	 * @Route("/user/{name}/edit", name="user_edit")
+	 */
+	public function editUserAction($name)
+	{
+		$theme = $this->get('rl_themes.theme.provider');
+		$legend = 'Edit user '.$name;
+		$text = 'Profile editing page would be here.';
+		$title = 'Edit user '.$name;
+		return $this->render($theme->getPath('RLMainBundle', 'fieldset.html.twig'), array('theme' => $theme,
+				'user' => $this->get('security.context')->getToken()->getUser(),
+				'legend' => $legend,
+				'text' => $text,
+				'title' => $title));
+	}
+	/**
+	 * @Route("/user/{name}", name="user")
+	 */
+	public function userAction($name)
+	{
+		$theme = $this->get('rl_themes.theme.provider');
+		$legend = 'Show user '.$name;
+		$text = 'Profile page would be here.';
+		$title = 'Show user '.$name;
+		return $this->render($theme->getPath('RLMainBundle', 'fieldset.html.twig'), array('theme' => $theme,
+				'user' => $this->get('security.context')->getToken()->getUser(),
+				'legend' => $legend,
+				'text' => $text,
+				'title' => $title));
+	}
 }

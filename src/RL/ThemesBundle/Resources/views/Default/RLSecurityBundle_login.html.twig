@@ -1,6 +1,7 @@
 {% extends theme.path('RLMainBundle', 'layout.html.twig') %}
 
 {%block content%}
+{%if is_granted('ROLE_ANONYMOUS')%}
 <table width="100%">
 <tr>
 <td>
@@ -56,4 +57,7 @@ If you want to control the URL the user is redirected to on success (more detail
 </td>
 </tr>
 </table>
+{%else%}
+<fieldset><legend>You are already logged in</legend><p align="center">You are already logged in. If you want to login with another nick, you must logout</p></fieldset>
+{%endif %}
 {%endblock%}

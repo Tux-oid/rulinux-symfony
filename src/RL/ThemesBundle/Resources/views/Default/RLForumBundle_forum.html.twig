@@ -1,11 +1,22 @@
 {% extends theme.path('RLMainBundle', 'layout.html.twig') %}
 
-{%block middle%}
-<td colspan="2" class="content">
-    <ul>
+{%block title%}
+{{parent()}} - {%trans%}Forum{%endtrans%}
+{%endblock title%}
+
+{%block content%}
+<h1>
+        {%trans%}Forum{%endtrans%}
+</h1>
+{%trans%}Groups:{%endtrans%}
+<ul>
         {% for subsection in subsections %}
-        <li><a href="{{path('subsection', {'name': subsection.rewrite})}}">{{ subsection.name|e }}</a> - {{ subsection.description|e }}</li>
+                <li><a href="{{path('subsection', {'name': subsection.rewrite})}}">{{ subsection.name|e }}</a> - {{ subsection.description|e }}</li>
         {% endfor %}
-    </ul>
-</td>
+</ul>
+<br>
+<h1>{%trans%}Settings{%endtrans%}</h1>
+<ul>
+<li><a href="{{path("user_edit", {'name':user.username})}}">{%trans%}Personal settings{%endtrans%}</a></li>
+</ul><br>
 {%endblock%}
