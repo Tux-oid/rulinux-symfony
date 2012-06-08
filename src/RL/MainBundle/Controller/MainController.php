@@ -16,7 +16,6 @@ class MainController extends Controller
 	public function homepageAction()
 	{
 		$user = $this->get('security.context')->getToken()->getUser();
-		$user->setTheme('Default');
 		$theme = $this->get('rl_themes.theme.provider');
 		return $this->render($theme->getPath('RLMainBundle', 'index.html.twig'), array(
 				'user' => $this->get('security.context')->getToken()->getUser(),

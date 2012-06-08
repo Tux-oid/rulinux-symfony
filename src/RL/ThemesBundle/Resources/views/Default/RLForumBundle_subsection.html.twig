@@ -1,5 +1,25 @@
 {% extends theme.path('RLMainBundle', 'layout.html.twig') %}
 
+{% block navigation %}
+<form name="navForm" action="/">
+	<table class=nav>
+		<tr>
+			<td align=left valign=middle>
+				<a href="{{path('forum')}}">{%trans%}Forum{%endtrans%}</a> - <b>{{subsection.name}}</b>
+			</td>
+			<td align=right valign=middle>
+				[<a href="{{path('new_thread_in_forum', {'subsection':subsection.rewrite})}}">Add message</a>]
+				<select name=id onChange = 'self.location = "forum_"+document.navForm.id[document.navForm.id.selectedIndex].value' title="quick jump">
+					{% for subsect in subsections%}
+						<option value="{{subsect.rewrite}}" {%if subsect.name == subsection.name%}selected{%endif%}>{{subsect.name}}</option>
+					{%endfor%}
+				</select>
+			</td>
+		</tr>
+	</table>
+</form>
+{%endblock navigation %}
+
 {%block content%}
 <br>
 <h1>{%trans%}Forum{%endtrans%} {{subsection.name}}</h1>
@@ -23,46 +43,46 @@
             $("#box").slideUp();
         });
     });
-</script>
-<div id="jq-wrapper">
-    <div id="bodyContent" style="padding-bottom:10px">
-        <a href="#" id="trigger">{%trans%}Subsection recomendations{%endtrans%}</a>
-        <div id="box">
+	</script>
+	<div id="jq-wrapper">
+		<div id="bodyContent" style="padding-bottom:10px">
+			<a href="#" id="trigger">{%trans%}Subsection recomendations{%endtrans%}</a>
+			<div id="box">
             {{subsection.shortfaq}}
-        </div>
-    </div>
-</div>
-<!--</p>-->
-<div class=forum>
-    <table width="100%" class="message-table">
-        <thead>
-            <tr>
+				</div>
+			</div>
+		</div>
+		<!--</p>-->
+		<div class=forum>
+			<table width="100%" class="message-table">
+				<thead>
+					<tr>
                 {%if is_granted('ROLE_MODER')%}
-                <th>Management</th>
+							<th>Management</th>
                 {%endif%}
-                <th width = "70%">Title</th>
-                <th>Comments count
-                    <br>all/day/hour</th>
-            </tr>
-        </thead>
+							<th width = "70%">Title</th>
+							<th>Comments count
+								<br>all/day/hour</th>
+						</tr>
+					</thead>
 
-        <tfoot>
-            <tr>
-                <td colspan=2>
-                    <p>
-                    <div style="float: left"></div>
-                    <div style="float: right"></div>
-                </td>
-            </tr>
-        </tfoot>
+					<tfoot>
+						<tr>
+							<td colspan=2>
+								<p>
+								<div style="float: left"></div>
+								<div style="float: right"></div>
+							</td>
+						</tr>
+					</tfoot>
 
-        <tbody>
-            <tr>
+					<tbody>
+						<tr>
                 {% for thread in threads %}
-                <td align = center></td><td>-</td><td align=center><b>-</b>/<b>-</b>/<b>-</b></td>
+								<td align = center></td><td>-</td><td align=center><b>-</b>/<b>-</b>/<b>-</b></td>
                 {% endfor %}
-            </tr>
-        </tbody>
-    </table>
+							</tr>
+						</tbody>
+					</table>
 
     {%endblock%}

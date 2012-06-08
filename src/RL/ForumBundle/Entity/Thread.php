@@ -9,7 +9,7 @@ use Doctrine\Common\Collections\ArrayCollection;
 use RL\ForumBundle\Entity\Message;
 
 /**
- * @ORM\Entity()
+ * @ORM\Entity(repositoryClass="RL\ForumBundle\Entity\ThreadRepository")
  * @ORM\Table(name="threads")
  * @ORM\HasLifecycleCallbacks()
  */

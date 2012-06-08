@@ -56,7 +56,7 @@ class FixtureLoader implements FixtureInterface
 		$manager->persist($developmentSubsection);
 		
 		$serverSubsection = new Subsection();
-		$serverSubsection->setName('rulinux.net');
+		$serverSubsection->setName('Rulinux.net');
 		$serverSubsection->setDescription('comment about work of server rulinux.net');
 		$serverSubsection->setShortfaq('');
 		$serverSubsection->setRewrite('rulinux_net');

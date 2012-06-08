@@ -51,7 +51,7 @@ class ThemeProvider implements ThemeProviderInterface
 					}
 					catch(\Exception $e)
 					{
-						throw \Exception('Template not found');
+						throw new \Exception('Template not found');
 					}
 					return $bundleName.':Default';
 				}

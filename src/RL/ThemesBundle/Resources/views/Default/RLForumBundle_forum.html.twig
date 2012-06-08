@@ -7,16 +7,16 @@
 {%block content%}
 <h1>
         {%trans%}Forum{%endtrans%}
-</h1>
+	</h1>
 {%trans%}Groups:{%endtrans%}
-<ul>
+	<ul>
         {% for subsection in subsections %}
-                <li><a href="{{path('subsection', {'name': subsection.rewrite})}}">{{ subsection.name|e }}</a> - {{ subsection.description|e }}</li>
+			<li><a href="{{path('subsection', {'name': subsection.rewrite})}}">{{ subsection.name|e }}</a> - {{ subsection.description|e }}</li>
         {% endfor %}
-</ul>
-<br>
-<h1>{%trans%}Settings{%endtrans%}</h1>
-<ul>
-<li><a href="{{path("user_edit", {'name':user.username})}}">{%trans%}Personal settings{%endtrans%}</a></li>
-</ul><br>
+		</ul>
+		<br>
+		<h1>{%trans%}Settings{%endtrans%}</h1>
+		<ul>
+			<li><a href="{{path("user_edit", {'name':user.username})}}">{%trans%}Personal settings{%endtrans%}</a></li>
+		</ul><br>
 {%endblock%}
