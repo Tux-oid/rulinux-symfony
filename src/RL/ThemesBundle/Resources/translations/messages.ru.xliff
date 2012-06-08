@@ -30,6 +30,102 @@
                 <source>Remember me</source>
                 <target>Запомнить меня</target>
             </trans-unit>
+            <trans-unit id="8">
+                <source>Add material</source>
+                <target>Добавить материал</target>
+            </trans-unit>
+            <trans-unit id="9">
+                <source>Add message</source>
+                <target>Добавить сообщение</target>
+            </trans-unit>
+            <trans-unit id="10">
+                <source>Request to all, who adds threads in forum:</source>
+                <target>Просьба ко всем, добавляющим темы в форум: </target>
+            </trans-unit>
+            <trans-unit id="11">
+                <source>Read</source>
+                <target>Прочитайте</target>
+            </trans-unit>
+            <trans-unit id="12">
+                <source>Maybe, answer on your question is already there.</source>
+                <target>Возможно, ваш вопрос уже содержится в нашем сборнике ответов на часто задаваемые вопросы. </target>
+            </trans-unit>
+            <trans-unit id="13">
+                <source>Write in the correct forum.</source>
+                <target>Пишите в правильный форум.</target>
+            </trans-unit>
+            <trans-unit id="14">
+                <source>Select an appropriate topic for your question section of the forum, such as questions about system administration must be specified in the Admin, and not in General, etc.</source>
+                <target>Выберете подходящий по теме вашего вопроса раздел форума, например вопросы по администрированию системы нужно задавать в Admin, а не в General и т.п. </target>
+            </trans-unit>
+            <trans-unit id="15">
+                <source>Write a meaningful title.</source>
+                <target>Пишите осмысленный заголовок.</target>
+            </trans-unit>
+            <trans-unit id="16">
+                <source>Create a meaningful title to thread. Messages with meaningless caption("Help!", "Question", ...) remain unanswered.</source>
+                <target>Придумайте осмысленный заголовок теме. Сообщения с бессмысленными загловками ("Помогите!", "Вопрос", ...), как правило, остаются без ответа. </target>
+            </trans-unit>
+            <trans-unit id="17">
+                <source>Preview</source>
+                <target>Предпросмотр</target>
+            </trans-unit>
+            <trans-unit id="18">
+                <source>Send</source>
+                <target>Отправить</target>
+            </trans-unit>
+            <trans-unit id="19">
+                <source>Subject</source>
+                <target>Заколовок</target>
+            </trans-unit>
+            <trans-unit id="20">
+                <source>Comment</source>
+                <target>Текст сообщения</target>
+            </trans-unit>
+            <trans-unit id="21">
+                <source>Forum</source>
+                <target>Форум</target>
+            </trans-unit>
+            <trans-unit id="22">
+                <source>Welcome,</source>
+                <target>Добро пожаловать,</target>
+            </trans-unit>
+            <trans-unit id="23">
+                <source>Logout</source>
+                <target>Выход</target>
+            </trans-unit>
+            <trans-unit id="24">
+                <source>Groups</source>
+                <target>Группы</target>
+            </trans-unit>
+            <trans-unit id="25">
+                <source>Settings</source>
+                <target>Настройки</target>
+            </trans-unit>
+            <trans-unit id="26">
+                <source>Personal settings</source>
+                <target>Персональные настройки сайта</target>
+            </trans-unit>
+            <trans-unit id="27">
+                <source>Subsection recomendations</source>
+                <target>Рекомендации по разделу</target>
+            </trans-unit>
+            <trans-unit id="28">
+                <source>Management</source>
+                <target>Управление</target>
+            </trans-unit>
+            <trans-unit id="29">
+                <source>Title</source>
+                <target>Заголовок</target>
+            </trans-unit>
+            <trans-unit id="30">
+                <source>Comments count</source>
+                <target>Число ответов</target>
+            </trans-unit>
+            <trans-unit id="31">
+                <source>all/day/hour</source>
+                <target>всего/день/час</target>
+            </trans-unit>
         </body>
     </file>
 </xliff>

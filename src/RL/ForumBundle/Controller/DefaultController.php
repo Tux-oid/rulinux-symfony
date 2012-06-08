@@ -63,18 +63,30 @@ class DefaultController extends Controller
 	 */
 	public function newThreadAction($subsection)
 	{
-		$newThread = new AddThreadForm;
-		$form = $this->createForm(new AddThreadType(), $newThread);
-		
-//		$resForm = new PasswordRestoringForm;
-//		$form = $this->createForm(new RestorePasswordType(), $resForm);
-		
 		$theme = $this->get('rl_themes.theme.provider');
 		$user = $this->get('security.context')->getToken()->getUser();
+		$request = $this->getRequest();
+		$preview = false;
+		$pr_val = $request->request->get('preview');
+		if(isset($pr_val))
+		{
+			$preview = true;
+			$newThread = new AddThreadForm($user);
+			$prv_thr = $request->request->get('addThread');
+			$newThread->setSubject($prv_thr['subject']);
+			$newThread->setComment($prv_thr['comment']);
+		}
+		else
+			$newThread = new AddThreadForm($user);
+		$form = $this->createForm(new AddThreadType(), $newThread);
 		return $this->render($theme->getPath('RLForumBundle', 'new_thread_in_forum.html.twig'), array(
 				'theme' => $theme,
 				'user' => $user,
 				'form' => $form->createView(),
+				'subsection'=>$subsection,
+				'preview'=>$preview,
+				'message'=>$newThread,
+
 			));
 	}
 }

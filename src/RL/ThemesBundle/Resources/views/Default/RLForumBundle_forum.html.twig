@@ -8,7 +8,7 @@
 <h1>
         {%trans%}Forum{%endtrans%}
 	</h1>
-{%trans%}Groups:{%endtrans%}
+{%trans%}Groups{%endtrans%}:
 	<ul>
         {% for subsection in subsections %}
 			<li><a href="{{path('subsection', {'name': subsection.rewrite})}}">{{ subsection.name|e }}</a> - {{ subsection.description|e }}</li>

@@ -8,7 +8,7 @@
 				<a href="{{path('forum')}}">{%trans%}Forum{%endtrans%}</a> - <b>{{subsection.name}}</b>
 			</td>
 			<td align=right valign=middle>
-				[<a href="{{path('new_thread_in_forum', {'subsection':subsection.rewrite})}}">Add message</a>]
+				[<a href="{{path('new_thread_in_forum', {'subsection':subsection.rewrite})}}">{%trans%}Add message{%endtrans%}</a>]
 				<select name=id onChange = 'self.location = "forum_"+document.navForm.id[document.navForm.id.selectedIndex].value' title="quick jump">
 					{% for subsect in subsections%}
 						<option value="{{subsect.rewrite}}" {%if subsect.name == subsection.name%}selected{%endif%}>{{subsect.name}}</option>
@@ -58,11 +58,11 @@
 				<thead>
 					<tr>
                 {%if is_granted('ROLE_MODER')%}
-							<th>Management</th>
+							<th>{%trans%}Management{%endtrans%}</th>
                 {%endif%}
-							<th width = "70%">Title</th>
-							<th>Comments count
-								<br>all/day/hour</th>
+							<th width = "70%">{%trans%}Title{%endtrans%}</th>
+							<th>{%trans%}Comments count{%endtrans%}
+								<br>{%trans%}all/day/hour{%endtrans%}</th>
 						</tr>
 					</thead>
 

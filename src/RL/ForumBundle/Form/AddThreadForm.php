@@ -5,9 +5,8 @@
 
 namespace RL\ForumBundle\Form;
 use Symfony\Component\Validator\Constraints as Assert;
-//use Symfony\Component\Form\FormView;
 
-class AddThreadForm //extends FormView
+class AddThreadForm
 {
 	/**
 	 * @Assert\NotBlank()
@@ -17,6 +16,15 @@ class AddThreadForm //extends FormView
 	 * @Assert\NotBlank()
 	 */
 	protected $comment;
+	protected $useragent;
+	protected $postingTime;
+	protected $author;
+	public function __construct($user)
+	{
+		 $this->useragent = $_SERVER['HTTP_USER_AGENT'];
+		 $this->postingTime = new \DateTime('now');
+		 $this->author = $user;
+	}
 	public function getSubject()
 	{
 		return $this->subject;
@@ -33,6 +41,31 @@ class AddThreadForm //extends FormView
 	{
 		$this->comment = $comment;
 	}
+	public function getUseragent()
+	{
+		return $this->useragent;
+	}
+	public function setUseragent($useragent)
+	{
+		$this->useragent = $useragent;
+	}
+	public function getPostingTime()
+	{
+		return $this->postingTime;
+	}
+	public function setPostingTime($postingTime)
+	{
+		$this->postingTime = $postingTime;
+	}
+	public function getAuthor()
+	{
+		return $this->author;
+	}
+	public function setAuthor($author)
+	{
+		$this->author = $author;
+	}
+
 
 
 }

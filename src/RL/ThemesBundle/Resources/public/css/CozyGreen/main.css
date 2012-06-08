@@ -141,12 +141,12 @@ TR.headClsBottom
 div.messages, div.title 
 { 
     background-color: #84ac60; 
-    background-image: url(images/tile_cat.gif);
+    background-image: url(/web/bundles/rlthemes/images/CozyGreen/tile_cat.gif);
 }
 .messages .comment .title 
 { 
     background: #84ac60; 
-    background-image: url(images/tile_cat.gif);
+    background-image: url(/web/bundles/rlthemes/images/CozyGreen/tile_cat.gif);
 }
 div.messages, div.msg 
 { 

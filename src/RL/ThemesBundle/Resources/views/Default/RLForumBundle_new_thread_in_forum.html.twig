@@ -3,16 +3,31 @@
 {%block content%}
 <h1>{%trans%}Add material{%endtrans%}</h1>
 <p class="error"></p>
+{%if preview == false %}
 <h2>{%trans%}Add message{%endtrans%}</h2>
 <br>{%trans%}Request to all, who adds threads in forum:{%endtrans%}
 <ul>
-  <li><b>{%trans%}Read {%endtrans%}<a href="/faq">FAQ</a></b>! {%trans%}Maybe, answer on your question is already there.{%endtrans%}
-  <li><b>{%trans%}Write in the correct forum.{%endtrans%}</b> {%trans%}Select an appropriate topic for your question section of the forum, such as
-questions about system administration must be specified in the Admin, and
-not in General, etc.{%endtrans%}
-  <li><b>{%trans%}Write a meaningful title{%endtrans%}</b>. {%trans%}Create a meaningful title to thread. Messages with meaningless caption("Help!", "Question", ...) remain unanswered.{%endtrans%}
+  <li><b>{%trans%}Read{%endtrans%} <a href="/faq">FAQ</a></b>! {%trans%}Maybe, answer on your question is already there.{%endtrans%}
+  <li><b>{%trans%}Write in the correct forum.{%endtrans%}</b> {%trans%}Select an appropriate topic for your question section of the forum, such as questions about system administration must be specified in the Admin, and not in General, etc.{%endtrans%}
+  <li><b>{%trans%}Write a meaningful title.{%endtrans%}</b> {%trans%}Create a meaningful title to thread. Messages with meaningless caption("Help!", "Question", ...) remain unanswered.{%endtrans%}
 </ul>
-<form action="{{path('register_send')}}" method="post" {{form_enctype(form)}}>
+{%else%}
+<h2>{%trans%}Preview{%endtrans%}</h2>
+<div class="comment">
+  <div class="title"><br></div>
+  <div class="msg">
+    <table cellspacing="0" width="100%">
+      <tr>
+        <td valign="top"><h2>{{message.subject}}</h2>
+        <p><p>{{message.comment}}</p></p>
+        <div class="sign">{{message.author.username}} (<a href="{{path('user', {'name':message.author.username})}}">*</a>) ({{message.postingTime.date}})
+        <br>{{message.useragent}}</div>
+      </td>
+    </tr>
+  </table>
+</div>
+{%endif%}
+<form action="{{path('new_thread_in_forum', {'subsection':subsection})}}" method="post" {{form_enctype(form)}}>
 {{form_errors(form)}}
 <table border="0">
 <tr>
@@ -24,7 +39,7 @@ not in General, etc.{%endtrans%}
 </tr><input type="hidden" name="subsection_id" value="8" />
 
 <tr>
-<td style="vertical-align:top;">{{form_label(form.comment)}}</td>
+<td style="vertical-align:top;">{{form_label(form.comment)}}:</td>
 <td>
 {{form_widget(form.comment, {'attr': {'rows':'20', 'cols':'80'}})}}
 <p class="error">{{form_errors(form.comment)}}</p>
@@ -33,8 +48,8 @@ not in General, etc.{%endtrans%}
 <tr>
 <td></td>
 <td>
-<input type="submit" name="submit_form" value="{%trans%}Send{%endtrans%}">
-<input type="submit" name="submit_form" value="{%trans%}Preview{%endtrans%}">
+<input type="submit" name="submit" value="{%trans%}Send{%endtrans%}">
+<input type="submit" name="preview" value="{%trans%}Preview{%endtrans%}">
 </td>
 </tr>
 </table>
