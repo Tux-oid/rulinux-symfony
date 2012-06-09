@@ -154,6 +154,10 @@
                 <source>from</source>
                 <target>от</target>
             </trans-unit>
+            <trans-unit id="39">
+                <source>Add comment</source>
+                <target>Добавить комментарий</target>
+            </trans-unit>
         </body>
     </file>
 </xliff>

@@ -7,6 +7,7 @@ namespace RL\ForumBundle\Controller;
 use Symfony\Component\Security\Core\SecurityContext;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
+use RL\MainBundle\Form\Pages;
 use RL\ForumBundle\Entity\Subsection;
 use RL\ForumBundle\Form\AddThreadType;
 use RL\ForumBundle\Form\AddThreadForm;
@@ -118,7 +119,7 @@ class DefaultController extends Controller
 			));
 	}
 	/**
-	 * @Route("/thread/{id}/{page}", name="thread")
+	 * @Route("/thread/{id}/{page}", name="thread", defaults={"page" = 1})
 	 */
 	public function threadAction($id, $page)
 	{
@@ -126,11 +127,18 @@ class DefaultController extends Controller
 		$user = $this->get('security.context')->getToken()->getUser();
 		$doctrine = $this->get('doctrine');
 		$threadRepository = $doctrine->getRepository('RLForumBundle:Thread');
-		$thread = $threadRepository->getThreadById($id);
+		$itemsCount = count($threadRepository->findOneById($id)->getMessages());
+		$itemsOnPage = $user->getCommentsOnPage();
+		$pagesCount = ceil(($itemsCount - 1) / $itemsOnPage);
+		$pagesCount > 1 ? $begin = $itemsOnPage * ($page - 1) : $begin = 0;
+		$thread = $threadRepository->getThreadById($id, $itemsOnPage, $begin);
+		$pages = new Pages($itemsOnPage, $itemsCount, $page);
+		$pagesStr = $pages->draw();
 		return $this->render($theme->getPath('RLForumBundle', 'thread.html.twig'), array(
 				'theme' => $theme,
 				'user' => $user,
 				'thread' => $thread,
+				'pages'=> $pagesStr,
 			));
 	}
 	/**

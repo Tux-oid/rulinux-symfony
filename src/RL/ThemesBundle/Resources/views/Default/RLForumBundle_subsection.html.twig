@@ -1,5 +1,9 @@
 {% extends theme.path('RLMainBundle', 'layout.html.twig') %}
 
+{%block title%}
+{{parent()}} - {%trans%}Forum{%endtrans%} - {{subsection.name}}
+{%endblock title%}
+
 {% block navigation %}
 <form name="navForm" action="/">
 	<table class=nav>
@@ -88,7 +92,7 @@
 									{%endif%}
 									</td>
 									<td>
-										<a href="{{path('thread', {'id': thread.id, 'page':1})}}">
+										<a href="{{path('thread', {'id': thread.id})}}">
 											{{thread.messages[0].subject}}
 										</a>
 										({{thread.messages[0].user.username}})

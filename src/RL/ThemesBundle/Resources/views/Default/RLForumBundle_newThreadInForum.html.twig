@@ -1,5 +1,9 @@
 {% extends theme.path('RLMainBundle', 'layout.html.twig') %}
 
+{%block title%}
+{{parent()}} - {%trans%}Add material{%endtrans%}
+{%endblock title%}
+
 {%block content%}
 <h1>{%trans%}Add material{%endtrans%}</h1>
 <p class="error"></p>

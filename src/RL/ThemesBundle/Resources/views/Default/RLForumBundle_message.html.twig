@@ -4,7 +4,7 @@
 <a href="#{{'msg'~message.id}}"><img border="0" src="{{'/web/bundles/rlthemes/images/'~user.theme~'/id.png'}}" alt="[#]"></a>
 <a href="set_filter_142880"><img border="0" src="{{'/web/bundles/rlthemes/images/'~user.theme~'/filter.png'}}" alt="{%trans%}[Add filter]{%endtrans%}"></a>
 <a href="message_142880:edit"><img border="0" src="{{'/web/bundles/rlthemes/images/'~user.theme~'/edit.png'}}" alt="{%trans%}[Edit]{%endtrans%}"></a>
-{%trans%}Reply to:{%endtrans%} <a href="#{{message.referer}}">{{message.thread.messages[message.referer].subject}}</a> {%trans%}from{%endtrans%} {{message.thread.messages[message.referer].user.username}}  {{message.thread.messages[message.referer].postingTime.date}}<br></div>
+{#{%trans%}Reply to:{%endtrans%} <a href="#{{'msg'~message.referer}}">{{message.thread.messages[message.referer-1].subject}}</a> {%trans%}from{%endtrans%} {{message.thread.messages[message.referer-1].user.username}}  {{message.thread.messages[message.referer-1].postingTime.date}}<br></div>#}
 <div class=msg id="{{'msg'~message.id}}">
 <table cellspacing="0" width="100%">
 <tr>

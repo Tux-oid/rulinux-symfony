@@ -27,7 +27,7 @@ class ThreadRepository extends EntityRepository
 		$threads = $q->getResult();
 		return $threads;
 	}
-	public function getThreadById($id)
+	public function getThreadById($id, $limit, $offset)
 	{
 		$em = $this->_em;
 		$q = $em->createQueryBuilder()
@@ -37,6 +37,8 @@ class ThreadRepository extends EntityRepository
 			->where('t.id = :id')
 			->setParameter('id', $id)
 			->orderBy('m.id')
+			->setFirstResult($offset)
+			->setMaxResults($limit)
 			->getQuery();
 		$thread = $q->getSingleResult();
 		return $thread;
