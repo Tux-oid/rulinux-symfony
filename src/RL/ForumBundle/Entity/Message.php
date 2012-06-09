@@ -7,10 +7,12 @@ namespace RL\ForumBundle\Entity;
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\ArrayCollection;
 use RL\SecurityBundle\Entity\User;
+use RL\ForumBundle\Entity\Thread;
 
 /**
  * @ORM\Entity()
  * @ORM\Table(name="comments")
+ * @ORM\HasLifecycleCallbacks()
  */
 class Message
 {
@@ -21,7 +23,7 @@ class Message
 	 */
 	protected $id;
 	/**
-	 * @ORM\ManyToOne(targetEntity="Thread", inversedBy="messages")
+	 * @ORM\ManyToOne(targetEntity="RL\ForumBundle\Entity\Thread", inversedBy="messages")
 	 */
 	protected $thread;
 	/**
@@ -69,13 +71,13 @@ class Message
 	/**
 	 * @ORM\Column(type="boolean", name="show_ua")
 	 */
-	protected $showUa = 1;
+	protected $showUa = TRUE;
 	/**
 	 * @ORM\Column(type="string", length="128", name="session_id", nullable="true")
 	 */
 	protected $sessionId;
 	
-	protected function __construct()
+	public function __construct()
 	{
 		$this->postingTime = $this->changingTime = new \DateTime('now');
 	}
@@ -86,6 +88,12 @@ class Message
 	{
 		$this->postingTime = $this->changingTime = new \DateTime('now');
 		$this->sessionId = \session_id();
+		$this->useragent = $_SERVER['HTTP_USER_AGENT'];
+		if($this->user->getShowUA())
+			$this->showUa = TRUE;
+		else
+			$this->showUa = FALSE;
+		
 	}
 	/**
 	 * @ORM\preUpdate 

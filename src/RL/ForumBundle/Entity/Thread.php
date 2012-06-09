@@ -7,6 +7,7 @@ namespace RL\ForumBundle\Entity;
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\ArrayCollection;
 use RL\ForumBundle\Entity\Message;
+use RL\ForumBundle\Entity\Subsection;
 
 /**
  * @ORM\Entity(repositoryClass="RL\ForumBundle\Entity\ThreadRepository")
@@ -22,21 +23,17 @@ class Thread
 	 */
 	protected $id;
 	/**
-	 * @ORM\OneToMany(targetEntity="Message", mappedBy="thread")
+	 * @ORM\OneToMany(targetEntity="RL\ForumBundle\Entity\Message", mappedBy="thread")
 	 */
 	protected $messages;
 	/**
-	 * @ORM\ManyToOne(targetEntity="Subsection", inversedBy="threads")
+	 * @ORM\ManyToOne(targetEntity="RL\ForumBundle\Entity\Subsection", inversedBy="threads")
 	 */
 	protected $subsection;
 	/**
 	 * @ORM\Column(type="boolean")
 	 */
 	protected $attached = false;
-	/**
-	 * @ORM\Column(type="datetime")
-	 */
-	protected $time;
 	/**
 	 * @ORM\Column(type="datetime", name="changing_timest")
 	 */
@@ -50,7 +47,7 @@ class Thread
 	 */
 	public function setDefaultValues()
 	{
-		$this->time = $this->changingTime = new \DateTime('now');
+		$this->changingTime = new \DateTime('now');
 	}
 	/**
 	 * @ORM\preUpdate 
@@ -85,24 +82,6 @@ class Thread
 	public function getAttached()
 	{
 		return $this->attached;
-	}
-	/**
-	 * Set time
-	 *
-	 * @param datetime $time
-	 */
-	public function setTime($time)
-	{
-		$this->time = $time;
-	}
-	/**
-	 * Get time
-	 *
-	 * @return datetime 
-	 */
-	public function getTime()
-	{
-		return $this->time;
 	}
 	/**
 	 * Set changingTime
@@ -145,7 +124,7 @@ class Thread
 	 *
 	 * @param RL\ForumBundle\Entity\Section $subsection
 	 */
-	public function setSubsection(\RL\ForumBundle\Entity\Section $subsection)
+	public function setSubsection(\RL\ForumBundle\Entity\Subsection $subsection)
 	{
 		$this->subsection = $subsection;
 	}

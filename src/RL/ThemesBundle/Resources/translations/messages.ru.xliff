@@ -126,6 +126,34 @@
                 <source>all/day/hour</source>
                 <target>всего/день/час</target>
             </trans-unit>
+	    <trans-unit id="32">
+                <source>Reply to this message</source>
+                <target>Ответить на это сообщение</target>
+            </trans-unit>
+	    <trans-unit id="33">
+                <source>[Move]</source>
+                <target>[Переместить]</target>
+            </trans-unit>
+	    <trans-unit id="34">
+                <source>[Attach]</source>
+                <target>Прикрепить</target>
+            </trans-unit>
+	    <trans-unit id="35">
+                <source>[Add filter]</source>
+                <target>[Добавить метку]</target>
+            </trans-unit>
+	    <trans-unit id="36">
+                <source>[Edit]</source>
+                <target>[Править]</target>
+            </trans-unit>
+	    <trans-unit id="37">
+                <source>Reply to:</source>
+                <target>Ответ на:</target>
+            </trans-unit>
+	    <trans-unit id="38">
+                <source>from</source>
+                <target>от</target>
+            </trans-unit>
         </body>
     </file>
 </xliff>

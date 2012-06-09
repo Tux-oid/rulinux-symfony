@@ -13,21 +13,9 @@
 </ul>
 {%else%}
 <h2>{%trans%}Preview{%endtrans%}</h2>
-<div class="comment">
-  <div class="title"><br></div>
-  <div class="msg">
-    <table cellspacing="0" width="100%">
-      <tr>
-        <td valign="top"><h2>{{message.subject}}</h2>
-        <p><p>{{message.comment}}</p></p>
-        <div class="sign">{{message.author.username}} (<a href="{{path('user', {'name':message.author.username})}}">*</a>) ({{message.postingTime.date}})
-        <br>{{message.useragent}}</div>
-      </td>
-    </tr>
-  </table>
-</div>
+{% include theme.path('RLForumBundle', 'preview.html.twig')%}
 {%endif%}
-<form action="{{path('new_thread_in_forum', {'subsection':subsection})}}" method="post" {{form_enctype(form)}}>
+<form action="{{path('new_thread_in_forum', {'subsectionRewrite':subsection})}}" method="post" {{form_enctype(form)}}>
 {{form_errors(form)}}
 <table border="0">
 <tr>

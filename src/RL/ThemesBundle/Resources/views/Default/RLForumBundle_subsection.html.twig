@@ -8,79 +8,95 @@
 				<a href="{{path('forum')}}">{%trans%}Forum{%endtrans%}</a> - <b>{{subsection.name}}</b>
 			</td>
 			<td align=right valign=middle>
-				[<a href="{{path('new_thread_in_forum', {'subsection':subsection.rewrite})}}">{%trans%}Add message{%endtrans%}</a>]
+				[<a href="{{path('new_thread_in_forum', {'subsectionRewrite':subsection.rewrite})}}">{%trans%}Add message{%endtrans%}</a>]
 				<select name=id onChange = 'self.location = "forum_"+document.navForm.id[document.navForm.id.selectedIndex].value' title="quick jump">
 					{% for subsect in subsections%}
 						<option value="{{subsect.rewrite}}" {%if subsect.name == subsection.name%}selected{%endif%}>{{subsect.name}}</option>
 					{%endfor%}
-				</select>
-			</td>
-		</tr>
-	</table>
-</form>
+					</select>
+				</td>
+			</tr>
+		</table>
+	</form>
 {%endblock navigation %}
 
 {%block content%}
-<br>
-<h1>{%trans%}Forum{%endtrans%} {{subsection.name}}</h1>
-<!--<p style="margin-top: 0px;">-->
-<em>{{subsection.description}}</em>
-<br/>
-<br/>
-<script type="text/javascript">
-    var mins = 2;
-    $(function()
-    {		
-        $("#trigger").click(function(event) 
-        {
-            event.preventDefault();
-            $("#box").slideToggle();
-        });
+	<br>
+	<h1>{%trans%}Forum{%endtrans%} {{subsection.name}}</h1>
+	<!--<p style="margin-top: 0px;">-->
+	<em>{{subsection.description}}</em>
+	<br/>
+	<br/>
+	<script type="text/javascript">
+	    var mins = 2;
+	    $(function()
+	    {		
+		$("#trigger").click(function(event) 
+		{
+		    event.preventDefault();
+		    $("#box").slideToggle();
+		});
 
-        $("#box a").click(function(event) 
-        {
-            event.preventDefault();
-            $("#box").slideUp();
-        });
-    });
-	</script>
-	<div id="jq-wrapper">
-		<div id="bodyContent" style="padding-bottom:10px">
-			<a href="#" id="trigger">{%trans%}Subsection recomendations{%endtrans%}</a>
-			<div id="box">
+		$("#box a").click(function(event) 
+		{
+		    event.preventDefault();
+		    $("#box").slideUp();
+		});
+	    });
+		</script>
+		<div id="jq-wrapper">
+			<div id="bodyContent" style="padding-bottom:10px">
+				<a href="#" id="trigger">{%trans%}Subsection recomendations{%endtrans%}</a>
+				<div id="box">
             {{subsection.shortfaq}}
+					</div>
 				</div>
 			</div>
-		</div>
-		<!--</p>-->
-		<div class=forum>
-			<table width="100%" class="message-table">
-				<thead>
-					<tr>
+			<!--</p>-->
+			<div class=forum>
+				<table width="100%" class="message-table">
+					<thead>
+						<tr>
                 {%if is_granted('ROLE_MODER')%}
-							<th>{%trans%}Management{%endtrans%}</th>
+								<th>{%trans%}Management{%endtrans%}</th>
                 {%endif%}
-							<th width = "70%">{%trans%}Title{%endtrans%}</th>
-							<th>{%trans%}Comments count{%endtrans%}
-								<br>{%trans%}all/day/hour{%endtrans%}</th>
-						</tr>
-					</thead>
+								<th width = "70%">{%trans%}Title{%endtrans%}</th>
+								<th>{%trans%}Comments count{%endtrans%}
+									<br>{%trans%}all/day/hour{%endtrans%}</th>
+							</tr>
+						</thead>
 
-					<tfoot>
-						<tr>
-							<td colspan=2>
-								<p>
-								<div style="float: left"></div>
-								<div style="float: right"></div>
-							</td>
-						</tr>
-					</tfoot>
+						<tfoot>
+							<tr>
+								<td colspan=2>
+									<p>
+									<div style="float: left"></div>
+									<div style="float: right"></div>
+								</td>
+							</tr>
+						</tfoot>
 
-					<tbody>
-						<tr>
-                {% for thread in threads %}
-								<td align = center></td><td>-</td><td align=center><b>-</b>/<b>-</b>/<b>-</b></td>
-                {% endfor %}
+						<tbody>
+							<tr>
+								{% for thread in threads %}
+									<td align = center>
+										<img src="{{'/web/bundles/rlthemes/images/'~user.theme~'/move.png'}}">
+									{%if thread.attached == false%}
+										<img src="{{'/web/bundles/rlthemes/images/'~user.theme~'/attach.png'}}">
+									{%else%}
+										<img src="{{'/web/bundles/rlthemes/images/'~user.theme~'/detach.png'}}">
+									{%endif%}
+									</td>
+									<td>
+										<a href="{{path('thread', {'id': thread.id, 'page':1})}}">
+											{{thread.messages[0].subject}}
+										</a>
+										({{thread.messages[0].user.username}})
+									</td>
+									<td align=center>
+										<b>-</b>/<b>-</b>/<b>-</b>
+									</td>
+								{% endfor %}
 							</tr>
 						</tbody>
 					</table>

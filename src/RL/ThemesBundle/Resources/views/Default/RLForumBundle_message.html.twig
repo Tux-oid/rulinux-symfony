@@ -1,0 +1,39 @@
+<div class="messages">
+<div class="comment" id="{{'cmm'~message.id}}">
+<div class=title>
+<a href="#{{'msg'~message.id}}"><img border="0" src="{{'/web/bundles/rlthemes/images/'~user.theme~'/id.png'}}" alt="[#]"></a>
+<a href="set_filter_142880"><img border="0" src="{{'/web/bundles/rlthemes/images/'~user.theme~'/filter.png'}}" alt="{%trans%}[Add filter]{%endtrans%}"></a>
+<a href="message_142880:edit"><img border="0" src="{{'/web/bundles/rlthemes/images/'~user.theme~'/edit.png'}}" alt="{%trans%}[Edit]{%endtrans%}"></a>
+{%trans%}Reply to:{%endtrans%} <a href="#{{message.referer}}">{{message.thread.messages[message.referer].subject}}</a> {%trans%}from{%endtrans%} {{message.thread.messages[message.referer].user.username}}  {{message.thread.messages[message.referer].postingTime.date}}<br></div>
+<div class=msg id="{{'msg'~message.id}}">
+<table cellspacing="0" width="100%">
+<tr>
+<td valign=top align=center width="160px">
+	{%if message.user.photo != ''%}
+		<img src="{{message.user.photo}}" alt="avatar">
+	{%endif%}
+</td>
+<td valign=top>
+	<h2>{{message.subject}}</h2>
+	{{message.comment}}
+	<div class=sign>
+		{{message.user.username}}(<a href="{{path('user', {'name': message.user.username})}}">*</a>)({{message.postingTime.date}})
+		<br>
+		<br>
+		{%if is_granted('ROLE_ADMIN')%}
+			<i>{{message.useragent}}</i>
+		{%else%}
+			{%if message.showUa == true%}
+				<i>{{message.useragent}}</i>
+		{%endif%}
+	{%endif%}
+	</div>
+<div class=reply>
+	[<a href="{{path('comment', {'thread_id': message.thread.id, 'comment_id': message.id})}}">{%trans%}Reply to this message{%endtrans%}</a>]
+</div>
+</td>
+</tr>
+</table>
+</div>
+</div>
+</div>

@@ -1,0 +1,30 @@
+{% extends theme.path('RLMainBundle', 'layout.html.twig') %}
+
+{%block title%}
+{{parent()}} 
+{%endblock title%}
+
+{% block navigation %}
+<form name="navForm" action="/">
+	<table class=nav>
+		<tr>
+			<td align=left valign=middle>
+				<a href="{{path('forum')}}">{%trans%}Forum{%endtrans%}</a> - <b><a href="{{path('subsection', {'name': thread.subsection.rewrite})}}">{{thread.subsection.name}}</a></b>
+			</td>
+			<td align=right valign=middle>
+				[RSS]
+			</td>
+		</tr>
+	</table>
+	</form>
+{%endblock navigation %}
+
+{%block content%}
+{%include theme.path('RLForumBundle', 'topicStartMessage.html.twig')%}
+
+{%for message in thread.messages %}
+	{%if message != thread.messages[0]%}
+		{%include theme.path('RLForumBundle', 'message.html.twig')%}
+	{%endif%}
+{%endfor%}
+{%endblock content%}
