@@ -1,7 +1,7 @@
 {% extends theme.path('RLMainBundle', 'layout.html.twig') %}
 
 {%block title%}
-{{parent()}} - {%trans%}Forum{%endtrans%} - {{thread.subsection.name}} - {{thread.messages[0].subject}}
+{{parent()}} - {%trans%}Forum{%endtrans%} - {{startMessage.thread.subsection.name}} - {{startMessage.thread.messages[0].subject}}
 {%endblock title%}
 
 {% block navigation %}
@@ -9,7 +9,7 @@
     <table class=nav>
         <tr>
             <td align=left valign=middle>
-                <a href="{{path('forum')}}">{%trans%}Forum{%endtrans%}</a> - <b><a href="{{path('subsection', {'name': thread.subsection.rewrite})}}">{{thread.subsection.name}}</a></b>
+                <a href="{{path('forum')}}">{%trans%}Forum{%endtrans%}</a> - <b><a href="{{path('subsection', {'name': startMessage.thread.subsection.rewrite})}}">{{startMessage.thread.subsection.name}}</a></b>
             </td>
             <td align=right valign=middle>
                 [RSS]
@@ -21,7 +21,7 @@
 
 {%block content%}
 {%include theme.path('RLForumBundle', 'topicStartMessage.html.twig')%}
-{%block pages%}
+{%block pagesTop%}
 <table class=nav>
     <tr>
         <td align=left valign=middle width="35%">
@@ -53,10 +53,41 @@
         </td>
     </tr>
 </table>
-{%endblock pages%}
-{%for message in thread.messages %}
-	{%if message != thread.messages[0]%}
-		{%include theme.path('RLForumBundle', 'message.html.twig')%}
-	{%endif%}
+{%endblock pagesTop%}
+{%for message in messages %}
+	{%include theme.path('RLForumBundle', 'message.html.twig')%}
 {%endfor%}
+{%block pagesBottom%}
+<table class=nav>
+    <tr>
+        <td align=left valign=middle width="35%">
+            <table>
+                <tr valign=middle>
+                    <td align=left valign=top>
+                        <a href="thread_37328_page_1" rel=prev rev=next>Previous</a>
+                    </td>
+                </tr>
+            </table>
+        </td>
+        <td>
+            <table width="100%">
+                <tr valign=middle align=center>
+                    <td>
+                        {{pages|raw}}
+                    </td>
+                </tr>
+            </table>
+        </td>
+        <td align=left valign=middle width="35%">
+            <table width="100%">
+                <tr valign=middle align=right>
+                    <td>
+                        <a href="thread_37332_page_1" rel=prev rev=next>Next</a>
+                    </td>
+                </tr>
+            </table>
+        </td>
+    </tr>
+</table>
+{%endblock pagesBottom%}
 {%endblock content%}

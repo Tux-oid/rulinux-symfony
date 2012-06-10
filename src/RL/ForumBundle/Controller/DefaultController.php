@@ -7,7 +7,7 @@ namespace RL\ForumBundle\Controller;
 use Symfony\Component\Security\Core\SecurityContext;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
-use RL\MainBundle\Form\Pages;
+use RL\MainBundle\Helper\Pages;
 use RL\ForumBundle\Entity\Subsection;
 use RL\ForumBundle\Form\AddThreadType;
 use RL\ForumBundle\Form\AddThreadForm;
@@ -130,14 +130,16 @@ class DefaultController extends Controller
 		$itemsCount = count($threadRepository->findOneById($id)->getMessages());
 		$itemsOnPage = $user->getCommentsOnPage();
 		$pagesCount = ceil(($itemsCount - 1) / $itemsOnPage);
-		$pagesCount > 1 ? $begin = $itemsOnPage * ($page - 1) : $begin = 0;
-		$thread = $threadRepository->getThreadById($id, $itemsOnPage, $begin);
-		$pages = new Pages($itemsOnPage, $itemsCount, $page);
+		$pagesCount > 1 ? $offset = $itemsOnPage * ($page - 1) : $offset = 0;
+		$startMessage = $threadRepository->getThreadStartMessageById($id);
+		$threadComments = $threadRepository->getThreadCommentsById($id, $itemsOnPage, $offset);
+		$pages = new Pages($this->get('router'), $itemsOnPage, $itemsCount, $page, 'thread', array("id"=>$id, "page"=>$page));
 		$pagesStr = $pages->draw();
 		return $this->render($theme->getPath('RLForumBundle', 'thread.html.twig'), array(
 				'theme' => $theme,
 				'user' => $user,
-				'thread' => $thread,
+				'startMessage' => $startMessage,
+				'messages' => $threadComments,
 				'pages'=> $pagesStr,
 			));
 	}
