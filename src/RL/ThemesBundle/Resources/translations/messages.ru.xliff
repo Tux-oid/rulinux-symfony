@@ -158,6 +158,18 @@
                 <source>Add comment</source>
                 <target>Добавить комментарий</target>
             </trans-unit>
+	    <trans-unit id="40">
+                <source>Edit message</source>
+                <target>Редактировать сообщение</target>
+            </trans-unit>
+	    <trans-unit id="41">
+                <source>Change</source>
+                <target>Изменить</target>
+            </trans-unit>
+	    <trans-unit id="42">
+                <source>Edition reason</source>
+                <target>Причина редактирования</target>
+            </trans-unit>
         </body>
     </file>
 </xliff>

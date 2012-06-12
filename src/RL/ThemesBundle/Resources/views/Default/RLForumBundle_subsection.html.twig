@@ -81,8 +81,8 @@
 						</tfoot>
 
 						<tbody>
-							<tr>
-								{% for thread in threads %}
+                                                        {% for thread in threads %}
+                                                                <tr>
 									<td align = center>
 										<img src="{{'/web/bundles/rlthemes/images/'~user.theme~'/move.png'}}">
 									{%if thread.attached == false%}
@@ -94,15 +94,15 @@
 									<td>
 										<a href="{{path('thread', {'id': thread.id})}}">
 											{{thread.messages[0].subject}}
-										</a>
-										({{thread.messages[0].user.username}})
-									</td>
-									<td align=center>
-										<b>-</b>/<b>-</b>/<b>-</b>
-									</td>
-								{% endfor %}
-							</tr>
-						</tbody>
-					</table>
+											</a>
+											({{thread.messages[0].user.username}})
+										</td>
+										<td align=center>
+											<b>{%if commentsCount['all'][thread.id] is defined%}{{commentsCount['all'][thread.id]}}{%else%}-{%endif%}</b>/<b>{%if commentsCount['day'][thread.id] is defined%}{{commentsCount['day'][thread.id]}}{%else%}-{%endif%}</b>/<b>{%if commentsCount['hour'][thread.id] is defined%}{{commentsCount['hour'][thread.id]}}{%else%}-{%endif%}</b>
+										</td>
+								</tr>
+							{% endfor %}
+								</tbody>
+							</table>
 
     {%endblock%}

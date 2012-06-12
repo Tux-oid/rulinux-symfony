@@ -13,6 +13,8 @@ use RL\ForumBundle\Form\AddThreadType;
 use RL\ForumBundle\Form\AddThreadForm;
 use RL\ForumBundle\Form\AddCommentType;
 use RL\ForumBundle\Form\AddCommentForm;
+use RL\ForumBundle\Form\EditCommentType;
+use RL\ForumBundle\Form\EditCommentForm;
 use RL\ForumBundle\Entity\Thread;
 use RL\ForumBundle\Entity\Message;
 
@@ -41,12 +43,14 @@ class DefaultController extends Controller
 				));
 		}
 		$threadRepository = $this->get('doctrine')->getRepository('RLForumBundle:Thread');
-		$threads = $threadRepository->getThreads($name, '10', '0');
+		$threads = $threadRepository->getThreads($name, $user->getThreadsOnPage(), '0');
+		$commentsCount = $threadRepository->getCommentsCount($user->getThreadsOnPage(), '0');
 		return $this->render($theme->getPath('RLForumBundle', 'subsection.html.twig'), array('theme' => $theme,
 				'user' => $user,
 				'subsection' => $subsection,
 				'subsections' => $subsectionRepository->findAll(),
 				'threads' => $threads,
+				'commentsCount' => $commentsCount,
 				)
 		);
 	}
@@ -56,10 +60,14 @@ class DefaultController extends Controller
 	public function forumAction()
 	{
 		$theme = $this->get('rl_themes.theme.provider');
-		$subsectionRepository = $this->get('doctrine')->getRepository('RLForumBundle:Subsection');
+		$doctrine = $this->get('doctrine');
+		$subsectionRepository = $doctrine->getRepository('RLForumBundle:Subsection');
+		$subsections = $subsectionRepository->findAll();
+		$threadsCount = $doctrine->getRepository('RLForumBundle:Thread')->getThreadsCount();
 		return $this->render($theme->getPath('RLForumBundle', 'forum.html.twig'), array('theme' => $theme,
 				'user' => $this->get('security.context')->getToken()->getUser(),
-				'subsections' => $subsectionRepository->findAll(),
+				'subsections' => $subsections,
+				'threadsCount' => $threadsCount,
 				)
 		);
 	}
@@ -133,14 +141,14 @@ class DefaultController extends Controller
 		$pagesCount > 1 ? $offset = $itemsOnPage * ($page - 1) : $offset = 0;
 		$startMessage = $threadRepository->getThreadStartMessageById($id);
 		$threadComments = $threadRepository->getThreadCommentsById($id, $itemsOnPage, $offset);
-		$pages = new Pages($this->get('router'), $itemsOnPage, $itemsCount, $page, 'thread', array("id"=>$id, "page"=>$page));
+		$pages = new Pages($this->get('router'), $itemsOnPage, $itemsCount, $page, 'thread', array("id" => $id, "page" => $page));
 		$pagesStr = $pages->draw();
 		return $this->render($theme->getPath('RLForumBundle', 'thread.html.twig'), array(
 				'theme' => $theme,
 				'user' => $user,
 				'startMessage' => $startMessage,
 				'messages' => $threadComments,
-				'pages'=> $pagesStr,
+				'pages' => $pagesStr,
 			));
 	}
 	/**
@@ -170,7 +178,7 @@ class DefaultController extends Controller
 			$message->setReferer($comment_id);
 			$em->persist($message);
 			$em->flush();
-			return $this->redirect($this->generateUrl("thread", array("id" => $thread_id, "page"=>1))); //FIXME: set url for redirecting
+			return $this->redirect($this->generateUrl("thread", array("id" => $thread_id, "page" => 1))); //FIXME: set url for redirecting
 		}
 		//preview
 		$pr_val = $request->request->get('preview');
@@ -196,8 +204,77 @@ class DefaultController extends Controller
 		return $this->render($theme->getPath('RLForumBundle', 'addComment.html.twig'), array(
 				'theme' => $theme,
 				'user' => $user,
-				'message'=>$message,
-				'form'=>$form->createView(),
+				'message' => $message,
+				'form' => $form->createView(),
+			));
+	}
+	/**
+	 * @Route("/message/{messageId}/edit", name="editMessage") 
+	 */
+	public function editMessage($messageId)
+	{
+		$theme = $this->get('rl_themes.theme.provider');
+		$securityContext = $this->get('security.context');
+		$user = $securityContext->getToken()->getUser();
+		$doctrine = $this->get('doctrine');
+		$messageRepository = $doctrine->getRepository('RLForumBundle:Message');
+		$message = $messageRepository->findOneById($messageId);
+		//check access
+		if($message->getUser() != $user || !$securityContext->isGranted('ROLE_MODER'))
+		{
+			$legend = 'Access denied';
+			$title = 'Edit message';
+			$text = 'You have not privelegies to edit this message';
+			return $this->render($theme->getPath('RLMainBundle', 'fieldset.html.twig'), array(
+					'theme' => $theme,
+					'user' => $user,
+					'legend' => $legend,
+					'title' => $title,
+					'text' => $text,
+				));
+		}
+		if($user->isAnonymous())
+		{
+			if($message->getSessionId != \session_id())
+			{
+				$legend = 'Access denied';
+				$title = 'Edit message';
+				$text = 'You have not privelegies to edit this message';
+				return $this->render($theme->getPath('RLMainBundle', 'fieldset.html.twig'), array(
+						'theme' => $theme,
+						'user' => $user,
+						'legend' => $legend,
+						'title' => $title,
+						'text' => $text,
+					));
+			}
+		}
+		//save comment in database
+		$request = $this->getRequest();
+		$sbm = $request->request->get('submit');
+		if(isset($sbm))
+		{
+			$em = $doctrine->getEntityManager();
+			$cmnt = $request->request->get('editComment');
+			$message->setSubject($cmnt['subject']);
+			$message->setComment($cmnt['comment']);
+			$message->setRawComment($cmnt['comment']);
+			$message->setChangedBy($user);
+			$message->setChangedFor($cmnt['editionReason']);
+//			$em->persist($message);
+			$em->flush();
+			return $this->redirect($this->generateUrl("thread", array("id" => $message->getThread()->getId()))); //FIXME: set url for redirecting
+		}
+		//editing
+		$comment = new EditCommentForm();
+		$comment->setSubject($message->getSubject());
+		$comment->setComment($message->getRawComment());
+		$form = $this->createForm(new EditCommentType(), $comment);
+		return $this->render($theme->getPath('RLForumBundle', 'editComment.html.twig'), array(
+				'theme' => $theme,
+				'user' => $user,
+				'message' => $message,
+				'form' => $form->createView(),
 			));
 	}
 }

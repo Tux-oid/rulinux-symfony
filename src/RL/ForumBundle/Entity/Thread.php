@@ -35,6 +35,10 @@ class Thread
 	 */
 	protected $attached = false;
 	/**
+	 * @ORM\Column(type="datetime", name="timest")
+	 */
+	protected $postingTime;
+	/**
 	 * @ORM\Column(type="datetime", name="changing_timest")
 	 */
 	protected $changingTime;
@@ -47,7 +51,7 @@ class Thread
 	 */
 	public function setDefaultValues()
 	{
-		$this->changingTime = new \DateTime('now');
+		$this->postingTime = $this->changingTime = new \DateTime('now');
 	}
 	/**
 	 * @ORM\preUpdate 

@@ -8,7 +8,7 @@ use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\ArrayCollection;
 
 /**
- * @ORM\Entity()
+ * @ORM\Entity(repositoryClass="RL\ForumBundle\Entity\SubsectionRepository")
  * @ORM\Table(name="subsections")
  */
 class Subsection
