@@ -17,7 +17,7 @@ class Pages
 	{
 		$itemsOnPage = $this->itemsOnPage;
 		$page = $this->page;
-		$pagesCount = ceil(($this->itemsCount - 1) / $itemsOnPage);
+		$pagesCount = ceil(($this->itemsCount) / $itemsOnPage);
 		$pages = '';
 		if($pagesCount > 1)
 		{

@@ -13,17 +13,10 @@ class ThreadRepository extends EntityRepository
 	public function getThreads($subsection, $limit, $offset)
 	{
 		$em = $this->_em;
-		$q = $em->createQueryBuilder()
-			->select('t, m')
-			->from('RL\ForumBundle\Entity\Thread', 't')
-			->innerJoin('t.messages', 'm')
-			->where('m.id = (SELECT MIN(msg.id) AS msg_id FROM RL\ForumBundle\Entity\Message AS msg WHERE msg.thread = t.id)')
-			->andWhere('t.subsection = (SELECT s.id FROM RL\ForumBundle\Entity\Subsection s WHERE s.rewrite = ?1)')
-			->setParameter(1, $subsection)
-			->orderBy('t.id')
+		$q = $em->createQuery('SELECT t, m FROM RL\ForumBundle\Entity\Thread AS t INNER JOIN t.messages AS m WHERE m.id = (SELECT MIN(msg.id) AS msg_id FROM RL\ForumBundle\Entity\Message AS msg WHERE msg.thread = t.id) AND t.subsection = (SELECT s.id FROM RL\ForumBundle\Entity\Subsection s WHERE s.rewrite = ?1) ORDER BY t.id DESC')
 			->setFirstResult($offset)
 			->setMaxResults($limit)
-			->getQuery();
+			->setParameter(1, $subsection);
 		$threads = $q->getResult();
 		return $threads;
 	}
@@ -74,36 +67,43 @@ class ThreadRepository extends EntityRepository
 		}
 		return $ret;
 	}
-	public function getCommentsCount($limit, $offset)
+	public function getCommentsCount($subsection, $limit, $offset)
 	{
 		$ret = array();
-		$all = $this->_em->createQuery('SELECT t.id, COUNT(m.id) AS allCnt FROM RL\ForumBundle\Entity\Message AS m INNER JOIN m.thread AS t GROUP BY t.id ORDER BY t.id')
-			->setMaxResults($limit)
-			->setFirstResult($offset)
-			->getResult();
-		foreach($all as $value)
+		
+		return $ret;
+	}
+	public function getNeighborThreadsById($id)
+	{
+		$em = $this->_em;
+		$ret = array();
+		$previous_thread = $em->createQuery("SELECT thr, s FROM RL\ForumBundle\Entity\Thread AS thr INNER JOIN thr.subsection AS s WHERE thr.id=(SELECT MAX(t.id) FROM RL\ForumBundle\Entity\Thread AS t WHERE t.id <:id)")//SELECT MAX(t.id) AS id FROM RL\ForumBundle\Entity\Thread AS t WHERE t.id < :id AND t.subsection = (
+			->setMaxResults(1)
+			->setFirstResult(0)
+			->setParameter('id', $id)
+			->getOneOrNullResult();
+		if(isset($previous_thread))
 		{
-			$ret['all'][$value['id']] = $value['allCnt'];
+			$previous_id = $em->createQuery("SELECT m, t FROM RL\ForumBundle\Entity\Message AS m INNER JOIN m.thread AS t WHERE t=:thread AND m.id = (SELECT MIN(msg.id) FROM RL\ForumBundle\Entity\Message AS msg WHERE msg.thread=:thread)")
+				->setMaxResults(1)
+				->setFirstResult(0)
+				->setParameter('thread', $previous_thread)
+				->getSingleResult();
+			$ret['previous'] = $previous_id;
 		}
-		$yesterday = new \DateTime('-1 day');
-		$day = $this->_em->createQuery('SELECT t.id, COUNT(m.id) AS dayCnt FROM RL\ForumBundle\Entity\Message AS m INNER JOIN m.thread AS t WHERE m.postingTime > :postingTime GROUP BY t.id ORDER BY t.id')
-			->setParameter('postingTime', $yesterday->format('Y.m.d H:i:s'))
-			->setMaxResults($limit)
-			->setFirstResult($offset)
-			->getResult();
-		foreach($day as $value)
+		$next_thread = $em->createQuery("SELECT thr, s FROM RL\ForumBundle\Entity\Thread AS thr INNER JOIN thr.subsection AS s WHERE thr.id=(SELECT MIN(t.id) FROM RL\ForumBundle\Entity\Thread AS t WHERE t.id >:id)")
+			->setMaxResults(1)
+			->setFirstResult(0)
+			->setParameter('id', $id)
+			->getOneOrNullResult();
+		if(isset($next_thread))
 		{
-			$ret['day'][$value['id']] = $value['dayCnt'];
-		}
-		$lastHour = new \DateTime('-1 hour');
-		$hour = $this->_em->createQuery('SELECT t.id, COUNT(m.id) AS hourCnt FROM RL\ForumBundle\Entity\Message AS m INNER JOIN m.thread AS t WHERE m.postingTime > :postingTime GROUP BY t.id ORDER BY t.id')
-			->setParameter('postingTime', $lastHour->format('Y.m.d H:i:s'))
-			->setMaxResults($limit)
-			->setFirstResult($offset)
-			->getResult();
-		foreach($hour as $value)
-		{
-			$ret['hour'][$value['id']] = $value['hourCnt'];
+			$next_id = $em->createQuery("SELECT m, t FROM RL\ForumBundle\Entity\Message AS m INNER JOIN m.thread AS t WHERE t=:thread AND m.id = (SELECT MIN(msg.id) FROM RL\ForumBundle\Entity\Message AS msg WHERE msg.thread=:thread)")
+				->setMaxResults(1)
+				->setFirstResult(0)
+				->setParameter('thread', $next_thread)
+				->getSingleResult();
+			$ret['next'] = $next_id;
 		}
 		return $ret;
 	}

@@ -39,6 +39,10 @@ class Subsection
 	 * @ORM\OneToMany(targetEntity="Thread", mappedBy="subsection")
 	 */
 	protected $threads;
+	/*
+	 * ORM\ManyToOne(targetEntity="RL\MainBundle\Entity\Section", inversedBy="subsections")
+	 */
+	protected $section;
 	public function __construct()
 	{
 		$this->threads = new \Doctrine\Common\Collections\ArrayCollection();
@@ -142,4 +146,14 @@ class Subsection
 	{
 		return $this->threads;
 	}
+	public function getSection()
+	{
+		return $this->section;
+	}
+	public function setSection($section)
+	{
+		$this->section = $section;
+	}
+
+
 }

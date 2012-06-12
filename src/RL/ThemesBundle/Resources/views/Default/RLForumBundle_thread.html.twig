@@ -28,7 +28,9 @@
             <table>
                 <tr valign=middle>
                     <td align=left valign=top>
-                        <a href="thread_37328_page_1" rel=prev rev=next>Previous</a>
+			{%if neighborThreads['previous'] is defined %}
+				<a href="{{path('thread', {'id':neighborThreads['previous'].thread.id})}}" rel=prev rev=next>{{neighborThreads['previous'].subject}}</a>
+			{%endif%}
                     </td>
                 </tr>
             </table>
@@ -46,7 +48,9 @@
             <table width="100%">
                 <tr valign=middle align=right>
                     <td>
-                        <a href="thread_37332_page_1" rel=prev rev=next>Next</a>
+			{%if neighborThreads['next'] is defined %}
+				<a href="{{path('thread', {'id':neighborThreads['next'].thread.id})}}" rel=prev rev=next>{{neighborThreads['next'].subject}}</a>
+			{%endif%}
                     </td>
                 </tr>
             </table>
@@ -64,7 +68,9 @@
             <table>
                 <tr valign=middle>
                     <td align=left valign=top>
-                        <a href="thread_37328_page_1" rel=prev rev=next>Previous</a>
+			{%if neighborThreads['previous'] is defined %}
+				<a href="{{path('thread', {'id':neighborThreads['previous'].thread.id})}}" rel=prev rev=next>{{neighborThreads['previous'].subject}}</a>
+			{%endif%}
                     </td>
                 </tr>
             </table>
@@ -82,7 +88,9 @@
             <table width="100%">
                 <tr valign=middle align=right>
                     <td>
-                        <a href="thread_37332_page_1" rel=prev rev=next>Next</a>
+			{%if neighborThreads['next'] is defined %}
+				<a href="{{path('thread', {'id':neighborThreads['next'].thread.id})}}" rel=prev rev=next>{{neighborThreads['next'].subject}}</a>
+			{%endif%}
                     </td>
                 </tr>
             </table>

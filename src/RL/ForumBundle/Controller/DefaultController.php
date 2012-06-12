@@ -21,9 +21,9 @@ use RL\ForumBundle\Entity\Message;
 class DefaultController extends Controller
 {
 	/**
-	 * @Route("/forum_{name}", name="subsection")
+	 * @Route("/forum_{name}/{page}", name="subsection", defaults={"page" = 1})
 	 */
-	public function subsectionAction($name)
+	public function subsectionAction($name, $page)
 	{
 		$theme = $this->get('rl_themes.theme.provider');
 		$user = $this->get('security.context')->getToken()->getUser();
@@ -43,20 +43,28 @@ class DefaultController extends Controller
 				));
 		}
 		$threadRepository = $this->get('doctrine')->getRepository('RLForumBundle:Thread');
-		$threads = $threadRepository->getThreads($name, $user->getThreadsOnPage(), '0');
-		$commentsCount = $threadRepository->getCommentsCount($user->getThreadsOnPage(), '0');
+		$itemsCount = count($subsection->getThreads());
+		$itemsOnPage = $user->getThreadsOnPage();
+		$pagesCount = ceil(($itemsCount) / $itemsOnPage);
+		$pagesCount > 1 ? $offset = $itemsOnPage * ($page - 1) : $offset = 0;
+		$threads = $threadRepository->getThreads($name, $user->getThreadsOnPage(), $offset);
+		$commentsCount = $threadRepository->getCommentsCount($subsection, $user->getThreadsOnPage(), $offset);
+		$pages = new Pages($this->get('router'), $itemsOnPage, $itemsCount, $page, 'subsection', array("name" => $name, "page" => $page));
+		$pagesStr = $pages->draw();
 		return $this->render($theme->getPath('RLForumBundle', 'subsection.html.twig'), array('theme' => $theme,
 				'user' => $user,
 				'subsection' => $subsection,
 				'subsections' => $subsectionRepository->findAll(),
 				'threads' => $threads,
 				'commentsCount' => $commentsCount,
+				'pages' => $pagesStr,
 				)
 		);
 	}
 	/**
 	 * @Route("/forum", name="forum")
 	 */
+	//FIXME:add section
 	public function forumAction()
 	{
 		$theme = $this->get('rl_themes.theme.provider');
@@ -73,7 +81,8 @@ class DefaultController extends Controller
 	}
 	/**
 	 * @Route("/new_thread_in_forum_{subsectionRewrite}", name="new_thread_in_forum")
-	 */
+	 */ 
+	//FIXME:add section
 	public function newThreadAction($subsectionRewrite)
 	{
 		$theme = $this->get('rl_themes.theme.provider');
@@ -141,14 +150,16 @@ class DefaultController extends Controller
 		$pagesCount > 1 ? $offset = $itemsOnPage * ($page - 1) : $offset = 0;
 		$startMessage = $threadRepository->getThreadStartMessageById($id);
 		$threadComments = $threadRepository->getThreadCommentsById($id, $itemsOnPage, $offset);
-		$pages = new Pages($this->get('router'), $itemsOnPage, $itemsCount, $page, 'thread', array("id" => $id, "page" => $page));
+		$pages = new Pages($this->get('router'), $itemsOnPage, $itemsCount-1, $page, 'thread', array("id" => $id, "page" => $page));
 		$pagesStr = $pages->draw();
+		$neighborThreads = $threadRepository->getNeighborThreadsById($id);
 		return $this->render($theme->getPath('RLForumBundle', 'thread.html.twig'), array(
 				'theme' => $theme,
 				'user' => $user,
 				'startMessage' => $startMessage,
 				'messages' => $threadComments,
 				'pages' => $pagesStr,
+				'neighborThreads' => $neighborThreads,
 			));
 	}
 	/**
