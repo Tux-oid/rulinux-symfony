@@ -279,7 +279,7 @@ class Message
 	 *
 	 * @param \RL\SecurityBundle\Entity\User $changedBy
 	 */
-	public function setChangedBy(\RL\SecurityBundle\Entity\User $changedBy)
+	public function setChangedBy($changedBy)
 	{
 		$this->changedBy = $changedBy;
 	}
@@ -297,7 +297,7 @@ class Message
 	 *
 	 * @param RL\SecurityBundle\Entity\User $user
 	 */
-	public function setUser(\RL\SecurityBundle\Entity\User $user)
+	public function setUser($user)
 	{
 		$this->user = $user;
 	}

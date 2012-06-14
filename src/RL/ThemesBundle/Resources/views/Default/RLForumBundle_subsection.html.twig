@@ -1,7 +1,7 @@
 {% extends theme.path('RLMainBundle', 'layout.html.twig') %}
 
 {%block title%}
-{{parent()}} - {%trans%}Forum{%endtrans%} - {{subsection.name}}
+{{parent()}} - {{section.name}} - {{subsection.name}}
 {%endblock title%}
 
 {% block navigation %}
@@ -9,11 +9,11 @@
 	<table class=nav>
 		<tr>
 			<td align=left valign=middle>
-				<a href="{{path('forum')}}">{%trans%}Forum{%endtrans%}</a> - <b>{{subsection.name}}</b>
+				<a href="{{path('forum')}}">{{section.name}}</a> - <b>{{subsection.name}}</b>
 			</td>
 			<td align=right valign=middle>
-				[<a href="{{path('new_thread_in_forum', {'subsectionRewrite':subsection.rewrite})}}">{%trans%}Add message{%endtrans%}</a>]
-				<select name=id onChange = 'self.location = "forum_"+document.navForm.id[document.navForm.id.selectedIndex].value' title="quick jump">
+				[<a href="{{path('new_thread_in_'~section.rewrite, {'subsectionRewrite':subsection.rewrite})}}">{%trans%}Add message{%endtrans%}</a>]
+				<select name=id onChange = 'self.location = {{section.rewrite}}"_"+document.navForm.id[document.navForm.id.selectedIndex].value' title="quick jump">
 					{% for subsect in subsections%}
 						<option value="{{subsect.rewrite}}" {%if subsect.name == subsection.name%}selected{%endif%}>{{subsect.name}}</option>
 					{%endfor%}
@@ -26,7 +26,7 @@
 
 {%block content%}
 	<br>
-	<h1>{%trans%}Forum{%endtrans%} {{subsection.name}}</h1>
+	<h1>{{section.name}} {{subsection.name}}</h1>
 	<!--<p style="margin-top: 0px;">-->
 	<em>{{subsection.description}}</em>
 	<br/>

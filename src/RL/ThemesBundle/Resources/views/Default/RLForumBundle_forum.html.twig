@@ -1,13 +1,11 @@
 {% extends theme.path('RLMainBundle', 'layout.html.twig') %}
 
 {%block title%}
-{{parent()}} - {%trans%}Forum{%endtrans%}
+{{parent()}} - {{section.name}}
 {%endblock title%}
 
 {%block content%}
-<h1>
-        {%trans%}Forum{%endtrans%}
-	</h1>
+<h1>{{section.name}}</h1>
 {%trans%}Groups{%endtrans%}:
 	<ul>
         {% for subsection in subsections %}

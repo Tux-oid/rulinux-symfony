@@ -6,6 +6,7 @@
 namespace RL\ForumBundle\Entity;
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\ArrayCollection;
+use RL\MainBundle\Entity\Section;
 
 /**
  * @ORM\Entity(repositoryClass="RL\ForumBundle\Entity\SubsectionRepository")
@@ -39,8 +40,9 @@ class Subsection
 	 * @ORM\OneToMany(targetEntity="Thread", mappedBy="subsection")
 	 */
 	protected $threads;
-	/*
-	 * ORM\ManyToOne(targetEntity="RL\MainBundle\Entity\Section", inversedBy="subsections")
+	/**
+	 * @ORM\ManyToOne(targetEntity="RL\MainBundle\Entity\Section", inversedBy="subsections")
+	 * @ORM\OrderBy({"id" = "ASC"})
 	 */
 	protected $section;
 	public function __construct()

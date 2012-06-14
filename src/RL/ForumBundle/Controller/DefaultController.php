@@ -17,71 +17,32 @@ use RL\ForumBundle\Form\EditCommentType;
 use RL\ForumBundle\Form\EditCommentForm;
 use RL\ForumBundle\Entity\Thread;
 use RL\ForumBundle\Entity\Message;
+use RL\MainBundle\Entity\Section;
 
 class DefaultController extends Controller
 {
 	/**
-	 * @Route("/forum_{name}/{page}", name="subsection", defaults={"page" = 1})
-	 */
-	public function subsectionAction($name, $page)
-	{
-		$theme = $this->get('rl_themes.theme.provider');
-		$user = $this->get('security.context')->getToken()->getUser();
-		$subsectionRepository = $this->get('doctrine')->getRepository('RLForumBundle:Subsection');
-		$subsection = $subsectionRepository->findOneByRewrite($name);
-		if(empty($subsection))
-		{
-			$legend = 'subsection not found';
-			$title = 'unknown subsection';
-			$text = 'subsection '.$name.' not found';
-			return $this->render($theme->getPath('RLMainBundle', 'fieldset.html.twig'), array(
-					'theme' => $theme,
-					'user' => $user,
-					'legend' => $legend,
-					'title' => $title,
-					'text' => $text,
-				));
-		}
-		$threadRepository = $this->get('doctrine')->getRepository('RLForumBundle:Thread');
-		$itemsCount = count($subsection->getThreads());
-		$itemsOnPage = $user->getThreadsOnPage();
-		$pagesCount = ceil(($itemsCount) / $itemsOnPage);
-		$pagesCount > 1 ? $offset = $itemsOnPage * ($page - 1) : $offset = 0;
-		$threads = $threadRepository->getThreads($name, $user->getThreadsOnPage(), $offset);
-		$commentsCount = $threadRepository->getCommentsCount($subsection, $user->getThreadsOnPage(), $offset);
-		$pages = new Pages($this->get('router'), $itemsOnPage, $itemsCount, $page, 'subsection', array("name" => $name, "page" => $page));
-		$pagesStr = $pages->draw();
-		return $this->render($theme->getPath('RLForumBundle', 'subsection.html.twig'), array('theme' => $theme,
-				'user' => $user,
-				'subsection' => $subsection,
-				'subsections' => $subsectionRepository->findAll(),
-				'threads' => $threads,
-				'commentsCount' => $commentsCount,
-				'pages' => $pagesStr,
-				)
-		);
-	}
-	/**
 	 * @Route("/forum", name="forum")
 	 */
-	//FIXME:add section
 	public function forumAction()
 	{
 		$theme = $this->get('rl_themes.theme.provider');
 		$doctrine = $this->get('doctrine');
-		$subsectionRepository = $doctrine->getRepository('RLForumBundle:Subsection');
-		$subsections = $subsectionRepository->findAll();
-		$threadsCount = $doctrine->getRepository('RLForumBundle:Thread')->getThreadsCount();
-		return $this->render($theme->getPath('RLForumBundle', 'forum.html.twig'), array('theme' => $theme,
+		$sectionRepository = $doctrine->getRepository('RLMainBundle:Section');
+		$section = $sectionRepository->findOneByRewrite('forum');
+		$subsections = $section->getSubsections();
+		$threadsCount = $doctrine->getRepository('RLForumBundle:Thread')->getThreadsCount($section);
+		return $this->render($theme->getPath($section->getBundle(), 'forum.html.twig'), array('theme' => $theme,
 				'user' => $this->get('security.context')->getToken()->getUser(),
 				'subsections' => $subsections,
 				'threadsCount' => $threadsCount,
+				'section' => $section,
 				)
 		);
 	}
 	/**
 	 * @Route("/new_thread_in_forum_{subsectionRewrite}", name="new_thread_in_forum")
-	 */ 
+	 */
 	//FIXME:add section
 	public function newThreadAction($subsectionRewrite)
 	{
@@ -89,14 +50,15 @@ class DefaultController extends Controller
 		$user = $this->get('security.context')->getToken()->getUser();
 		$doctrine = $this->get('doctrine');
 		$request = $this->getRequest();
+		$section = $doctrine->getRepository('RLMainBundle:Section')->findOneByRewrite('forum');
+		$subsectionRepository = $doctrine->getRepository('RLForumBundle:Subsection');
+		$subsection = $subsectionRepository->getSubsectionByRewrite($subsectionRewrite, $section);
 		//save thread in database
 		$sbm = $request->request->get('submit');
 		if(isset($sbm))
 		{
 			$em = $doctrine->getEntityManager();
 			$thr = $request->request->get('addThread');
-			$subsectionRepository = $doctrine->getRepository('RLForumBundle:Subsection');
-			$subsection = $subsectionRepository->findOneByRewrite($subsectionRewrite);
 			$thread = new Thread();
 			$thread->setSubsection($subsection);
 			$em->persist($thread);
@@ -126,13 +88,14 @@ class DefaultController extends Controller
 			$newThread = new AddThreadForm($user);
 		//show form
 		$form = $this->createForm(new AddThreadType(), $newThread);
-		return $this->render($theme->getPath('RLForumBundle', 'newThreadInForum.html.twig'), array(
+		return $this->render($theme->getPath($section->getBundle(), 'newThread.html.twig'), array(
 				'theme' => $theme,
 				'user' => $user,
 				'form' => $form->createView(),
 				'subsection' => $subsectionRewrite,
 				'preview' => $preview,
 				'message' => $newThread,
+				'section' => $section,
 			));
 	}
 	/**
@@ -149,8 +112,9 @@ class DefaultController extends Controller
 		$pagesCount = ceil(($itemsCount - 1) / $itemsOnPage);
 		$pagesCount > 1 ? $offset = $itemsOnPage * ($page - 1) : $offset = 0;
 		$startMessage = $threadRepository->getThreadStartMessageById($id);
+		$section = $startMessage->getThread()->getSubsection()->getSection();
 		$threadComments = $threadRepository->getThreadCommentsById($id, $itemsOnPage, $offset);
-		$pages = new Pages($this->get('router'), $itemsOnPage, $itemsCount-1, $page, 'thread', array("id" => $id, "page" => $page));
+		$pages = new Pages($this->get('router'), $itemsOnPage, $itemsCount - 1, $page, 'thread', array("id" => $id, "page" => $page));
 		$pagesStr = $pages->draw();
 		$neighborThreads = $threadRepository->getNeighborThreadsById($id);
 		return $this->render($theme->getPath('RLForumBundle', 'thread.html.twig'), array(
@@ -160,6 +124,7 @@ class DefaultController extends Controller
 				'messages' => $threadComments,
 				'pages' => $pagesStr,
 				'neighborThreads' => $neighborThreads,
+				'section'=>$section,
 			));
 	}
 	/**
@@ -287,5 +252,49 @@ class DefaultController extends Controller
 				'message' => $message,
 				'form' => $form->createView(),
 			));
+	}
+	/**
+	 * @Route("/forum_{name}/{page}", name="subsection", defaults={"page" = 1}, requirements = {"name"=".*"})
+	 */
+	public function subsectionAction($name, $page)
+	{
+		$theme = $this->get('rl_themes.theme.provider');
+		$user = $this->get('security.context')->getToken()->getUser();
+		$subsectionRepository = $this->get('doctrine')->getRepository('RLForumBundle:Subsection');
+		$sectionRepository = $this->get('doctrine')->getRepository('RLMainBundle:Section');
+		$section = $sectionRepository->findOneByRewrite('forum');
+		$subsection = $subsectionRepository->getSubsectionByRewrite($name, $section);
+		if(empty($subsection))
+		{
+			$legend = 'subsection not found';
+			$title = 'unknown subsection';
+			$text = 'subsection '.$name.' not found';
+			return $this->render($theme->getPath('RLMainBundle', 'fieldset.html.twig'), array(
+					'theme' => $theme,
+					'user' => $user,
+					'legend' => $legend,
+					'title' => $title,
+					'text' => $text,
+				));
+		}
+		$threadRepository = $this->get('doctrine')->getRepository('RLForumBundle:Thread');
+		$itemsCount = count($subsection->getThreads());
+		$itemsOnPage = $user->getThreadsOnPage();
+		$pagesCount = ceil(($itemsCount) / $itemsOnPage);
+		$pagesCount > 1 ? $offset = $itemsOnPage * ($page - 1) : $offset = 0;
+		$threads = $threadRepository->getThreads($subsection, $user->getThreadsOnPage(), $offset);
+		$commentsCount = $threadRepository->getCommentsCount($subsection, $user->getThreadsOnPage(), $offset);
+		$pages = new Pages($this->get('router'), $itemsOnPage, $itemsCount, $page, 'subsection', array("name" => $name, "page" => $page));
+		$pagesStr = $pages->draw();
+		return $this->render($theme->getPath($section->getBundle(), 'subsection.html.twig'), array('theme' => $theme,
+				'user' => $user,
+				'subsection' => $subsection,
+				'subsections' => $section->getSubsections(),
+				'threads' => $threads,
+				'commentsCount' => $commentsCount,
+				'pages' => $pagesStr,
+				'section' => $section,
+				)
+		);
 	}
 }

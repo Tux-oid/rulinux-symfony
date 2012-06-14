@@ -59,7 +59,7 @@ class ThemeProvider implements ThemeProviderInterface
 			}
 			return $this->themes[$themeName];
 		}
-		throw \Exception('Theme not found');
+		throw new \Exception('Theme not found');
 	}
 	function getName()
 	{

@@ -1,3 +1,8 @@
+RLArticlesBundle:
+    resource: "@RLArticlesBundle/Controller/"
+    type:     annotation
+    prefix:   /
+
 RLForumBundle:
     resource: "@RLForumBundle/Controller/"
     type:     annotation

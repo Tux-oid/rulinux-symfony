@@ -1,7 +1,7 @@
 {% extends theme.path('RLMainBundle', 'layout.html.twig') %}
 
 {%block title%}
-{{parent()}} - {%trans%}Forum{%endtrans%} - {{startMessage.thread.subsection.name}} - {{startMessage.thread.messages[0].subject}}
+{{parent()}} - {{section.name}} - {{startMessage.thread.subsection.name}} - {{startMessage.thread.messages[0].subject}}
 {%endblock title%}
 
 {% block navigation %}
@@ -9,7 +9,7 @@
     <table class=nav>
         <tr>
             <td align=left valign=middle>
-                <a href="{{path('forum')}}">{%trans%}Forum{%endtrans%}</a> - <b><a href="{{path('subsection', {'name': startMessage.thread.subsection.rewrite})}}">{{startMessage.thread.subsection.name}}</a></b>
+                <a href="{{path(section.rewrite)}}">{{section.name}}</a> - <b><a href="{{path('subsection', {'section':section.rewrite, 'name': startMessage.thread.subsection.rewrite})}}">{{startMessage.thread.subsection.name}}</a></b>
             </td>
             <td align=right valign=middle>
                 [RSS]
@@ -20,7 +20,7 @@
 {%endblock navigation %}
 
 {%block content%}
-{%include theme.path('RLForumBundle', 'topicStartMessage.html.twig')%}
+{%include theme.path(section.bundle, 'topicStartMessage.html.twig')%}
 {%block pagesTop%}
 <table class=nav>
     <tr>

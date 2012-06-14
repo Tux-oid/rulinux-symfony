@@ -6,6 +6,7 @@
 namespace RL\MainBundle\Entity;
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\ArrayCollection;
+use RL\ForumBundle\Entity\Subsection;
 
 /**
  * @ORM\Entity()
@@ -36,7 +37,8 @@ class Section
 	 */
 	protected $bundle;
 	/**
-	 * ORM\OneToMany(targetEntity="RL\ForumBundle\Entity\Subsection", mappedBy="section")
+	 * @ORM\OneToMany(targetEntity="RL\ForumBundle\Entity\Subsection", mappedBy="section")
+	 * @ORM\OrderBy({"id" = "ASC"})
 	 */
 	protected $subsections;
 	function __construct()

@@ -30,7 +30,10 @@
                                                                         <td align=right valign=top><a href="{{path('logout')}}">{%trans%}Logout{%endtrans%}</a></td>
                                                                 </tr>
                                                                 <tr class="headClsBottom">
-                                                                        <td align=left><a href="{{path('forum')}}">{%trans%}Forum{%endtrans%}</a></td>
+                                                                        <td align=left>
+										<a href="{{path('forum')}}">{%trans%}Forum{%endtrans%}</a> - 
+										<a href="{{path('articles')}}">{%trans%}Articles{%endtrans%}</a>
+									</td>
                                                                         <td align=right>{%trans%}Welcome,{%endtrans%} <a href="{{path('user', {'name':user.username})}}">{{user.username}}</a>!</td>
                                                                 </tr>
                                                         </table>

@@ -170,6 +170,14 @@
                 <source>Edition reason</source>
                 <target>Причина редактирования</target>
             </trans-unit>
+	    <trans-unit id="43">
+                <source>Articles</source>
+                <target>Статьи</target>
+            </trans-unit>
+	    <trans-unit id="44">
+                <source>Add article</source>
+                <target>Добавить статью</target>
+            </trans-unit>
         </body>
     </file>
 </xliff>

@@ -12,6 +12,9 @@ use RL\ForumBundle\Entity\Subsection;
 /**
  * @ORM\Entity(repositoryClass="RL\ForumBundle\Entity\ThreadRepository")
  * @ORM\Table(name="threads")
+ * @ORM\InheritanceType("JOINED")
+ * @ORM\DiscriminatorColumn(name="discr", type="string")
+ * @ORM\DiscriminatorMap({"thread" = "Thread", "article" = "RL\ArticlesBundle\Entity\Article"})
  * @ORM\HasLifecycleCallbacks()
  */
 class Thread
@@ -24,6 +27,7 @@ class Thread
 	protected $id;
 	/**
 	 * @ORM\OneToMany(targetEntity="RL\ForumBundle\Entity\Message", mappedBy="thread")
+	 * @ORM\OrderBy({"id" = "ASC"})
 	 */
 	protected $messages;
 	/**
