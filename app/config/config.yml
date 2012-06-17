@@ -61,10 +61,15 @@ jms_security_extra:
     
 netpositive_discriminator_map:
     discriminator_map:
-        content:
+        thread:
             entity: RL\ForumBundle\Entity\Thread
             children:
                 article: RL\ArticlesBundle\Entity\Article
+                news: RL\NewsBundle\Entity\News
+        section:
+            entity: RL\ForumBundle\Entity\Subsection
+            children:
+                news: RL\NewsBundle\Entity\NewsSubsection
 
 rl_security:
     anonymous:
