@@ -1,7 +1,6 @@
 <?php
 
 namespace RL\ArticlesBundle\Controller;
-
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
@@ -15,7 +14,7 @@ use RL\ForumBundle\Entity\Message;
 
 class DefaultController extends Controller
 {
-    /**
+	/**
 	 * @Route("/articles", name="articles")
 	 */
 	public function articlesAction()
@@ -64,7 +63,7 @@ class DefaultController extends Controller
 			$message->setThread($thread);
 			$em->persist($message);
 			$em->flush();
-			return $this->redirect($this->generateUrl("subsection", array("name" => $subsectionRewrite))); //FIXME: set url for redirecting
+			return $this->redirect($this->generateUrl("art_subsection", array("name" => $subsectionRewrite))); //FIXME: set url for redirecting
 		}
 		//preview
 		$preview = false;

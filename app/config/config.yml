@@ -58,6 +58,13 @@ swiftmailer:
 jms_security_extra:
     secure_controllers:  true
     secure_all_services: false
+    
+netpositive_discriminator_map:
+    discriminator_map:
+        content:
+            entity: RL\ForumBundle\Entity\Thread
+            children:
+                article: RL\ArticlesBundle\Entity\Article
 
 rl_security:
     anonymous:

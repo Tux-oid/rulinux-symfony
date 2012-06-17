@@ -13,8 +13,8 @@ use RL\ForumBundle\Entity\Subsection;
  * @ORM\Entity(repositoryClass="RL\ForumBundle\Entity\ThreadRepository")
  * @ORM\Table(name="threads")
  * @ORM\InheritanceType("JOINED")
- * @ORM\DiscriminatorColumn(name="discr", type="string")
- * @ORM\DiscriminatorMap({"thread" = "Thread", "article" = "RL\ArticlesBundle\Entity\Article"})
+ * @ORM\DiscriminatorColumn(name="content_type", type="string", length="20")
+ * @ORM\DiscriminatorMap({"thread" = "Thread"})
  * @ORM\HasLifecycleCallbacks()
  */
 class Thread

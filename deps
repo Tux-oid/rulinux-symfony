@@ -72,3 +72,7 @@
 
 [LightOpenId]
     git=git://github.com/formapro/LightOpenID.git
+
+[NetpositiveDiscriminatorMapBundle]
+    git=git://github.com/Netpositive/NetpositiveDiscriminatorMapBundle.git
+    target=bundles/Netpositive/DiscriminatorMapBundle
