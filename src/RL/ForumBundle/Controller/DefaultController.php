@@ -9,8 +9,8 @@ use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use RL\MainBundle\Helper\Pages;
 use RL\ForumBundle\Entity\Subsection;
-use RL\ForumBundle\Form\AddThreadType;
-use RL\ForumBundle\Form\AddThreadForm;
+use RL\NewsBundle\Form\AddThreadType;
+use RL\NewsBundle\Form\AddThreadForm;
 use RL\ForumBundle\Form\AddCommentType;
 use RL\ForumBundle\Form\AddCommentForm;
 use RL\ForumBundle\Form\EditCommentType;
@@ -41,16 +41,16 @@ class DefaultController extends Controller
 		);
 	}
 	/**
-	 * @Route("/new_thread_in_forum_{subsectionRewrite}", name="new_thread_in_forum")
+	 * @Route("/new_thread_in_{sectionRewrite}_{subsectionRewrite}", name="new_thread")
 	 */
-	//FIXME:add section
-	public function newThreadAction($subsectionRewrite)
+	public function newThreadAction($sectionRewrite, $subsectionRewrite)
 	{
+		//FIXME: add subsection selection in form
 		$theme = $this->get('rl_themes.theme.provider');
 		$user = $this->get('security.context')->getToken()->getUser();
 		$doctrine = $this->get('doctrine');
 		$request = $this->getRequest();
-		$section = $doctrine->getRepository('RLMainBundle:Section')->findOneByRewrite('forum');
+		$section = $doctrine->getRepository('RLMainBundle:Section')->findOneByRewrite($sectionRewrite);
 		$subsectionRepository = $doctrine->getRepository('RLForumBundle:Subsection');
 		$subsection = $subsectionRepository->getSubsectionByRewrite($subsectionRewrite, $section);
 		//save thread in database
@@ -59,7 +59,8 @@ class DefaultController extends Controller
 		{
 			$em = $doctrine->getEntityManager();
 			$thr = $request->request->get('addThread');
-			$thread = new Thread();
+			$threadCls = $section->getBundleNamespace().'\Entity\Thread';
+			$thread = new $threadCls();
 			$thread->setSubsection($subsection);
 			$em->persist($thread);
 			$message = new Message();
@@ -76,18 +77,20 @@ class DefaultController extends Controller
 		//preview
 		$preview = false;
 		$pr_val = $request->request->get('preview');
+		$formCls = $section->getBundleNamespace().'\Form\AddThreadForm';
 		if(isset($pr_val))
 		{
 			$preview = true;
-			$newThread = new AddThreadForm($user);
+			$newThread = new $formCls($user);
 			$prv_thr = $request->request->get('addThread');
 			$newThread->setSubject($prv_thr['subject']);
 			$newThread->setComment($prv_thr['comment']);
 		}
 		else
-			$newThread = new AddThreadForm($user);
+			$newThread = new $formCls($user);
 		//show form
-		$form = $this->createForm(new AddThreadType(), $newThread);
+		$typeCls = $section->getBundleNamespace().'\Form\AddThreadType';
+		$form = $this->createForm(new $typeCls(), $newThread);
 		return $this->render($theme->getPath($section->getBundle(), 'newThread.html.twig'), array(
 				'theme' => $theme,
 				'user' => $user,
@@ -107,12 +110,13 @@ class DefaultController extends Controller
 		$user = $this->get('security.context')->getToken()->getUser();
 		$doctrine = $this->get('doctrine');
 		$threadRepository = $doctrine->getRepository('RLForumBundle:Thread');
+		$section = $threadRepository->findOneById($id)->getSubsection()->getSection();
 		$itemsCount = count($threadRepository->findOneById($id)->getMessages());
+		$threadRepository = $doctrine->getRepository($section->getBundle().':Thread');
 		$itemsOnPage = $user->getCommentsOnPage();
 		$pagesCount = ceil(($itemsCount - 1) / $itemsOnPage);
 		$pagesCount > 1 ? $offset = $itemsOnPage * ($page - 1) : $offset = 0;
 		$startMessage = $threadRepository->getThreadStartMessageById($id);
-		$section = $startMessage->getThread()->getSubsection()->getSection();
 		$threadComments = $threadRepository->getThreadCommentsById($id, $itemsOnPage, $offset);
 		$pages = new Pages($this->get('router'), $itemsOnPage, $itemsCount - 1, $page, 'thread', array("id" => $id, "page" => $page));
 		$pagesStr = $pages->draw();

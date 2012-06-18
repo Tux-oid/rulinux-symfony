@@ -37,6 +37,10 @@ class Section
 	 */
 	protected $bundle;
 	/**
+	 * @ORM\Column(type="string", length="1024", nullable="false")
+	 */
+	protected $bundleNamespace;
+	/**
 	 * @ORM\OneToMany(targetEntity="RL\ForumBundle\Entity\Subsection", mappedBy="section")
 	 * @ORM\OrderBy({"id" = "ASC"})
 	 */
@@ -93,5 +97,15 @@ class Section
 	{
 		$this->subsections = $subsections;
 	}
+	public function getBundleNamespace()
+	{
+		return $this->bundleNamespace;
+	}
+	public function setBundleNamespace($bundleNamespace)
+	{
+		$this->bundleNamespace = $bundleNamespace;
+	}
+
+
 }
 ?>

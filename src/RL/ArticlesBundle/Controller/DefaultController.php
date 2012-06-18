@@ -1,7 +1,7 @@
 <?php
 
 namespace RL\ArticlesBundle\Controller;
-use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+//use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use RL\MainBundle\Helper\Pages;
@@ -9,8 +9,9 @@ use RL\ForumBundle\Form\AddThreadForm;
 use RL\ForumBundle\Form\AddThreadType;
 use RL\MainBundle\Entity\Section;
 use RL\ForumBundle\Entity\Subsection;
-use RL\ArticlesBundle\Entity\Article;
+use RL\ArticlesBundle\Entity\Thread;
 use RL\ForumBundle\Entity\Message;
+use RL\ForumBundle\Controller\DefaultController as Controller;
 
 class DefaultController extends Controller
 {
@@ -33,63 +34,7 @@ class DefaultController extends Controller
 				)
 		);
 	}
-	/**
-	 * @Route("/new_thread_in_articles_{subsectionRewrite}", name="new_thread_in_articles")
-	 */
-	public function newArticleAction($subsectionRewrite)
-	{
-		$theme = $this->get('rl_themes.theme.provider');
-		$user = $this->get('security.context')->getToken()->getUser();
-		$doctrine = $this->get('doctrine');
-		$request = $this->getRequest();
-		$section = $doctrine->getRepository('RLMainBundle:Section')->findOneByRewrite('articles');
-		$subsectionRepository = $doctrine->getRepository('RLForumBundle:Subsection');
-		$subsection = $subsectionRepository->getSubsectionByRewrite($subsectionRewrite, $section);
-		//save thread in database
-		$sbm = $request->request->get('submit');
-		if(isset($sbm))
-		{
-			$em = $doctrine->getEntityManager();
-			$thr = $request->request->get('addThread');
-			$thread = new Article();
-			$thread->setSubsection($subsection);
-			$em->persist($thread);
-			$message = new Message();
-			$message->setUser($user);
-			$message->setReferer(0);
-			$message->setSubject($thr['subject']);
-			$message->setComment($thr['comment']);
-			$message->setRawComment($thr['comment']);
-			$message->setThread($thread);
-			$em->persist($message);
-			$em->flush();
-			return $this->redirect($this->generateUrl("art_subsection", array("name" => $subsectionRewrite))); //FIXME: set url for redirecting
-		}
-		//preview
-		$preview = false;
-		$pr_val = $request->request->get('preview');
-		if(isset($pr_val))
-		{
-			$preview = true;
-			$newThread = new AddThreadForm($user);
-			$prv_thr = $request->request->get('addThread');
-			$newThread->setSubject($prv_thr['subject']);
-			$newThread->setComment($prv_thr['comment']);
-		}
-		else
-			$newThread = new AddThreadForm($user);
-		//show form
-		$form = $this->createForm(new AddThreadType(), $newThread);
-		return $this->render($theme->getPath($section->getBundle(), 'newThread.html.twig'), array(
-				'theme' => $theme,
-				'user' => $user,
-				'form' => $form->createView(),
-				'subsection' => $subsectionRewrite,
-				'preview' => $preview,
-				'message' => $newThread,
-				'section' => $section,
-			));
-	}
+
 	/**
 	 * @Route("/articles_{name}/{page}", name="art_subsection", defaults={"page" = 1}, requirements = {"name"=".*"})
 	 */
@@ -114,12 +59,12 @@ class DefaultController extends Controller
 					'text' => $text,
 				));
 		}
-		$threadRepository = $this->get('doctrine')->getRepository('RLArticlesBundle:Article');
+		$threadRepository = $this->get('doctrine')->getRepository('RLArticlesBundle:Thread');
 		$itemsCount = count($subsection->getThreads());
 		$itemsOnPage = $user->getThreadsOnPage();
 		$pagesCount = ceil(($itemsCount) / $itemsOnPage);
 		$pagesCount > 1 ? $offset = $itemsOnPage * ($page - 1) : $offset = 0;
-		$threads = $threadRepository->getArticles($subsection, $user->getThreadsOnPage(), $offset);
+		$threads = $threadRepository->getThreads($subsection, $user->getThreadsOnPage(), $offset);
 		$commentsCount = $threadRepository->getCommentsCount($subsection, $user->getThreadsOnPage(), $offset);
 		$pages = new Pages($this->get('router'), $itemsOnPage, $itemsCount, $page, 'subsection', array("name" => $name, "page" => $page));
 		$pagesStr = $pages->draw();

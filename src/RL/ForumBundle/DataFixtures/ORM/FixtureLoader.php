@@ -19,6 +19,7 @@ class FixtureLoader implements FixtureInterface
 		$forumSection->setDescription('Forum about GNU\Linux and not only');
 		$forumSection->setRewrite('forum');
 		$forumSection->setBundle('RLForumBundle');
+		$forumSection->setBundleNamespace('RL\ForumBundle');
 		$manager->persist($forumSection);
 		
 		$generalSubsection = new Subsection();

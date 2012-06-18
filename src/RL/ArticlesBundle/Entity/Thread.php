@@ -6,13 +6,13 @@
 namespace RL\ArticlesBundle\Entity;
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\ArrayCollection;
-use RL\ForumBundle\Entity\Thread;
+use RL\ForumBundle\Entity\Thread as ForumThread;
 
 /**
- * @ORM\Entity(repositoryClass="RL\ArticlesBundle\Entity\ArticleRepository")
+ * @ORM\Entity(repositoryClass="RL\ArticlesBundle\Entity\ThreadRepository")
  * @ORM\Table(name="articles")
  */
-class Article extends Thread
+class Thread extends ForumThread
 {
 	/**
 	 * @ORM\Column(type="boolean", name="approved")

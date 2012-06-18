@@ -18,6 +18,7 @@ class FixtureLoader implements FixtureInterface
 		$articlesSection->setDescription('Articles about FOSS');
 		$articlesSection->setRewrite('articles');
 		$articlesSection->setBundle('RLArticlesBundle');
+		$articlesSection->setBundleNamespace('RL\ArticlesBundle');
 		$manager->persist($articlesSection);
 		
 		$generalSubsection = new Subsection();

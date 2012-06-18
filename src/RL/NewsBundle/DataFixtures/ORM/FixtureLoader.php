@@ -19,6 +19,7 @@ class FixtureLoader implements FixtureInterface
 		$newsSection->setDescription('News about FOSS');
 		$newsSection->setRewrite('news');
 		$newsSection->setBundle('RLNewsBundle');
+		$newsSection->setBundleNamespace('RL\NewsBundle');
 		$manager->persist($newsSection);
 		
 		$documentationSubsection = new NewsSubsection();

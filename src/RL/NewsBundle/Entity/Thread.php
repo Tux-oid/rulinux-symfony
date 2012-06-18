@@ -5,13 +5,13 @@
 
 namespace RL\NewsBundle\Entity;
 use Doctrine\ORM\Mapping as ORM;
-use RL\ArticlesBundle\Entity\Article;
+use RL\ArticlesBundle\Entity\Thread as ArticlesThread;
 
 /**
- * @ORM\Entity(repositoryClass="RL\ArticlesBundle\Entity\ArticleRepository") 
+ * @ORM\Entity(repositoryClass="RL\ArticlesBundle\Entity\ThreadRepository") 
  * @ORM\Table(name="news")
  */
-class News extends Article
+class Thread extends ArticlesThread
 {
 	/**
 	 * @ORM\Column(type="string", length="2048", nullable="true")

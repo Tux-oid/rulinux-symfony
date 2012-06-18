@@ -28,13 +28,6 @@ class DefaultController extends Controller
 		);
 	}
 	/**
-	 * @Route("/new_thread_in_news_{subsectionRewrite}", name="new_thread_in_news")
-	 */
-	public function newNewsAction($subsectionRewrite)
-	{
-		
-	}
-	/**
 	 * @Route("/news_{name}/{page}", name="news_subsection", defaults={"page" = 1}, requirements = {"name"=".*"})
 	 */
 	public function subsectionAction($name, $page)
@@ -63,7 +56,7 @@ class DefaultController extends Controller
 		$itemsOnPage = $user->getThreadsOnPage();
 		$pagesCount = ceil(($itemsCount) / $itemsOnPage);
 		$pagesCount > 1 ? $offset = $itemsOnPage * ($page - 1) : $offset = 0;
-		$threads = $threadRepository->getArticles($subsection, $user->getThreadsOnPage(), $offset);
+		$threads = $threadRepository->getThreads($subsection, $user->getThreadsOnPage(), $offset);
 		$commentsCount = $threadRepository->getCommentsCount($subsection, $user->getThreadsOnPage(), $offset);
 		$pages = new Pages($this->get('router'), $itemsOnPage, $itemsCount, $page, 'subsection', array("name" => $name, "page" => $page));
 		$pagesStr = $pages->draw();

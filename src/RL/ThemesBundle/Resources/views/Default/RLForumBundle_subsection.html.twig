@@ -12,7 +12,7 @@
 				<a href="{{path('forum')}}">{{section.name}}</a> - <b>{{subsection.name}}</b>
 			</td>
 			<td align=right valign=middle>
-				[<a href="{{path('new_thread_in_'~section.rewrite, {'subsectionRewrite':subsection.rewrite})}}">{%trans%}Add message{%endtrans%}</a>]
+				[<a href="{{path('new_thread', {'sectionRewrite': section.rewrite, 'subsectionRewrite':subsection.rewrite})}}">{%trans%}Add message{%endtrans%}</a>]
 				<select name=id onChange = 'self.location = {{section.rewrite}}"_"+document.navForm.id[document.navForm.id.selectedIndex].value' title="quick jump">
 					{% for subsect in subsections%}
 						<option value="{{subsect.rewrite}}" {%if subsect.name == subsection.name%}selected{%endif%}>{{subsect.name}}</option>

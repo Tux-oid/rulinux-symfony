@@ -21,7 +21,8 @@
 <h2>{%trans%}Preview{%endtrans%}</h2>
 {% include theme.path('RLForumBundle', 'preview.html.twig')%}
 {%endif%}
-<form action="{{path('new_thread_in_'~section.rewrite, {'subsectionRewrite':subsection})}}" method="post" {{form_enctype(form)}}>
+{%block formTable%}
+<form action="{{path('new_thread', {'sectionRewrite':section.rewrite, 'subsectionRewrite':subsection})}}" method="post" {{form_enctype(form)}}>
 {{form_errors(form)}}
 <table border="0">
 <tr>
@@ -30,14 +31,17 @@
 {{form_widget(form.subject, {'attr':{'style':'width:100%'}})}}
 <p class="error">{{form_errors(form.subject)}}</p>
 </td>
-</tr><input type="hidden" name="subsection_id" value="8" />
-
+</tr>
 <tr>
 <td style="vertical-align:top;">{{form_label(form.comment)}}:</td>
 <td>
 {{form_widget(form.comment, {'attr': {'rows':'20', 'cols':'80'}})}}
 <p class="error">{{form_errors(form.comment)}}</p>
 </td>
+</tr>
+<tr>
+	<td>{{form_rest(form)}}</td>
+	<td></td>
 </tr>
 <tr>
 <td></td>
@@ -47,6 +51,6 @@
 </td>
 </tr>
 </table>
-{{form_rest(form)}}
 </form>
+{%endblock formTable%}
 {%endblock content %}

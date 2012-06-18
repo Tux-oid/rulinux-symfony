@@ -64,8 +64,8 @@ netpositive_discriminator_map:
         thread:
             entity: RL\ForumBundle\Entity\Thread
             children:
-                article: RL\ArticlesBundle\Entity\Article
-                news: RL\NewsBundle\Entity\News
+                article: RL\ArticlesBundle\Entity\Thread
+                news: RL\NewsBundle\Entity\Thread
         section:
             entity: RL\ForumBundle\Entity\Subsection
             children:
