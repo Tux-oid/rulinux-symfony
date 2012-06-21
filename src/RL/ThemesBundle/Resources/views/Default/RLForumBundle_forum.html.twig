@@ -9,7 +9,7 @@
 {%trans%}Groups{%endtrans%}:
 	<ul>
         {% for subsection in subsections %}
-			<li><a href="{{path('subsection', {'name': subsection.rewrite})}}">{{ subsection.name|e }}</a>({%if threadsCount['all'][subsection.id] is defined%}{{threadsCount['all'][subsection.id]}}{%else%}-{%endif%}/{%if threadsCount['day'][subsection.id] is defined%}{{threadsCount['day'][subsection.id]}}{%else%}-{%endif%}/{%if threadsCount['hour'][subsection.id] is defined%}{{threadsCount['hour'][subsection.id]}}{%else%}-{%endif%}) - <i>{{ subsection.description|e }}</i></li>
+			<li><a href="{{path('subsection', {'sectionRewrite': section.rewrite, 'subsectionRewrite': subsection.rewrite})}}">{{ subsection.name|e }}</a>({%if threadsCount['all'][subsection.id] is defined%}{{threadsCount['all'][subsection.id]}}{%else%}-{%endif%}/{%if threadsCount['day'][subsection.id] is defined%}{{threadsCount['day'][subsection.id]}}{%else%}-{%endif%}/{%if threadsCount['hour'][subsection.id] is defined%}{{threadsCount['hour'][subsection.id]}}{%else%}-{%endif%}) - <i>{{ subsection.description|e }}</i></li>
         {% endfor %}
 		</ul>
 		<br>

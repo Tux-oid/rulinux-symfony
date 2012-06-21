@@ -1,17 +1,17 @@
 <?php
 /**
- *@author Tux-oid 
+ * @author Tux-oid 
  */
 
 namespace RL\NewsBundle\Entity;
-use RL\ForumBundle\Entity\Subsection;
+use RL\ForumBundle\Entity\Subsection as ForumSubsection;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- *@ORM\Entity(repositoryClass="RL\ForumBundle\Entity\SubsectionRepository")
+ * @ORM\Entity(repositoryClass="RL\NewsBundle\Entity\SubsectionRepository")
  * @ORM\Table(name="news_subsection") 
  */
-class NewsSubsection extends Subsection
+class Subsection extends ForumSubsection
 {
 	/**
 	 * @ORM\Column(type="string", length="2048", nullable="true")
@@ -25,7 +25,5 @@ class NewsSubsection extends Subsection
 	{
 		$this->image = $image;
 	}
-
-
 }
 ?>

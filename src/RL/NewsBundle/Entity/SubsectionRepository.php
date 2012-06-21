@@ -3,15 +3,16 @@
  * @author Tux-oid 
  */
 
-namespace RL\ForumBundle\Entity;
+namespace RL\NewsBundle\Entity;
 use Doctrine\ORM\EntityRepository;
+use RL\ForumBundle\Entity\SubsectionRepository as ForumSubsectionRepository;
 
-class SubsectionRepository extends EntityRepository
+class SubsectionRepository extends ForumSubsectionRepository
 {
 	public function getSubsectionByRewrite($rewrite, $section)
 	{
 		$em = $this->_em;
-		$q = $em->createQuery('SELECT s FROM RL\ForumBundle\Entity\Subsection AS s WHERE s.rewrite = :rewrite AND s.section = :section')
+		$q = $em->createQuery('SELECT s FROM RL\NewsBundle\Entity\Subsection AS s WHERE s.rewrite = :rewrite AND s.section = :section')
 		->setFirstResult(0)
 		->setMaxResults(1)
 		->setParameter('rewrite', $rewrite)

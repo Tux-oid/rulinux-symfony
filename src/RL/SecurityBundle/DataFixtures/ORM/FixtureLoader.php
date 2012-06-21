@@ -96,7 +96,6 @@ class FixtureLoader implements FixtureInterface
 		$gmtSetting->setName('gmt');
 		$gmtSetting->setValue($gmt);
 		$manager->persist($gmtSetting);
-		//TODO: other values
 		//adding anonymous
 		$anonymous = new User();
 		$anonymous->setUsername('anonymous');

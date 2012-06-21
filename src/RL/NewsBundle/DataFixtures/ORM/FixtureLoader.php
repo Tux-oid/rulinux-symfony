@@ -7,7 +7,7 @@ namespace RL\NewsBundle\DataFixtures\ORM;
 use Doctrine\Common\Persistence\ObjectManager;
 use Doctrine\Common\DataFixtures\FixtureInterface;
 use RL\MainBundle\Entity\Section;
-use RL\NewsBundle\Entity\NewsSubsection;
+use RL\NewsBundle\Entity\Subsection;
 
 
 class FixtureLoader implements FixtureInterface
@@ -22,7 +22,7 @@ class FixtureLoader implements FixtureInterface
 		$newsSection->setBundleNamespace('RL\NewsBundle');
 		$manager->persist($newsSection);
 		
-		$documentationSubsection = new NewsSubsection();
+		$documentationSubsection = new Subsection();
 		$documentationSubsection->setName('Documentation');
 		$documentationSubsection->setDescription('News subsection about documentation');
 		$documentationSubsection->setRewrite('documentation');
@@ -31,7 +31,7 @@ class FixtureLoader implements FixtureInterface
 		$documentationSubsection->setShortfaq('');
 		$manager->persist($documentationSubsection);
 		
-		$linuxGeneralSubsection = new NewsSubsection();
+		$linuxGeneralSubsection = new Subsection();
 		$linuxGeneralSubsection->setName('Linux General');
 		$linuxGeneralSubsection->setDescription('News about GNU\Linux');
 		$linuxGeneralSubsection->setRewrite('linux_general');
@@ -40,7 +40,7 @@ class FixtureLoader implements FixtureInterface
 		$linuxGeneralSubsection->setShortfaq('');
 		$manager->persist($linuxGeneralSubsection);
 		
-		$opensourceSubsection = new NewsSubsection();
+		$opensourceSubsection = new Subsection();
 		$opensourceSubsection->setName('Opensource');
 		$opensourceSubsection->setDescription('News about FOSS');
 		$opensourceSubsection->setRewrite('opensource');
@@ -49,7 +49,7 @@ class FixtureLoader implements FixtureInterface
 		$opensourceSubsection->setShortfaq('');
 		$manager->persist($opensourceSubsection);
 		
-		$mozillaSubsection = new NewsSubsection();
+		$mozillaSubsection = new Subsection();
 		$mozillaSubsection->setName('Mozilla');
 		$mozillaSubsection->setDescription('News about Mozilla Foundation and their products');
 		$mozillaSubsection->setRewrite('mozilla');
@@ -58,7 +58,7 @@ class FixtureLoader implements FixtureInterface
 		$mozillaSubsection->setShortfaq('');
 		$manager->persist($mozillaSubsection);
 		
-		$redHatSubsection = new NewsSubsection();
+		$redHatSubsection = new Subsection();
 		$redHatSubsection->setName('RedHat');
 		$redHatSubsection->setDescription('News about Red Hat and their products');
 		$redHatSubsection->setRewrite('redhat');
@@ -67,7 +67,7 @@ class FixtureLoader implements FixtureInterface
 		$redHatSubsection->setShortfaq('');
 		$manager->persist($redHatSubsection);
 		
-		$javaSubsection = new NewsSubsection();
+		$javaSubsection = new Subsection();
 		$javaSubsection->setName('Java');
 		$javaSubsection->setDescription('News related to the Java language and its associated items');
 		$javaSubsection->setRewrite('java');
@@ -76,7 +76,7 @@ class FixtureLoader implements FixtureInterface
 		$javaSubsection->setShortfaq('');
 		$manager->persist($javaSubsection);
 		
-		$gnomeSubsection = new NewsSubsection();
+		$gnomeSubsection = new Subsection();
 		$gnomeSubsection->setName('GNOME');
 		$gnomeSubsection->setDescription('News about G.N.O.M.E. project');
 		$gnomeSubsection->setRewrite('gnome');
@@ -85,7 +85,7 @@ class FixtureLoader implements FixtureInterface
 		$gnomeSubsection->setShortfaq('');
 		$manager->persist($gnomeSubsection);
 		
-		$kdeSubsection = new NewsSubsection();
+		$kdeSubsection = new Subsection();
 		$kdeSubsection->setName('KDE');
 		$kdeSubsection->setDescription('News about KDE SC and related technologies');
 		$kdeSubsection->setRewrite('kde');
@@ -94,7 +94,7 @@ class FixtureLoader implements FixtureInterface
 		$kdeSubsection->setShortfaq('');
 		$manager->persist($kdeSubsection);
 		
-		$gnuSubsection = new NewsSubsection();
+		$gnuSubsection = new Subsection();
 		$gnuSubsection->setName('GNU');
 		$gnuSubsection->setDescription('News about GNU project');
 		$gnuSubsection->setRewrite('gnu');
@@ -103,7 +103,7 @@ class FixtureLoader implements FixtureInterface
 		$gnuSubsection->setShortfaq('');
 		$manager->persist($gnuSubsection);
 		
-		$securitySubsection = new NewsSubsection();
+		$securitySubsection = new Subsection();
 		$securitySubsection->setName('Security');
 		$securitySubsection->setDescription('News about security');
 		$securitySubsection->setRewrite('security');
@@ -112,7 +112,7 @@ class FixtureLoader implements FixtureInterface
 		$securitySubsection->setShortfaq('');
 		$manager->persist($securitySubsection);
 		
-		$linuxInRussiaSubsection = new NewsSubsection();
+		$linuxInRussiaSubsection = new Subsection();
 		$linuxInRussiaSubsection->setName('Linux in Russia');
 		$linuxInRussiaSubsection->setDescription('News about the progress of GNU/Linux in our country');
 		$linuxInRussiaSubsection->setRewrite('linux_in_russia');
@@ -121,7 +121,7 @@ class FixtureLoader implements FixtureInterface
 		$linuxInRussiaSubsection->setShortfaq('');
 		$manager->persist($linuxInRussiaSubsection);
 		
-		$linuxKernelSubsection = new NewsSubsection();
+		$linuxKernelSubsection = new Subsection();
 		$linuxKernelSubsection->setName('Linux kernel');
 		$linuxKernelSubsection->setDescription('News about Linux kernel');
 		$linuxKernelSubsection->setRewrite('linux_kernel');
@@ -130,7 +130,7 @@ class FixtureLoader implements FixtureInterface
 		$linuxKernelSubsection->setShortfaq('');
 		$manager->persist($linuxKernelSubsection);
 		
-		$commercialSubsection = new NewsSubsection();
+		$commercialSubsection = new Subsection();
 		$commercialSubsection->setName('Commercial software');
 		$commercialSubsection->setDescription('News about commercial software for *nix');
 		$commercialSubsection->setRewrite('commercial');
@@ -139,7 +139,7 @@ class FixtureLoader implements FixtureInterface
 		$commercialSubsection->setShortfaq('');
 		$manager->persist($commercialSubsection);
 		
-		$hardwareAndDriversSubsection = new NewsSubsection();
+		$hardwareAndDriversSubsection = new Subsection();
 		$hardwareAndDriversSubsection->setName('Hardware and Drivers');
 		$hardwareAndDriversSubsection->setDescription('News about hardware and drivers');
 		$hardwareAndDriversSubsection->setRewrite('hardware_and_drivers');
@@ -148,7 +148,7 @@ class FixtureLoader implements FixtureInterface
 		$hardwareAndDriversSubsection->setShortfaq('');
 		$manager->persist($hardwareAndDriversSubsection);
 		
-		$bsdSubsection = new NewsSubsection();
+		$bsdSubsection = new Subsection();
 		$bsdSubsection->setName('BSD');
 		$bsdSubsection->setDescription('News about BSD systems');
 		$bsdSubsection->setRewrite('bsd');
@@ -157,7 +157,7 @@ class FixtureLoader implements FixtureInterface
 		$bsdSubsection->setShortfaq('');
 		$manager->persist($bsdSubsection);
 		
-		$debianSubsection = new NewsSubsection();
+		$debianSubsection = new Subsection();
 		$debianSubsection->setName('Debian');
 		$debianSubsection->setDescription('News about Debian');
 		$debianSubsection->setRewrite('debian');
@@ -166,7 +166,7 @@ class FixtureLoader implements FixtureInterface
 		$debianSubsection->setShortfaq('');
 		$manager->persist($debianSubsection);
 		
-		$openOfficeSubsection = new NewsSubsection();
+		$openOfficeSubsection = new Subsection();
 		$openOfficeSubsection->setName('Open/Libre Office');
 		$openOfficeSubsection->setDescription('News about Open/Libre Office');
 		$openOfficeSubsection->setRewrite('openoffice');
@@ -175,7 +175,7 @@ class FixtureLoader implements FixtureInterface
 		$openOfficeSubsection->setShortfaq('');
 		$manager->persist($openOfficeSubsection);
 		
-		$pdaSubsection = new NewsSubsection();
+		$pdaSubsection = new Subsection();
 		$pdaSubsection->setName('PDA');
 		$pdaSubsection->setDescription('News about mobile applications');
 		$pdaSubsection->setRewrite('pda');
@@ -184,7 +184,7 @@ class FixtureLoader implements FixtureInterface
 		$pdaSubsection->setShortfaq('');
 		$manager->persist($pdaSubsection);
 		
-		$scoSubsection = new NewsSubsection();
+		$scoSubsection = new Subsection();
 		$scoSubsection->setName('SCO');
 		$scoSubsection->setDescription('News about SCO');
 		$scoSubsection->setRewrite('sco');
@@ -193,7 +193,7 @@ class FixtureLoader implements FixtureInterface
 		$scoSubsection->setShortfaq('');
 		$manager->persist($scoSubsection);
 		
-		$clustersSubsection = new NewsSubsection();
+		$clustersSubsection = new Subsection();
 		$clustersSubsection->setName('Clusters');
 		$clustersSubsection->setDescription('News about clusters and TOP-500');
 		$clustersSubsection->setRewrite('clusters');
@@ -202,7 +202,7 @@ class FixtureLoader implements FixtureInterface
 		$clustersSubsection->setShortfaq('');
 		$manager->persist($clustersSubsection);
 		
-		$ubuntuSubsection = new NewsSubsection();
+		$ubuntuSubsection = new Subsection();
 		$ubuntuSubsection->setName('Ubuntu Linux');
 		$ubuntuSubsection->setDescription('News about Ubuntu');
 		$ubuntuSubsection->setRewrite('ubuntu');
@@ -211,7 +211,7 @@ class FixtureLoader implements FixtureInterface
 		$ubuntuSubsection->setShortfaq('');
 		$manager->persist($ubuntuSubsection);
 		
-		$slackwareSubsection = new NewsSubsection();
+		$slackwareSubsection = new Subsection();
 		$slackwareSubsection->setName('Slackware Linux');
 		$slackwareSubsection->setDescription('News about Slackware');
 		$slackwareSubsection->setRewrite('slackware');
@@ -220,7 +220,7 @@ class FixtureLoader implements FixtureInterface
 		$slackwareSubsection->setShortfaq('');
 		$manager->persist($slackwareSubsection);
 		
-		$appleSubsection = new NewsSubsection();
+		$appleSubsection = new Subsection();
 		$appleSubsection->setName('Apple');
 		$appleSubsection->setDescription('News about Apple and their products');
 		$appleSubsection->setRewrite('apple');
@@ -229,7 +229,7 @@ class FixtureLoader implements FixtureInterface
 		$appleSubsection->setShortfaq('');
 		$manager->persist($appleSubsection);
 		
-		$novellSubsection = new NewsSubsection();
+		$novellSubsection = new Subsection();
 		$novellSubsection->setName('Novell');
 		$novellSubsection->setDescription('News about Novell and their products');
 		$novellSubsection->setRewrite('novell');
@@ -238,7 +238,7 @@ class FixtureLoader implements FixtureInterface
 		$novellSubsection->setShortfaq('');
 		$manager->persist($novellSubsection);
 		
-		$rulinuxSubsection = new NewsSubsection();
+		$rulinuxSubsection = new Subsection();
 		$rulinuxSubsection->setName('Rulinux.net');
 		$rulinuxSubsection->setDescription('News about our site');
 		$rulinuxSubsection->setRewrite('rulinux');
@@ -247,7 +247,7 @@ class FixtureLoader implements FixtureInterface
 		$rulinuxSubsection->setShortfaq('');
 		$manager->persist($rulinuxSubsection);
 		
-		$altSubsection = new NewsSubsection();
+		$altSubsection = new Subsection();
 		$altSubsection->setName('ALT');
 		$altSubsection->setDescription('News about ALT Linux');
 		$altSubsection->setRewrite('alt');
@@ -256,7 +256,7 @@ class FixtureLoader implements FixtureInterface
 		$altSubsection->setShortfaq('');
 		$manager->persist($altSubsection);
 		
-		$gtkSubsection = new NewsSubsection();
+		$gtkSubsection = new Subsection();
 		$gtkSubsection->setName('GTK');
 		$gtkSubsection->setDescription('News about GTK');
 		$gtkSubsection->setRewrite('gtk');
@@ -265,7 +265,7 @@ class FixtureLoader implements FixtureInterface
 		$gtkSubsection->setShortfaq('');
 		$manager->persist($gtkSubsection);
 		
-		$qtSubsection = new NewsSubsection();
+		$qtSubsection = new Subsection();
 		$qtSubsection->setName('Qt');
 		$qtSubsection->setDescription('News about Qt');
 		$qtSubsection->setRewrite('qt');

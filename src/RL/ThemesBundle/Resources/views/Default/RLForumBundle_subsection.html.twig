@@ -9,7 +9,7 @@
 	<table class=nav>
 		<tr>
 			<td align=left valign=middle>
-				<a href="{{path('forum')}}">{{section.name}}</a> - <b>{{subsection.name}}</b>
+				<a href="{{path('section', {'sectionRewrite':section.rewrite})}}">{{section.name}}</a> - <b>{{subsection.name}}</b>
 			</td>
 			<td align=right valign=middle>
 				[<a href="{{path('new_thread', {'sectionRewrite': section.rewrite, 'subsectionRewrite':subsection.rewrite})}}">{%trans%}Add message{%endtrans%}</a>]

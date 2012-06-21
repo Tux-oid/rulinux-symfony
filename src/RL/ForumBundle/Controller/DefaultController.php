@@ -8,40 +8,17 @@ use Symfony\Component\Security\Core\SecurityContext;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use RL\MainBundle\Helper\Pages;
-use RL\ForumBundle\Entity\Subsection;
-use RL\NewsBundle\Form\AddThreadType;
-use RL\NewsBundle\Form\AddThreadForm;
 use RL\ForumBundle\Form\AddCommentType;
 use RL\ForumBundle\Form\AddCommentForm;
 use RL\ForumBundle\Form\EditCommentType;
 use RL\ForumBundle\Form\EditCommentForm;
-use RL\ForumBundle\Entity\Thread;
 use RL\ForumBundle\Entity\Message;
 use RL\MainBundle\Entity\Section;
 
 class DefaultController extends Controller
 {
 	/**
-	 * @Route("/forum", name="forum")
-	 */
-	public function forumAction()
-	{
-		$theme = $this->get('rl_themes.theme.provider');
-		$doctrine = $this->get('doctrine');
-		$sectionRepository = $doctrine->getRepository('RLMainBundle:Section');
-		$section = $sectionRepository->findOneByRewrite('forum');
-		$subsections = $section->getSubsections();
-		$threadsCount = $doctrine->getRepository('RLForumBundle:Thread')->getThreadsCount($section);
-		return $this->render($theme->getPath($section->getBundle(), 'forum.html.twig'), array('theme' => $theme,
-				'user' => $this->get('security.context')->getToken()->getUser(),
-				'subsections' => $subsections,
-				'threadsCount' => $threadsCount,
-				'section' => $section,
-				)
-		);
-	}
-	/**
-	 * @Route("/new_thread_in_{sectionRewrite}_{subsectionRewrite}", name="new_thread")
+	 * @Route("/new_thread_in_{sectionRewrite}_{subsectionRewrite}", name="new_thread", requirements = {"subsectionRewrite"=".*"})
 	 */
 	public function newThreadAction($sectionRewrite, $subsectionRewrite)
 	{
@@ -51,28 +28,16 @@ class DefaultController extends Controller
 		$doctrine = $this->get('doctrine');
 		$request = $this->getRequest();
 		$section = $doctrine->getRepository('RLMainBundle:Section')->findOneByRewrite($sectionRewrite);
-		$subsectionRepository = $doctrine->getRepository('RLForumBundle:Subsection');
+		$subsectionRepository = $doctrine->getRepository($section->getBundle().':Subsection');
 		$subsection = $subsectionRepository->getSubsectionByRewrite($subsectionRewrite, $section);
 		//save thread in database
 		$sbm = $request->request->get('submit');
 		if(isset($sbm))
 		{
-			$em = $doctrine->getEntityManager();
-			$thr = $request->request->get('addThread');
-			$threadCls = $section->getBundleNamespace().'\Entity\Thread';
-			$thread = new $threadCls();
-			$thread->setSubsection($subsection);
-			$em->persist($thread);
-			$message = new Message();
-			$message->setUser($user);
-			$message->setReferer(0);
-			$message->setSubject($thr['subject']);
-			$message->setComment($thr['comment']);
-			$message->setRawComment($thr['comment']);
-			$message->setThread($thread);
-			$em->persist($message);
-			$em->flush();
-			return $this->redirect($this->generateUrl("subsection", array("name" => $subsectionRewrite))); //FIXME: set url for redirecting
+			$hlpCls = $section->getBundleNamespace().'\Helper\ThreadHelper';
+			$helper = new $hlpCls();
+			$helper->saveThread($doctrine, $request, $section, $subsection, $user);
+			return $this->redirect($this->generateUrl("subsection", array("sectionRewrite" => $sectionRewrite, "subsectionRewrite" => $subsectionRewrite)));
 		}
 		//preview
 		$preview = false;
@@ -258,21 +223,21 @@ class DefaultController extends Controller
 			));
 	}
 	/**
-	 * @Route("/forum_{name}/{page}", name="subsection", defaults={"page" = 1}, requirements = {"name"=".*"})
+	 * @Route("/section_{sectionRewrite}/subsection_{subsectionRewrite}/{page}", name="subsection", defaults={"page" = 1}, requirements = {"subsectionRewrite"=".*"})
 	 */
-	public function subsectionAction($name, $page)
+	public function subsectionAction($sectionRewrite, $subsectionRewrite, $page)
 	{
 		$theme = $this->get('rl_themes.theme.provider');
 		$user = $this->get('security.context')->getToken()->getUser();
 		$subsectionRepository = $this->get('doctrine')->getRepository('RLForumBundle:Subsection');
 		$sectionRepository = $this->get('doctrine')->getRepository('RLMainBundle:Section');
-		$section = $sectionRepository->findOneByRewrite('forum');
-		$subsection = $subsectionRepository->getSubsectionByRewrite($name, $section);
+		$section = $sectionRepository->findOneByRewrite($sectionRewrite);
+		$subsection = $subsectionRepository->getSubsectionByRewrite($subsectionRewrite, $section);
 		if(empty($subsection))
 		{
 			$legend = 'subsection not found';
 			$title = 'unknown subsection';
-			$text = 'subsection '.$name.' not found';
+			$text = 'subsection '.$subsectionRewrite.' not found';
 			return $this->render($theme->getPath('RLMainBundle', 'fieldset.html.twig'), array(
 					'theme' => $theme,
 					'user' => $user,
@@ -281,14 +246,14 @@ class DefaultController extends Controller
 					'text' => $text,
 				));
 		}
-		$threadRepository = $this->get('doctrine')->getRepository('RLForumBundle:Thread');
+		$threadRepository = $this->get('doctrine')->getRepository($section->getBundle().':Thread');
 		$itemsCount = count($subsection->getThreads());
 		$itemsOnPage = $user->getThreadsOnPage();
 		$pagesCount = ceil(($itemsCount) / $itemsOnPage);
 		$pagesCount > 1 ? $offset = $itemsOnPage * ($page - 1) : $offset = 0;
 		$threads = $threadRepository->getThreads($subsection, $user->getThreadsOnPage(), $offset);
 		$commentsCount = $threadRepository->getCommentsCount($subsection, $user->getThreadsOnPage(), $offset);
-		$pages = new Pages($this->get('router'), $itemsOnPage, $itemsCount, $page, 'subsection', array("name" => $name, "page" => $page));
+		$pages = new Pages($this->get('router'), $itemsOnPage, $itemsCount, $page, 'subsection', array("sectionRewrite" => $sectionRewrite, "subsectionRewrite" => $subsectionRewrite, "page" => $page));
 		$pagesStr = $pages->draw();
 		return $this->render($theme->getPath($section->getBundle(), 'subsection.html.twig'), array('theme' => $theme,
 				'user' => $user,
@@ -297,6 +262,25 @@ class DefaultController extends Controller
 				'threads' => $threads,
 				'commentsCount' => $commentsCount,
 				'pages' => $pagesStr,
+				'section' => $section,
+				)
+		);
+	}
+	/**
+	 * @Route("/section_{sectionRewrite}", name="section")
+	 */
+	public function sectionAction($sectionRewrite)
+	{
+		$theme = $this->get('rl_themes.theme.provider');
+		$doctrine = $this->get('doctrine');
+		$sectionRepository = $doctrine->getRepository('RLMainBundle:Section');
+		$section = $sectionRepository->findOneByRewrite($sectionRewrite);
+		$subsections = $section->getSubsections();
+		$threadsCount = $doctrine->getRepository($section->getBundle().':Thread')->getThreadsCount($section);
+		return $this->render($theme->getPath($section->getBundle(), 'forum.html.twig'), array('theme' => $theme,
+				'user' => $this->get('security.context')->getToken()->getUser(),
+				'subsections' => $subsections,
+				'threadsCount' => $threadsCount,
 				'section' => $section,
 				)
 		);

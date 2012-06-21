@@ -1,0 +1,40 @@
+<div class=messages>
+<div class="title">
+<a href="#{{'msg'~startMessage.id}}"><img border="0" src="{{'/web/bundles/rlthemes/images/'~user.theme~'/id.png'}}" alt="[#]"></a>
+{%if is_granted('ROLE_MODER')%}
+	<a href="move_thread_37329"><img border="0" src="{{'/web/bundles/rlthemes/images/'~user.theme~'/move.png'}}" alt="{%trans%}[Move]{%endtrans%}"></a>
+	{%if startMessage.thread.attached == false%}
+		<a href="attach_thread_37329"><img border="0" src="{{'/web/bundles/rlthemes/images/'~user.theme~'/attach.png'}}" alt="{%trans%}[Attach]{%endtrans%}"></a>
+	{%else%}
+		<a href="detach_thread_37329"><img border="0" src="{{'/web/bundles/rlthemes/images/'~user.theme~'/detach.png'}}" alt="{%trans%}[Detach]{%endtrans%}"></a>
+	{%endif%}
+{%endif%}
+{%if is_granted('ROLE_MODER') or startMessage.user == user%}
+	<a href="set_filter_142891"><img border="0" src="{{'/web/bundles/rlthemes/images/'~user.theme~'/filter.png'}}" alt="{%trans%}[Add filter]{%endtrans%}"></a>
+	<a href="{{path('editMessage', {'messageId':startMessage.id})}}"><img border="0" src="{{'/web/bundles/rlthemes/images/'~user.theme~'/edit.png'}}" alt="{%trans%}[Edit]{%endtrans%}"></a>
+{%endif%}	
+</div>
+<div class="msg" id="{{'msg'~startMessage.id}}"><h2 class="nt">{{startMessage.subject}}</h2>
+{{startMessage.comment}}
+<br><br>>>> <a href="{{startMessage.thread.prooflink}}">{%trans%}More{%endtrans%}</a><br>
+<p>
+<i>{{startMessage.user.username}}(<a href="{{path('user', {'name': startMessage.user.username})}}">*</a>) ({{startMessage.postingTime.date}})</i>
+<br>
+{%if startMessage.changedBy is not null%}
+<b><i>Changed by {{startMessage.changedBy.username}} on account of "{{startMessage.changedFor}}"</i></b>
+{%endif%}
+<br>
+{%if is_granted('ROLE_ADMIN')%}
+	<i>{{startMessage.useragent}}</i>
+{%else%}
+	{%if startMessage.showUa == true%}
+		<i>{{startMessage.useragent}}</i>
+	{%endif%}
+{%endif%}
+{%if startMessage.thread.approved != false%}
+	<br>Approved by: {{startMessage.thread.approvedBy.username}}(<a href="{{path('user', {'name':startMessage.thread.approvedBy.username})}}">*</a>) ({{startMessage.thread.approveTimest.date}})
+{%endif%}
+</p>
+[<a href="{{path('comment', {'thread_id': startMessage.thread.id, 'comment_id': startMessage.id})}}">{%trans%}Reply to this message{%endtrans%}</a>]<br>
+</div>
+</div>

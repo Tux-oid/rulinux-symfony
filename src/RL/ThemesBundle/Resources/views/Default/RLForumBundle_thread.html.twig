@@ -9,7 +9,7 @@
     <table class=nav>
         <tr>
             <td align=left valign=middle>
-                <a href="{{path(section.rewrite)}}">{{section.name}}</a> - <b><a href="{{path('subsection', {'section':section.rewrite, 'name': startMessage.thread.subsection.rewrite})}}">{{startMessage.thread.subsection.name}}</a></b>
+                <a href="{{path('section', {'sectionRewrite':section.rewrite})}}">{{section.name}}</a> - <b><a href="{{path('subsection', {'sectionRewrite':section.rewrite, 'subsectionRewrite': startMessage.thread.subsection.rewrite})}}">{{startMessage.thread.subsection.name}}</a></b>
             </td>
             <td align=right valign=middle>
                 [RSS]

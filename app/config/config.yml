@@ -69,7 +69,8 @@ netpositive_discriminator_map:
         section:
             entity: RL\ForumBundle\Entity\Subsection
             children:
-                news: RL\NewsBundle\Entity\NewsSubsection
+                articles: RL\ArticlesBundle\Entity\Subsection
+                news: RL\NewsBundle\Entity\Subsection
 
 rl_security:
     anonymous:
