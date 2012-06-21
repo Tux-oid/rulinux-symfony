@@ -32,10 +32,10 @@ class DefaultController extends Controller
 		$subsection = $subsectionRepository->getSubsectionByRewrite($subsectionRewrite, $section);
 		//save thread in database
 		$sbm = $request->request->get('submit');
+		$hlpCls = $section->getBundleNamespace().'\Helper\ThreadHelper';
+		$helper = new $hlpCls();
 		if(isset($sbm))
 		{
-			$hlpCls = $section->getBundleNamespace().'\Helper\ThreadHelper';
-			$helper = new $hlpCls();
 			$helper->saveThread($doctrine, $request, $section, $subsection, $user);
 			return $this->redirect($this->generateUrl("subsection", array("sectionRewrite" => $sectionRewrite, "subsectionRewrite" => $subsectionRewrite)));
 		}
@@ -47,9 +47,7 @@ class DefaultController extends Controller
 		{
 			$preview = true;
 			$newThread = new $formCls($user);
-			$prv_thr = $request->request->get('addThread');
-			$newThread->setSubject($prv_thr['subject']);
-			$newThread->setComment($prv_thr['comment']);
+			$helper->preview($newThread, $request);
 		}
 		else
 			$newThread = new $formCls($user);
@@ -223,7 +221,7 @@ class DefaultController extends Controller
 			));
 	}
 	/**
-	 * @Route("/section_{sectionRewrite}/subsection_{subsectionRewrite}/{page}", name="subsection", defaults={"page" = 1}, requirements = {"subsectionRewrite"=".*"})
+	 * @Route("/section_{sectionRewrite}_subsection_{subsectionRewrite}/{page}", name="subsection", defaults={"page" = 1}, requirements = {"subsectionRewrite"=".*"})
 	 */
 	public function subsectionAction($sectionRewrite, $subsectionRewrite, $page)
 	{

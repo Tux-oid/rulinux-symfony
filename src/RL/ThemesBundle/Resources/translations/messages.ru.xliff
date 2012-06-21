@@ -136,7 +136,7 @@
             </trans-unit>
 	    <trans-unit id="34">
                 <source>[Attach]</source>
-                <target>Прикрепить</target>
+                <target>[Прикрепить]</target>
             </trans-unit>
 	    <trans-unit id="35">
                 <source>[Add filter]</source>
@@ -181,6 +181,38 @@
 	    <trans-unit id="45">
                 <source>News</source>
                 <target>Новости</target>
+            </trans-unit>
+	    <trans-unit id="46">
+                <source>Gallery</source>
+                <target>Галерея</target>
+            </trans-unit>
+	    <trans-unit id="47">
+                <source>File address</source>
+                <target>Адрес файла</target>
+            </trans-unit>
+	    <trans-unit id="48">
+                <source>Requirements</source>
+                <target>Требования</target>
+            </trans-unit>
+	    <trans-unit id="49">
+                <source>Width x Height: form 400x400 up to 2048x2048 pixels</source>
+                <target>Ширина x Высота: от 400x400 до 2048x2048 пикселей </target>
+            </trans-unit>
+	    <trans-unit id="50">
+                <source>File type</source>
+                <target>Тип файла</target>
+            </trans-unit>
+	    <trans-unit id="51">
+                <source>Filesize not much then 700 Kb</source>
+                <target>Размер файла не более 700 Kb </target>
+            </trans-unit>
+	    <trans-unit id="52">
+                <source>On preview image do not showed</source>
+                <target>При предпросмотре изображение не отображается</target>
+            </trans-unit>
+	    <trans-unit id="53">
+                <source>Add image</source>
+                <target>Добавить изображение</target>
             </trans-unit>
         </body>
     </file>

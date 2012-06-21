@@ -58,6 +58,8 @@ swiftmailer:
 jms_security_extra:
     secure_controllers:  true
     secure_all_services: false
+
+gregwar_image: ~
     
 netpositive_discriminator_map:
     discriminator_map:
@@ -66,11 +68,14 @@ netpositive_discriminator_map:
             children:
                 article: RL\ArticlesBundle\Entity\Thread
                 news: RL\NewsBundle\Entity\Thread
+                gallery: RL\GalleryBundle\Entity\Thread
+                
         section:
             entity: RL\ForumBundle\Entity\Subsection
             children:
                 articles: RL\ArticlesBundle\Entity\Subsection
                 news: RL\NewsBundle\Entity\Subsection
+                gallery: RL\GalleryBundle\Entity\Subsection
 
 rl_security:
     anonymous:

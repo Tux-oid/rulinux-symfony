@@ -29,5 +29,12 @@ class ThreadHelper implements ThreadHelperInterface
 		$em->persist($message);
 		$em->flush();
 	}
+	public function preview(&$thread, \Symfony\Component\HttpFoundation\Request &$request)
+	{
+		$prv_thr = $request->request->get('addThread');
+		$thread->setSubject($prv_thr['subject']);
+		$thread->setComment($prv_thr['comment']);
+		$thread->setProoflink($prv_thr['prooflink']);
+	}
 }
 ?>

@@ -76,3 +76,7 @@
 [NetpositiveDiscriminatorMapBundle]
     git=git://github.com/Netpositive/NetpositiveDiscriminatorMapBundle.git
     target=bundles/Netpositive/DiscriminatorMapBundle
+
+[GregwarImageBundle]
+    git=git://github.com/Gregwar/ImageBundle.git
+    target=/bundles/Gregwar/ImageBundle

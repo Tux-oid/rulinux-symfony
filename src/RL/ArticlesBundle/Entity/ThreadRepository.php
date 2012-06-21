@@ -14,7 +14,8 @@ class ThreadRepository extends ForumThreadRepository
 	public function getThreads($subsection, $limit, $offset)
 	{
 		$em = $this->_em;
-		$q = $em->createQuery('SELECT t, m FROM RL\ArticlesBundle\Entity\Thread AS t INNER JOIN t.messages AS m WHERE m.id = (SELECT MIN(msg.id) AS msg_id FROM RL\ForumBundle\Entity\Message AS msg WHERE msg.thread = t.id) AND t.subsection = (SELECT s.id FROM RL\ForumBundle\Entity\Subsection s WHERE s.id = ?1) AND t.approved = true ORDER BY t.id DESC')
+//		$q = $em->createQuery('SELECT t, m FROM RL\ArticlesBundle\Entity\Thread AS t INNER JOIN t.messages AS m WHERE m.id = (SELECT MIN(msg.id) AS msg_id FROM RL\ForumBundle\Entity\Message AS msg WHERE msg.thread = t.id) AND t.subsection = (SELECT s.id FROM RL\ForumBundle\Entity\Subsection s WHERE s.id = ?1) AND t.approved = true ORDER BY t.id DESC')
+		$q = $em->createQuery('SELECT t, m FROM RL\ArticlesBundle\Entity\Thread AS t INNER JOIN t.messages AS m WHERE m.id = (SELECT MIN(msg.id) AS msg_id FROM RL\ForumBundle\Entity\Message AS msg WHERE msg.thread = t.id) AND t.subsection = (SELECT s.id FROM RL\ForumBundle\Entity\Subsection s WHERE s.id = ?1) ORDER BY t.id DESC')//FIXME:uncomment previous line
 			->setFirstResult($offset)
 			->setMaxResults($limit)
 			->setParameter(1, $subsection->getId());

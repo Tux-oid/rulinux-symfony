@@ -18,12 +18,14 @@ class AppKernel extends Kernel
 			new JMS\SecurityExtraBundle\JMSSecurityExtraBundle(),
 			new Symfony\Bundle\DoctrineFixturesBundle\DoctrineFixturesBundle(),
 			new Netpositive\DiscriminatorMapBundle\NetpositiveDiscriminatorMapBundle(),
+			new Gregwar\ImageBundle\GregwarImageBundle(),
 			new RL\SecurityBundle\RLSecurityBundle(),
 			new RL\MainBundle\RLMainBundle(),
 			new RL\ThemesBundle\RLThemesBundle(),
 			new RL\ForumBundle\RLForumBundle(),
 			new RL\ArticlesBundle\RLArticlesBundle(),
 			new RL\NewsBundle\RLNewsBundle(),
+            new RL\GalleryBundle\RLGalleryBundle(),
 		);
 
 		if(in_array($this->getEnvironment(), array('dev', 'test')))

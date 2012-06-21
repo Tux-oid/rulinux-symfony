@@ -3,6 +3,7 @@
 /app/cache/*
 /app/logs/*
 /vendor/
+/web/bundles/*
 /app/config/parameters.ini
 /htdocs.kdev4
 /.kdev4

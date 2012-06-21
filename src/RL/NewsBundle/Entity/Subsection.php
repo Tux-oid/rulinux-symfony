@@ -25,5 +25,21 @@ class Subsection extends ForumSubsection
 	{
 		$this->image = $image;
 	}
+	public function getAbsolutePath()
+	{
+		return null === $this->image ? null : $this->getUploadRootDir().'/'.$this->image;
+	}
+	public function getWebPath()
+	{
+		return null === $this->image ? null : $this->getUploadDir().'/'.$this->image;
+	}
+	protected function getUploadRootDir()
+	{
+		return __DIR__.'/../../../../'.$this->getUploadDir();
+	}
+	protected function getUploadDir()
+	{
+		return 'web/bundles/rlthemes/images/CozyGreen/subsections';//FIXME:theme changing
+	}
 }
 ?>
