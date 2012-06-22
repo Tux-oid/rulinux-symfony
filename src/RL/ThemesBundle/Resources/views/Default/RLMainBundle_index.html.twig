@@ -10,6 +10,11 @@
         {% endblock %}
         </td>
         <td class="content">
-	{% block content %}CONTENT_BLOCK{% endblock %}
+	{% block content %}
+			{%for thread in threads%}
+			{%include theme.path('RLMainBundle', 'news.html.twig')%}
+			{%endfor%}
+			{{pages|raw}}
+	{% endblock %}
         </td>
 {% endblock %}

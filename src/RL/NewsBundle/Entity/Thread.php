@@ -8,7 +8,7 @@ use Doctrine\ORM\Mapping as ORM;
 use RL\ArticlesBundle\Entity\Thread as ArticlesThread;
 
 /**
- * @ORM\Entity(repositoryClass="RL\ArticlesBundle\Entity\ThreadRepository") 
+ * @ORM\Entity(repositoryClass="RL\NewsBundle\Entity\ThreadRepository") 
  * @ORM\Table(name="news")
  */
 class Thread extends ArticlesThread
