@@ -1,6 +1,6 @@
 <?php
 /**
- * @author Ax-xa-xa 
+ * @author Ax-xa-xa
  */
 namespace RL\MainBundle\Controller;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
@@ -10,6 +10,20 @@ use RL\MainBundle\Helper\Pages;
 
 class MainController extends Controller
 {
+	/**
+	 * @Route("/unconfirmed", name="unconfirmed")
+	 */
+	public function unconfirmedAction()
+	{
+		$user = $this->get('security.context')->getToken()->getUser();
+		$theme = $this->get('rl_themes.theme.provider');
+		$doctrine = $this->get('doctrine');
+
+		return $this->render(
+			$theme->getPath('RLMainBundle', 'unconfirmed.html.twig'), array('user' => $user, 'theme' => $theme,)
+		);
+	}
+
 	/**
 	 * @Route("/{page}", name="index", defaults={"page" = 1}, requirements = {"page"="[0-9]*"})
 	 * @Template()
@@ -29,12 +43,9 @@ class MainController extends Controller
 		$threads = $threadRepository->getNews($itemsOnPage, $offset);
 		$pages = new Pages($this->get('router'), $itemsOnPage, $itemsCount, $page, 'index', array("page" => $page));
 		$pagesStr = $pages->draw();
-		return $this->render($theme->getPath('RLMainBundle', 'index.html.twig'), array(
-				'user' => $user,
-				'theme' => $this->get('rl_themes.theme.provider'),
-				'threads'=>$threads,
-				'pages'=>$pagesStr,
-				'section'=>$section,
-			));
+		return $this->render(
+			$theme->getPath('RLMainBundle', 'index.html.twig'), array('user' => $user, 'theme' => $this->get('rl_themes.theme.provider'), 'threads' => $threads, 'pages' => $pagesStr, 'section' => $section,)
+		);
 	}
+
 }
