@@ -18,9 +18,26 @@ class MainController extends Controller
 		$user = $this->get('security.context')->getToken()->getUser();
 		$theme = $this->get('rl_themes.theme.provider');
 		$doctrine = $this->get('doctrine');
-
+		$threadRepository = $doctrine->getRepository('RLNewsBundle:Thread');
+		$unconfirmedThreads = $threadRepository->getUnconfirmed();
 		return $this->render(
-			$theme->getPath('RLMainBundle', 'unconfirmed.html.twig'), array('user' => $user, 'theme' => $theme,)
+			$theme->getPath('RLMainBundle', 'unconfirmed.html.twig'), array('user' => $user, 'theme' => $theme, 'threads'=>$unconfirmedThreads,)
+		);
+	}
+
+	/**
+	 * @Route("/rules", name="rules")
+	 */
+	public function rulesAction()
+	{
+		$user = $this->get('security.context')->getToken()->getUser();
+		$theme = $this->get('rl_themes.theme.provider');
+		$doctrine = $this->get('doctrine');
+		$settingsRepository = $doctrine->getRepository('RLSecurityBundle:Settings');
+		$rulesTitle = $settingsRepository->findOneByName('rulesTitle')->getValue();
+		$rulesText = $settingsRepository->findOneByName('rulesText')->getValue();
+		return $this->render(
+			$theme->getPath('RLMainBundle', 'page.html.twig'), array('user' => $user, 'theme' => $theme, 'title'=>$rulesTitle, 'text'=>$rulesText, )
 		);
 	}
 

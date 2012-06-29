@@ -1,0 +1,33 @@
+<h2><a href="{{path('thread', {'id':thread.id})}}" style="text-decoration:none">{{thread.messages[0].subject}}</a></h2>
+{%if is_granted('ROLE_MODER')%}
+<div>
+	<a href="{{path('editMessage', {'messageId':thread.messages[0].id})}}">{%trans%}[Edit]{%endtrans%}</a> |
+	{%if thread.approved != false%}
+		{%if thread.attached == false%}
+			<a href="attach_thread_37284">{%trans%}[Attach]{%endtrans%}</a>
+		{%else%}
+			<a href="attach_thread_37284">{%trans%}[Detach]{%endtrans%}</a>
+		{%endif%}
+	{%else%}
+		<a href="approve_thread_37284">{%trans%}[Approve]{%endtrans%}</a>
+	{%endif%}
+</div>
+{%endif%}
+<table cellspacing="0" border="0"><tr><td style="vertical-align:top">
+	<table>
+		<tr>
+			<td style="vertical-align:top">
+			</td>
+			<td style="vertical-align:top">{{thread.messages[0].comment}}
+				<br>
+				<br>
+			</td>
+		</tr>
+	</table>
+	<p style="font-style:italic">{{thread.messages[0].user.username}} (<a href="{{path('user', {'name':thread.messages[0].user.username})}}">*</a>) ({{thread.messages[0].postingTime.date}})</p>[<a href="{{path('thread', {'id':thread.id})}}">10 messages</a>]&nbsp;[<a href="{{path('new_thread', {'sectionRewrite':section.rewrite, 'subsectionRewrite':subsection.rewrite})}}">{%trans%}Add comment{%endtrans%}</a>]
+	<br>
+	<br>
+</td>
+</tr>
+</table>
+<hr>

@@ -1,0 +1,13 @@
+{%extends theme.path('RLMainBundle', 'layout.html.twig')%}
+
+{%block title%}
+	{{parent()}} - {{title}}
+{%endblock title%}
+
+{%block content%}
+
+<h2 align="center">{{title|raw}}</h2>
+<br>
+{{text|raw}}
+<br>
+{%endblock content%}

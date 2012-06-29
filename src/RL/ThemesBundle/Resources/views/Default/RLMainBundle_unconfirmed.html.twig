@@ -1,1 +1,16 @@
 {%extends theme.path('RLMainBundle', 'layout.html.twig')%}
+
+
+{%block title%}
+	{{parent()}} - {%trans%}View unconfirmed{%endtrans%}
+{%endblock title%}
+
+{%block content%}
+<h1>{%trans%}View unconfirmed{%endtrans%}</h1><br>
+
+	{%for thread in threads%}
+		{%set section = thread.subsection.section %}
+		{%set subsection = thread.subsection %}
+		{%include theme.path(thread.subsection.section.bundle ,'unconfirmedItem.html.twig')%}
+	{%endfor%}
+{%endblock content%}
