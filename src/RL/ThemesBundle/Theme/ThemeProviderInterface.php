@@ -12,12 +12,12 @@ interface ThemeProviderInterface
     /**
      * Returns current theme name
      */
-    function getName();
+    function getTheme();
 
     /**
      * Returns current theme
      */
-    function getTheme($bundleName, $templateName);
+    function getTemplate($bundleName, $templateName);
     
     /**
      * Returns full template names with current layout part.

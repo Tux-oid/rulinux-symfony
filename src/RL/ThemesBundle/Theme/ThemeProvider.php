@@ -11,60 +11,52 @@ use RL\SecurityBundle\Security\User\RLUserInterface;
 
 class ThemeProvider implements ThemeProviderInterface
 {
-	private $themes;
-	private $default;
 	private $context;
 	private $httpKernel;
-	public function __construct(SecurityContextInterface $context, $kernel)
+	private $doctrine;
+	public function __construct(SecurityContextInterface $context, $kernel, $doctrine)
 	{
 		$this->context = $context;
-		$this->themes = NULL;
-		$this->default = NULL;
+		$this->doctrine = $doctrine;
 		$this->httpKernel = $kernel;
-		//FIXME: set themes information located in database
-		$this->default = 'Default';
-		$this->themes = array("Default" => 'RLThemesBundle:Default', "White" => 'RLThemesBundle:White', "CozyGreen" => 'RLThemesBundle:CozyGreen');
 	}
-	public function getTheme($bundleName, $templateName)
+	public function getTemplate($bundleName, $templateName)
 	{
-		$themeName = $this->getName($templateName);
-		if(array_key_exists($themeName, $this->themes))
+		$theme = $this->getTheme();
+		$defaultTheme = $this->doctrine->getRepository('RLThemesBundle:Theme')->findOneByName('Ubertechno');
+		$tpl = '@RLThemesBundle/Resources/views/'.$theme->getDirectory().'/'.$bundleName.'_'.$templateName;
+		try
 		{
-			$tpl = '@RLThemesBundle/Resources/views/'.$themeName.'/'.$bundleName.'_'.$templateName;
+			$this->httpKernel->locateResource($tpl);
+		}
+		catch(\Exception $e)
+		{
+			$tpl = '@RLThemesBundle/Resources/views/'.$defaultTheme->getDirectory().'/'.$bundleName.'_'.$templateName;
 			try
 			{
 				$this->httpKernel->locateResource($tpl);
 			}
 			catch(\Exception $e)
 			{
-				$tpl = '@RLThemesBundle/Resources/views/Default/'.$bundleName.'_'.$templateName;
+				$tpl = '@'.$bundleName.'/Resources/views/Default/'.$bundleName.'_'.$templateName;
 				try
 				{
 					$this->httpKernel->locateResource($tpl);
 				}
 				catch(\Exception $e)
 				{
-					$tpl = '@'.$bundleName.'/Resources/views/Default/'.$bundleName.'_'.$templateName;
-					try
-					{
-						$this->httpKernel->locateResource($tpl);
-					}
-					catch(\Exception $e)
-					{
-						throw new \Exception('Template not found');
-					}
-					return $bundleName.':Default';
+					throw new \Exception('Template not found');
 				}
-				return $this->themes['Default'];
+				return $bundleName.':Default';
 			}
-			return $this->themes[$themeName];
+			return $defaultTheme->getPath();
 		}
-		throw new \Exception('Theme not found');
+		return $theme->getPath();
 	}
-	function getName()
+	function getTheme()
 	{
-		$themeName = $this->default;
-		if(isset($this->themes))
+		$theme = $this->doctrine->getRepository('RLThemesBundle:Theme')->findOneByName('Ubertechno');
+		if(isset($theme))
 		{
 			$token = $this->context->getToken();
 			if(isset($token))
@@ -72,19 +64,19 @@ class ThemeProvider implements ThemeProviderInterface
 				$user = $token->getUser();
 				if($user instanceof RLUserInterface)
 				{
-					$themeNameUser = $user->getTheme();
-					if(isset($themeNameUser))
+					$userTheme = $user->getTheme();
+					if(isset($userTheme))
 					{
-						$themeName = $themeNameUser;
+						$theme = $userTheme;
 					}
 				}
 			}
 		}
-		return $themeName;
+		return $theme;
 	}
 	function getPath($bundleName, $templateName)
 	{
-		$theme = $this->getTheme($bundleName, $templateName);
+		$theme = $this->getTemplate($bundleName, $templateName);
 		return $theme.":".$bundleName.'_'.$templateName;
 	}
 }

@@ -9,6 +9,7 @@ use Doctrine\Common\DataFixtures\FixtureInterface;
 use RL\SecurityBundle\Entity\User;
 use RL\SecurityBundle\Entity\Group;
 use RL\SecurityBundle\Entity\Settings;
+use RL\ThemesBundle\Entity\Theme;
 use Symfony\Component\Security\Core\Encoder\MessageDigestPasswordEncoder;
 
 class FixtureLoader implements FixtureInterface
@@ -36,11 +37,6 @@ class FixtureLoader implements FixtureInterface
 		$captchaSetting->setName('captchaLevel');
 		$captchaSetting->setValue($captchaLevel);
 		$manager->persist($captchaSetting);
-		$theme = 'Default';
-		$themeSetting = new Settings();
-		$themeSetting->setName('theme');
-		$themeSetting->setValue($theme);
-		$manager->persist($themeSetting);
 		$sortingType = 0;
 		$sortingTypeSetting = new Settings();
 		$sortingTypeSetting->setName('sortingType');
@@ -96,6 +92,14 @@ class FixtureLoader implements FixtureInterface
 		$gmtSetting->setName('gmt');
 		$gmtSetting->setValue($gmt);
 		$manager->persist($gmtSetting);
+
+		$ubertechnoTheme = new Theme();
+		$ubertechnoTheme->setName('Ubertechno');
+		$ubertechnoTheme->setDescription('Acidic theme provided by the user Nosferatu');
+		$ubertechnoTheme->setPath('RLThemesBundle:Default');
+		$ubertechnoTheme->setDirectory('Default');
+		$manager->persist($ubertechnoTheme);
+
 		//adding anonymous
 		$anonymous = new User();
 		$anonymous->setUsername('anonymous');
@@ -110,7 +114,7 @@ class FixtureLoader implements FixtureInterface
 		$anonymous->setRegistrationDate(new \DateTime('2009-02-12 14:42:51'));
 		$anonymous->setLastVisitDate(new \DateTime('now'));
 		$anonymous->setCaptchaLevel($captchaLevel);
-		$anonymous->setTheme($theme);
+		$anonymous->setTheme($ubertechnoTheme);
 		$anonymous->setSortingType($sortingType);
 		$anonymous->setNewsOnPage($newsOnPage);
 		$anonymous->setThreadsOnPage($threadsOnPage);
@@ -141,7 +145,7 @@ class FixtureLoader implements FixtureInterface
 		$admin->setRegistrationDate(new \DateTime('now'));
 		$admin->setLastVisitDate(new \DateTime('now'));
 		$admin->setCaptchaLevel($captchaLevel);
-		$admin->setTheme($theme);
+		$admin->setTheme($ubertechnoTheme);
 		$admin->setSortingType($sortingType);
 		$admin->setNewsOnPage($newsOnPage);
 		$admin->setThreadsOnPage($threadsOnPage);

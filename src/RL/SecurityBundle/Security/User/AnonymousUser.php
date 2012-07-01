@@ -45,11 +45,11 @@ class AnonymousUser implements RLUserInterface
 	}
 	public function getTheme()
 	{
-		return array_key_exists('theme', $this->attributes) ? $this->attributes['theme'] : NULL;
+		return array_key_exists('theme', $this->attributes) ? \unserialize($this->attributes['theme']) : $this->dbAnon->getTheme();
 	}
 	public function setTheme($value)
 	{
-		$this->attributes['theme'] = $value;
+		$this->attributes['theme'] = \serialize($value);
 	}
 	// AdvancedUserInterface
 

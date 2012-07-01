@@ -136,7 +136,7 @@ class User implements RLUserInterface, \Serializable
 	 */
 	protected $blocks;
 	/**
-	 * @ORM\Column(name="theme", type="string", length=512)
+	 * @ORM\ManyToOne(targetEntity="RL\ThemesBundle\Entity\Theme")
 	 */
 	protected $theme;
 	/**

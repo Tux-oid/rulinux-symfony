@@ -7,3 +7,4 @@ services:
     arguments: 
       - "@security.context"
       - "@kernel"
+      - "@doctrine"
