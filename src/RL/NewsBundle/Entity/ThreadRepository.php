@@ -14,7 +14,7 @@ class ThreadRepository extends ArticlesThreadRepository
 	public function getNews($limit, $offset)
 	{
 		$em = $this->_em;
-		$q = $em->createQuery('SELECT t, m FROM RL\NewsBundle\Entity\Thread AS t INNER JOIN t.messages AS m WHERE m.id = (SELECT MIN(msg.id) AS msg_id FROM RL\ForumBundle\Entity\Message AS msg WHERE msg.thread = t.id) ORDER BY t.id DESC')
+		$q = $em->createQuery('SELECT t, m FROM RL\NewsBundle\Entity\Thread AS t INNER JOIN t.messages AS m WHERE m.id = (SELECT MIN(msg.id) AS msg_id FROM RL\ForumBundle\Entity\Message AS msg WHERE msg.thread = t.id) AND t.approved = true ORDER BY t.id DESC')
 			->setFirstResult($offset)
 			->setMaxResults($limit);
 		$threads = $q->getResult();

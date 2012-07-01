@@ -228,7 +228,11 @@
             </trans-unit>
             <trans-unit id="57">
                 <source>Rules</source>
-                <target>Правила</target>
+                <target>Правила форума</target>
+            </trans-unit>
+            <trans-unit id="58">
+                <source>Links</source>
+                <target>Ссылки</target>
             </trans-unit>
         </body>
     </file>

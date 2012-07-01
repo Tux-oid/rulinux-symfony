@@ -1,0 +1,7 @@
+parameters:
+#    rl_articles.example.class: RL\ArticlesBundle\Example
+
+services:
+#    rl_articles.example:
+#        class: %rl_articles.example.class%
+#        arguments: [@service_id, "plain_value", %parameter%]

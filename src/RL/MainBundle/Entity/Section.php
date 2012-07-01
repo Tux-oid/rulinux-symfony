@@ -45,62 +45,122 @@ class Section
 	 * @ORM\OrderBy({"id" = "ASC"})
 	 */
 	protected $subsections;
+
+	/**
+	 *
+	 */
 	function __construct()
 	{
 		$this->subsections = new ArrayCollection();
 	}
-		public function getId()
+
+	/**
+	 * @return mixed
+	 */
+	public function getId()
 	{
 		return $this->id;
 	}
+
+	/**
+	 * @param $id
+	 */
 	public function setId($id)
 	{
 		$this->id = $id;
 	}
+
+	/**
+	 * @return mixed
+	 */
 	public function getName()
 	{
 		return $this->name;
 	}
+
+	/**
+	 * @param $name
+	 */
 	public function setName($name)
 	{
 		$this->name = $name;
 	}
+
+	/**
+	 * @return mixed
+	 */
 	public function getDescription()
 	{
 		return $this->description;
 	}
+
+	/**
+	 * @param $description
+	 */
 	public function setDescription($description)
 	{
 		$this->description = $description;
 	}
+
+	/**
+	 * @return mixed
+	 */
 	public function getRewrite()
 	{
 		return $this->rewrite;
 	}
+
+	/**
+	 * @param $rewrite
+	 */
 	public function setRewrite($rewrite)
 	{
 		$this->rewrite = $rewrite;
 	}
+
+	/**
+	 * @return mixed
+	 */
 	public function getBundle()
 	{
 		return $this->bundle;
 	}
+
+	/**
+	 * @param $bundle
+	 */
 	public function setBundle($bundle)
 	{
 		$this->bundle = $bundle;
 	}
+
+	/**
+	 * @return \Doctrine\Common\Collections\ArrayCollection
+	 */
 	public function getSubsections()
 	{
 		return $this->subsections;
 	}
+
+	/**
+	 * @param $subsections
+	 */
 	public function setSubsections($subsections)
 	{
 		$this->subsections = $subsections;
 	}
+
+	/**
+	 * @return mixed
+	 */
 	public function getBundleNamespace()
 	{
 		return $this->bundleNamespace;
 	}
+
+	/**
+	 * @param $bundleNamespace
+	 */
 	public function setBundleNamespace($bundleNamespace)
 	{
 		$this->bundleNamespace = $bundleNamespace;

@@ -42,6 +42,28 @@ class MainController extends Controller
 	}
 
 	/**
+	 * @Route("/links", name="links")
+	 */
+	public function linksAction()
+	{
+		$user = $this->get('security.context')->getToken()->getUser();
+		$theme = $this->get('rl_themes.theme.provider');
+		$doctrine = $this->get('doctrine');
+		$linksRepository = $doctrine->getRepository('RLMainBundle:Link');
+		$links = $linksRepository->findAll();
+		$title = 'Links';
+		$text = '<ul>';
+		foreach($links as $link)
+		{
+			$text = $text.'<li><a href="'.$link->getLink().'">'.$link->getName().'</a></li>';
+		}
+		$text = $text.'</ul>';
+		return $this->render(
+			$theme->getPath('RLMainBundle', 'page.html.twig'), array('user' => $user, 'theme' => $theme, 'title'=>$title, 'text'=>$text, )
+		);
+	}
+
+	/**
 	 * @Route("/{page}", name="index", defaults={"page" = 1}, requirements = {"page"="[0-9]*"})
 	 * @Template()
 	 */

@@ -7,6 +7,7 @@ namespace RL\MainBundle\DataFixtures\ORM;
 use Doctrine\Common\Persistence\ObjectManager;
 use Doctrine\Common\DataFixtures\FixtureInterface;
 use RL\SecurityBundle\Entity\Settings;
+use RL\MainBundle\Entity\Link;
 
 class FixtureLoader implements FixtureInterface
 {
@@ -45,6 +46,26 @@ class FixtureLoader implements FixtureInterface
 		$rulesTextSetting->setName('rulesText');
 		$rulesTextSetting->setValue($rulesText);
 		$manager->persist($rulesTextSetting);
+
+		$gpLink = new Link();
+		$gpLink->setName('GNU Planet');
+		$gpLink->setLink('http://gnuplanet.org');
+		$manager->persist($gpLink);
+
+		$opennetLink = new Link();
+		$opennetLink->setName('OpenNET');
+		$opennetLink->setLink('http://opennet.ru');
+		$manager->persist($opennetLink);
+
+		$lorLink = new Link();
+		$lorLink->setName('linux.org.ru');
+		$lorLink->setLink('http://linux.org.ru');
+		$manager->persist($lorLink);
+
+		$lolksLink = new Link();
+		$lolksLink->setName('lolks');
+		$lolksLink->setLink('http://lolks.ru');
+		$manager->persist($lolksLink);
 
 		$manager->flush();
 	}
