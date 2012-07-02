@@ -8,7 +8,7 @@ use Doctrine\Common\Persistence\ObjectManager;
 use Doctrine\Common\DataFixtures\FixtureInterface;
 use RL\SecurityBundle\Entity\User;
 use RL\SecurityBundle\Entity\Group;
-use RL\SecurityBundle\Entity\Settings;
+use RL\MainBundle\Entity\Settings;
 use RL\ThemesBundle\Entity\Theme;
 use Symfony\Component\Security\Core\Encoder\MessageDigestPasswordEncoder;
 

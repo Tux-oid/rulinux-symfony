@@ -120,7 +120,7 @@
             </trans-unit>
             <trans-unit id="30">
                 <source>Comments count</source>
-                <target>Число ответов</target>
+                <target>Количество комментариев</target>
             </trans-unit>
             <trans-unit id="31">
                 <source>all/day/hour</source>
@@ -131,20 +131,20 @@
                 <target>Ответить на это сообщение</target>
             </trans-unit>
 	    <trans-unit id="33">
-                <source>[Move]</source>
-                <target>[Переместить]</target>
+                <source>Move</source>
+                <target>Переместить</target>
             </trans-unit>
 	    <trans-unit id="34">
-                <source>[Attach]</source>
-                <target>[Прикрепить]</target>
+                <source>Attach</source>
+                <target>Прикрепить</target>
             </trans-unit>
 	    <trans-unit id="35">
-                <source>[Add filter]</source>
-                <target>[Добавить метку]</target>
+                <source>Add filter</source>
+                <target>Добавить метку</target>
             </trans-unit>
 	    <trans-unit id="36">
-                <source>[Edit]</source>
-                <target>[Править]</target>
+                <source>Edit</source>
+                <target>Править</target>
             </trans-unit>
 	    <trans-unit id="37">
                 <source>Reply to:</source>
@@ -233,6 +233,138 @@
             <trans-unit id="58">
                 <source>Links</source>
                 <target>Ссылки</target>
+            </trans-unit>
+            <trans-unit id="59">
+                <source>Profile of user</source>
+                <target>Профиль пользователя</target>
+            </trans-unit>
+            <trans-unit id="60">
+                <source>User profile</source>
+                <target>Профиль пользователя</target>
+            </trans-unit>
+            <trans-unit id="61">
+                <source>Nick</source>
+                <target>Nick</target>
+            </trans-unit>
+            <trans-unit id="62">
+                <source>OpenID</source>
+                <target>OpenID</target>
+            </trans-unit>
+            <trans-unit id="63">
+                <source>Name</source>
+                <target>Имя</target>
+            </trans-unit>
+            <trans-unit id="64">
+                <source>Lastname</source>
+                <target>Фамилия</target>
+            </trans-unit>
+            <trans-unit id="65">
+                <source>Gender</source>
+                <target>Пол</target>
+            </trans-unit>
+            <trans-unit id="66">
+                <source>Male</source>
+                <target>Мужской</target>
+            </trans-unit>
+            <trans-unit id="67">
+                <source>Female</source>
+                <target>Женский</target>
+            </trans-unit>
+            <trans-unit id="68">
+                <source>Birthday</source>
+                <target>День рождения</target>
+            </trans-unit>
+            <trans-unit id="69">
+                <source>E-mail</source>
+                <target>E-mail</target>
+            </trans-unit>
+            <trans-unit id="70">
+                <source>IM</source>
+                <target>IM</target>
+            </trans-unit>
+            <trans-unit id="71">
+                <source>Country</source>
+                <target>Страна</target>
+            </trans-unit>
+            <trans-unit id="72">
+                <source>City</source>
+                <target>Город</target>
+            </trans-unit>
+            <trans-unit id="73">
+                <source>Status</source>
+                <target>Статус</target>
+            </trans-unit>
+            <trans-unit id="74">
+                <source>Administrator</source>
+                <target>Администратор</target>
+            </trans-unit>
+            <trans-unit id="75">
+                <source>Moderator</source>
+                <target>Модератор</target>
+            </trans-unit>
+            <trans-unit id="76">
+                <source>User</source>
+                <target>Пользователь</target>
+            </trans-unit>
+            <trans-unit id="77">
+                <source>Unblocked</source>
+                <target>Разблокирован</target>
+            </trans-unit>
+            <trans-unit id="78">
+                <source>Blocked</source>
+                <target>Заблокирован</target>
+            </trans-unit>
+            <trans-unit id="79">
+                <source>Registered</source>
+                <target>Зарегистрирован</target>
+            </trans-unit>
+            <trans-unit id="80">
+                <source>Last login</source>
+                <target>Последний логин</target>
+            </trans-unit>
+            <trans-unit id="81">
+                <source>Additional</source>
+                <target>Дополнительно</target>
+            </trans-unit>
+            <trans-unit id="82">
+                <source>Hidden</source>
+                <target>Скрыт</target>
+            </trans-unit>
+            <trans-unit id="83">
+                <source>First theme</source>
+                <target>Первая созданная тема</target>
+            </trans-unit>
+            <trans-unit id="84">
+                <source>Last theme</source>
+                <target>Последняя созданная тема</target>
+            </trans-unit>
+            <trans-unit id="85">
+                <source>First comment</source>
+                <target>Первый комментарий</target>
+            </trans-unit>
+            <trans-unit id="86">
+                <source>Last comment</source>
+                <target>Последний комментарий</target>
+            </trans-unit>
+            <trans-unit id="87">
+                <source>Themes count</source>
+                <target>Количество тем</target>
+            </trans-unit>
+            <trans-unit id="88">
+                <source>Change password</source>
+                <target>Смена пароля</target>
+            </trans-unit>
+            <trans-unit id="89">
+                <source>Old password</source>
+                <target>Старый пароль</target>
+            </trans-unit>
+            <trans-unit id="90">
+                <source>New password</source>
+                <target>Новый пароль</target>
+            </trans-unit>
+            <trans-unit id="91">
+                <source>Repeat password</source>
+                <target>Повторите пароль</target>
             </trans-unit>
         </body>
     </file>

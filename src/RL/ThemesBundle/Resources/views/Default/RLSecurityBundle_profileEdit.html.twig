@@ -1,0 +1,12 @@
+{%extends theme.path('RLMainBundle', 'layout.html.twig')%}
+
+{%block title%}
+{{parent()}} - {%trans%}Profile of user{%endtrans%} {{user.username}}
+{%endblock title%}
+
+{%block content%}
+	<h1>{%trans%}User profile{%endtrans%}</h1>
+	{%include theme.path('RLSecurityBundle', 'profilePasswordEdit.html.twig')%}
+	{%include theme.path('RLSecurityBundle', 'profilePersonalDataEdit.html.twig')%}
+
+{%endblock content%}

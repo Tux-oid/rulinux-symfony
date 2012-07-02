@@ -1,31 +1,23 @@
-<form action="{{ path('login_check') }} " method="post" {{ form_enctype(form) }} >
-    <table width="100%" cellpadding="0" cellspacing="0">
-    {% if error %}
-        <tr>
-            <td colspan="2">{{ error.message }}</td>
-        </tr>
-    {% endif %}
-        <tr>
-            <td>{%trans%}Username{%endtrans%}</td>
-            <td>{{ form_widget(form._username) }}</td>
-        </tr>
-        <tr>
-            <td>{%trans%}Password{%endtrans%}</td>
-            <td>{{ form_widget(form._password) }}</td>
-        </tr>
-        <tr>
-			<td>&nbsp;</td>
-            <td>{%trans%}Remember me{%endtrans%} {{ form_widget(form._remember_me) }}</td>
-        </tr>
-        <tr>
-			<td>&nbsp;</td>
-			<td><a href="{{ path('register') }}">Register</a></td>
+<form action="{{ path('login_check') }} " method="post" >
+	<form action="{{ path('login_check') }}" method="post">
+	<table>
+		<tr>
+			<td>
+				<label for="username">{%trans%}Username{%endtrans%}:</label>
+			</td>
+			<td>
+				<input type="text" id="username" name="_username" value="{{ last_username }}" />
+			</td>
 		</tr>
-        <tr>
-            <td colspan="2">
-                {{ form_rest(form) }}
-                <input type="submit"/>
-            </td>
-        </tr>
-    </table>
+		<tr>
+			<td>
+				<label for="password">{%trans%}Password{%endtrans%}:</label>
+			</td>
+			<td>
+				<input type="password" id="password" name="_password" />
+			</td>
+		</tr>
+	</table>
+	<input type="submit">
+
 </form>

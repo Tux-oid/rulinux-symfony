@@ -84,11 +84,11 @@
                                                         {% for thread in threads %}
                                                                 <tr>
 									<td align = center>
-										<img src="{{'/web/bundles/rlthemes/images/'~user.theme~'/move.png'}}">
+										<img src="{{'/web/bundles/rlthemes/images/'~user.theme.directory~'/move.png'}}">
 									{%if thread.attached == false%}
-										<img src="{{'/web/bundles/rlthemes/images/'~user.theme~'/attach.png'}}">
+										<img src="{{'/web/bundles/rlthemes/images/'~user.theme.directory~'/attach.png'}}">
 									{%else%}
-										<img src="{{'/web/bundles/rlthemes/images/'~user.theme~'/detach.png'}}">
+										<img src="{{'/web/bundles/rlthemes/images/'~user.theme.directory~'/detach.png'}}">
 									{%endif%}
 									</td>
 									<td>

@@ -148,7 +148,7 @@ class AnonymousUser implements RLUserInterface
 	}
 	public function getLanguage()
 	{
-		return array_key_exists('commentsOnPage', $this->attributes) ? $this->attributes['commentsOnPage'] : $this->dbAnon->getLanguage();
+		return array_key_exists('language', $this->attributes) ? $this->attributes['language'] : $this->dbAnon->getLanguage();
 	}
 	public function getLastVisitDate()
 	{
@@ -156,11 +156,11 @@ class AnonymousUser implements RLUserInterface
 	}
 	public function getMark()
 	{
-		return array_key_exists('commentsOnPage', $this->attributes) ? $this->attributes['commentsOnPage'] : $this->dbAnon->getMark();
+		return array_key_exists('mark', $this->attributes) ? $this->attributes['mark'] : $this->dbAnon->getMark();
 	}
 	public function getNewsOnPage()
 	{
-		return array_key_exists('commentsOnPage', $this->attributes) ? $this->attributes['commentsOnPage'] : $this->dbAnon->getNewsOnPage();
+		return array_key_exists('newsOnPage', $this->attributes) ? $this->attributes['newsOnPage'] : $this->dbAnon->getNewsOnPage();
 	}
 	public function getRegistrationDate()
 	{
@@ -168,23 +168,23 @@ class AnonymousUser implements RLUserInterface
 	}
 	public function getShowAvatars()
 	{
-		return array_key_exists('commentsOnPage', $this->attributes) ? $this->attributes['commentsOnPage'] : $this->dbAnon->getShowAvatars();
+		return array_key_exists('showAvatars', $this->attributes) ? $this->attributes['showAvatars'] : $this->dbAnon->getShowAvatars();
 	}
 	public function getShowResp()
 	{
-		return array_key_exists('commentsOnPage', $this->attributes) ? $this->attributes['commentsOnPage'] : $this->dbAnon->getShowResp();
+		return array_key_exists('showResp', $this->attributes) ? $this->attributes['showResp'] : $this->dbAnon->getShowResp();
 	}
 	public function getShowUa()
 	{
-		return array_key_exists('commentsOnPage', $this->attributes) ? $this->attributes['commentsOnPage'] : $this->dbAnon->getShowUa();
+		return array_key_exists('showUa', $this->attributes) ? $this->attributes['showUa'] : $this->dbAnon->getShowUa();
 	}
 	public function getSortingType()
 	{
-		return array_key_exists('commentsOnPage', $this->attributes) ? $this->attributes['commentsOnPage'] : $this->dbAnon->getSortingType();
+		return array_key_exists('sortingType', $this->attributes) ? $this->attributes['sortingType'] : $this->dbAnon->getSortingType();
 	}
 	public function getThreadsOnPage()
 	{
-		return array_key_exists('commentsOnPage', $this->attributes) ? $this->attributes['commentsOnPage'] : $this->dbAnon->getThreadsOnPage();
+		return array_key_exists('threadsOnPage', $this->attributes) ? $this->attributes['threadsOnPage'] : $this->dbAnon->getThreadsOnPage();
 	}
 	public function setCaptchaLevel($captchaLevel)
 	{

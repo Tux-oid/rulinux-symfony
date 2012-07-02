@@ -3,7 +3,7 @@
  * @author Tux-oid
  */
 
-namespace RL\SecurityBundle\Entity;
+namespace RL\MainBundle\Entity;
 use Doctrine\ORM\Mapping as ORM;
 
 /**

@@ -1,0 +1,109 @@
+{%extends theme.path('RLMainBundle', 'layout.html.twig')%}
+
+{%block title%}
+	{{parent()}} - {%trans%}Profile of user{%endtrans%} {{userInfo.username}}
+{%endblock title%}
+
+{%block content%}
+<h1>{%trans%}User profile{%endtrans%}</h1>
+	{%if userInfo.photo is not null%}
+		<img src="/web/bundles/rlsecurity/images/avatars/{{userInfo.photo}}" alt="avatar">
+	{%endif%}
+<br>
+<table>
+	<tr>
+		<td>{%trans%}Nick{%endtrans%}:</td>
+		<td>{{userInfo.username}}</td>
+	</tr>
+	<tr>
+		<td>{%trans%}OpenID{%endtrans%}: </td>
+		<td>{{userInfo.openid}}</td>
+	</tr>
+	<tr>
+		<td>{%trans%}Name{%endtrans%}: </td>
+		<td>{{userInfo.name}}</td>
+	</tr>
+	<tr>
+		<td>{%trans%}Lastname{%endtrans%}: </td>
+		<td>{{userInfo.lastname}}</td>
+	</tr>
+	<tr>
+		<td>{%trans%}Gender{%endtrans%}: </td>
+		<td>{%if userInfo.gender == true%}{%trans%}Male{%endtrans%}{%else%}{%trans%}Female{%endtrans%}{%endif%}</td>
+	</tr>
+	<tr>
+		<td>{%trans%}Birthday{%endtrans%}: </td>
+		<td>{{userInfo.birthday.date}}</td>
+	</tr>
+	<tr>
+		<td>{%trans%}E-mail{%endtrans%}: </td>
+		<td>{%if userInfo.showEmail == true%}{{userInfo.email}}{%else%}{%trans%}Hidden{%endtrans%}{%endif%}</td>
+	</tr>
+	<tr>
+		<td>{%trans%}IM{%endtrans%}: </td>
+		<td>{%if userInfo.showIm == true%}{{userInfo.im}}{%else%}{%trans%}Hidden{%endtrans%}{%endif%}</td>
+	</tr>
+	<tr>
+		<td>{%trans%}Country{%endtrans%}: </td>
+		<td>{{userInfo.country}}</td>
+	</tr>
+	<tr>
+		<td>{%trans%}City{%endtrans%}: </td>
+		<td>{{userInfo.city}}</td>
+	</tr>
+	<tr>
+		<td>{%trans%}Status{%endtrans%}: </td>
+		<td>
+			{%if userInfo.roles[0].name == 'ROLE_ADMIN'%}{%trans%}Administrator{%endtrans%}{%elseif userInfo.roles[0].name == 'ROLE_MODER'%}{%trans%}Moderator{%endtrans%}{%else%}{%trans%}User{%endtrans%}{%endif%},
+			{%if userInfo.active == true%}{%trans%}Unblocked{%endtrans%}{%else%}{%trans%}Blocked{%endtrans%}{%endif%}
+		</td>
+	</tr>
+	<tr>
+		<td>{%trans%}Registered{%endtrans%}: </td>
+		<td>{{userInfo.registrationDate.date}}</td>
+	</tr>
+	<tr>
+		<td>{%trans%}Last login{%endtrans%}: </td>
+		<td>{{userInfo.lastVisitDate.date}}</td>
+	</tr>
+</table>
+<br>
+{%trans%}Additional{%endtrans%}:
+<br>{{userInfo.additional}}<br>
+<table>
+	<tr>
+		<td><hr></td>
+		<td></td>
+	</tr>
+	<tr>
+		<td>{%trans%}First theme{%endtrans%}:</td>
+		<td>{{commentsInfo['firstThreadDate']}}</td>
+	</tr>
+	<tr>
+		<td>{%trans%}Last theme{%endtrans%}:</td>
+		<td>{{commentsInfo['lastThreadDate']}}</td>
+	</tr>
+	<tr>
+		<td>{%trans%}First comment{%endtrans%}:</td>
+		<td>{{commentsInfo['firstCommentDate']}}</td>
+	</tr>
+	<tr>
+		<td>{%trans%}Last comment{%endtrans%}:</td>
+		<td>{{commentsInfo['lastCommentDate']}}</td>
+	</tr>
+	<tr>
+		<td><a href="comments_Tux-oid">{%trans%}Comments count{%endtrans%}</a>:</td>
+		<td>{{commentsInfo['allComments']}}</td>
+	</tr>
+	<tr>
+		<td>{%trans%}Themes count{%endtrans%}:</td>
+		<td>{{commentsInfo['allThreads']}}</td>
+	</tr>
+</table>
+{%if is_granted('ROLE_MODER') or user == userInfo%}
+<form action="{{path("user_edit", {"name":userInfo.username})}}" method="get">
+	<input type="submit" value="{%trans%}Edit{%endtrans%}">
+</form>
+{%endif%}
+<br>
+{%endblock content%}

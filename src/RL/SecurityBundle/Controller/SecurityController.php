@@ -1,6 +1,6 @@
 <?php
 /**
- * @author Ax-xa-xa 
+ * @author Ax-xa-xa
  * @author Tux-oid
  */
 
@@ -33,14 +33,14 @@ class SecurityController extends Controller
 	 */
 	public function fakeAction()
 	{
-		
+
 	}
+
 	/**
 	 * @Route("/login", name="login")
 	 */
 	public function loginAction()
 	{
-		$this->get('session')->setLocale('ru_RU'); //FIXME: loale in user class
 		$theme = $this->get('rl_themes.theme.provider');
 		$request = $this->getRequest();
 		$session = $request->getSession();
@@ -53,12 +53,11 @@ class SecurityController extends Controller
 			$error = $session->get(SecurityContext::AUTHENTICATION_ERROR);
 			$session->remove(SecurityContext::AUTHENTICATION_ERROR);
 		}
-		return $this->render($theme->getPath('RLSecurityBundle', 'login.html.twig'), array('theme' => $theme,
-				'user' => $this->get('security.context')->getToken()->getUser(),
-				'last_username' => $session->get(SecurityContext::LAST_USERNAME),
-				'error' => $error,
-			));
+		return $this->render(
+			$theme->getPath('RLSecurityBundle', 'login.html.twig'), array('theme' => $theme, 'user' => $this->get('security.context')->getToken()->getUser(), 'last_username' => $session->get(SecurityContext::LAST_USERNAME), 'error' => $error,)
+		);
 	}
+
 	/**
 	 * @Route("/register", name="register")
 	 */
@@ -67,10 +66,11 @@ class SecurityController extends Controller
 		$newUser = new RegistrationFirstForm;
 		$theme = $this->get('rl_themes.theme.provider');
 		$form = $this->createForm(new RegisterFirstType(), $newUser);
-		return $this->render($theme->getPath('RLSecurityBundle', 'registrationFirstPage.html.twig'), array('theme' => $theme,
-				'user' => $this->get('security.context')->getToken()->getUser(),
-				'form' => $form->createView()));
+		return $this->render(
+			$theme->getPath('RLSecurityBundle', 'registrationFirstPage.html.twig'), array('theme' => $theme, 'user' => $this->get('security.context')->getToken()->getUser(), 'form' => $form->createView())
+		);
 	}
+
 	/**
 	 * @Route("/register_send", name="register_send")
 	 */
@@ -87,31 +87,30 @@ class SecurityController extends Controller
 			{
 				$mailer = $this->get('mailer');
 				$secret = $this->container->getParameter('secret');
-				$link = $this->generateUrl('register_confirm', array('username' => $newUser->getName(), 'password' => $newUser->getPassword(), 'email' => $newUser->getEmail(), 'hash' => md5(md5($newUser->getName().$newUser->getPassword().$newUser->getEmail().$secret))), true);
+				$link = $this->generateUrl('register_confirm', array('username' => $newUser->getName(), 'password' => $newUser->getPassword(), 'email' => $newUser->getEmail(), 'hash' => md5(md5($newUser->getName() . $newUser->getPassword() . $newUser->getEmail() . $secret))), true);
 				$user = $newUser->getName();
 				$site = $request->getHttpHost();
-				$message = \Swift_Message::newInstance()
-					->setSubject('Registration letter')
-					->setFrom('noemail@rulinux.net')//FIXME:load email from settings
-					->setTo($newUser->getEmail())
-					->setContentType('text/html')
-					->setBody($this->renderView($theme->getPath('RLSecurityBundle', 'registrationLetter.html.twig'), array('link' => $link, 'user' => $user, 'site' => $site)));
+				$message = \Swift_Message::newInstance()->setSubject('Registration letter')->setFrom('noemail@rulinux.net') //FIXME:load email from settings
+					->setTo($newUser->getEmail())->setContentType('text/html')->setBody($this->renderView($theme->getPath('RLSecurityBundle', 'registrationLetter.html.twig'), array('link' => $link, 'user' => $user, 'site' => $site)));
 				$mailer->send($message);
 				$legend = 'Registration mail is sended.';
 				$text = 'Registration mail is sended. Please check your email.';
 				$title = 'Mail sended';
-				return $this->render($theme->getPath('RLMainBundle', 'fieldset.html.twig'), array('theme' => $theme,
-						'user' => $this->get('security.context')->getToken()->getUser(),
-						'legend' => $legend,
-						'text' => $text,
-						'title' => $title));
+				return $this->render(
+					$theme->getPath('RLMainBundle', 'fieldset.html.twig'), array('theme' => $theme, 'user' => $this->get('security.context')->getToken()->getUser(), 'legend' => $legend, 'text' => $text, 'title' => $title)
+				);
 			}
 			else
+			{
 				throw new \Exception('Registration form is invalid.');
+			}
 		}
 		else
+		{
 			return $this->redirect($this->generateUrl('index'));
+		}
 	}
+
 	/**
 	 * @Route("/register_confirm/{username}/{password}/{email}/{hash}", name="register_confirm")
 	 */
@@ -119,21 +118,20 @@ class SecurityController extends Controller
 	{
 		$theme = $this->get('rl_themes.theme.provider');
 		$secret = $this->container->getParameter('secret');
-		if($hash == md5(md5($username.$password.$email.$secret)))
+		if($hash == md5(md5($username . $password . $email . $secret)))
 		{
 			$newUser = new User;
 			$form = $this->createForm(new RegisterType(), $newUser);
-			return $this->render($theme->getPath('RLSecurityBundle', 'registrationSecondPage.html.twig'), array(
-					'theme' => $theme,
-					'user' => $this->get('security.context')->getToken()->getUser(),
-					'username' => $username,
-					'password' => $password,
-					'email' => $email,
-					'form' => $form->createView()));
+			return $this->render(
+				$theme->getPath('RLSecurityBundle', 'registrationSecondPage.html.twig'), array('theme' => $theme, 'user' => $this->get('security.context')->getToken()->getUser(), 'username' => $username, 'password' => $password, 'email' => $email, 'form' => $form->createView())
+			);
 		}
 		else
+		{
 			throw new \Exception('Hash is invalid');
+		}
 	}
+
 	/**
 	 * @Route("/registration_save", name="registration_save")
 	 */
@@ -175,20 +173,23 @@ class SecurityController extends Controller
 				$em->persist($newUser);
 				$em->flush();
 				$legend = 'Registration completed.';
-				$text = 'Registration completed. Now you can <a href="'.$this->generateUrl('login').'">login</a> on this site.';
+				$text = 'Registration completed. Now you can <a href="' . $this->generateUrl('login') . '">login</a> on this site.';
 				$title = '';
-				return $this->render($theme->getPath('RLMainBundle', 'fieldset.html.twig'), array('theme' => $theme,
-						'user' => $this->get('security.context')->getToken()->getUser(),
-						'legend' => $legend,
-						'text' => $text,
-						'title' => $title));
+				return $this->render(
+					$theme->getPath('RLMainBundle', 'fieldset.html.twig'), array('theme' => $theme, 'user' => $this->get('security.context')->getToken()->getUser(), 'legend' => $legend, 'text' => $text, 'title' => $title)
+				);
 			}
 			else
+			{
 				throw new \Exception('Registration form is invalid.');
+			}
 		}
 		else
+		{
 			return $this->redirect($this->generateUrl('index'));
+		}
 	}
+
 	/**
 	 * @Route("/openid_check", name="openid_check")
 	 */
@@ -209,7 +210,9 @@ class SecurityController extends Controller
 					return $this->redirect($openid->authUrl());
 				}
 				else
+				{
 					throw new \Exception('OpenID identifier is empty');
+				}
 			}
 			elseif($openid->mode == 'cancel')
 			{
@@ -231,11 +234,9 @@ class SecurityController extends Controller
 						$legend = 'msg';
 						$text = 'login user';
 						$title = '';
-						return $this->render($theme->getPath('RLMainBundle', 'fieldset.html.twig'), array('theme' => $theme,
-								'user' => $this->get('security.context')->getToken()->getUser(),
-								'legend' => $legend,
-								'text' => $text,
-								'title' => $title));
+						return $this->render(
+							$theme->getPath('RLMainBundle', 'fieldset.html.twig'), array('theme' => $theme, 'user' => $this->get('security.context')->getToken()->getUser(), 'legend' => $legend, 'text' => $text, 'title' => $title)
+						);
 					}
 					else
 					{
@@ -243,16 +244,15 @@ class SecurityController extends Controller
 						$email = '';
 						$newUser = new User;
 						$form = $this->createForm(new RegisterType(), $newUser);
-						return $this->render($theme->getPath('RLSecurityBundle', 'openIDRegistration.html.twig'), array('theme' => $theme,
-								'user' => $this->get('security.context')->getToken()->getUser(),
-								'openid' => $identity,
-								'password' => '',
-								'email' => $email,
-								'form' => $form->createView()));
+						return $this->render(
+							$theme->getPath('RLSecurityBundle', 'openIDRegistration.html.twig'), array('theme' => $theme, 'user' => $this->get('security.context')->getToken()->getUser(), 'openid' => $identity, 'password' => '', 'email' => $email, 'form' => $form->createView())
+						);
 					}
 				}
 				else
+				{
 					throw new \Exception('OpenID is invalid');
+				}
 			}
 		}
 		catch(ErrorException $e)
@@ -260,6 +260,7 @@ class SecurityController extends Controller
 			throw new \Exception($e->getMessage());
 		}
 	}
+
 	/**
 	 * @Route("/restore_password", name="restore_password")
 	 */
@@ -268,10 +269,11 @@ class SecurityController extends Controller
 		$theme = $this->get('rl_themes.theme.provider');
 		$resForm = new PasswordRestoringForm;
 		$form = $this->createForm(new RestorePasswordType(), $resForm);
-		return $this->render($theme->getPath('RLSecurityBundle', 'passwordRestoringForm.html.twig'), array('theme' => $theme,
-				'user' => $this->get('security.context')->getToken()->getUser(),
-				'form' => $form->createView()));
+		return $this->render(
+			$theme->getPath('RLSecurityBundle', 'passwordRestoringForm.html.twig'), array('theme' => $theme, 'user' => $this->get('security.context')->getToken()->getUser(), 'form' => $form->createView())
+		);
 	}
+
 	/**
 	 * @Route("/restore_password_check", name="restore_password_check")
 	 */
@@ -317,56 +319,56 @@ class SecurityController extends Controller
 				$em->persist($user);
 				$em->flush();
 				$mailer = $this->get('mailer');
-				$message = \Swift_Message::newInstance()
-					->setSubject('Password restoring')
-					->setFrom('noemail@rulinux.net')//FIXME:load email from settings
-					->setTo($resForm->getEmail())
-					->setContentType('text/html')
-					->setBody($this->renderView($theme->getPath('RLSecurityBundle', 'passwordRestoringLetter.html.twig'), array('username' => $username, 'password' => $password)));
+				$message = \Swift_Message::newInstance()->setSubject('Password restoring')->setFrom('noemail@rulinux.net') //FIXME:load email from settings
+					->setTo($resForm->getEmail())->setContentType('text/html')->setBody($this->renderView($theme->getPath('RLSecurityBundle', 'passwordRestoringLetter.html.twig'), array('username' => $username, 'password' => $password)));
 				$mailer->send($message);
 				$legend = 'Mail with your new password is sended.';
 				$text = 'Mail with your new password is sended. Please check your email.';
 				$title = 'Mail sended';
-				return $this->render($theme->getPath('RLMainBundle', 'fieldset.html.twig'), array('theme' => $theme,
-						'user' => $this->get('security.context')->getToken()->getUser(),
-						'legend' => $legend,
-						'text' => $text,
-						'title' => $title));
+				return $this->render(
+					$theme->getPath('RLMainBundle', 'fieldset.html.twig'), array('theme' => $theme, 'user' => $this->get('security.context')->getToken()->getUser(), 'legend' => $legend, 'text' => $text, 'title' => $title)
+				);
 			}
 			else
+			{
 				throw new \Exception('Password restoring form is invalid');
+			}
 		}
 		else
+		{
 			return $this->redirect($this->generateUrl('index'));
+		}
 	}
+
 	/**
 	 * @Route("/user/{name}/edit", name="user_edit")
 	 */
 	public function editUserAction($name)
 	{
 		$theme = $this->get('rl_themes.theme.provider');
-		$legend = 'Edit user '.$name;
-		$text = 'Profile editing page would be here.';
-		$title = 'Edit user '.$name;
-		return $this->render($theme->getPath('RLMainBundle', 'fieldset.html.twig'), array('theme' => $theme,
-				'user' => $this->get('security.context')->getToken()->getUser(),
-				'legend' => $legend,
-				'text' => $text,
-				'title' => $title));
+		$user = $this->get('security.context')->getToken()->getUser();
+
+		return $this->render(
+			$theme->getPath('RLSecurityBundle', 'profileEdit.html.twig'), array('theme' => $theme, 'user' => $user,)
+		);
 	}
+
 	/**
 	 * @Route("/user/{name}", name="user")
 	 */
 	public function userAction($name)
 	{
 		$theme = $this->get('rl_themes.theme.provider');
-		$legend = 'Show user '.$name;
-		$text = 'Profile page would be here.';
-		$title = 'Show user '.$name;
-		return $this->render($theme->getPath('RLMainBundle', 'fieldset.html.twig'), array('theme' => $theme,
-				'user' => $this->get('security.context')->getToken()->getUser(),
-				'legend' => $legend,
-				'text' => $text,
-				'title' => $title));
+		$user = $this->get('security.context')->getToken()->getUser();
+		$userRepository = $this->getDoctrine()->getRepository('RLSecurityBundle:User');
+		$userInProfile = $userRepository->findOneByUsername($name);
+		if(empty($userInProfile))
+		{
+			throw new \Exception('user '.$name.' not found');
+		}
+		$userComments = $userRepository->getUserCommentsInformation($userInProfile);
+		return $this->render(
+			$theme->getPath('RLSecurityBundle', 'profile.html.twig'), array('theme' => $theme, 'user' => $user, 'userInfo'=> $userInProfile, 'commentsInfo' => $userComments,)
+		);
 	}
 }

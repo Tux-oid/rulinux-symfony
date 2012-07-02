@@ -108,7 +108,7 @@ class DefaultController extends Controller
 		if(isset($sbm))
 		{
 			$em = $doctrine->getEntityManager();
-			$thr = $request->request->get('addThread');
+			$thr = $request->request->get('addComment');
 			$threadRepository = $doctrine->getRepository('RLForumBundle:Thread');
 			$thread = $threadRepository->findOneById($thread_id);
 			$message = new Message();
@@ -143,7 +143,7 @@ class DefaultController extends Controller
 				$re = 'Re:';
 			$newComment->setSubject($re.$message->getSubject());
 		}
-		$form = $this->createForm(new AddThreadType(), $newComment);
+		$form = $this->createForm(new AddCommentType(), $newComment);
 		return $this->render($theme->getPath('RLForumBundle', 'addComment.html.twig'), array(
 				'theme' => $theme,
 				'user' => $user,

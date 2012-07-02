@@ -1,0 +1,66 @@
+<form action="user_Tux-oid:edit" method="post" enctype="multipart/form-data">
+	<fieldset>
+		<legend>{%trans%}Personal information{%endtrans%}</legend>
+		{%if %}
+		<img src="images/avatars/Tux-oid.jpg">
+		<br>{%trans%}Photo{%endtrans%}
+		<ul>
+			<li>{%trans%}minimum{%endtrans%}: 50x50px;
+			<li>{%trans%}maximum{%endtrans%}: 150x150px;
+			<li>{%trans%}format{%endtrans%}: jpeg, gif, png
+		</ul>
+		<input type="file" name="user_photo">
+		<br>
+		<br>
+		<table>
+			<tr>
+				<td>Имя:</td>
+				<td><input type="text" name="user_name" value="Peter"></td>
+				<td>&nbsp;</td>
+			</tr>
+			<td>OpenID:</td>
+			<td><input type="text" name="openid" value="tuxoid.livejournal.com"></td>
+			<td>&nbsp;</td>
+			</tr>
+			<tr>
+				<td>Фамилия:</td>
+				<td><input type="text" name="user_lastname" value=""></td>
+				<td>&nbsp;</td>
+			</tr>
+			<tr>
+				<td>Пол:</td>
+				<td>
+					<select name="gender">
+						<option value="1" selected>Мужской</option>
+						<option value="0" >Женский</option>
+					</select>
+				</td>
+				<td>&nbsp;</td>
+			</tr>
+			<tr>
+				<td>E-mail:</td>
+				<td><input type="text" name="user_email" value="tuxoiduser@gmail.com"></td>
+				<td><input type="checkbox" name="showEmail" >Показывать</td>
+			</tr>
+			<tr>
+				<td>IM:</td>
+				<td><input type="text"  name="user_im" value="tuxoid@jabnet.org"></td>
+				<td><input type="checkbox" name="showIM" checked>Показывать</td>
+			</tr>
+			<tr>
+				<td>Страна:</td>
+				<td><input type="text" name="user_country" value="Russia"></td>
+				<td></td>
+			</tr>
+			<tr>
+				<td>Город:</td>
+				<td><input type="text" name="user_city" value="Saratov"></td>
+				<td></td>
+			</tr>
+		</table>
+		Дополнительно:<br>
+		<textarea name="user_additional" rows="7" cols="45"></textarea>
+	</fieldset>
+	<input type="submit" value="Изменить пользовательскую информацию">
+	<input type="hidden" name="action" value="info">
+</form>

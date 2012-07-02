@@ -12,7 +12,7 @@ use Doctrine\ORM\Mapping as ORM;
 use \RL\SecurityBundle\Entity\Group;
 
 /**
- * @ORM\Entity()
+ * @ORM\Entity(repositoryClass="RL\SecurityBundle\Entity\UserRepository")
  * @ORM\Table(name="users")
  */
 class User implements RLUserInterface, \Serializable
@@ -148,7 +148,7 @@ class User implements RLUserInterface, \Serializable
 	 */
 	protected $filters;
 	/**
-	 * @ORM\ManyToOne(targetEntity="Mark", inversedBy="users")
+	 * @ORM\ManyToOne(targetEntity="RL\MainBundle\Entity\Mark", inversedBy="users")
 	 * @ORM\JoinColumn(name="mark", referencedColumnName="id")
 	 */
 	protected $mark;

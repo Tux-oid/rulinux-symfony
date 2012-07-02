@@ -6,7 +6,7 @@
 namespace RL\MainBundle\DataFixtures\ORM;
 use Doctrine\Common\Persistence\ObjectManager;
 use Doctrine\Common\DataFixtures\FixtureInterface;
-use RL\SecurityBundle\Entity\Settings;
+use RL\MainBundle\Entity\Settings;
 use RL\MainBundle\Entity\Link;
 
 class FixtureLoader implements FixtureInterface

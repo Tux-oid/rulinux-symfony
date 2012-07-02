@@ -21,7 +21,7 @@ class MainController extends Controller
 		$threadRepository = $doctrine->getRepository('RLNewsBundle:Thread');
 		$unconfirmedThreads = $threadRepository->getUnconfirmed();
 		return $this->render(
-			$theme->getPath('RLMainBundle', 'unconfirmed.html.twig'), array('user' => $user, 'theme' => $theme, 'threads'=>$unconfirmedThreads,)
+			$theme->getPath('RLMainBundle', 'unconfirmed.html.twig'), array('user' => $user, 'theme' => $theme, 'threads' => $unconfirmedThreads,)
 		);
 	}
 
@@ -33,11 +33,11 @@ class MainController extends Controller
 		$user = $this->get('security.context')->getToken()->getUser();
 		$theme = $this->get('rl_themes.theme.provider');
 		$doctrine = $this->get('doctrine');
-		$settingsRepository = $doctrine->getRepository('RLSecurityBundle:Settings');
+		$settingsRepository = $doctrine->getRepository('RLMainBundle:Settings');
 		$rulesTitle = $settingsRepository->findOneByName('rulesTitle')->getValue();
 		$rulesText = $settingsRepository->findOneByName('rulesText')->getValue();
 		return $this->render(
-			$theme->getPath('RLMainBundle', 'page.html.twig'), array('user' => $user, 'theme' => $theme, 'title'=>$rulesTitle, 'text'=>$rulesText, )
+			$theme->getPath('RLMainBundle', 'page.html.twig'), array('user' => $user, 'theme' => $theme, 'title' => $rulesTitle, 'text' => $rulesText,)
 		);
 	}
 
@@ -55,11 +55,11 @@ class MainController extends Controller
 		$text = '<ul>';
 		foreach($links as $link)
 		{
-			$text = $text.'<li><a href="'.$link->getLink().'">'.$link->getName().'</a></li>';
+			$text = $text . '<li><a href="' . $link->getLink() . '">' . $link->getName() . '</a></li>';
 		}
-		$text = $text.'</ul>';
+		$text = $text . '</ul>';
 		return $this->render(
-			$theme->getPath('RLMainBundle', 'page.html.twig'), array('user' => $user, 'theme' => $theme, 'title'=>$title, 'text'=>$text, )
+			$theme->getPath('RLMainBundle', 'page.html.twig'), array('user' => $user, 'theme' => $theme, 'title' => $title, 'text' => $text,)
 		);
 	}
 
@@ -69,6 +69,7 @@ class MainController extends Controller
 	 */
 	public function homepageAction($page)
 	{
+		$this->get('session')->setLocale('ru_RU'); //FIXME: loale in user class
 		$user = $this->get('security.context')->getToken()->getUser();
 		$theme = $this->get('rl_themes.theme.provider');
 		$doctrine = $this->get('doctrine');
