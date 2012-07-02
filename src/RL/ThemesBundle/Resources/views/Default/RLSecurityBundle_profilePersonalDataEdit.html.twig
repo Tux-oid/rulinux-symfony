@@ -1,7 +1,7 @@
 <form action="user_Tux-oid:edit" method="post" enctype="multipart/form-data">
 	<fieldset>
 		<legend>{%trans%}Personal information{%endtrans%}</legend>
-		{%if %}
+
 		<img src="images/avatars/Tux-oid.jpg">
 		<br>{%trans%}Photo{%endtrans%}
 		<ul>
@@ -61,6 +61,5 @@
 		Дополнительно:<br>
 		<textarea name="user_additional" rows="7" cols="45"></textarea>
 	</fieldset>
-	<input type="submit" value="Изменить пользовательскую информацию">
-	<input type="hidden" name="action" value="info">
+	<input type="submit" name = "info" value="{%trans%}Save settings{%endtrans%}">
 </form>

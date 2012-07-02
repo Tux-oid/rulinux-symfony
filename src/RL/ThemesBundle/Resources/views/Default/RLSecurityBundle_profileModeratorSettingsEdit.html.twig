@@ -1,0 +1,33 @@
+<form action="user_Admin:edit" method="post">
+	<fieldset>
+		<legend>{%trans%}Moderator settings{%endtrans%}</legend>
+		<table>
+			<tr>
+				<td>{%trans%}Blocked{%endtrans%}:</td>
+				<td>
+					<select name="banned">
+						<option value="1" >Да</option>
+						<option value="0" selected>Нет</option>
+					</select>
+				</td>
+				<td></td>
+			</tr>
+			<tr>
+				<td>{%trans%}Captcha level{%endtrans%}:</td>
+				<td>
+					<select name="captcha">
+						<option value="-1" selected>Нет</option>
+						<option value="0" >0</option>
+						<option value="1" >1</option>
+						<option value="2" >2</option>
+						<option value="3" >3</option>
+						<option value="4" >4</option>
+					</select>
+				</td>
+				<td></td>
+			</tr>
+		</table>
+	</fieldset>
+	<input type="submit" value="{%trans%}Save settings{%endtrans%}">
+	<input type="hidden" name="action" value="moder">
+</form>

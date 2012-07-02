@@ -347,9 +347,28 @@ class SecurityController extends Controller
 	{
 		$theme = $this->get('rl_themes.theme.provider');
 		$user = $this->get('security.context')->getToken()->getUser();
-
+		if($name == 'anonymous' && $user->isAnonymous())
+		{
+			$userInProfile = $this->get('security.context')->getToken()->getUser();
+		}
+		else
+		{
+			$userRepository = $this->getDoctrine()->getRepository('RLSecurityBundle:User');
+			$userInProfile = $userRepository->findOneByUsername($name);
+		}
+		if(!$this->get('security.context')->isGranted('ROLE_MODER'))
+		{
+			if($userInProfile->getUsername() != $user->getUsername())
+			{
+				throw new \Exception('You can\'t edit profile of user '.$name);
+			}
+		}
+		if(empty($userInProfile))
+		{
+			throw new \Exception('User '.$name.' not found');
+		}
 		return $this->render(
-			$theme->getPath('RLSecurityBundle', 'profileEdit.html.twig'), array('theme' => $theme, 'user' => $user,)
+			$theme->getPath('RLSecurityBundle', 'profileEdit.html.twig'), array('theme' => $theme, 'user' => $user, 'userInfo'=> $userInProfile,)
 		);
 	}
 

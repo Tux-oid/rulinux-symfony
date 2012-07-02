@@ -100,7 +100,7 @@
 		<td>{{commentsInfo['allThreads']}}</td>
 	</tr>
 </table>
-{%if is_granted('ROLE_MODER') or user == userInfo%}
+{%if is_granted('ROLE_MODER') or user.username == userInfo.username%}
 <form action="{{path("user_edit", {"name":userInfo.username})}}" method="get">
 	<input type="submit" value="{%trans%}Edit{%endtrans%}">
 </form>

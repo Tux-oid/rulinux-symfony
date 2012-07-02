@@ -1,0 +1,15 @@
+<form action="user_Admin:edit" method="post">
+	<fieldset>
+		<legend>{%trans%}Administrator settings{%endtrans%}</legend>
+		<table>
+			<tr>
+				<td>{%trans%}Group{%endtrans%}:</td>
+				<td>
+					<select name="group"><option value="1" >Пользователи</option><option value="2" selected>Администраторы</option><option value="3" >Модераторы</option></select>
+				</td>
+				<td></td>
+			</tr>
+		</table>
+	</fieldset>
+	<input type="submit" name="admin" value="{%trans%}Save settings{%endtrans%}">
+</form>
