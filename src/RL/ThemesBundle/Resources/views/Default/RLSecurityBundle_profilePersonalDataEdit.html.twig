@@ -1,65 +1,74 @@
-<form action="user_Tux-oid:edit" method="post" enctype="multipart/form-data">
+<form action="{{path('user_edit', {'name':userInfo.username})}}" method="post" {{form_enctype(personalInformation)}}>
 	<fieldset>
 		<legend>{%trans%}Personal information{%endtrans%}</legend>
-
-		<img src="images/avatars/Tux-oid.jpg">
-		<br>{%trans%}Photo{%endtrans%}
+		{%if userInfo.photo is not null%}
+			<img src="/web/bundles/rlsecurity/images/avatars/{{userInfo.photo}}" alt="avatar">
+		{%endif%}
+		<br>{{form_label(personalInformation.photo)}}
 		<ul>
 			<li>{%trans%}minimum{%endtrans%}: 50x50px;
 			<li>{%trans%}maximum{%endtrans%}: 150x150px;
 			<li>{%trans%}format{%endtrans%}: jpeg, gif, png
 		</ul>
-		<input type="file" name="user_photo">
+		{{form_widget(personalInformation.photo)}}
 		<br>
 		<br>
 		<table>
 			<tr>
-				<td>Имя:</td>
-				<td><input type="text" name="user_name" value="Peter"></td>
-				<td>&nbsp;</td>
+				<td>{{form_label(personalInformation.name)}}:</td>
+				<td>{{form_widget(personalInformation.name)}}</td>
+				<td>{{form_errors(personalInformation.name)}}</td>
 			</tr>
-			<td>OpenID:</td>
-			<td><input type="text" name="openid" value="tuxoid.livejournal.com"></td>
-			<td>&nbsp;</td>
-			</tr>
-			<tr>
-				<td>Фамилия:</td>
-				<td><input type="text" name="user_lastname" value=""></td>
-				<td>&nbsp;</td>
+			<td>{{form_label(personalInformation.openid)}}:</td>
+			<td>{{form_widget(personalInformation.openid)}}</td>
+			<td>{{form_errors(personalInformation.openid)}}</td>
 			</tr>
 			<tr>
-				<td>Пол:</td>
+				<td>{{form_label(personalInformation.lastname)}}:</td>
+				<td>{{form_widget(personalInformation.lastname)}}</td>
+				<td>{{form_errors(personalInformation.lastname)}}</td>
+			</tr>
+			<tr>
+				<td>{{form_label(personalInformation.gender)}}:</td>
+				<td>{{form_widget(personalInformation.gender)}}</td>
+				<td>{{form_errors(personalInformation.gender)}}</td>
+			</tr>
+			<tr>
+				<td>{{form_label(personalInformation.birthday)}}:</td>
+				<td>{{form_widget(personalInformation.birthday)}}</td>
+				<td>{{form_errors(personalInformation.birthday)}}</td>
+			</tr>
+			<tr>
+				<td>{{form_label(personalInformation.email)}}:</td>
+				<td>{{form_widget(personalInformation.email)}}</td>
 				<td>
-					<select name="gender">
-						<option value="1" selected>Мужской</option>
-						<option value="0" >Женский</option>
-					</select>
+					{{form_widget(personalInformation.showEmail)}}{%trans%}Show{%endtrans%}
+					{{form_errors(personalInformation.email)}}
 				</td>
-				<td>&nbsp;</td>
 			</tr>
 			<tr>
-				<td>E-mail:</td>
-				<td><input type="text" name="user_email" value="tuxoiduser@gmail.com"></td>
-				<td><input type="checkbox" name="showEmail" >Показывать</td>
+				<td>{{form_label(personalInformation.im)}}:</td>
+				<td>{{form_widget(personalInformation.im)}}</td>
+				<td>
+					{{form_widget(personalInformation.showIm)}}{%trans%}Show{%endtrans%}
+					{{form_errors(personalInformation.im)}}
+				</td>
 			</tr>
 			<tr>
-				<td>IM:</td>
-				<td><input type="text"  name="user_im" value="tuxoid@jabnet.org"></td>
-				<td><input type="checkbox" name="showIM" checked>Показывать</td>
+				<td>{{form_label(personalInformation.country)}}:</td>
+				<td>{{form_widget(personalInformation.country)}}</td>
+				<td>{{form_errors(personalInformation.country)}}</td>
 			</tr>
 			<tr>
-				<td>Страна:</td>
-				<td><input type="text" name="user_country" value="Russia"></td>
-				<td></td>
-			</tr>
-			<tr>
-				<td>Город:</td>
-				<td><input type="text" name="user_city" value="Saratov"></td>
-				<td></td>
+				<td>{{form_label(personalInformation.city)}}:</td>
+				<td>{{form_widget(personalInformation.city)}}</td>
+				<td>{{form_errors(personalInformation.city)}}</td>
 			</tr>
 		</table>
-		Дополнительно:<br>
-		<textarea name="user_additional" rows="7" cols="45"></textarea>
+		{{form_label(personalInformation.additional)}}<br>
+		{{form_widget(personalInformation.additional, {'attr': {'rows':'7', 'cols':'45'}})}}<br>
+		{{form_errors(personalInformation.additional)}}
 	</fieldset>
-	<input type="submit" name = "info" value="{%trans%}Save settings{%endtrans%}">
+	<input type="hidden" name="action" value="personal">
+	<input type="submit" name = "sbm" value="{%trans%}Save settings{%endtrans%}">
 </form>

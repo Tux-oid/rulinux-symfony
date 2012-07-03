@@ -18,6 +18,8 @@ use RL\SecurityBundle\Entity\SettingsRepository;
 use RL\SecurityBundle\Form\RegisterType;
 use RL\SecurityBundle\Form\RegisterFirstType;
 use RL\SecurityBundle\Form\RestorePasswordType;
+use RL\SecurityBundle\Form\PersonalInformationType;
+use RL\SecurityBundle\Form\PersonalInformationForm;
 use LightOpenID\openid;
 
 /**
@@ -367,8 +369,30 @@ class SecurityController extends Controller
 		{
 			throw new \Exception('User '.$name.' not found');
 		}
+		//save settings in database
+		$request = $this->getRequest();
+		$sbm = $request->request->get('sbm');
+		if(isset($sbm))
+		{
+			$method = $request->getMethod();
+			if($method == 'POST')
+			{
+				//save personal information
+				if($request->request->get('action') == 'personal')
+				{
+					$personalInformationForm = new PersonalInformationForm;
+					$form = $this->createForm(new PersonalInformationType(), $personalInformationForm);
+					$form->bindRequest($request);
+					if($form->isValid())
+					{
+						//
+					}
+				}
+			}
+		}
+		$personalInformation = $this->createForm(new PersonalInformationType(), $userInProfile);
 		return $this->render(
-			$theme->getPath('RLSecurityBundle', 'profileEdit.html.twig'), array('theme' => $theme, 'user' => $user, 'userInfo'=> $userInProfile,)
+			$theme->getPath('RLSecurityBundle', 'profileEdit.html.twig'), array('theme' => $theme, 'user' => $user, 'userInfo'=> $userInProfile, 'personalInformation' => $personalInformation->createView())
 		);
 	}
 
