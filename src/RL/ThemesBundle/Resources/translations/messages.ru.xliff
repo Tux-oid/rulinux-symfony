@@ -366,6 +366,58 @@
                 <source>Repeat password</source>
                 <target>Повторите пароль</target>
             </trans-unit>
+            <trans-unit id="92">
+                <source>Show</source>
+                <target>Показывать</target>
+            </trans-unit>
+            <trans-unit id="93">
+                <source>Theme</source>
+                <target>Тема оформления</target>
+            </trans-unit>
+            <trans-unit id="94">
+                <source>Mark</source>
+                <target>Разметка</target>
+            </trans-unit>
+            <trans-unit id="95">
+                <source>Time zone</source>
+                <target>Часовой пояс</target>
+            </trans-unit>
+            <trans-unit id="96">
+                <source>News on page</source>
+                <target>Новостей на странице</target>
+            </trans-unit>
+            <trans-unit id="97">
+                <source>Comments on page</source>
+                <target>Комментариев на странице</target>
+            </trans-unit>
+            <trans-unit id="98">
+                <source>Threads on page</source>
+                <target>Тредов на странице</target>
+            </trans-unit>
+            <trans-unit id="99">
+                <source>Show avatars</source>
+                <target>Показывать аватары</target>
+            </trans-unit>
+            <trans-unit id="100">
+                <source>Show useragent</source>
+                <target>Показывать сигнатуру моего браузера</target>
+            </trans-unit>
+            <trans-unit id="101">
+                <source>Sorting type</source>
+                <target>Тип сортировки</target>
+            </trans-unit>
+            <trans-unit id="102">
+                <source>Show author of parent message in tracker</source>
+                <target>Показывать автора родительского сообщения в трекере</target>
+            </trans-unit>
+            <trans-unit id="103">
+                <source>Changing time</source>
+                <target>По времени изменения</target>
+            </trans-unit>
+            <trans-unit id="104">
+                <source>Posting time</source>
+                <target>По времени добавления</target>
+            </trans-unit>
         </body>
     </file>
 </xliff>

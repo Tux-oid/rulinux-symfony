@@ -20,7 +20,10 @@ use RL\SecurityBundle\Form\RegisterFirstType;
 use RL\SecurityBundle\Form\RestorePasswordType;
 use RL\SecurityBundle\Form\PersonalInformationType;
 use RL\SecurityBundle\Form\PersonalInformationForm;
+use RL\SecurityBundle\Form\PersonalSettingsType;
+use RL\SecurityBundle\Form\PersonalSettingsForm;
 use LightOpenID\openid;
+use Gregwar\ImageBundle\Image;
 
 /**
  * Security controller
@@ -378,21 +381,77 @@ class SecurityController extends Controller
 			if($method == 'POST')
 			{
 				//save personal information
-				if($request->request->get('action') == 'personal')
+				if($request->request->get('action') == 'personalInformation')
 				{
 					$personalInformationForm = new PersonalInformationForm;
 					$form = $this->createForm(new PersonalInformationType(), $personalInformationForm);
 					$form->bindRequest($request);
 					if($form->isValid())
 					{
-						//
+						$photo = $personalInformationForm->getPhoto();
+						if(!empty($photo))
+						{
+							$filename = $userInProfile->getUsername().'_'.$photo->getClientOriginalName();
+							$personalInformationForm->getPhoto()->move(__DIR__.'/../../../../web/bundles/rlsecurity/images/avatars', $filename);
+							$absolutePath = __DIR__.'/../../../../web/bundles/rlsecurity/images/avatars/'.$filename;
+							$imgCls = new Image();
+							$image = $imgCls->open($absolutePath);
+							$width = $image->width();
+							$height = $image->height();
+							if($width > 150 || $height > 150)
+							{
+								unlink($absolutePath);
+								throw new \Exception('Image size is very big.');
+							}
+							$userInProfile->setPhoto($filename);
+						}
+						$userInProfile->setName($personalInformationForm->getName());
+						$userInProfile->setOpenid($personalInformationForm->getOpenid());
+						$userInProfile->setLastname($personalInformationForm->getLastname());
+						$userInProfile->setGender($personalInformationForm->getGender());
+						$userInProfile->setBirthday($personalInformationForm->getBirthday());
+						$userInProfile->setEmail($personalInformationForm->getEmail());
+						$userInProfile->setShowEmail($personalInformationForm->getShowEmail());
+						$userInProfile->setIm($personalInformationForm->getIm());
+						$userInProfile->setShowIm($personalInformationForm->getShowIm());
+						$userInProfile->setCountry($personalInformationForm->getCountry());
+						$userInProfile->setCity($personalInformationForm->getCity());
+						$userInProfile->setAdditional($personalInformationForm->getAdditional());
+						$this->getDoctrine()->getEntityManager()->flush();
 					}
+					else
+						throw new \Exception('Form is invalid');
+				}
+				//save personal settings
+				elseif($request->request->get('action') == 'personalSettings')
+				{
+					$personalSettingsForm = new PersonalSettingsForm;
+					$form = $this->createForm(new PersonalSettingsType(), $personalSettingsForm);
+					$form->bindRequest($request);
+					if($form->isValid())
+					{
+//						$userInProfile->setMark($personalSettingsForm->getMark());//FIXME:add Mark entity set entity type
+						$userInProfile->setTheme($personalSettingsForm->getTheme());
+						$userInProfile->setGmt($personalSettingsForm->getGmt());
+						$userInProfile->setNewsOnPage($personalSettingsForm->getNewsOnPage());
+						$userInProfile->setThreadsOnPage($personalSettingsForm->getThreadsOnPage());
+						$userInProfile->setCommentsOnPage($personalSettingsForm->getCommentsOnPage());
+						$userInProfile->setShowAvatars($personalSettingsForm->getShowAvatars());
+						$userInProfile->setShowUa($personalSettingsForm->getShowUa());
+						$userInProfile->setShowResp($personalSettingsForm->getShowResp());
+						$userInProfile->setSortingType($personalSettingsForm->getSortingType());
+						$this->getDoctrine()->getEntityManager()->flush();
+					}
+					else
+						throw new \Exception('Form is invalid');
 				}
 			}
 		}
+		//show info
 		$personalInformation = $this->createForm(new PersonalInformationType(), $userInProfile);
+		$personalSettings = $this->createForm(new PersonalSettingsType(), $userInProfile);
 		return $this->render(
-			$theme->getPath('RLSecurityBundle', 'profileEdit.html.twig'), array('theme' => $theme, 'user' => $user, 'userInfo'=> $userInProfile, 'personalInformation' => $personalInformation->createView())
+			$theme->getPath('RLSecurityBundle', 'profileEdit.html.twig'), array('theme' => $theme, 'user' => $user, 'userInfo'=> $userInProfile, 'personalInformation' => $personalInformation->createView(), 'personalSettings'=>$personalSettings->createView(), )
 		);
 	}
 

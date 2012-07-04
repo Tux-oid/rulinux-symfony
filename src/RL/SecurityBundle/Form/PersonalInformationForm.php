@@ -4,11 +4,9 @@
  */
 namespace RL\SecurityBundle\Form;
 
-use Symfony\Component\Validator\Constraint as Assert;
+use Symfony\Component\Validator\Constraints as Assert;
 
-/**
-
- */class PersonalInformationForm
+class PersonalInformationForm
 {
 	/**
 	 * @var
@@ -30,7 +28,6 @@ use Symfony\Component\Validator\Constraint as Assert;
 	/**
 	 * @var
 	 * @Assert\NotBlank()
-	 * @Assert\Boolean
 	 */
 	protected $gender;
 	/**
@@ -58,6 +55,8 @@ use Symfony\Component\Validator\Constraint as Assert;
 	protected $showIm;
 	/**
 	 * @var
+	 * @Assert\NotBlank()
+	 * @Assert\Country
 	 */
 	protected $country;
 	/**

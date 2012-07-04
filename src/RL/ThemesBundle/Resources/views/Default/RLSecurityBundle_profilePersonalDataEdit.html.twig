@@ -6,9 +6,7 @@
 		{%endif%}
 		<br>{{form_label(personalInformation.photo)}}
 		<ul>
-			<li>{%trans%}minimum{%endtrans%}: 50x50px;
 			<li>{%trans%}maximum{%endtrans%}: 150x150px;
-			<li>{%trans%}format{%endtrans%}: jpeg, gif, png
 		</ul>
 		{{form_widget(personalInformation.photo)}}
 		<br>
@@ -68,7 +66,8 @@
 		{{form_label(personalInformation.additional)}}<br>
 		{{form_widget(personalInformation.additional, {'attr': {'rows':'7', 'cols':'45'}})}}<br>
 		{{form_errors(personalInformation.additional)}}
+		{{form_rest(personalInformation)}}
 	</fieldset>
-	<input type="hidden" name="action" value="personal">
+	<input type="hidden" name="action" value="personalInformation">
 	<input type="submit" name = "sbm" value="{%trans%}Save settings{%endtrans%}">
 </form>

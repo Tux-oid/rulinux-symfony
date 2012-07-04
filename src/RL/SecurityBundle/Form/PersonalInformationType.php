@@ -34,6 +34,10 @@ class PersonalInformationType extends AbstractType
 
 	public function getDefaultOptions(array $options)
 	{
-		return array('csrf_protection' => true, 'csrf_field_name' => '_csrf_token', 'intention' => 'authenticate');
+		return array(
+			'csrf_protection' => true,
+			'csrf_field_name' => '_csrf_token',
+			'intention' => 'authenticate'
+		);
 	}
 }
