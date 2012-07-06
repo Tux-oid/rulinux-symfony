@@ -40,14 +40,18 @@ class DefaultController extends Controller
 			return $this->redirect($this->generateUrl("subsection", array("sectionRewrite" => $sectionRewrite, "subsectionRewrite" => $subsectionRewrite)));
 		}
 		//preview
-		$preview = false;
+		$previewMode = false;
 		$pr_val = $request->request->get('preview');
 		$formCls = $section->getBundleNamespace().'\Form\AddThreadForm';
+		$preview = '';
 		if(isset($pr_val))
 		{
-			$preview = true;
+			$previewMode = true;
 			$newThread = new $formCls($user);
 			$helper->preview($newThread, $request);
+			$preview = new $formCls($user);
+			$helper->preview($preview, $request);
+			$preview->setComment($user->getMark()->getMarkObject()->render($preview->getComment()));
 		}
 		else
 			$newThread = new $formCls($user);
@@ -59,6 +63,7 @@ class DefaultController extends Controller
 				'user' => $user,
 				'form' => $form->createView(),
 				'subsection' => $subsectionRewrite,
+				'previewMode' => $previewMode,
 				'preview' => $preview,
 				'message' => $newThread,
 				'section' => $section,
@@ -115,7 +120,7 @@ class DefaultController extends Controller
 			$message->setUser($user);
 			$message->setReferer(0);
 			$message->setSubject($thr['subject']);
-			$message->setComment($thr['comment']);
+			$message->setComment($user->getMark()->getMarkObject()->render($thr['comment']));
 			$message->setRawComment($thr['comment']);
 			$message->setThread($thread);
 			$message->setReferer($comment_id);
@@ -125,19 +130,21 @@ class DefaultController extends Controller
 		}
 		//preview
 		$pr_val = $request->request->get('preview');
-		$message = '';
+		$preview = '';
 		$newComment = new AddCommentForm($user);
 		if(isset($pr_val))
 		{
-			$prv_thr = $request->request->get('addThread');
+			$prv_thr = $request->request->get('addComment');
 			$newComment->setSubject($prv_thr['subject']);
 			$newComment->setComment($prv_thr['comment']);
-			$message = $newComment;
+			$preview = new AddCommentForm($user);
+			$preview->setSubject($prv_thr['subject']);
+			$preview->setComment($user->getMark()->getMarkObject()->render($prv_thr['comment']));
 		}
 		else
 		{
 			$messageRepository = $doctrine->getRepository('RLForumBundle:Message');
-			$message = $messageRepository->findOneById($comment_id);
+			$preview = $messageRepository->findOneById($comment_id);
 			$re = '';
 			if(substr($message->getSubject(), 0, 3) != 'Re:')
 				$re = 'Re:';
@@ -147,7 +154,7 @@ class DefaultController extends Controller
 		return $this->render($theme->getPath('RLForumBundle', 'addComment.html.twig'), array(
 				'theme' => $theme,
 				'user' => $user,
-				'message' => $message,
+				'preview' => $preview,
 				'form' => $form->createView(),
 			));
 	}
@@ -200,11 +207,10 @@ class DefaultController extends Controller
 			$em = $doctrine->getEntityManager();
 			$cmnt = $request->request->get('editComment');
 			$message->setSubject($cmnt['subject']);
-			$message->setComment($cmnt['comment']);
+			$message->setComment($user->getMark()->getMarkObject()->render($cmnt['comment']));
 			$message->setRawComment($cmnt['comment']);
 			$message->setChangedBy($user);
 			$message->setChangedFor($cmnt['editionReason']);
-//			$em->persist($message);
 			$em->flush();
 			return $this->redirect($this->generateUrl("thread", array("id" => $message->getThread()->getId()))); //FIXME: set url for redirecting
 		}

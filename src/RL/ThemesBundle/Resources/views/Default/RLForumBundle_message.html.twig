@@ -17,7 +17,7 @@
 </td>
 <td valign=top>
 	<h2>{{message.subject}}</h2>
-	{{message.comment}}
+	{{message.comment|raw}}
 	<div class=sign>
 		{{message.user.username}}(<a href="{{path('user', {'name': message.user.username})}}">*</a>)({{message.postingTime.date}})
 		<br>

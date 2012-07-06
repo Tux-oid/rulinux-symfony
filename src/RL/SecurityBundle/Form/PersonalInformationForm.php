@@ -66,22 +66,22 @@ class PersonalInformationForm
 	/**
 	 * @var
 	 */
-	protected $additional;
+	protected $additionalRaw;
 
 	/**
 	 * @param $additional
 	 */
-	public function setAdditional($additional)
+	public function setAdditionalRaw($additionalRaw)
 	{
-		$this->additional = $additional;
+		$this->additionalRaw = $additionalRaw;
 	}
 
 	/**
 	 * @return mixed
 	 */
-	public function getAdditional()
+	public function getAdditionalRaw()
 	{
-		return $this->additional;
+		return $this->additionalRaw;
 	}
 
 	/**

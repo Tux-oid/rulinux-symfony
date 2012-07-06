@@ -416,7 +416,9 @@ class SecurityController extends Controller
 						$userInProfile->setShowIm($personalInformationForm->getShowIm());
 						$userInProfile->setCountry($personalInformationForm->getCountry());
 						$userInProfile->setCity($personalInformationForm->getCity());
-						$userInProfile->setAdditional($personalInformationForm->getAdditional());
+						$userInProfile->setAdditionalRaw($personalInformationForm->getAdditionalRaw());
+						$userInProfile->setAdditional($user->getMark()->getMarkObject()->render($personalInformationForm->getAdditionalRaw()));
+
 						$this->getDoctrine()->getEntityManager()->flush();
 					}
 					else
@@ -430,7 +432,7 @@ class SecurityController extends Controller
 					$form->bindRequest($request);
 					if($form->isValid())
 					{
-//						$userInProfile->setMark($personalSettingsForm->getMark());//FIXME:add Mark entity set entity type
+						$userInProfile->setMark($personalSettingsForm->getMark());
 						$userInProfile->setTheme($personalSettingsForm->getTheme());
 						$userInProfile->setGmt($personalSettingsForm->getGmt());
 						$userInProfile->setNewsOnPage($personalSettingsForm->getNewsOnPage());

@@ -10,6 +10,7 @@ use Symfony\Component\Validator\Constraints as Assert;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 use \RL\SecurityBundle\Entity\Group;
+use RL\MainBundle\Entity\Mark;
 
 /**
  * @ORM\Entity(repositoryClass="RL\SecurityBundle\Entity\UserRepository")
@@ -106,7 +107,7 @@ class User implements RLUserInterface, \Serializable
 	 */
 	protected $lastVisitDate;
 	/**
-	 * @ORM\Column(name="banned", type="boolean")
+	 * @ORM\Column(name="active", type="boolean")
 	 */
 	protected $active;
 	/**
@@ -149,7 +150,6 @@ class User implements RLUserInterface, \Serializable
 	protected $filters;
 	/**
 	 * @ORM\ManyToOne(targetEntity="RL\MainBundle\Entity\Mark", inversedBy="users")
-	 * @ORM\JoinColumn(name="mark", referencedColumnName="id")
 	 */
 	protected $mark;
 	/**
@@ -895,16 +895,16 @@ class User implements RLUserInterface, \Serializable
 	/**
 	 * Set mark
 	 *
-	 * @param RL\SecurityBundle\Entity\Mark $mark
+	 * @param RL\MainBundle\Entity\Mark $mark
 	 */
-	public function setMark(Mark $mark)
+	public function setMark(\RL\MainBundle\Entity\Mark $mark)
 	{
 		$this->mark = $mark;
 	}
 	/**
 	 * Get mark
 	 *
-	 * @return RL\SecurityBundle\Entity\Mark
+	 * @return RL\MainBundle\Entity\Mark
 	 */
 	public function getMark()
 	{

@@ -23,7 +23,7 @@
 </table>
 </div>
 <div class="msg" id="{{'msg'~startMessage.id}}">
-{{startMessage.comment}}
+{{startMessage.comment|raw}}
 <p>
 <i>{{startMessage.user.username}}(<a href="{{path('user', {'name': startMessage.user.username})}}">*</a>) ({{startMessage.postingTime.date}})
 <br>

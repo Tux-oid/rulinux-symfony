@@ -8,6 +8,7 @@ use Doctrine\Common\Persistence\ObjectManager;
 use Doctrine\Common\DataFixtures\FixtureInterface;
 use RL\MainBundle\Entity\Settings;
 use RL\MainBundle\Entity\Link;
+use RL\MainBundle\Entity\Mark;
 
 class FixtureLoader implements FixtureInterface
 {
@@ -66,6 +67,39 @@ class FixtureLoader implements FixtureInterface
 		$lolksLink->setName('lolks');
 		$lolksLink->setLink('http://lolks.ru');
 		$manager->persist($lolksLink);
+
+		$bbCode = new Mark();
+		$bbCode->setName('BBCode');
+		$bbCode->setDescription('[b]<b>Bold text</b>[/b]<br>
+		[i]<i>Italic text</i>[/i]<br>
+		[u]<u>Underlined text</u>[/u]<br>
+		[s]<s>Strikethrough text</s>[/s]<br>
+		[sub]<sub>Subscript text</sub>[/sub]<br>
+		[sup]<sup>Raised text</sup>[/sup]<br>
+		[quote]Quote[/quote]<br>
+		[list]<br>
+		[*] First element of marked list<br>
+		[*] Second element of marked list<br>
+		[*] Third element of marked list<br>
+		[/list]<br>
+		[num]<br>
+		[*] First element of enumerated list<br>
+		[*] Second element of enumerated list<br>
+		[*] Third element of enumerated list<br>
+		[/num]<br>
+		[p align=left|right|center]<br>
+		left|right|center alignment<br>
+		[/p]<br>
+		[code=lang]<br>
+		Highlighted code<br>
+		[/code]<br>
+		[img align=left|right|middle|top|bottom]path to image[/img]<br>
+		[user]user[/user]<br>
+		[url=link]text[/url] or [url]link[/url]<br>
+		[spoiler]spoiler[/spoiler]<br>
+		[math]formula[/math]');
+		$bbCode->setMarkClass('BbCode');
+		$manager->persist($bbCode);
 
 		$manager->flush();
 	}

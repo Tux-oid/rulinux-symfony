@@ -24,7 +24,7 @@ class PersonalInformationType extends AbstractType
 			->add('showIm', 'checkbox', array('required' => false))
 			->add('country', 'country', array('required' => true))
 			->add('city', 'text', array('required' => false))
-			->add('additional', 'textarea', array('required' => false));
+			->add('additionalRaw', 'textarea', array('required' => false));
 	}
 
 	public function getName()

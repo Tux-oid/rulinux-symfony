@@ -7,7 +7,7 @@ namespace RL\SecurityBundle\Security\User;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\HttpFoundation\ParameterBag;
 use RL\SecurityBundle\Entity\Group;
-use RL\SecurityBundle\Entity\Mark;
+use RL\MainBundle\Entity\Mark;
 use RL\SecurityBundle\Entity\User;
 
 class AnonymousUser implements RLUserInterface
@@ -16,7 +16,7 @@ class AnonymousUser implements RLUserInterface
 	protected $identity;
 	protected $dbAnon;
 	protected $doctrine;
-	public function __construct($identity, array $attributes = array(), \Symfony\Bundle\DoctrineBundle\Registry &$doctrine, $logger = null)
+	public function __construct($identity, array $attributes = array(), \Symfony\Bundle\DoctrineBundle\Registry &$doctrine, $logger = NULL)
 	{
 		$this->identity = $identity;
 		$this->attributes = $attributes;
@@ -210,7 +210,7 @@ class AnonymousUser implements RLUserInterface
 	{
 		$this->attributes['lastVisitDate'] = $lastVisitDate;
 	}
-	public function setMark(Mark $mark)
+	public function setMark(\RL\MainBundle\Entity\Mark $mark)
 	{
 		$this->attributes['mark'] = $mark;
 	}
@@ -241,5 +241,170 @@ class AnonymousUser implements RLUserInterface
 	public function setThreadsOnPage($threadsOnPage)
 	{
 		$this->attributes['threadsOnPage'] = $threadsOnPage;
+	}
+
+	public function setName($name)
+	{
+		return $this->dbAnon->setName($name);
+	}
+
+	public function getName()
+	{
+		return $this->dbAnon->getName();
+	}
+
+	public function setLastname($lastname)
+	{
+		return $this->dbAnon->setLastname($lastname);
+	}
+
+	public function getLastname()
+	{
+		return $this->dbAnon->getLastname();
+	}
+
+	public function setCountry($country)
+	{
+		return $this->dbAnon->setCountry($country);
+	}
+
+	public function getCountry()
+	{
+		return $this->dbAnon->getCountry();
+	}
+
+	public function setCity($city)
+	{
+		return $this->dbAnon->setCity($city);
+	}
+
+	public function getCity()
+	{
+		return $this->dbAnon->getCity();
+	}
+
+	public function setPhoto($photo)
+	{
+		return $this->dbAnon->setPhoto($photo);
+	}
+
+	public function getPhoto()
+	{
+		return $this->dbAnon->getPhoto();
+	}
+
+	public function setBirthday($birthday)
+	{
+		return $this->dbAnon->setBirthday($birthday);
+	}
+
+	public function getBirthday()
+	{
+		return $this->dbAnon->getBirthday();
+	}
+
+	public function setGender($gender)
+	{
+		return $this->dbAnon->setGender($gender);
+	}
+
+	public function getGender()
+	{
+		return $this->dbAnon->getGender();
+	}
+
+	public function setAdditional($additional)
+	{
+		return $this->dbAnon->setAdditional($additional);
+	}
+
+	public function getAdditional()
+	{
+		return $this->dbAnon->getAdditional();
+	}
+
+	public function setAdditionalRaw($additionalRaw)
+	{
+		return $this->dbAnon->setAdditionalRaw($additionalRaw);
+	}
+
+	public function getAdditionalRaw()
+	{
+		return $this->dbAnon->getAdditionalRaw();
+	}
+
+	public function setEmail($email)
+	{
+		return $this->dbAnon->setEmail($email);
+	}
+
+	public function getEmail()
+	{
+		return $this->dbAnon->getEmail();
+	}
+
+	public function setIm($im)
+	{
+		return $this->dbAnon->setIm($im);
+	}
+
+	public function getIm()
+	{
+		return $this->dbAnon->getIm();
+	}
+
+	public function setOpenid($openid)
+	{
+		return $this->dbAnon->setOpenid($openid);
+	}
+
+	public function getOpenid()
+	{
+		return $this->dbAnon->getOpenid();
+	}
+
+	public function setShowEmail($showEmail)
+	{
+		return $this->dbAnon->setShowEmail($showEmail);
+	}
+
+	public function getShowEmail()
+	{
+		return $this->dbAnon->getShowEmail();
+	}
+
+	public function setShowIm($showIm)
+	{
+		return $this->dbAnon->setShowIm($showIm);
+	}
+
+	public function getShowIm()
+	{
+		return $this->dbAnon->getShowIm();
+	}
+
+	public function setActive($active)
+	{
+		return $this->dbAnon->setActive($active);
+	}
+
+	public function setQuestion($question)
+	{
+		return $this->dbAnon->setQuestion($question);
+	}
+
+	public function getQuestion()
+	{
+		return $this->dbAnon->getQuestion();
+	}
+
+	public function setAnswer($answer)
+	{
+		return $this->dbAnon->setAnswer($answer);
+	}
+
+	public function getAnswer()
+	{
+		return $this->dbAnon->getAnswer();
 	}
 }

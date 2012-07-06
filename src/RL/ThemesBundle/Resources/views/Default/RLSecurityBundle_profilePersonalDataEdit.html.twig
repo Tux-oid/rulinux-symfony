@@ -63,9 +63,9 @@
 				<td>{{form_errors(personalInformation.city)}}</td>
 			</tr>
 		</table>
-		{{form_label(personalInformation.additional)}}<br>
-		{{form_widget(personalInformation.additional, {'attr': {'rows':'7', 'cols':'45'}})}}<br>
-		{{form_errors(personalInformation.additional)}}
+		{{form_label(personalInformation.additionalRaw, 'Additional')}}<br>
+		{{form_widget(personalInformation.additionalRaw, {'attr': {'rows':'7', 'cols':'45'}})}}<br>
+		{{form_errors(personalInformation.additionalRaw)}}
 		{{form_rest(personalInformation)}}
 	</fieldset>
 	<input type="hidden" name="action" value="personalInformation">

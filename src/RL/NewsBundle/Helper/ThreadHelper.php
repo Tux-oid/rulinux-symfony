@@ -23,7 +23,7 @@ class ThreadHelper implements ThreadHelperInterface
 		$message->setUser($user);
 		$message->setReferer(0);
 		$message->setSubject($thr['subject']);
-		$message->setComment($thr['comment']);
+		$message->setComment($user->getMark()->getMarkObject()->render($thr['comment']));
 		$message->setRawComment($thr['comment']);
 		$message->setThread($thread);
 		$em->persist($message);

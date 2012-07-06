@@ -12,7 +12,7 @@ class PersonalSettingsType extends AbstractType
 	public function buildForm(FormBuilder $builder, array $options)
 	{
 		$builder->add('theme', 'entity', array('class' => 'RLThemesBundle:Theme', 'property'=>'name', 'required' => true))
-			->add('mark', 'text', array('required' => true))//FIXME:add Mark entity set entity type
+			->add('mark', 'entity', array('class' => 'RLMainBundle:Mark', 'property'=>'name','required' => true))
 			->add('gmt', 'timezone', array('required' => true))
 			->add('newsOnPage', 'text', array('required' => true))
 			->add('commentsOnPage', 'text', array('required' => true))

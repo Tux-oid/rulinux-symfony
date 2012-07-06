@@ -9,7 +9,7 @@ use Doctrine\ORM\Mapping as ORM;
 /**
  * @ORM\Entity
  * @ORM\Table(name="marks")
- */
+  */
 class Mark /* implements Serializable */
 {
 	/**
@@ -23,17 +23,23 @@ class Mark /* implements Serializable */
 	 */
 	protected $name;
 	/**
-	 * @ORM\Column(name="description", type="string", length=512, unique="true", nullable="false")
+	 * @ORM\Column(name="description", type="text", unique="true", nullable="false")
 	 */
 	protected $description;
 	/**
-	 * @ORM\OneToMany(targetEntity="User", mappedBy="mark")
+	 * @ORM\Column(name="markClass", type="string", length=256, unique="true", nullable="false")
+	 */
+	protected $markClass;
+	/**
+	 * @ORM\OneToMany(targetEntity="RL\SecurityBundle\Entity\User", mappedBy="mark")
 	 */
 	protected $users;
+
 	public function __construct()
 	{
 		$this->users = new \Doctrine\Common\Collections\ArrayCollection();
 	}
+
 	/**
 	 * Get id
 	 *
@@ -43,6 +49,7 @@ class Mark /* implements Serializable */
 	{
 		return $this->id;
 	}
+
 	/**
 	 * Set name
 	 *
@@ -52,6 +59,7 @@ class Mark /* implements Serializable */
 	{
 		$this->name = $name;
 	}
+
 	/**
 	 * Get name
 	 *
@@ -61,6 +69,7 @@ class Mark /* implements Serializable */
 	{
 		return $this->name;
 	}
+
 	/**
 	 * Set description
 	 *
@@ -70,6 +79,7 @@ class Mark /* implements Serializable */
 	{
 		$this->description = $description;
 	}
+
 	/**
 	 * Get description
 	 *
@@ -79,6 +89,7 @@ class Mark /* implements Serializable */
 	{
 		return $this->description;
 	}
+
 	/**
 	 * Add users
 	 *
@@ -88,6 +99,7 @@ class Mark /* implements Serializable */
 	{
 		$this->users[] = $users;
 	}
+
 	/**
 	 * Get users
 	 *
@@ -96,5 +108,27 @@ class Mark /* implements Serializable */
 	public function getUsers()
 	{
 		return $this->users;
+	}
+
+	public function getMarkObject()
+	{
+		$className = 'RL\MainBundle\Marks\\'.$this->getMarkClass();
+		return new $className();
+	}
+
+	/**
+	 * @param $markClass
+	 */
+	public function setMarkClass($markClass)
+	{
+		$this->markClass = $markClass;
+	}
+
+	/**
+	 * @return mixed
+	 */
+	public function getMarkClass()
+	{
+		return $this->markClass;
 	}
 }

@@ -3,12 +3,12 @@
   <div class="msg">
     <table cellspacing="0" width="100%">
       <tr>
-        <td valign="top"><h2>{{message.subject}}</h2>
-        <p><p>{{message.comment}}</p></p>
-        <div class="sign">{{message.user.username}} (<a href="{{path('user', {'name':message.user.username})}}">*</a>) ({{message.postingTime.date}})
+        <td valign="top"><h2>{{preview.subject}}</h2>
+        <p><p>{{preview.comment|raw}}</p></p>
+        <div class="sign">{{preview.user.username}} (<a href="{{path('user', {'name':preview.user.username})}}">*</a>) ({{preview.postingTime.date}})
 		<br>
 		{%if user.showUa == true%}
-			{{message.useragent}}
+			{{preview.useragent}}
 		{%endif%}
 	</div>
       </td>

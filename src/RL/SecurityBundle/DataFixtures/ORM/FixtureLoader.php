@@ -9,6 +9,7 @@ use Doctrine\Common\DataFixtures\FixtureInterface;
 use RL\SecurityBundle\Entity\User;
 use RL\SecurityBundle\Entity\Group;
 use RL\MainBundle\Entity\Settings;
+use RL\MainBundle\Entity\Mark;
 use RL\ThemesBundle\Entity\Theme;
 use Symfony\Component\Security\Core\Encoder\MessageDigestPasswordEncoder;
 
@@ -100,6 +101,43 @@ class FixtureLoader implements FixtureInterface
 		$ubertechnoTheme->setDirectory('Default');
 		$manager->persist($ubertechnoTheme);
 
+		$texMark = new Mark();
+		$texMark->setName('Tex-Mark');
+		$texMark->setDescription('\b{<b>Bold text</b>[}<br>
+				\i{<i>Italic text</i>}<br>
+				\u{<u>Underlined text</u>}<br>
+				\s{<s>Strikethrough text</s>}<br>
+				\sub{<sub>Subscript text</sub>}<br>
+				\sup{<sup>Raised text</sup>}<br>
+				\quote{Quote}<br>
+				\list{<br>
+				{*} First element of marked list<br>
+				{*} Second element of marked list<br>
+				{*} Third element of marked list<br>
+				}<br>
+				\num{<br>
+				{*} First element of enumerated list<br>
+				{*} Second element of enumerated list<br>
+				{*} Third element of enumerated list<br>
+				}<br>
+				\begin{flushleft|flushright|center}<br>
+				eft|right|center alignment<br>
+				\\\\ - a line break within a tag alignment<br>
+				\end{flushleft|flushright|center}<br>
+				\begin[lang]{highlight}<br>
+				Highlighted code<br>
+				\end{highlight}<br>
+				\img[left|right|middle|top|bottom]{path to image}<br>
+				\user{user}<br>
+				\url[text]{link}<br>
+				\url{link}<br>
+				\br a line break<br>
+				\\} Shielded brace<br>
+				spoiler{spoiler}<br>
+				\begin{math}formula\end{math}');
+		$texMark->setMarkClass('TexMark');
+		$manager->persist($texMark);
+
 		//adding anonymous
 		$anonymous = new User();
 		$anonymous->setUsername('anonymous');
@@ -115,6 +153,7 @@ class FixtureLoader implements FixtureInterface
 		$anonymous->setLastVisitDate(new \DateTime('now'));
 		$anonymous->setCaptchaLevel($captchaLevel);
 		$anonymous->setTheme($ubertechnoTheme);
+		$anonymous->setMark($texMark);
 		$anonymous->setSortingType($sortingType);
 		$anonymous->setNewsOnPage($newsOnPage);
 		$anonymous->setThreadsOnPage($threadsOnPage);
@@ -146,6 +185,7 @@ class FixtureLoader implements FixtureInterface
 		$admin->setLastVisitDate(new \DateTime('now'));
 		$admin->setCaptchaLevel($captchaLevel);
 		$admin->setTheme($ubertechnoTheme);
+		$admin->setMark($texMark);
 		$admin->setSortingType($sortingType);
 		$admin->setNewsOnPage($newsOnPage);
 		$admin->setThreadsOnPage($threadsOnPage);
