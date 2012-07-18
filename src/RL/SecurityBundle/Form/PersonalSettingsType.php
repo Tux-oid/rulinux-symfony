@@ -14,6 +14,7 @@ class PersonalSettingsType extends AbstractType
 		$builder->add('theme', 'entity', array('class' => 'RLThemesBundle:Theme', 'property'=>'name', 'required' => true))
 			->add('mark', 'entity', array('class' => 'RLMainBundle:Mark', 'property'=>'name','required' => true))
 			->add('gmt', 'timezone', array('required' => true))
+			->add('language', 'locale', array('required'=>true))
 			->add('newsOnPage', 'text', array('required' => true))
 			->add('commentsOnPage', 'text', array('required' => true))
 			->add('threadsOnPage', 'text', array('required' => true))

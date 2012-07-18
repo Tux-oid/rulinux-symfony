@@ -8,7 +8,7 @@ use Doctrine\Common\Persistence\ObjectManager;
 use Doctrine\Common\DataFixtures\FixtureInterface;
 use RL\MainBundle\Entity\Settings;
 use RL\MainBundle\Entity\Link;
-use RL\MainBundle\Entity\Mark;
+use RL\MainBundle\Entity\BbCode;
 
 class FixtureLoader implements FixtureInterface
 {
@@ -68,7 +68,7 @@ class FixtureLoader implements FixtureInterface
 		$lolksLink->setLink('http://lolks.ru');
 		$manager->persist($lolksLink);
 
-		$bbCode = new Mark();
+		$bbCode = new BbCode();
 		$bbCode->setName('BBCode');
 		$bbCode->setDescription('[b]<b>Bold text</b>[/b]<br>
 		[i]<i>Italic text</i>[/i]<br>
@@ -98,7 +98,6 @@ class FixtureLoader implements FixtureInterface
 		[url=link]text[/url] or [url]link[/url]<br>
 		[spoiler]spoiler[/spoiler]<br>
 		[math]formula[/math]');
-		$bbCode->setMarkClass('BbCode');
 		$manager->persist($bbCode);
 
 		$manager->flush();

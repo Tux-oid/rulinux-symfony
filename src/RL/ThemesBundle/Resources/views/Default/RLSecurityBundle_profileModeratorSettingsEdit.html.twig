@@ -1,33 +1,20 @@
-<form action="user_Admin:edit" method="post">
+<form action="{{path('user_edit', {'name':userInfo.username})}}" method="post" {{form_enctype(moderatorSettings)}}>
 	<fieldset>
 		<legend>{%trans%}Moderator settings{%endtrans%}</legend>
 		<table>
 			<tr>
-				<td>{%trans%}Blocked{%endtrans%}:</td>
-				<td>
-					<select name="banned">
-						<option value="1" >Да</option>
-						<option value="0" selected>Нет</option>
-					</select>
-				</td>
-				<td></td>
+				<td>{{form_label(moderatorSettings.active)}}:</td>
+				<td>{{form_widget(moderatorSettings.active)}}</td>
+				<td>{{form_errors(moderatorSettings.active)}}</td>
 			</tr>
 			<tr>
-				<td>{%trans%}Captcha level{%endtrans%}:</td>
-				<td>
-					<select name="captcha">
-						<option value="-1" selected>Нет</option>
-						<option value="0" >0</option>
-						<option value="1" >1</option>
-						<option value="2" >2</option>
-						<option value="3" >3</option>
-						<option value="4" >4</option>
-					</select>
-				</td>
-				<td></td>
+				<td>{{form_label(moderatorSettings.captchaLevel, 'Captcha level')}}:</td>
+				<td>{{form_widget(moderatorSettings.captchaLevel)}}</td>
+				<td>{{form_errors(moderatorSettings.captchaLevel)}}</td>
 			</tr>
 		</table>
+		{{form_rest(moderatorSettings)}}
 	</fieldset>
-	<input type="submit" value="{%trans%}Save settings{%endtrans%}">
-	<input type="hidden" name="action" value="moder">
+	<input type="hidden" name="action" value="moderatorSettings">
+	<input type="submit" name="sbm" value="{%trans%}Save settings{%endtrans%}">
 </form>

@@ -1,24 +1,27 @@
 <?php
 /**
- * @author Tux-oid 
+ * @author Tux-oid
  */
-
 namespace RL\SecurityBundle\Form;
+
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilder;
 
-class RestorePasswordType extends AbstractType
+class ModeratorSettingsType extends AbstractType
 {
 	public function buildForm(FormBuilder $builder, array $options)
 	{
-		$builder->add('username', 'text')
-			->add('email', 'email')
-			->add('question', 'text')
-			->add('answer', 'text');
+		$builder->add('active', 'checkbox', array('required' => false))
+		->add('captchaLevel', 'text', array('required' => true));//TODO:set choice type
 	}
-	public function getName()
+	/**
+	 * Returns the name of this type.
+	 *
+	 * @return string The name of this type
+	 */
+	function getName()
 	{
-		return 'restorePassword';
+		return 'moderatorSettings';
 	}
 	public function getDefaultOptions(array $options)
 	{
@@ -29,4 +32,3 @@ class RestorePasswordType extends AbstractType
 		);
 	}
 }
-?>

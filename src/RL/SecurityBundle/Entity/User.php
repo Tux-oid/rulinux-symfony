@@ -25,13 +25,9 @@ class User implements RLUserInterface, \Serializable
 	 */
 	protected $id;
 	/**
-	 * @ORM\ManyToMany(targetEntity="Group")
-	 * @ORM\JoinTable(name="user_group",
-	 *     joinColumns={@ORM\JoinColumn(name="user_id", referencedColumnName="id")},
-	 *     inverseJoinColumns={@ORM\JoinColumn(name="group_id", referencedColumnName="id")}
-	 * )
+	 * @ORM\ManyToOne(targetEntity="Group", inversedBy="users")
 	 */
-	protected $groups;
+	protected $group;
 	/**
 	 * @ORM\Column(name="nick", type="string", length=100, unique="true", nullable="false")
 	 * @Assert\NotBlank()
@@ -129,6 +125,8 @@ class User implements RLUserInterface, \Serializable
 	//Settings
 	/**
 	 * @ORM\Column(name="language", type="text")
+	 * @Assert\NotBlank()
+	 * @Assert\Language
 	 */
 	protected $language;
 	/**
@@ -204,7 +202,7 @@ class User implements RLUserInterface, \Serializable
 				array(
 					'id' => $this->id,
 					'username' => $this->username,
-					'groups' => $this->groups,
+					'group' => $this->group,
 					'salt' => $this->salt,
 					'password' => $this->password,
 					'name' => $this->name,
@@ -248,7 +246,7 @@ class User implements RLUserInterface, \Serializable
 		$unserializedData = unserialize($serializedData);
 		$this->id = isset($unserializedData['id']) ? $unserializedData['id'] : null;
 		$this->username = isset($unserializedData['username']) ? $unserializedData['username'] : null;
-		$this->groups = isset($unserializedData['groups']) ? $unserializedData['groups'] : null;
+		$this->group = isset($unserializedData['group']) ? $unserializedData['group'] : null;
 		$this->salt = isset($unserializedData['salt']) ? $unserializedData['salt'] : null;
 		$this->password = isset($unserializedData['password']) ? $unserializedData['password'] : null;
 		$this->name = isset($unserializedData['name']) ? $unserializedData['name'] : null;
@@ -327,7 +325,8 @@ class User implements RLUserInterface, \Serializable
 	 */
 	public function getRoles()
 	{
-		return $this->groups->toArray();
+//		return $this->group->toArray();
+		return array($this->group);
 	}
 	/**
 	 * @inheritDoc
@@ -911,24 +910,6 @@ class User implements RLUserInterface, \Serializable
 		return $this->mark;
 	}
 	/**
-	 * Add groups
-	 *
-	 * @param RL\SecurityBundle\Entity\Group $groups
-	 */
-	public function addGroup(Group $groups)
-	{
-		$this->groups[] = $groups;
-	}
-	/**
-	 * Get groups
-	 *
-	 * @return Doctrine\Common\Collections\Collection
-	 */
-	public function getGroups()
-	{
-		return $this->groups;
-	}
-	/**
 	 * Set language
 	 *
 	 * @param text $language
@@ -1071,4 +1052,24 @@ class User implements RLUserInterface, \Serializable
 	{
 		return $this->comments;
 	}
+
+    /**
+     * Set group
+     *
+     * @param RL\SecurityBundle\Entity\Group $group
+     */
+    public function setGroup(\RL\SecurityBundle\Entity\Group $group)
+    {
+        $this->group = $group;
+    }
+
+    /**
+     * Get group
+     *
+     * @return RL\SecurityBundle\Entity\Group 
+     */
+    public function getGroup()
+    {
+        return $this->group;
+    }
 }

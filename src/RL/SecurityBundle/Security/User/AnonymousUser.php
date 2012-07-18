@@ -115,7 +115,7 @@ class AnonymousUser implements RLUserInterface
 		$attributes = $this->getAttributes();
 		$attributes['blocks'] = $value;
 	}
-	public function addGroup(Group $groups)
+	public function setGroup(Group $group)
 	{
 	}
 	public function isActive()
@@ -138,7 +138,7 @@ class AnonymousUser implements RLUserInterface
 	{
 		return array_key_exists('gmt', $this->attributes) ? $this->attributes['gmt'] : $this->dbAnon->getGmt();
 	}
-	public function getGroups()
+	public function getGroup()
 	{
 		return $this->getRoles();
 	}

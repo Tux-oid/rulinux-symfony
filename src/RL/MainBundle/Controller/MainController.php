@@ -69,7 +69,6 @@ class MainController extends Controller
 	 */
 	public function homepageAction($page)
 	{
-		$this->get('session')->setLocale('ru_RU'); //FIXME: loale in user class
 		$user = $this->get('security.context')->getToken()->getUser();
 		$theme = $this->get('rl_themes.theme.provider');
 		$doctrine = $this->get('doctrine');

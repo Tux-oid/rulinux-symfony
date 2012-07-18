@@ -79,8 +79,16 @@
 
 [GregwarImageBundle]
     git=git://github.com/Gregwar/ImageBundle.git
-    target=/bundles/Gregwar/ImageBundle
+    target=bundles/Gregwar/ImageBundle
 
 [ucaptcha]
     git=git://gitorious.org/rulinux-engine/ucaptcha.git
-    target=/ucaptcha
+    target=ucaptcha
+
+[geshi]
+    git=git://gitorious.org/rulinux-engine/geshi.git
+    target=geshi/lib/Geshi
+
+[phpmathpublisher]
+    git=git://gitorious.org/rulinux-engine/phpmathpublisher.git
+    target=phpmathpublisher/lib/PMP

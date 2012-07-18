@@ -31,7 +31,7 @@ class Group implements RoleInterface, \Serializable
 	 */
 	protected $description;
 	/**
-	 * @ORM\ManyToMany(targetEntity="User", mappedBy="groups")
+	 * @ORM\OneToMany(targetEntity="User", mappedBy="group")
 	 */
 	protected $users;
 	public function __construct()

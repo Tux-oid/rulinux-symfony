@@ -2,11 +2,20 @@
 /**
  * @author Tux-oid
  */
+namespace RL\MainBundle\Entity;
+use Doctrine\ORM\Mapping as ORM;
+use RL\MainBundle\Entity\Mark;
 
-namespace RL\MainBundle\Marks;
-
-class TexMark
+/**
+ * @ORM\Entity
+ */
+final class TexMark extends Mark
 {
+
+	/**
+	 * @param $string
+	 * @return mixed|string
+	 */
 	public function render($string)
 	{
 		$code = array();
@@ -15,8 +24,8 @@ class TexMark
 		$vh = preg_match_all($re, $string, $match);
 		for($i = 0; $i < $vh; $i++)
 		{
-			$lang[$i] = $match[3][$i];
-			$with_breaks = mark::highlight(html_entity_decode($match[6][$i], ENT_QUOTES), $match[3][$i], "librarys/geshi/geshi");
+			$lang[$i] = $match[2][$i];
+			$with_breaks = parent::highlight(html_entity_decode($match[6][$i], ENT_QUOTES), $match[3][$i], "librarys/geshi/geshi");
 			$code[$i] = $with_breaks;
 			$string = str_replace($match[0][$i], '⓬' . $i . '⓬', $string);
 		}
@@ -24,7 +33,7 @@ class TexMark
 		$vh = preg_match_all($re, $string, $match);
 		for($i = 0; $i < $vh; $i++)
 		{
-			$with_breaks = mark::make_formula($match[2][$i]);
+			$with_breaks = parent::make_formula($match[2][$i]);
 			$math[$i] = $with_breaks;
 			$string = str_replace($match[0][$i], 'ᴥ' . $i . 'ᴥ', $string);
 		}
@@ -104,9 +113,9 @@ class TexMark
 			if(!empty($sel))
 				$string = preg_replace($user_re, "<b><a href=\"/profile.php?user=\$2\">\$2</a></b>", $string, 1);
 			else
-					{
-						$string = preg_replace($user_re, "\$2", $string, 1);
-					}
+			{
+				$string = preg_replace($user_re, "\$2", $string, 1);
+			}
 		}
 		$url_re = '#(\\\\url)(\\[)?(.*?[^\\]]?)(\\])?({)(.*?[^}]?)(})#sim';
 		$vt = preg_match_all($url_re, $string, $match);
@@ -153,7 +162,9 @@ class TexMark
 		$re = "#(ᴥ)([0-9]+)(ᴥ)#suim";
 		$vt = preg_match_all($re, $string, $match);
 		for($i = 0; $i < $vt; $i++)
+		{
 			$string = str_replace('ᴥ' . $match[2][$i] . 'ᴥ', $math[$match[2][$i]], $string);
+		}
 		return $string;
 	}
 }

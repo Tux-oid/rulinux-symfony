@@ -2,11 +2,19 @@
 /**
  * @author Tux-oid
  */
+namespace RL\MainBundle\Entity;
+use Doctrine\ORM\Mapping as ORM;
+use RL\MainBundle\Entity\Mark;
 
-namespace RL\MainBundle\Marks;
-
-class WakabaMark
+/**
+ * @ORM\Entity
+ */
+final class WakabaMark extends Mark
 {
+	/**
+	 * @param $string
+	 * @return mixed|string
+	 */
 	public function render($string)
 	{
 		$code = array();
@@ -15,8 +23,8 @@ class WakabaMark
 		$vh = preg_match_all($re, $string, $match);
 		for($i = 0; $i < $vh; $i++)
 		{
-			$lang[$i] = $match[3][$i];
-			$with_breaks = mark::highlight(html_entity_decode($match[4][$i], ENT_QUOTES), $match[3][$i], "librarys/geshi/geshi");
+			$lang[$i] = $match[2][$i];
+			$with_breaks = parent::highlight(html_entity_decode($match[4][$i], ENT_QUOTES), $match[3][$i], "librarys/geshi/geshi");
 			$code[$i] = $with_breaks;
 			$string = str_replace($match[0][$i], '⓬' . $i . '⓬', $string);
 		}
@@ -24,7 +32,7 @@ class WakabaMark
 		$vh = preg_match_all($re, $string, $match);
 		for($i = 0; $i < $vh; $i++)
 		{
-			$with_breaks = mark::make_formula($match[2][$i]);
+			$with_breaks = parent::make_formula($match[2][$i]);
 			$math[$i] = $with_breaks;
 			$string = str_replace($match[0][$i], 'ᴥ' . $i . 'ᴥ', $string);
 		}

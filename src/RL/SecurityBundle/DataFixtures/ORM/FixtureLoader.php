@@ -9,7 +9,7 @@ use Doctrine\Common\DataFixtures\FixtureInterface;
 use RL\SecurityBundle\Entity\User;
 use RL\SecurityBundle\Entity\Group;
 use RL\MainBundle\Entity\Settings;
-use RL\MainBundle\Entity\Mark;
+use RL\MainBundle\Entity\TexMark;
 use RL\ThemesBundle\Entity\Theme;
 use Symfony\Component\Security\Core\Encoder\MessageDigestPasswordEncoder;
 
@@ -101,7 +101,7 @@ class FixtureLoader implements FixtureInterface
 		$ubertechnoTheme->setDirectory('Default');
 		$manager->persist($ubertechnoTheme);
 
-		$texMark = new Mark();
+		$texMark = new TexMark();
 		$texMark->setName('Tex-Mark');
 		$texMark->setDescription('\b{<b>Bold text</b>[}<br>
 				\i{<i>Italic text</i>}<br>
@@ -135,7 +135,6 @@ class FixtureLoader implements FixtureInterface
 				\\} Shielded brace<br>
 				spoiler{spoiler}<br>
 				\begin{math}formula\end{math}');
-		$texMark->setMarkClass('TexMark');
 		$manager->persist($texMark);
 
 		//adding anonymous
@@ -168,7 +167,7 @@ class FixtureLoader implements FixtureInterface
 		$encoder = new MessageDigestPasswordEncoder('md5', false, 1);
 		$password = $encoder->encodePassword('anonymous', $anonymous->getSalt());
 		$anonymous->setPassword($password);
-		$anonymous->getGroups()->add($anonymousRole);
+		$anonymous->setGroup($anonymousRole);
 		$manager->persist($anonymous);
 		//Adding admin 
 		$admin = new User();
@@ -200,7 +199,7 @@ class FixtureLoader implements FixtureInterface
 		$encoder = new MessageDigestPasswordEncoder('md5', false, 1);
 		$password = $encoder->encodePassword('admin', $admin->getSalt());
 		$admin->setPassword($password);
-		$admin->getGroups()->add($adminRole);
+		$admin->setGroup($adminRole);
 		$manager->persist($admin);
 		$manager->flush();
 	}

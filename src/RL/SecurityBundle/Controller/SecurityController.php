@@ -16,12 +16,18 @@ use RL\SecurityBundle\Entity\User;
 use RL\SecurityBundle\Entity\Group;
 use RL\SecurityBundle\Entity\SettingsRepository;
 use RL\SecurityBundle\Form\RegisterType;
-use RL\SecurityBundle\Form\RegisterFirstType;
-use RL\SecurityBundle\Form\RestorePasswordType;
+use RL\SecurityBundle\Form\RegistrationFirstType;
+use RL\SecurityBundle\Form\PasswordRestoringType;
 use RL\SecurityBundle\Form\PersonalInformationType;
 use RL\SecurityBundle\Form\PersonalInformationForm;
 use RL\SecurityBundle\Form\PersonalSettingsType;
 use RL\SecurityBundle\Form\PersonalSettingsForm;
+use RL\SecurityBundle\Form\PasswordChangingType;
+use RL\SecurityBundle\Form\PasswordChangingForm;
+use RL\SecurityBundle\Form\AdministratorSettingsType;
+use RL\SecurityBundle\Form\AdministratorSettingsForm;
+use RL\SecurityBundle\Form\ModeratorSettingsType;
+use RL\SecurityBundle\Form\ModeratorSettingsForm;
 use LightOpenID\openid;
 use Gregwar\ImageBundle\Image;
 
@@ -70,7 +76,7 @@ class SecurityController extends Controller
 	{
 		$newUser = new RegistrationFirstForm;
 		$theme = $this->get('rl_themes.theme.provider');
-		$form = $this->createForm(new RegisterFirstType(), $newUser);
+		$form = $this->createForm(new RegistrationFirstType(), $newUser);
 		return $this->render(
 			$theme->getPath('RLSecurityBundle', 'registrationFirstPage.html.twig'), array('theme' => $theme, 'user' => $this->get('security.context')->getToken()->getUser(), 'form' => $form->createView())
 		);
@@ -86,7 +92,7 @@ class SecurityController extends Controller
 		if($method == 'POST')
 		{
 			$newUser = new RegistrationFirstForm;
-			$form = $this->createForm(new RegisterFirstType(), $newUser);
+			$form = $this->createForm(new RegistrationFirstType(), $newUser);
 			$form->bindRequest($request);
 			if($form->isValid())
 			{
@@ -273,7 +279,7 @@ class SecurityController extends Controller
 	{
 		$theme = $this->get('rl_themes.theme.provider');
 		$resForm = new PasswordRestoringForm;
-		$form = $this->createForm(new RestorePasswordType(), $resForm);
+		$form = $this->createForm(new PasswordPestoringType(), $resForm);
 		return $this->render(
 			$theme->getPath('RLSecurityBundle', 'passwordRestoringForm.html.twig'), array('theme' => $theme, 'user' => $this->get('security.context')->getToken()->getUser(), 'form' => $form->createView())
 		);
@@ -289,7 +295,7 @@ class SecurityController extends Controller
 		if($method == 'POST')
 		{
 			$resForm = new PasswordRestoringForm;
-			$form = $this->createForm(new RestorePasswordType(), $resForm);
+			$form = $this->createForm(new PasswordPestoringType(), $resForm);
 			$form->bindRequest($request);
 			if($form->isValid())
 			{
@@ -380,8 +386,33 @@ class SecurityController extends Controller
 			$method = $request->getMethod();
 			if($method == 'POST')
 			{
+				//save password
+				if($request->request->get('action') == 'passwordChanging')
+				{
+					$passwordChangingForm = new PasswordChangingForm;
+					$form = $this->createForm(new PasswordChangingType(), $passwordChangingForm);
+					$form->bindRequest($request);
+					if($form->isValid())
+					{
+						$encoder = new MessageDigestPasswordEncoder('md5', false, 1);
+						$oldPassword = $encoder->encodePassword($passwordChangingForm->getOldPassword(), $userInProfile->getSalt());
+						if($userInProfile->getPassword() !== $oldPassword)
+						{
+							throw new \Exception('Your old password is invalid');
+						}
+						if($passwordChangingForm->getNewPassword() !== $passwordChangingForm->getValidation())
+						{
+							throw new \Exception('Your new password does not meet the validation');
+						}
+						$newPassword = $encoder->encodePassword($passwordChangingForm->getNewPassword(), $userInProfile->getSalt());
+						$userInProfile->setPassword($newPassword);
+						$this->getDoctrine()->getEntityManager()->flush();
+					}
+					else
+						throw new \Exception('Form is invalid');
+				}
 				//save personal information
-				if($request->request->get('action') == 'personalInformation')
+				elseif($request->request->get('action') == 'personalInformation')
 				{
 					$personalInformationForm = new PersonalInformationForm;
 					$form = $this->createForm(new PersonalInformationType(), $personalInformationForm);
@@ -417,8 +448,7 @@ class SecurityController extends Controller
 						$userInProfile->setCountry($personalInformationForm->getCountry());
 						$userInProfile->setCity($personalInformationForm->getCity());
 						$userInProfile->setAdditionalRaw($personalInformationForm->getAdditionalRaw());
-						$userInProfile->setAdditional($user->getMark()->getMarkObject()->render($personalInformationForm->getAdditionalRaw()));
-
+						$userInProfile->setAdditional($user->getMark()->render($personalInformationForm->getAdditionalRaw()));
 						$this->getDoctrine()->getEntityManager()->flush();
 					}
 					else
@@ -435,6 +465,8 @@ class SecurityController extends Controller
 						$userInProfile->setMark($personalSettingsForm->getMark());
 						$userInProfile->setTheme($personalSettingsForm->getTheme());
 						$userInProfile->setGmt($personalSettingsForm->getGmt());
+						$userInProfile->setLanguage($personalSettingsForm->getLanguage());
+						$this->get('session')->setLocale($userInProfile->getLanguage());
 						$userInProfile->setNewsOnPage($personalSettingsForm->getNewsOnPage());
 						$userInProfile->setThreadsOnPage($personalSettingsForm->getThreadsOnPage());
 						$userInProfile->setCommentsOnPage($personalSettingsForm->getCommentsOnPage());
@@ -447,13 +479,47 @@ class SecurityController extends Controller
 					else
 						throw new \Exception('Form is invalid');
 				}
+				//save moderator settings
+				elseif($request->request->get('action') == 'moderatorSettings')
+				{
+					$moderatorSettingsForm = new ModeratorSettingsForm;
+					$form = $this->createForm(new ModeratorSettingsType(), $moderatorSettingsForm);
+					$form->bindRequest($request);
+					if($form->isValid())
+					{
+						$userInProfile->setActive($moderatorSettingsForm->getActive());//TODO: when inactive send message to user
+						$level = $moderatorSettingsForm->getCaptchaLevel();
+						$userInProfile->setCaptchaLevel((int)$level);
+						$this->getDoctrine()->getEntityManager()->flush();
+					}
+					else
+						throw new \Exception('Form is invalid');
+				}
+				//save administrator settings
+				elseif($request->request->get('action') == 'administratorSettings')
+				{
+					$administratorSettingsForm = new AdministratorSettingsForm;
+					$form = $this->createForm(new AdministratorSettingsType(), $administratorSettingsForm);
+					$form->bindRequest($request);
+					if($form->isValid())
+					{
+						$userInProfile->setGroup($administratorSettingsForm->getGroup());
+						$this->getDoctrine()->getEntityManager()->flush();
+					}
+					else
+						throw new \Exception('Form is invalid');
+				}
 			}
 		}
 		//show info
+		$passwordChangingForm = new PasswordChangingForm();
+		$passwordChanging = $this->createForm(new PasswordChangingType(), $passwordChangingForm);
 		$personalInformation = $this->createForm(new PersonalInformationType(), $userInProfile);
 		$personalSettings = $this->createForm(new PersonalSettingsType(), $userInProfile);
+		$moderatorSettings = $this->createForm(new ModeratorSettingsType(), $userInProfile);
+		$administratorSettings = $this->createForm(new AdministratorSettingsType(), $userInProfile);
 		return $this->render(
-			$theme->getPath('RLSecurityBundle', 'profileEdit.html.twig'), array('theme' => $theme, 'user' => $user, 'userInfo'=> $userInProfile, 'personalInformation' => $personalInformation->createView(), 'personalSettings'=>$personalSettings->createView(), )
+			$theme->getPath('RLSecurityBundle', 'profileEdit.html.twig'), array('theme' => $theme, 'user' => $user, 'userInfo'=> $userInProfile, 'personalInformation' => $personalInformation->createView(), 'personalSettings'=>$personalSettings->createView(), 'passwordChanging'=>$passwordChanging->createView(), 'moderatorSettings'=>$moderatorSettings->createView(), 'administratorSettings'=>$administratorSettings->createView(), )
 		);
 	}
 

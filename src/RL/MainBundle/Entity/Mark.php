@@ -5,12 +5,16 @@
 
 namespace RL\MainBundle\Entity;
 use Doctrine\ORM\Mapping as ORM;
+use PMP;
 
 /**
  * @ORM\Entity
  * @ORM\Table(name="marks")
-  */
-class Mark /* implements Serializable */
+ * @ORM\InheritanceType("SINGLE_TABLE")
+ * @ORM\DiscriminatorColumn(name="content_type", type="string", length=20)
+ * @ORM\DiscriminatorMap({"mark"="Mark"})
+ */
+abstract class Mark
 {
 	/**
 	 * @ORM\Id
@@ -26,10 +30,6 @@ class Mark /* implements Serializable */
 	 * @ORM\Column(name="description", type="text", unique="true", nullable="false")
 	 */
 	protected $description;
-	/**
-	 * @ORM\Column(name="markClass", type="string", length=256, unique="true", nullable="false")
-	 */
-	protected $markClass;
 	/**
 	 * @ORM\OneToMany(targetEntity="RL\SecurityBundle\Entity\User", mappedBy="mark")
 	 */
@@ -110,25 +110,26 @@ class Mark /* implements Serializable */
 		return $this->users;
 	}
 
-	public function getMarkObject()
+	abstract public function render($string);
+
+	public function makeFormula($string)
 	{
-		$className = 'RL\MainBundle\Marks\\'.$this->getMarkClass();
-		return new $className();
+		$text = '<m>' . $string . '</m>';
+		$size = 10;
+		$pathToImg = '/web/bundles/rlmain/images/formulas/'; //TODO:save path to config file
+		$phpMathPublisher = new \PMP\PhpMathPublisher();
+		$str = $phpMathPublisher->mathfilter($text, $size, $pathToImg);
+		return $str;
 	}
 
-	/**
-	 * @param $markClass
-	 */
-	public function setMarkClass($markClass)
+	public function highlight($code, $lang)
 	{
-		$this->markClass = $markClass;
-	}
-
-	/**
-	 * @return mixed
-	 */
-	public function getMarkClass()
-	{
-		return $this->markClass;
+		if(empty($lang))
+			$lang = 'c';
+		$path = $_SERVER["DOCUMENT_ROOT"] . 'vendor/geshi/lib/Geshi/src/geshi'; //TODO:save path to config file
+		$geshi = new \Geshi_GeSHi($code, $lang);
+		$geshi->enable_line_numbers(GESHI_FANCY_LINE_NUMBERS, 1);
+		$code = geshi_highlight($code, $lang, $path, true);
+		return $code;
 	}
 }

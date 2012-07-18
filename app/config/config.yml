@@ -76,6 +76,14 @@ netpositive_discriminator_map:
                 articles: RL\ArticlesBundle\Entity\Subsection
                 news: RL\NewsBundle\Entity\Subsection
                 gallery: RL\GalleryBundle\Entity\Subsection
+        mark:
+            entity: RL\MainBundle\Entity\Mark
+            children:
+                texMark: RL\MainBundle\Entity\TexMark
+                bbcode: RL\MainBundle\Entity\BbCode
+                wakabaMark: RL\MainBundle\Entity\WakabaMark
+                baseHtml: RL\MainBundle\Entity\BaseHtml
+
 
 rl_security:
     anonymous:

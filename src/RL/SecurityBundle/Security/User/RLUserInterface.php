@@ -80,8 +80,8 @@ interface RLUserInterface extends AdvancedUserInterface
 	public function getShowResp();
 	public function setMark(\RL\MainBundle\Entity\Mark $mark);
 	public function getMark();
-	public function addGroup(\RL\SecurityBundle\Entity\Group $groups);
-	public function getGroups();
+	public function setGroup(\RL\SecurityBundle\Entity\Group $group);
+	public function getGroup();
 	public function setLanguage($language);
 	public function getLanguage();
 	public function setActive($active);

@@ -8,7 +8,8 @@ use Symfony\Component\Validator\Constraints as Assert;
 
 /**
 
- */class PersonalSettingsForm
+ */
+class PersonalSettingsForm
 {
 	/**
 	 * @var
@@ -56,7 +57,12 @@ use Symfony\Component\Validator\Constraints as Assert;
 	 * @var
 	 */
 	protected $showResp;
-
+	/**
+	 * @var
+	 * @Assert\NotBlank()
+	 * @Assert\Language
+	 */
+	protected $language;
 	/**
 	 * @param $commentsOnPage
 	 */
@@ -215,5 +221,21 @@ use Symfony\Component\Validator\Constraints as Assert;
 	public function getThreadsOnPage()
 	{
 		return $this->threadsOnPage;
+	}
+
+	/**
+	 * @param $language
+	 */
+	public function setLanguage($language)
+	{
+		$this->language = $language;
+	}
+
+	/**
+	 * @return mixed
+	 */
+	public function getLanguage()
+	{
+		return $this->language;
 	}
 }

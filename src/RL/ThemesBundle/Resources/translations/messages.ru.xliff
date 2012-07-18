@@ -418,6 +418,35 @@
                 <source>Posting time</source>
                 <target>По времени добавления</target>
             </trans-unit>
+            <trans-unit id="105">
+                <source>Language</source>
+                <target>Язык</target>
+            </trans-unit>
+            <trans-unit id="106">
+                <source>Save settings</source>
+                <target>Сохранить настройки</target>
+            </trans-unit>
+            <trans-unit id="107">
+                <source>Administrator settings</source>
+                <target>Администраторские настройки</target>
+            </trans-unit>
+            <trans-unit id="108">
+                <source>Group</source>
+                <target>Группа</target>
+            </trans-unit>
+            <trans-unit id="109">
+                <source>Moderator settings</source>
+                <target>Модераторские настройки</target>
+            </trans-unit>
+            <trans-unit id="110">
+                <source>Active</source>
+                <target>Активен</target>
+            </trans-unit>
+            <trans-unit id="111">
+                <source>Captcha level</source>
+                <target>Уровень каптчи</target>
+            </trans-unit>
+
         </body>
     </file>
 </xliff>

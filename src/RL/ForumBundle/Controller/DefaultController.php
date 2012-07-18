@@ -51,7 +51,7 @@ class DefaultController extends Controller
 			$helper->preview($newThread, $request);
 			$preview = new $formCls($user);
 			$helper->preview($preview, $request);
-			$preview->setComment($user->getMark()->getMarkObject()->render($preview->getComment()));
+			$preview->setComment($user->getMark()->render($preview->getComment()));
 		}
 		else
 			$newThread = new $formCls($user);
@@ -120,7 +120,7 @@ class DefaultController extends Controller
 			$message->setUser($user);
 			$message->setReferer(0);
 			$message->setSubject($thr['subject']);
-			$message->setComment($user->getMark()->getMarkObject()->render($thr['comment']));
+			$message->setComment($user->getMark()->render($thr['comment']));
 			$message->setRawComment($thr['comment']);
 			$message->setThread($thread);
 			$message->setReferer($comment_id);
@@ -139,16 +139,16 @@ class DefaultController extends Controller
 			$newComment->setComment($prv_thr['comment']);
 			$preview = new AddCommentForm($user);
 			$preview->setSubject($prv_thr['subject']);
-			$preview->setComment($user->getMark()->getMarkObject()->render($prv_thr['comment']));
+			$preview->setComment($user->getMark()->render($prv_thr['comment']));
 		}
 		else
 		{
 			$messageRepository = $doctrine->getRepository('RLForumBundle:Message');
 			$preview = $messageRepository->findOneById($comment_id);
 			$re = '';
-			if(substr($message->getSubject(), 0, 3) != 'Re:')
+			if(substr($preview->getSubject(), 0, 3) != 'Re:')
 				$re = 'Re:';
-			$newComment->setSubject($re.$message->getSubject());
+			$newComment->setSubject($re.$preview->getSubject());
 		}
 		$form = $this->createForm(new AddCommentType(), $newComment);
 		return $this->render($theme->getPath('RLForumBundle', 'addComment.html.twig'), array(
@@ -207,7 +207,7 @@ class DefaultController extends Controller
 			$em = $doctrine->getEntityManager();
 			$cmnt = $request->request->get('editComment');
 			$message->setSubject($cmnt['subject']);
-			$message->setComment($user->getMark()->getMarkObject()->render($cmnt['comment']));
+			$message->setComment($user->getMark()->render($cmnt['comment']));
 			$message->setRawComment($cmnt['comment']);
 			$message->setChangedBy($user);
 			$message->setChangedFor($cmnt['editionReason']);

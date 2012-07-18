@@ -1,4 +1,4 @@
-<form action="{{path('user_edit', {'name':userInfo.username})}}" method="post" {{form_enctype(personalInformation)}}>
+<form action="{{path('user_edit', {'name':userInfo.username})}}" method="post" {{form_enctype(personalSettings)}}>
 	<fieldset>
 		<legend>{%trans%}Settings{%endtrans%}</legend>
 		<table>
@@ -6,15 +6,22 @@
 				<td>{{form_label(personalSettings.theme)}}:</td>
 				<td>{{form_widget(personalSettings.theme)}}</td>
 				<td>{{form_errors(personalSettings.theme)}}</td>
-			</tr><tr>
-			<td>{{form_label(personalSettings.mark)}}:</td>
-			<td>{{form_widget(personalSettings.mark)}}</td>
-			<td>{{form_errors(personalSettings.mark)}}</td>
-		</tr><tr>
-			<td>{{form_label(personalSettings.gmt, 'Time zone')}}:</td>
-			<td>{{form_widget(personalSettings.gmt)}}</td>
-			<td><{{form_errors(personalSettings.gmt)}}/td>
-		</tr>
+			</tr>
+			<tr>
+				<td>{{form_label(personalSettings.mark)}}:</td>
+				<td>{{form_widget(personalSettings.mark)}}</td>
+				<td>{{form_errors(personalSettings.mark)}}</td>
+			</tr>
+			<tr>
+				<td>{{form_label(personalSettings.gmt, 'Time zone')}}:</td>
+				<td>{{form_widget(personalSettings.gmt)}}</td>
+				<td><{{form_errors(personalSettings.gmt)}}/td>
+			</tr>
+			<tr>
+				<td>{{form_label(personalSettings.language)}}:</td>
+				<td>{{form_widget(personalSettings.language)}}</td>
+				<td><{{form_errors(personalSettings.language)}}/td>
+			</tr>
 			<tr>
 				<td>{{form_label(personalSettings.newsOnPage, 'News on page')}}:</td>
 				<td>{{form_widget(personalSettings.newsOnPage, {attr: {'maxlength':3}})}}</td>
@@ -54,5 +61,5 @@
 		{{form_rest(personalSettings)}}
 	</fieldset>
 	<input type="hidden" name="action" value="personalSettings">
-	<input type="submit" name ="sbm" value="{%trans%}Save settings{%endtrans%}">
+	<input type="submit" name="sbm" value="{%trans%}Save settings{%endtrans%}">
 </form>
