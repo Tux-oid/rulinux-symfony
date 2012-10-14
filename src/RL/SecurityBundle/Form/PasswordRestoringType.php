@@ -7,7 +7,7 @@ namespace RL\SecurityBundle\Form;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilder;
 
-class PasswordPestoringType extends AbstractType
+class PasswordRestoringType extends AbstractType
 {
 	public function buildForm(FormBuilder $builder, array $options)
 	{

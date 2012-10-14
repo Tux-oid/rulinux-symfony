@@ -13,8 +13,6 @@ use Symfony\Component\HttpFoundation\Request;
 use RL\SecurityBundle\Form\RegistrationFirstForm;
 use RL\SecurityBundle\Form\PasswordRestoringForm;
 use RL\SecurityBundle\Entity\User;
-use RL\SecurityBundle\Entity\Group;
-use RL\SecurityBundle\Entity\SettingsRepository;
 use RL\SecurityBundle\Form\RegisterType;
 use RL\SecurityBundle\Form\RegistrationFirstType;
 use RL\SecurityBundle\Form\PasswordRestoringType;
@@ -28,7 +26,7 @@ use RL\SecurityBundle\Form\AdministratorSettingsType;
 use RL\SecurityBundle\Form\AdministratorSettingsForm;
 use RL\SecurityBundle\Form\ModeratorSettingsType;
 use RL\SecurityBundle\Form\ModeratorSettingsForm;
-use LightOpenID\openid;
+use LightOpenID;
 use Gregwar\ImageBundle\Image;
 
 /**
@@ -279,7 +277,7 @@ class SecurityController extends Controller
 	{
 		$theme = $this->get('rl_themes.theme.provider');
 		$resForm = new PasswordRestoringForm;
-		$form = $this->createForm(new PasswordPestoringType(), $resForm);
+		$form = $this->createForm(new PasswordRestoringType(), $resForm);
 		return $this->render(
 			$theme->getPath('RLSecurityBundle', 'passwordRestoringForm.html.twig'), array('theme' => $theme, 'user' => $this->get('security.context')->getToken()->getUser(), 'form' => $form->createView())
 		);
@@ -295,7 +293,7 @@ class SecurityController extends Controller
 		if($method == 'POST')
 		{
 			$resForm = new PasswordRestoringForm;
-			$form = $this->createForm(new PasswordPestoringType(), $resForm);
+			$form = $this->createForm(new PasswordRestoringType(), $resForm);
 			$form->bindRequest($request);
 			if($form->isValid())
 			{
