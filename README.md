@@ -1,5 +1,9 @@
-RL
+RuLinux engine
 =======
 
-Sample site for testing [RL bundle](https://github.com:AleshDobry/RL.git "github repository").
+##Installation
+
+Run
+    composer.phar install
+    php app/console doctrine:fixtures:load
 

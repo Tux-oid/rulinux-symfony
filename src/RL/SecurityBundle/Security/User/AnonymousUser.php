@@ -5,12 +5,13 @@
 
 namespace RL\SecurityBundle\Security\User;
 use Symfony\Component\Security\Core\User\UserInterface;
+use Symfony\Component\Security\Core\User\EquatableInterface;
 use Symfony\Component\HttpFoundation\ParameterBag;
 use RL\SecurityBundle\Entity\Group;
 use RL\MainBundle\Entity\Mark;
 use RL\SecurityBundle\Entity\User;
 
-class AnonymousUser implements RLUserInterface
+class AnonymousUser implements RLUserInterface, EquatableInterface
 {
 	protected $attributes;
 	protected $identity;
@@ -92,7 +93,7 @@ class AnonymousUser implements RLUserInterface
 	{
 		
 	}
-	public function equals(UserInterface $user)
+	public function isEqualTo(UserInterface $user)
 	{
 		if($user instanceof RLUser)
 		{

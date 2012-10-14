@@ -115,7 +115,7 @@ final class BbCode extends Mark
 		for($i = 0; $i < $arr; $i++)
 		{
 			$where_arr = array(array("key" => 'nick', "value" => $match[2][$i], "oper" => '='));
-			$sel = base::select('users', '', '*', $where_arr, 'AND');
+			$sel = base::select('users', '', '*', $where_arr, 'AND');//FIXME:use Doctrine ORM
 			if(!empty($sel))
 				$string = preg_replace($user_re, "<b><a href=\"/profile.php?user=\$2\">\$2</a></b>", $string, 1);
 			else

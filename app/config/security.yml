@@ -1,60 +1,63 @@
+jms_security_extra:
+    secure_all_services: false
+    expressions: true
+
 security:
     factories: # подключение security расширений RL
           - "%kernel.root_dir%/../src/RL/SecurityBundle/Resources/config/factories.yml"
-          
     encoders:
-#        RL\SecurityBundle\Security\User\SampleUser: plaintext
-        RL\SecurityBundle\Entity\User:
-          algorithm: md5
-          iterations: 1
-          encode_as_base64: false
+    #        RL\SecurityBundle\Security\User\SampleUser: plaintext
+            RL\SecurityBundle\Entity\User:
+              algorithm: md5
+              iterations: 1
+              encode_as_base64: false
 
     role_hierarchy:
-        ROLE_ADMIN:       [ROLE_MODER, ROLE_ALLOWED_TO_SWITCH]
-        ROLE_MODER:       ROLE_USER
-        ROLE_ANONYMOUS:   ROLE_USER
-#        ROLE_SUPER_ADMIN: [ROLE_ADMIN, ROLE_ALLOWED_TO_SWITCH]
+            ROLE_ADMIN:       [ROLE_MODER, ROLE_ALLOWED_TO_SWITCH]
+            ROLE_MODER:       ROLE_USER
+            ROLE_ANONYMOUS:   ROLE_USER
+    #        ROLE_SUPER_ADMIN: [ROLE_ADMIN, ROLE_ALLOWED_TO_SWITCH]
 
     providers:
-#        in_memory:
-#            users:
-#                user:  { password: userpass, roles: [ 'ROLE_USER' ] }
-#                admin: { password: adminpass, roles: [ 'ROLE_ADMIN' ] }
-          chain_provider: 
-                  providers: [team_blog.anonymous.user.provider, db_users]
-          team_blog.anonymous.user.provider:
-          db_users:
-            entity: {class: RL\SecurityBundle\Entity\User, property: username}
+    #        in_memory:
+    #            users:
+    #                user:  { password: userpass, roles: [ 'ROLE_USER' ] }
+    #                admin: { password: adminpass, roles: [ 'ROLE_ADMIN' ] }
+              chain_provider:
+                      chain:
+                              providers: [team_blog.anonymous.user.provider, db_users]
+              team_blog.anonymous.user.provider:
+              db_users:
+                entity: {class: RL\SecurityBundle\Entity\User, property: username}
 
-    firewalls: 
+    firewalls:
 
-        default: 
-            
-            pattern: ^/  
+            default:
 
-            form-login: 
-                login_path: /login
-                check_path: /login_check
+                pattern: ^/
 
-            logout:
-                path: /logout
-                target: /
+                form-login:
+                    login_path: /login
+                    check_path: /login_check
 
-            remember-me:
-                key: %secret%
-                lifetime: 2592000
-                path: /
-                domain: ~
+                logout:
+                    path: /logout
+                    target: /
 
-            # RL Авторизация ананимусов
-            team-blog-anonymous:
-                key: %secret%
-                lifetime: 2592000
-                path: /
-                domain: ~
+                remember-me:
+                    key: %secret%
+                    lifetime: 2592000
+                    path: /
+                    domain: ~
+
+                # RL Авторизация ананимусов
+                team-blog-anonymous:
+                    key: %secret%
+                    lifetime: 2592000
+                    path: /
+                    domain: ~
 
 
     access_control:
         #- { path: ^/login, roles: IS_AUTHENTICATED_ANONYMOUSLY, requires_channel: https }
-        #- { path: ^/_internal, roles: IS_AUTHENTICATED_ANONYMOUSLY, ip: 127.0.0.1 }
-
+        #- { path: ^/_internal/secure, roles: IS_AUTHENTICATED_ANONYMOUSLY, ip: 127.0.0.1 }

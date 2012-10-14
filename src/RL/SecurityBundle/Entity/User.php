@@ -6,6 +6,7 @@
 namespace RL\SecurityBundle\Entity;
 use RL\SecurityBundle\Security\User\RLUserInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
+use Symfony\Component\Security\Core\User\EquatableInterface;
 use Symfony\Component\Validator\Constraints as Assert;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
@@ -16,7 +17,7 @@ use RL\MainBundle\Entity\Mark;
  * @ORM\Entity(repositoryClass="RL\SecurityBundle\Entity\UserRepository")
  * @ORM\Table(name="users")
  */
-class User implements RLUserInterface, \Serializable
+class User implements RLUserInterface, \Serializable, EquatableInterface
 {
 	/**
 	 * @ORM\Id()
@@ -338,7 +339,7 @@ class User implements RLUserInterface, \Serializable
 	/**
 	 * @inheritDoc
 	 */
-	public function equals(UserInterface $user)
+	public function isEqualTo(UserInterface $user)
 	{
 		return $this->username === $user->getUsername();
 	}
