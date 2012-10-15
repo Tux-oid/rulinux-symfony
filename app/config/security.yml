@@ -3,8 +3,6 @@ jms_security_extra:
     expressions: true
 
 security:
-    factories: # подключение security расширений RL
-          - "%kernel.root_dir%/../src/RL/SecurityBundle/Resources/config/factories.yml"
     encoders:
     #        RL\SecurityBundle\Security\User\SampleUser: plaintext
             RL\SecurityBundle\Entity\User:
@@ -27,6 +25,7 @@ security:
                       chain:
                               providers: [team_blog.anonymous.user.provider, db_users]
               team_blog.anonymous.user.provider:
+
               db_users:
                 entity: {class: RL\SecurityBundle\Entity\User, property: username}
 
