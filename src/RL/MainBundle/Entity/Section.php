@@ -21,23 +21,23 @@ class Section
 	 */
 	protected $id;
 	/**
-	 * @ORM\Column(type="string", length="512")
+	 * @ORM\Column(type="string", length=512)
 	 */
 	protected $name;
 	/**
-	 * @ORM\Column(type="string", length="1024", nullable="true")
+	 * @ORM\Column(type="string", length=1024, nullable=true)
 	 */
 	protected $description;
 	/**
-	 * @ORM\Column(type="string", length="256", nullable="false")
+	 * @ORM\Column(type="string", length=256, nullable=false)
 	 */
 	protected $rewrite;
 	/**
-	 * @ORM\Column(type="string", length="1024", nullable="false")
+	 * @ORM\Column(type="string", length=1024, nullable=false)
 	 */
 	protected $bundle;
 	/**
-	 * @ORM\Column(type="string", length="1024", nullable="false")
+	 * @ORM\Column(type="string", length=1024, nullable=false)
 	 */
 	protected $bundleNamespace;
 	/**

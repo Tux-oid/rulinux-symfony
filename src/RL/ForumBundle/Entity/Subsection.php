@@ -12,7 +12,7 @@ use RL\MainBundle\Entity\Section;
  * @ORM\Entity(repositoryClass="RL\ForumBundle\Entity\SubsectionRepository")
  * @ORM\Table(name="subsections")
  * @ORM\InheritanceType("JOINED")
- * @ORM\DiscriminatorColumn(name="content_type", type="string", length="20")
+ * @ORM\DiscriminatorColumn(name="content_type", type="string", length=20)
  * @ORM\DiscriminatorMap({"subsection" = "Subsection"})
  */
 class Subsection
@@ -36,7 +36,7 @@ class Subsection
 	 */
 	protected $shortfaq;
 	/**
-	 * @ORM\Column(type="string", length=512, nullable="true")
+	 * @ORM\Column(type="string", length=512, nullable=true)
 	 */
 	protected $rewrite;
 	/**

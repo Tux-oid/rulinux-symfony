@@ -23,9 +23,9 @@ security:
     #                admin: { password: adminpass, roles: [ 'ROLE_ADMIN' ] }
               chain_provider:
                       chain:
-                              providers: [team_blog.anonymous.user.provider, db_users]
-              team_blog.anonymous.user.provider:
-
+                              providers: [rl_security, db_users]
+              rl_security:
+                id: rl_security.anonymous.user.provider
               db_users:
                 entity: {class: RL\SecurityBundle\Entity\User, property: username}
 
@@ -50,7 +50,7 @@ security:
                     domain: ~
 
                 # RL Авторизация ананимусов
-                team-blog-anonymous:
+                rl-anonymous:
                     key: %secret%
                     lifetime: 2592000
                     path: /

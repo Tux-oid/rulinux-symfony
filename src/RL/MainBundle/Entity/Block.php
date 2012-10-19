@@ -23,7 +23,7 @@ class Block implements \Serializable
 	 */
 	protected $name;
 	/**
-	 * @ORM\Column(name="description", type="string", length=512, unique="true", nullable="false")
+	 * @ORM\Column(name="description", type="string", length=512, unique=true, nullable=true)
 	 */
 	protected $description;
 	/**

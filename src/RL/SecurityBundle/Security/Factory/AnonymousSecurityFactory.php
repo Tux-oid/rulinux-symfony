@@ -33,9 +33,9 @@ class AnonymousSecurityFactory implements SecurityFactoryInterface
 			->setDefinition($providerId, new DefinitionDecorator('security.authentication.provider.anonymous'))
 			->replaceArgument(0, $config['key'])
 		;
-		$listenerId = 'team_blog.anonymous.authentication.listener.'.$id;
+		$listenerId = 'rl_security.anonymous.authentication.listener.'.$id;
 		$container
-			->setDefinition($listenerId, new DefinitionDecorator('team_blog.anonymous.authentication.listener'))
+			->setDefinition($listenerId, new DefinitionDecorator('rl_security.anonymous.authentication.listener'))
 			->replaceArgument(2, $config)
 		;
 
@@ -73,6 +73,6 @@ class AnonymousSecurityFactory implements SecurityFactoryInterface
 	 */
 	public function getKey()
 	{
-		return 'team-blog-anonymous';
+		return 'rl-anonymous';
 	}
 }

@@ -51,7 +51,7 @@ class Message
 	 */
 	protected $rawComment;
 	/**
-	 * @ORM\Column(type="string", length="512", nullable="true")
+	 * @ORM\Column(type="string", length=512, nullable=true)
 	 */
 	protected $useragent;
 	/**
@@ -63,7 +63,7 @@ class Message
 	 */
 	protected $changedBy;
 	/**
-	 * @ORM\Column(type="string", length="512", name="changed_for", nullable="true")
+	 * @ORM\Column(type="string", length=512, name="changed_for", nullable=true)
 	 */
 	protected $changedFor;
 	//ManyToOne on filters Entity
@@ -73,7 +73,7 @@ class Message
 	 */
 	protected $showUa = TRUE;
 	/**
-	 * @ORM\Column(type="string", length="128", name="session_id", nullable="true")
+	 * @ORM\Column(type="string", length=128, name="session_id", nullable=true)
 	 */
 	protected $sessionId;
 	

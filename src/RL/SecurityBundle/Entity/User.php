@@ -30,7 +30,7 @@ class User implements RLUserInterface, \Serializable, EquatableInterface
 	 */
 	protected $group;
 	/**
-	 * @ORM\Column(name="nick", type="string", length=100, unique="true", nullable="false")
+	 * @ORM\Column(name="nick", type="string", length=100, unique=true, nullable=false)
 	 * @Assert\NotBlank()
 	 * @Assert\Regex("#([a-zA-Z0-9\_\-\/\.]{2,})$#")
 	 */
@@ -45,29 +45,29 @@ class User implements RLUserInterface, \Serializable, EquatableInterface
 	 */
 	protected $password;
 	/**
-	 * @ORM\Column(name="name", type="string", length=255, nullable="true")
+	 * @ORM\Column(name="name", type="string", length=255, nullable=true)
 	 */
 	protected $name;
 	/**
-	 * @ORM\Column(name="lastname", type="string", length=255, nullable="true")
+	 * @ORM\Column(name="lastname", type="string", length=255, nullable=true)
 	 */
 	protected $lastname;
 	/**
-	 * @ORM\Column(name="country", type="string", length=512, nullable="true")
+	 * @ORM\Column(name="country", type="string", length=512, nullable=true)
 	 * @Assert\Country
 	 */
 	protected $country;
 	/**
-	 * @ORM\Column(name="city", type="string", length=512, nullable="true")
+	 * @ORM\Column(name="city", type="string", length=512, nullable=true)
 	 */
 	protected $city;
 	/**
-	 * @ORM\Column(name="photo", type="string", length=512, nullable="true")
+	 * @ORM\Column(name="photo", type="string", length=512, nullable=true)
 	 * * @Assert\Image
 	 */
 	protected $photo;
 	/**
-	 * @ORM\Column(name="birthday", type="datetime", nullable="true")
+	 * @ORM\Column(name="birthday", type="datetime", nullable=true)
 	 * * @Assert\DateTime
 	 */
 	protected $birthday;
@@ -76,20 +76,20 @@ class User implements RLUserInterface, \Serializable, EquatableInterface
 	 */
 	protected $gender;
 	/**
-	 * @ORM\Column(name="additional", type="text", nullable="true")
+	 * @ORM\Column(name="additional", type="text", nullable=true)
 	 */
 	protected $additional;
 	/**
-	 * @ORM\Column(name="raw_additional", type="text", nullable="true")
+	 * @ORM\Column(name="raw_additional", type="text", nullable=true)
 	 */
 	protected $additionalRaw;
 	/**
-	 * @ORM\Column(name="email", type="string", length=512, unique="true", nullable="false")
+	 * @ORM\Column(name="email", type="string", length=512, unique=true, nullable=false)
 	 * * @Assert\Email
 	 */
 	protected $email;
 	/**
-	 * @ORM\Column(name="im", type="string", length=512, nullable="true")
+	 * @ORM\Column(name="im", type="string", length=512, nullable=true)
 	 * @Assert\Email
 	 */
 	protected $im;
@@ -112,15 +112,15 @@ class User implements RLUserInterface, \Serializable, EquatableInterface
 	 */
 	protected $captchaLevel;
 	/**
-	 * @ORM\Column(name="openid", type="string", length=1024, nullable="true")
+	 * @ORM\Column(name="openid", type="string", length=1024, nullable=true)
 	 */
 	protected $openid;
 	/**
-	 * @ORM\Column(name="question", type="string", length="1024", nullable="false")
+	 * @ORM\Column(name="question", type="string", length=1024, nullable=false)
 	 */
 	protected $question;
 	/**
-	 * @ORM\Column(name="answer", type="string", length="1024", nullable="false")
+	 * @ORM\Column(name="answer", type="string", length=1024, nullable=false)
 	 */
 	protected $answer;
 	//Settings

@@ -26,7 +26,7 @@ class RLSecurityExtension extends Extension
 		$loader = new Loader\YamlFileLoader($container, new FileLocator(__DIR__.'/../Resources/config'));
 		$loader->load('services.yml');
 
-		$container->setParameter('team_blog.anonymous.class', $config['anonymous']['class']);
-		$container->setParameter('team_blog.anonymous.defaults', $config['anonymous']['defaults']);
+		$container->setParameter('rl_security.anonymous.class', $config['anonymous']['class']);
+		$container->setParameter('rl_security.anonymous.defaults', $config['anonymous']['defaults']);
 	}
 }

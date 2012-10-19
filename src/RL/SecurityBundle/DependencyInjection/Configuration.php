@@ -19,33 +19,18 @@ class Configuration implements ConfigurationInterface
 	public function getConfigTreeBuilder()
 	{
 		$treeBuilder = new TreeBuilder();
-		$rootNode = $treeBuilder->root('team_blog');
+		$rootNode = $treeBuilder->root('rl_security');
 		$rootNode->children()
 			->arrayNode('anonymous')
 			->children()
 			->scalarNode('class')->isRequired()->end()
 			->arrayNode('defaults')
-			->addDefaultsIfNotSet()
-			->defaultValue(NULL)
+			->defaultValue(array())
 			->useAttributeAsKey('name')
 			->prototype('variable')->end()
 			->end()
 			->end()
 			->end();
-//		$rootNode->children()
-//			->arrayNode('theme')
-//			->children()
-//			->scalarNode('default')->defaultNull()->end()
-//			->arrayNode('availables')
-//			->addDefaultsIfNotSet()
-//			->defaultValue(NULL)
-//			->useAttributeAsKey('name')
-//			->prototype('variable')->end()
-//			->end()
-//			->end()
-//			->end()
-//			->end();
-
 
 		return $treeBuilder;
 	}

@@ -21,12 +21,12 @@ class Link
 	 */
 	protected $id;
 	/**
-	 * @ORM\Column(type="string", length="512")
+	 * @ORM\Column(type="string", length=512)
 	 * @var
 	 */
 	protected $name;
 	/**
-	 * @ORM\Column(type="string", length="512")
+	 * @ORM\Column(type="string", length=512)
 	 * @var
 	 */
 	protected $link;

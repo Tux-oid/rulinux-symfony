@@ -21,19 +21,19 @@ class Theme
 	 */
 	protected $id;
 	/**
-	 * @ORM\Column(type="string", length="64")
+	 * @ORM\Column(type="string", length=64)
 	 */
 	protected $name;
 	/**
-	 * @ORM\Column(type="string", length="255")
+	 * @ORM\Column(type="string", length=255)
 	 */
 	protected $description;
 	/**
-	 * @ORM\Column(type="string", length="255")
+	 * @ORM\Column(type="string", length=255)
 	 */
 	protected $path;
 	/**
-	 * @ORM\Column(type="string", length="255")
+	 * @ORM\Column(type="string", length=255)
 	 */
 	protected $directory;
 	/**

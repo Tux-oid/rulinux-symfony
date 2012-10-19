@@ -13,7 +13,7 @@ use RL\ForumBundle\Entity\Subsection;
  * @ORM\Entity(repositoryClass="RL\ForumBundle\Entity\ThreadRepository")
  * @ORM\Table(name="threads")
  * @ORM\InheritanceType("JOINED")
- * @ORM\DiscriminatorColumn(name="content_type", type="string", length="20")
+ * @ORM\DiscriminatorColumn(name="content_type", type="string", length=20)
  * @ORM\DiscriminatorMap({"thread" = "Thread"})
  * @ORM\HasLifecycleCallbacks()
  */

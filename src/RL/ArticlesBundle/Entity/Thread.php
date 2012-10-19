@@ -23,7 +23,7 @@ class Thread extends ForumThread
 	 */
 	protected $approvedBy;
 	/**
-	 * @ORM\Column(type="datetime", name="approve_timest", nullable="true")
+	 * @ORM\Column(type="datetime", name="approve_timest", nullable=true)
 	 */
 	protected $approveTimest;
 	public function getApproved()

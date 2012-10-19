@@ -14,7 +14,7 @@ use Doctrine\ORM\Mapping as ORM;
 class Subsection extends ForumSubsection
 {
 	/**
-	 * @ORM\Column(type="string", length="2048", nullable="true")
+	 * @ORM\Column(type="string", length=2048, nullable=true)
 	 */
 	protected $image;
 	public function getImage()

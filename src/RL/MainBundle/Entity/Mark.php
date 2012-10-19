@@ -27,7 +27,7 @@ abstract class Mark
 	 */
 	protected $name;
 	/**
-	 * @ORM\Column(name="description", type="text", unique="true", nullable="false")
+	 * @ORM\Column(name="description", type="text", unique=true, nullable=false)
 	 */
 	protected $description;
 	/**

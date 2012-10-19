@@ -16,7 +16,7 @@ use Gregwar\ImageBundle\Image;
 class Thread extends ArticlesThread
 {
 	/**
-	 * @ORM\Column(type="string", length="2048", nullable="true")
+	 * @ORM\Column(type="string", length=2048, nullable=true)
 	 */
 	protected $filename;
 	/**
@@ -24,7 +24,7 @@ class Thread extends ArticlesThread
 	 */
 	protected $fileSize = 0;
 	/**
-	 * @ORM\Column(type="string", length="16", nullable="true")
+	 * @ORM\Column(type="string", length=16, nullable=true)
 	 */
 	protected $imageSize;
 	protected $file;

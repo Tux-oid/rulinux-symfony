@@ -8,9 +8,11 @@ use Symfony\Component\Security\Http\Firewall\ListenerInterface;
 use Symfony\Component\Security\Core\SecurityContextInterface;
 use Symfony\Component\HttpKernel\Log\LoggerInterface;
 use Symfony\Component\HttpKernel\Event\GetResponseEvent;
+use Symfony\Component\HttpKernel\Event\FilterResponseEvent;
 use Symfony\Component\Security\Core\Authentication\Token\AnonymousToken;
 use Symfony\Component\HttpFoundation\ParameterBag;
 use RL\SecurityBundle\Security\User\AnonymousUserProviderInterface;
+use Symfony\Component\HttpFoundation\Cookie;
 
 /**
  * RL anonymous authentication listener
@@ -59,6 +61,32 @@ class AnonymousAuthenticationListener implements ListenerInterface
 		if(null !== $this->logger)
 		{
 			$this->logger->info(sprintf('Populated SecurityContext with an anonymous Token'));
+		}
+	}
+
+	public function saveUser(FilterResponseEvent $event)
+	{
+
+		$response = $event->getResponse();
+		$request = $event->getRequest();
+		$options = $request->getSession()->get('options');
+		$token = $this->context->getToken();
+		if($token instanceof AnonymousToken)
+		{
+			$user = $token->getUser();
+			if($user instanceof RLUserInterface)
+			{
+				$value = serialize(array($user->getIdentity(), $user->getAttributes()));
+				$cookie = new Cookie(
+					$options['cookie'],
+					base64_encode($value),
+					time() + $options['lifetime'],
+					$options['path'],
+					$options['domain'],
+					$options['secure'],
+					$options['httponly']);
+				$response->headers->setCookie($cookie);
+			}
 		}
 	}
 }

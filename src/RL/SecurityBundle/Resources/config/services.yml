@@ -1,27 +1,25 @@
 # src/RL/MainBundle/Resources/config/services.yml
 parameters:
-  team_blog.anonymous.user.provider.class: RL\SecurityBundle\Security\User\AnonymousUserProvider
-  team_blog.anonymous.authentication.listener.class: RL\SecurityBundle\Security\Firewall\AnonymousAuthenticationListener
-  team_blog.anonymous.defaults:
-  team_blog.anonymous.class:
+  rl_security.anonymous.user.provider.class: RL\SecurityBundle\Security\User\AnonymousUserProvider
+  rl_security.anonymous.authentication.listener.class: RL\SecurityBundle\Security\Firewall\AnonymousAuthenticationListener
+  rl_security.anonymous.defaults:
+  rl_security.anonymous.class:
 
 services:
-  team_blog.anonymous.user.provider:
-    class: %team_blog.anonymous.user.provider.class%
+  rl_security.anonymous.user.provider:
+    class: %rl_security.anonymous.user.provider.class%
     arguments: 
-      - "@security.context"
-      - "%team_blog.anonymous.class%"
-      - "%team_blog.anonymous.defaults%"
-    tags: 
-     - {name: kernel.event_listener, event: kernel.response, method: saveUser}
+      - "%rl_security.anonymous.class%"
+      - "%rl_security.anonymous.defaults%"
 
-  team_blog.anonymous.authentication.listener:
-    class: %team_blog.anonymous.authentication.listener.class%
+  rl_security.anonymous.authentication.listener:
+    class: %rl_security.anonymous.authentication.listener.class%
     arguments: 
       - "@security.context"
-      - "@team_blog.anonymous.user.provider"
-      - "%team_blog.anonymous.defaults%"
+      - "@rl_security.anonymous.user.provider"
+      - "%rl_security.anonymous.defaults%"
       - "@doctrine"
       - "@?logger"
     tags:
       - {name: monolog.logger, channel: security}
+      - {name: kernel.event_listener, event: kernel.response, method: saveUser}

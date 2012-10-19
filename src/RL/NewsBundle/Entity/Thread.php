@@ -14,7 +14,7 @@ use RL\ArticlesBundle\Entity\Thread as ArticlesThread;
 class Thread extends ArticlesThread
 {
 	/**
-	 * @ORM\Column(type="string", length="2048", nullable="true")
+	 * @ORM\Column(type="string", length=2048, nullable=true)
 	 */
 	protected $prooflink;
 	public function getProoflink()
