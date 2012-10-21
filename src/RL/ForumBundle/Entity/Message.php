@@ -82,7 +82,7 @@ class Message
 		$this->postingTime = $this->changingTime = new \DateTime('now');
 	}
 	/**
-	 * @ORM\prePersist 
+	 * @ORM\PrePersist
 	 */
 	public function setDefaultValues()
 	{
@@ -96,7 +96,7 @@ class Message
 		
 	}
 	/**
-	 * @ORM\preUpdate 
+	 * @ORM\PreUpdate
 	 */
 	public function updateChangingTime()
 	{

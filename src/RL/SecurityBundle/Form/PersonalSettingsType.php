@@ -4,12 +4,12 @@
  */
 
 namespace RL\SecurityBundle\Form;
-use Symfony\Component\Form\FormBuilder;
+use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Form\AbstractType;
 
 class PersonalSettingsType extends AbstractType
 {
-	public function buildForm(FormBuilder $builder, array $options)
+	public function buildForm(FormBuilderInterface $builder, array $options)
 	{
 		$builder->add('theme', 'entity', array('class' => 'RLThemesBundle:Theme', 'property'=>'name', 'required' => true))
 			->add('mark', 'entity', array('class' => 'RLMainBundle:Mark', 'property'=>'name','required' => true))

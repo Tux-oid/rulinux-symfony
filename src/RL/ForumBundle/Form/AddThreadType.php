@@ -4,12 +4,12 @@
  */
 
 namespace RL\ForumBundle\Form;
-use Symfony\Component\Form\FormBuilder;
+use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Form\AbstractType;
 
 class AddThreadType extends AbstractType
 {
-	public function buildForm(FormBuilder $builder, array $options)
+	public function buildForm(FormBuilderInterface $builder, array $options)
 	{
 		$builder->add('subject', 'text', array('required' => true))
 			->add('comment', 'textarea', array('required' => true));

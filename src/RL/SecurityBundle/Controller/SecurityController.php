@@ -91,7 +91,7 @@ class SecurityController extends Controller
 		{
 			$newUser = new RegistrationFirstForm;
 			$form = $this->createForm(new RegistrationFirstType(), $newUser);
-			$form->bindRequest($request);
+			$form->bind($request);
 			if($form->isValid())
 			{
 				$mailer = $this->get('mailer');
@@ -152,7 +152,7 @@ class SecurityController extends Controller
 		{
 			$newUser = new User;
 			$form = $this->createForm(new RegisterType(), $newUser);
-			$form->bindRequest($request);
+			$form->bind($request);
 			if($form->isValid())
 			{
 				$settingsRepository = $this->getDoctrine()->getRepository('RLSecurityBundle:Settings');
@@ -178,7 +178,7 @@ class SecurityController extends Controller
 				$password = $encoder->encodePassword($newUser->getPassword(), $newUser->getSalt());
 				$newUser->setPassword($password);
 				$newUser->getGroups()->add($userRole);
-				$em = $this->getDoctrine()->getEntityManager();
+				$em = $this->getDoctrine()->getManager();
 				$em->persist($newUser);
 				$em->flush();
 				$legend = 'Registration completed.';
@@ -294,7 +294,7 @@ class SecurityController extends Controller
 		{
 			$resForm = new PasswordRestoringForm;
 			$form = $this->createForm(new PasswordRestoringType(), $resForm);
-			$form->bindRequest($request);
+			$form->bind($request);
 			if($form->isValid())
 			{
 				$userRepository = $this->getDoctrine()->getRepository('RLSecurityBundle:User');
@@ -324,7 +324,7 @@ class SecurityController extends Controller
 				$encodedPassword = $encoder->encodePassword($password, $user->getSalt());
 				$user->setPassword($encodedPassword);
 				$username = $user->getUsername();
-				$em = $this->getDoctrine()->getEntityManager();
+				$em = $this->getDoctrine()->getManager();
 				$em->persist($user);
 				$em->flush();
 				$mailer = $this->get('mailer');
@@ -389,7 +389,7 @@ class SecurityController extends Controller
 				{
 					$passwordChangingForm = new PasswordChangingForm;
 					$form = $this->createForm(new PasswordChangingType(), $passwordChangingForm);
-					$form->bindRequest($request);
+					$form->bind($request);
 					if($form->isValid())
 					{
 						$encoder = new MessageDigestPasswordEncoder('md5', false, 1);
@@ -404,7 +404,7 @@ class SecurityController extends Controller
 						}
 						$newPassword = $encoder->encodePassword($passwordChangingForm->getNewPassword(), $userInProfile->getSalt());
 						$userInProfile->setPassword($newPassword);
-						$this->getDoctrine()->getEntityManager()->flush();
+						$this->getDoctrine()->getManager()->flush();
 					}
 					else
 						throw new \Exception('Form is invalid');
@@ -414,7 +414,7 @@ class SecurityController extends Controller
 				{
 					$personalInformationForm = new PersonalInformationForm;
 					$form = $this->createForm(new PersonalInformationType(), $personalInformationForm);
-					$form->bindRequest($request);
+					$form->bind($request);
 					if($form->isValid())
 					{
 						$photo = $personalInformationForm->getPhoto();
@@ -447,7 +447,7 @@ class SecurityController extends Controller
 						$userInProfile->setCity($personalInformationForm->getCity());
 						$userInProfile->setAdditionalRaw($personalInformationForm->getAdditionalRaw());
 						$userInProfile->setAdditional($user->getMark()->render($personalInformationForm->getAdditionalRaw()));
-						$this->getDoctrine()->getEntityManager()->flush();
+						$this->getDoctrine()->getManager()->flush();
 					}
 					else
 						throw new \Exception('Form is invalid');
@@ -457,14 +457,14 @@ class SecurityController extends Controller
 				{
 					$personalSettingsForm = new PersonalSettingsForm;
 					$form = $this->createForm(new PersonalSettingsType(), $personalSettingsForm);
-					$form->bindRequest($request);
+					$form->bind($request);
 					if($form->isValid())
 					{
 						$userInProfile->setMark($personalSettingsForm->getMark());
 						$userInProfile->setTheme($personalSettingsForm->getTheme());
 						$userInProfile->setGmt($personalSettingsForm->getGmt());
 						$userInProfile->setLanguage($personalSettingsForm->getLanguage());
-						$this->get('session')->setLocale($userInProfile->getLanguage());
+						$this->getRequest()->setLocale($userInProfile->getLanguage());
 						$userInProfile->setNewsOnPage($personalSettingsForm->getNewsOnPage());
 						$userInProfile->setThreadsOnPage($personalSettingsForm->getThreadsOnPage());
 						$userInProfile->setCommentsOnPage($personalSettingsForm->getCommentsOnPage());
@@ -472,7 +472,7 @@ class SecurityController extends Controller
 						$userInProfile->setShowUa($personalSettingsForm->getShowUa());
 						$userInProfile->setShowResp($personalSettingsForm->getShowResp());
 						$userInProfile->setSortingType($personalSettingsForm->getSortingType());
-						$this->getDoctrine()->getEntityManager()->flush();
+						$this->getDoctrine()->getManager()->flush();
 					}
 					else
 						throw new \Exception('Form is invalid');
@@ -482,13 +482,13 @@ class SecurityController extends Controller
 				{
 					$moderatorSettingsForm = new ModeratorSettingsForm;
 					$form = $this->createForm(new ModeratorSettingsType(), $moderatorSettingsForm);
-					$form->bindRequest($request);
+					$form->bind($request);
 					if($form->isValid())
 					{
 						$userInProfile->setActive($moderatorSettingsForm->getActive());//TODO: when inactive send message to user
 						$level = $moderatorSettingsForm->getCaptchaLevel();
 						$userInProfile->setCaptchaLevel((int)$level);
-						$this->getDoctrine()->getEntityManager()->flush();
+						$this->getDoctrine()->getManager()->flush();
 					}
 					else
 						throw new \Exception('Form is invalid');
@@ -498,11 +498,11 @@ class SecurityController extends Controller
 				{
 					$administratorSettingsForm = new AdministratorSettingsForm;
 					$form = $this->createForm(new AdministratorSettingsType(), $administratorSettingsForm);
-					$form->bindRequest($request);
+					$form->bind($request);
 					if($form->isValid())
 					{
 						$userInProfile->setGroup($administratorSettingsForm->getGroup());
-						$this->getDoctrine()->getEntityManager()->flush();
+						$this->getDoctrine()->getManager()->flush();
 					}
 					else
 						throw new \Exception('Form is invalid');

@@ -5,12 +5,12 @@
 
 namespace RL\SecurityBundle\Form;
 
-use Symfony\Component\Form\FormBuilder;
+use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Form\AbstractType;
 
 class PersonalInformationType extends AbstractType
 {
-	public function buildForm(FormBuilder $builder, array $options)
+	public function buildForm(FormBuilderInterface $builder, array $options)
 	{
 		$builder->add('name', 'text', array('required' => false))
 			->add('openid', 'text', array('required' => false))

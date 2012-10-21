@@ -163,6 +163,8 @@ class FixtureLoader implements FixtureInterface
 		$anonymous->setShowUa($showUa);
 		$anonymous->setShowResp($showResp);
 		$anonymous->setLanguage($language);
+		$anonymous->setQuestion('');
+		$anonymous->setAnswer('');
 		$anonymous->setGmt($gmt);
 		$encoder = new MessageDigestPasswordEncoder('md5', false, 1);
 		$password = $encoder->encodePassword('anonymous', $anonymous->getSalt());
@@ -195,6 +197,8 @@ class FixtureLoader implements FixtureInterface
 		$admin->setShowUa($showUa);
 		$admin->setShowResp($showResp);
 		$admin->setLanguage($language);
+		$admin->setQuestion('');
+		$admin->setAnswer('');
 		$admin->setGmt($gmt);
 		$encoder = new MessageDigestPasswordEncoder('md5', false, 1);
 		$password = $encoder->encodePassword('admin', $admin->getSalt());

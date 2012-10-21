@@ -11,7 +11,7 @@ use Symfony\Component\HttpKernel\Event\GetResponseEvent;
 use Symfony\Component\HttpKernel\Event\FilterResponseEvent;
 use Symfony\Component\Security\Core\Authentication\Token\AnonymousToken;
 use Symfony\Component\HttpFoundation\ParameterBag;
-use RL\SecurityBundle\Security\User\AnonymousUserProviderInterface;
+use RL\SecurityBundle\Security\User\AnonymousUserProvider;
 use Symfony\Component\HttpFoundation\Cookie;
 
 /**
@@ -23,7 +23,7 @@ class AnonymousAuthenticationListener implements ListenerInterface
 	private $options;
 	private $context;
 	private $logger;
-	public function __construct(SecurityContextInterface $context, AnonymousUserProviderInterface $userProvider, $options, $doctrine, LoggerInterface $logger = null)
+	public function __construct(SecurityContextInterface $context, AnonymousUserProvider $userProvider, $options, $doctrine, LoggerInterface $logger = null)
 	{
 		$this->userProvider = $userProvider;
 		$this->context = $context;

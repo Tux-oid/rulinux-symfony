@@ -9,7 +9,6 @@ use Symfony\Component\Security\Core\User\EquatableInterface;
 use Symfony\Component\HttpFoundation\ParameterBag;
 use RL\SecurityBundle\Entity\Group;
 use RL\MainBundle\Entity\Mark;
-use RL\SecurityBundle\Entity\User;
 
 class AnonymousUser implements RLUserInterface, EquatableInterface
 {
@@ -17,7 +16,7 @@ class AnonymousUser implements RLUserInterface, EquatableInterface
 	protected $identity;
 	protected $dbAnon;
 	protected $doctrine;
-	public function __construct($identity, array $attributes = array(), \Symfony\Bundle\DoctrineBundle\Registry &$doctrine, $logger = NULL)
+	public function __construct($identity, array $attributes = array(), \Doctrine\Bundle\DoctrineBundle\Registry &$doctrine, $logger = NULL)
 	{
 		$this->identity = $identity;
 		$this->attributes = $attributes;

@@ -4,8 +4,7 @@
  */
 
 namespace RL\ArticlesBundle\Form;
-use Symfony\Component\Form\FormBuilder;
-use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\FormBuilderInterface;
 use RL\ForumBundle\Form\AddThreadType as ForumAdhreadForm;
 
 

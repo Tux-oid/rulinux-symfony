@@ -51,14 +51,14 @@ class Thread
 		$this->messages = new \Doctrine\Common\Collections\ArrayCollection();
 	}
 	/**
-	 * @ORM\prePersist 
+	 * @ORM\PrePersist
 	 */
 	public function setDefaultValues()
 	{
 		$this->postingTime = $this->changingTime = new \DateTime('now');
 	}
 	/**
-	 * @ORM\preUpdate 
+	 * @ORM\PreUpdate
 	 */
 	public function updateChangingTime()
 	{
