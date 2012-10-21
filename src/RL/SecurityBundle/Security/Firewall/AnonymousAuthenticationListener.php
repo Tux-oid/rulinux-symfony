@@ -2,7 +2,9 @@
 /**
  *@author Ax-xa-xa 
  */
+
 namespace RL\SecurityBundle\Security\Firewall;
+
 use Symfony\Component\Security\Core\Authentication\AuthenticationManagerInterface;
 use Symfony\Component\Security\Http\Firewall\ListenerInterface;
 use Symfony\Component\Security\Core\SecurityContextInterface;
@@ -11,8 +13,9 @@ use Symfony\Component\HttpKernel\Event\GetResponseEvent;
 use Symfony\Component\HttpKernel\Event\FilterResponseEvent;
 use Symfony\Component\Security\Core\Authentication\Token\AnonymousToken;
 use Symfony\Component\HttpFoundation\ParameterBag;
-use RL\SecurityBundle\Security\User\AnonymousUserProvider;
 use Symfony\Component\HttpFoundation\Cookie;
+use RL\SecurityBundle\Security\User\AnonymousUserProvider;
+use RL\SecurityBundle\Security\User\RLUserInterface;
 
 /**
  * RL anonymous authentication listener
@@ -56,7 +59,7 @@ class AnonymousAuthenticationListener implements ListenerInterface
 			$identity = $request->getSession()->getId();
 			$attributes = array();
 		}
-		$user = $this->userProvider->loadUser($identity, $attributes, $this->doctrine);
+		$user = $this->userProvider->loadUser($identity, $attributes);
 		$this->context->setToken(new AnonymousToken($this->options['key'], $user, $user->getRoles()));
 		if(null !== $this->logger)
 		{

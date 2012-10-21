@@ -14,16 +14,16 @@ class AnonymousUserProvider implements UserProviderInterface
 {
 	protected $defaults;
 	protected $userclass;
-
 	protected $doctrine;
 
-	public function __construct($userclass, $defaults)
+	public function __construct($userclass, $defaults, $doctrine)
 	{
 		$this->defaults = $defaults;
 		$this->userclass = $userclass;
+		$this->doctrine = $doctrine;
 	}
 
-	public function loadUser($identity, $attributes, &$doctrine)
+	public function loadUser($identity, $attributes)
 	{
 		$attributes['username'] = $this->defaults['username'];
 		$attributes['enabled'] = $this->defaults['enabled'];
@@ -34,7 +34,7 @@ class AnonymousUserProvider implements UserProviderInterface
 				$attributes[$key] = $this->defaults[$key];
 			}
 		}
-		return new $this->userclass($identity, $attributes, $doctrine);
+		return new $this->userclass($identity, $attributes, $this->doctrine);
 	}
 
 	/**
@@ -50,7 +50,11 @@ class AnonymousUserProvider implements UserProviderInterface
 	 */
 	public function loadUserByUsername($username)
 	{
-		// TODO: Implement loadUserByUsername() method.
+		if($username == 'anonymous')
+		{
+			return new $this->userclass(\session_id(), $this->defaults, $this->doctrine);//FIXME: fix this shit
+		}
+		throw new UsernameNotFoundException(sprintf('Username "%s" does not exist.', $username));
 	}
 
 	/**

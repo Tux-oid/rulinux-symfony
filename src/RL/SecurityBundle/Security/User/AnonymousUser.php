@@ -45,11 +45,11 @@ class AnonymousUser implements RLUserInterface, EquatableInterface
 	}
 	public function getTheme()
 	{
-		return array_key_exists('theme', $this->attributes) ? \unserialize($this->attributes['theme']) : $this->dbAnon->getTheme();
+		return array_key_exists('theme', $this->attributes) ? $this->doctrine->getManager()->getRepository('RLThemesBundle:Theme')->findOneByName($this->attributes['theme']) : $this->dbAnon->getTheme();
 	}
 	public function setTheme($value)
 	{
-		$this->attributes['theme'] = \serialize($value);
+		$this->attributes['theme'] = $value->getName();
 	}
 	// AdvancedUserInterface
 
@@ -156,7 +156,7 @@ class AnonymousUser implements RLUserInterface, EquatableInterface
 	}
 	public function getMark()
 	{
-		return array_key_exists('mark', $this->attributes) ? $this->attributes['mark'] : $this->dbAnon->getMark();
+		return array_key_exists('mark', $this->attributes) ? $this->doctrine->getManager()->getRepository('RLMainBundle:Mark')->findOneByName($this->attributes['mark']) : $this->dbAnon->getMark();
 	}
 	public function getNewsOnPage()
 	{
@@ -212,7 +212,7 @@ class AnonymousUser implements RLUserInterface, EquatableInterface
 	}
 	public function setMark(\RL\MainBundle\Entity\Mark $mark)
 	{
-		$this->attributes['mark'] = $mark;
+		$this->attributes['mark'] = $mark->getName();
 	}
 	public function setNewsOnPage($newsOnPage)
 	{
