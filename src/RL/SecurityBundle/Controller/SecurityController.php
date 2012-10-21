@@ -464,7 +464,7 @@ class SecurityController extends Controller
 						$userInProfile->setTheme($personalSettingsForm->getTheme());
 						$userInProfile->setGmt($personalSettingsForm->getGmt());
 						$userInProfile->setLanguage($personalSettingsForm->getLanguage());
-						$this->getRequest()->setLocale($userInProfile->getLanguage());
+						$this->get('session')->set('_locale', $userInProfile->getLanguage());
 						$userInProfile->setNewsOnPage($personalSettingsForm->getNewsOnPage());
 						$userInProfile->setThreadsOnPage($personalSettingsForm->getThreadsOnPage());
 						$userInProfile->setCommentsOnPage($personalSettingsForm->getCommentsOnPage());

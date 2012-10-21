@@ -1,1 +1,9 @@
 # src/RL/MainBundle/Resources/config/services.yml
+parameters:
+  rl_main.locale.listener.class: RL\MainBundle\Listeners\LocaleListener
+
+services:
+  rl_main.locale.listener:
+    class: %rl_main.locale.listener.class%
+    tags:
+      - {name: kernel.event_listener, event: kernel.request, method: onKernelRequest}
