@@ -15,7 +15,7 @@
   <td style="vertical-align:top">
         <a href="{{thread.subsection.webPath}}"><img src="{{thread.subsection.webPath}}" alt="subsection"></a>
       </td>
-<td style="vertical-align:top">{{thread.messages[0].comment}}
+<td style="vertical-align:top">{{thread.messages[0].comment|raw}}
 	<br>
 <br>
 {%if thread.prooflink is not null%}

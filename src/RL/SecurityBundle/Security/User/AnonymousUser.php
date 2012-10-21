@@ -407,4 +407,9 @@ class AnonymousUser implements RLUserInterface, EquatableInterface
 	{
 		return $this->dbAnon->getAnswer();
 	}
+
+	public function getDbAnonymous()
+	{
+		return $this->dbAnon;
+	}
 }

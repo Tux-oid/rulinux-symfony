@@ -85,6 +85,19 @@ class DefaultController extends Controller
 		$pagesCount = ceil(($itemsCount - 1) / $itemsOnPage);
 		$pagesCount > 1 ? $offset = $itemsOnPage * ($page - 1) : $offset = 0;
 		$startMessage = $threadRepository->getThreadStartMessageById($id);
+		if(null === $startMessage)
+		{
+			$legend = 'Thread not found';
+			$title = 'Thread not found';
+			$text = 'Thread with specified id isn\'t found';
+			return $this->render($theme->getPath('RLMainBundle', 'fieldset.html.twig'), array(
+					'theme' => $theme,
+					'user' => $user,
+					'legend' => $legend,
+					'title' => $title,
+					'text' => $text,
+				));
+		}
 		$threadComments = $threadRepository->getThreadCommentsById($id, $itemsOnPage, $offset);
 		$pages = new Pages($this->get('router'), $itemsOnPage, $itemsCount - 1, $page, 'thread', array("id" => $id, "page" => $page));
 		$pagesStr = $pages->draw();
@@ -117,6 +130,10 @@ class DefaultController extends Controller
 			$threadRepository = $doctrine->getRepository('RLForumBundle:Thread');
 			$thread = $threadRepository->findOneById($thread_id);
 			$message = new Message();
+			if($user->isAnonymous())
+			{
+				$user = $user->getDbAnonymous();
+			}
 			$message->setUser($user);
 			$message->setReferer(0);
 			$message->setSubject($thr['subject']);
@@ -209,6 +226,10 @@ class DefaultController extends Controller
 			$message->setSubject($cmnt['subject']);
 			$message->setComment($user->getMark()->render($cmnt['comment']));
 			$message->setRawComment($cmnt['comment']);
+			if($user->isAnonymous())
+			{
+				$user = $user->getDbAnonymous();
+			}
 			$message->setChangedBy($user);
 			$message->setChangedFor($cmnt['editionReason']);
 			$em->flush();

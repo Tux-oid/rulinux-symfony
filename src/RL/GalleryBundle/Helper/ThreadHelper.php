@@ -10,9 +10,9 @@ use RL\ForumBundle\Entity\Message;
 
 class ThreadHelper implements ThreadHelperInterface
 {
-	public function saveThread(\Symfony\Bundle\DoctrineBundle\Registry &$doctrine, \Symfony\Component\HttpFoundation\Request &$request, $section, $subsection, $user)
+	public function saveThread(\Doctrine\Bundle\DoctrineBundle\Registry &$doctrine, \Symfony\Component\HttpFoundation\Request &$request, $section, $subsection, $user)
 	{
-		$em = $doctrine->getEntityManager();
+		$em = $doctrine->getManager();
 		$thr = $request->request->get('addThread');
 		$threadCls = $section->getBundleNamespace().'\Entity\Thread';
 		$thread = new $threadCls();
@@ -21,6 +21,10 @@ class ThreadHelper implements ThreadHelperInterface
 		$thread->setFile($filesArr['file']);
 		$em->persist($thread);
 		$message = new Message();
+		if($user->isAnonymous())
+		{
+			$user = $user->getDbAnonymous();
+		}
 		$message->setUser($user);
 		$message->setReferer(0);
 		$message->setSubject($thr['subject']);

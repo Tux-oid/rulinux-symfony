@@ -4,12 +4,12 @@
 	<a href="{{path('editMessage', {'messageId':thread.messages[0].id})}}">{%trans%}Edit{%endtrans%}</a> |
 	{%if thread.approved != false%}
 		{%if thread.attached == false%}
-			<a href="attach_thread_37284">{%trans%}Attach{%endtrans%}</a>
+			<a href="{{path('attach_thread', {'id':thread.id, 'state':'true'})}}">{%trans%}Attach{%endtrans%}</a>
 		{%else%}
-			<a href="attach_thread_37284">{%trans%}Detach{%endtrans%}</a>
+			<a href="{{path('attach_thread', {'id':thread.id, 'state':'false'})}}">{%trans%}Detach{%endtrans%}</a>
 		{%endif%}
 	{%else%}
-		<a href="approve_thread_37284">{%trans%}Approve{%endtrans%}</a>
+		<a href="{{path('approve_thread', {'id':thread.id})}}">{%trans%}Approve{%endtrans%}</a>
 	{%endif%}
 </div>
 {%endif%}
@@ -18,7 +18,7 @@
 		<tr>
 			<td style="vertical-align:top">
 			</td>
-			<td style="vertical-align:top">{{thread.messages[0].comment}}
+			<td style="vertical-align:top">{{thread.messages[0].comment|raw}}
 				<br>
 				<br>
 			</td>
