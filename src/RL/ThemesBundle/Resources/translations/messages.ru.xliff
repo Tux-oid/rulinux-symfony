@@ -446,6 +446,10 @@
                 <source>Captcha level</source>
                 <target>Уровень каптчи</target>
             </trans-unit>
+            <trans-unit id="112">
+	        <source>Authentication</source>
+                <target>Аутентификация</target>
+            </trans-unit>
 
         </body>
     </file>

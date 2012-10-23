@@ -23,10 +23,11 @@ tr.footer
     text-align: center;
     /*background: gray;*/
 }
-td.aside 
+td.aside
 {
-    width:240px; 
-    background: #CED4E5;
+    width:240px;
+    float: left;
+    text-align: center;
 }
 td.content 
 {

@@ -1,3 +1,10 @@
+{% extends theme.path('RLMainBundle', 'blocksLayout.html.twig') %}
+
+{% block title %}
+{% trans %}Authentication{% endtrans %}
+{% endblock title %}
+
+{% block body %}
 <form action="{{ path('login_check') }} " method="post" >
 	<form action="{{ path('login_check') }}" method="post">
 	<table>
@@ -19,5 +26,5 @@
 		</tr>
 	</table>
 	<input type="submit">
-
 </form>
+{% endblock body %}

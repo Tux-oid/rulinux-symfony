@@ -27,7 +27,7 @@ class Message
 	 */
 	protected $thread;
 	/**
-	 * @ORM\ManyToOne(targetEntity="RL\SecurityBundle\Entity\User")
+	 * @ORM\ManyToOne(targetEntity="RL\SecurityBundle\Entity\User", inversedBy="comments")
 	 */
 	protected $user;
 	/**

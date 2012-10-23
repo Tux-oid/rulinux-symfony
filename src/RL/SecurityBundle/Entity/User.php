@@ -132,7 +132,6 @@ class User implements RLUserInterface, \Serializable, EquatableInterface
 	protected $language;
 	/**
 	 * @ORM\Column(name="blocks", type="array")
-	 * @Assert\Language
 	 */
 	protected $blocks;
 	/**
