@@ -412,11 +412,11 @@
             </trans-unit>
             <trans-unit id="103">
                 <source>Changing time</source>
-                <target>По времени изменения</target>
+                <target>Время изменения</target>
             </trans-unit>
             <trans-unit id="104">
                 <source>Posting time</source>
-                <target>По времени добавления</target>
+                <target>Время постинга</target>
             </trans-unit>
             <trans-unit id="105">
                 <source>Language</source>

@@ -26,6 +26,21 @@ class MainController extends Controller
 	}
 
 	/**
+	 * @Route("/tracker/{hours}", name="tracker", defaults={"hours" = 3}, requirements = {"hours"="[0-9]*"})
+	 */
+	public function trackerAction($hours)
+	{
+		$user = $this->get('security.context')->getToken()->getUser();
+		$theme = $this->get('rl_themes.theme.provider');
+		$doctrine = $this->get('doctrine');
+		$messageRepository = $doctrine->getRepository('RLForumBundle:Message');
+		$messages = $messageRepository->getMessagesForLastHours($hours);
+		return $this->render(
+			$theme->getPath('RLMainBundle', 'tracker.html.twig'), array('user' => $user, 'theme' => $theme, 'messages'=>$messages, 'count'=>count($messages), 'hours' => $hours )
+		);
+	}
+
+	/**
 	 * @Route("/rules", name="rules")
 	 */
 	public function rulesAction()

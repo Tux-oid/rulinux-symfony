@@ -10,7 +10,7 @@ use RL\SecurityBundle\Entity\User;
 use RL\ForumBundle\Entity\Thread;
 
 /**
- * @ORM\Entity()
+ * @ORM\Entity(repositoryClass="RL\ForumBundle\Entity\MessageRepository")
  * @ORM\Table(name="comments")
  * @ORM\HasLifecycleCallbacks()
  */
