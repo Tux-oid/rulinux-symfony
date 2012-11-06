@@ -450,7 +450,22 @@
 	        <source>Authentication</source>
                 <target>Аутентификация</target>
             </trans-unit>
-
+            <trans-unit id="113">
+            	<source>Tracker</source>
+                <target>Трекер</target>
+            </trans-unit>
+            <trans-unit id="114">
+                <source>{0} Posted during last %hours% hours|{1} Posted during last %hours% hour| ]1,Inf] Posted during last %hours% hours</source>
+                <target>{0} За последние %hours% часов|{1} За последний %hours% час| [2,4] За последние %hours% часа| [5,Inf] За последние %hours% часов</target>
+            </trans-unit>
+	    <trans-unit id="115">
+                <source>Time period</source>
+                <target>Промежуток времени</target>
+            </trans-unit>
+            <trans-unit id="116">
+                <source>Comments count</source>
+                <target>Всего</target>
+            </trans-unit>
         </body>
     </file>
 </xliff>

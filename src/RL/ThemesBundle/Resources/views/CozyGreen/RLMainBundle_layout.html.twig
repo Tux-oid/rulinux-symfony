@@ -5,7 +5,7 @@
 	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 	{% stylesheets   '@RLThemesBundle/Resources/public/css/CozyGreen/main.css'
                          '@RLThemesBundle/Resources/public/css/CozyGreen/common.css'
-                         '@RLThemesBundle/Resources/public/css/CozyGreen/hover.css' 
+                         '@RLThemesBundle/Resources/public/css/CozyGreen/hover.css'
         %}
 	<link href="{{ asset_url }}" rel="stylesheet" media="screen"/>
 	{% endstylesheets %}
@@ -49,6 +49,8 @@
 						<a href="{{path('section', {'sectionRewrite':'gallery'})}}">{%trans%}Gallery{%endtrans%}</a>
 						-
 						<a href="{{path('unconfirmed')}}">{%trans%}Unconfirmed{%endtrans%}</a>
+						-
+						<a href="{{ path('tracker') }}">{% trans %}Tracker{% endtrans %}</a>
 						-
 						<a href="{{path('rules')}}">{%trans%}Rules{%endtrans%}</a>
 						-

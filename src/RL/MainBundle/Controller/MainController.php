@@ -4,6 +4,8 @@
  */
 namespace RL\MainBundle\Controller;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use RL\MainBundle\Form\TrackerForm;
+use RL\MainBundle\Form\TrackerType;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use RL\MainBundle\Helper\Pages;
@@ -33,10 +35,19 @@ class MainController extends Controller
 		$user = $this->get('security.context')->getToken()->getUser();
 		$theme = $this->get('rl_themes.theme.provider');
 		$doctrine = $this->get('doctrine');
+		$request = $this->getRequest();
+		$sbm = $request->request->get('submit');
+		if(isset($sbm))
+		{
+			$tracker = $request->request->get('tracker');
+			$hours = (int)$tracker['hours'];
+		}
+		/** @var $messageRepository \RL\ForumBundle\Entity\MessageRepository */
 		$messageRepository = $doctrine->getRepository('RLForumBundle:Message');
 		$messages = $messageRepository->getMessagesForLastHours($hours);
+		$form = $this->createForm(new TrackerType(), new TrackerForm($hours));
 		return $this->render(
-			$theme->getPath('RLMainBundle', 'tracker.html.twig'), array('user' => $user, 'theme' => $theme, 'messages'=>$messages, 'count'=>count($messages), 'hours' => $hours )
+			$theme->getPath('RLMainBundle', 'tracker.html.twig'), array('user' => $user, 'theme' => $theme, 'form'=>$form->createView(), 'messages'=>$messages, 'count'=>count($messages), 'hours' => $hours )
 		);
 	}
 
@@ -80,7 +91,6 @@ class MainController extends Controller
 
 	/**
 	 * @Route("/{page}", name="index", defaults={"page" = 1}, requirements = {"page"="[0-9]*"})
-	 * @Template()
 	 */
 	public function homepageAction($page)
 	{

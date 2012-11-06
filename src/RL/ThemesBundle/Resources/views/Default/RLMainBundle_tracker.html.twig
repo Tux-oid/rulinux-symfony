@@ -1,26 +1,26 @@
 {% extends theme.path('RLMainBundle', 'layout.html.twig') %}
 
 {% block title %}
-    {{ parent() }} - Posted during last {{ hours }} hours
+    {{ parent() }} - {% transchoice hours%}{0} Posted during last %hours% hours|{1} Posted during last %hours% hour| ]1,Inf] Posted during last %hours% hours{% endtranschoice %}
 {% endblock title %}
 
 {% block content %}
-<form name="trackerForm" action="">
+<form name="trackerForm" action="{{path('tracker')}}" method="post" {{form_enctype(form)}}>
     <table class=nav>
         <tr>
             <td align=left valign=middle>
-                Posted during last {{ hours }} hours
+                {% transchoice hours%}{0} Posted during last %hours% hours|{1} Posted during last %hours% hour| ]1,Inf] Posted during last %hours% hours{% endtranschoice %}
             </td>
             <td align=right valign=middle>
-                Posted during last
-                <input name="hours" onChange="submit();" value="{{ hours }}">
-                hours
-                <input type="submit" value="{% trans %}Send{% endtrans %}">
+                {% trans %}Time period{% endtrans %}
+                {{form_widget(form.hours)}}
+                {{form_rest(form)}}
+                <input type="submit" name="submit" value="{% trans %}Send{% endtrans %}">
             </td>
         </tr>
     </table>
 </form>
-<h1>Posted during last {{ hours }} hours</h1>
+<h1>{% transchoice hours%}{0} Posted during last %hours% hours|{1} Posted during last %hours% hour| ]1,Inf] Posted during last %hours% hours{% endtranschoice %}</h1>
 <div class=forum>
     <table width="100%" class="message-table">
         <thead>
@@ -35,7 +35,7 @@
         </thead>
         <tfoot>
         <tr>
-            <td colspan='4' align='right'>Comments count: {{ count }} &nbsp</td>
+            <td colspan='4' align='right'>{% trans %}Comments count{% endtrans %}: {{ count }} &nbsp</td>
         </tr>
         </tfoot>
         <tbody>

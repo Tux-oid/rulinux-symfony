@@ -4,6 +4,7 @@
  */
 
 namespace RL\ForumBundle\Form;
+
 use Symfony\Component\Validator\Constraints as Assert;
 
 class AddCommentForm

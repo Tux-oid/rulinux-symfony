@@ -295,7 +295,7 @@ class Message
 	/**
 	 * Set user
 	 *
-	 * @param RL\SecurityBundle\Entity\User $user
+	 * @param \RL\SecurityBundle\Entity\User $user
 	 */
 	public function setUser($user)
 	{
@@ -304,7 +304,7 @@ class Message
 	/**
 	 * Get user
 	 *
-	 * @return RL\SecurityBundle\Entity\User 
+	 * @return \RL\SecurityBundle\Entity\User
 	 */
 	public function getUser()
 	{
@@ -331,7 +331,7 @@ class Message
 	/**
 	 * Set thread
 	 *
-	 * @param RL\ForumBundle\Entity\Thread $thread
+	 * @param \RL\ForumBundle\Entity\Thread $thread
 	 */
 	public function setThread(\RL\ForumBundle\Entity\Thread $thread)
 	{
@@ -340,7 +340,7 @@ class Message
 	/**
 	 * Get thread
 	 *
-	 * @return RL\ForumBundle\Entity\Thread 
+	 * @return \RL\ForumBundle\Entity\Thread
 	 */
 	public function getThread()
 	{
