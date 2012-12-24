@@ -135,12 +135,11 @@ class DefaultController extends Controller
 				$user = $user->getDbAnonymous();
 			}
 			$message->setUser($user);
-			$message->setReferer(0);
 			$message->setSubject($thr['subject']);
 			$message->setComment($user->getMark()->render($thr['comment']));
 			$message->setRawComment($thr['comment']);
 			$message->setThread($thread);
-			$message->setReferer($comment_id);
+			$message->setReferer($doctrine->getRepository('RLForumBundle:Message')->findOneById($comment_id));
 			$em->persist($message);
 			$em->flush();
 			return $this->redirect($this->generateUrl("thread", array("id" => $thread_id, "page" => 1))); //FIXME: set url for redirecting

@@ -94,7 +94,7 @@ class Thread
 	/**
 	 * Set changingTime
 	 *
-	 * @param datetime $changingTime
+	 * @param \Datetime $changingTime
 	 */
 	public function setChangingTime($changingTime)
 	{
@@ -103,7 +103,7 @@ class Thread
 	/**
 	 * Get changingTime
 	 *
-	 * @return datetime 
+	 * @return \Datetime
 	 */
 	public function getChangingTime()
 	{
@@ -112,7 +112,7 @@ class Thread
 	/**
 	 * Add messages
 	 *
-	 * @param RL\ForumBundle\Entity\Message $messages
+	 * @param \RL\ForumBundle\Entity\Message $messages
 	 */
 	public function addMessage(\RL\ForumBundle\Entity\Message $messages)
 	{
@@ -121,7 +121,7 @@ class Thread
 	/**
 	 * Get messages
 	 *
-	 * @return Doctrine\Common\Collections\Collection 
+	 * @return \Doctrine\Common\Collections\Collection
 	 */
 	public function getMessages()
 	{
@@ -130,7 +130,7 @@ class Thread
 	/**
 	 * Set subsection
 	 *
-	 * @param RL\ForumBundle\Entity\Section $subsection
+	 * @param \RL\ForumBundle\Entity\Subsection $subsection
 	 */
 	public function setSubsection(\RL\ForumBundle\Entity\Subsection $subsection)
 	{
@@ -139,7 +139,7 @@ class Thread
 	/**
 	 * Get subsection
 	 *
-	 * @return RL\ForumBundle\Entity\Section 
+	 * @return \RL\ForumBundle\Entity\Subsection
 	 */
 	public function getSubsection()
 	{

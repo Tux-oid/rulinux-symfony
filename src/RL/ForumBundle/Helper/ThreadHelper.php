@@ -24,7 +24,6 @@ class ThreadHelper implements ThreadHelperInterface
 			$user = $user->getDbAnonymous();
 		}
 		$message->setUser($user);
-		$message->setReferer(0);
 		$message->setSubject($thr['subject']);
 		$message->setComment($user->getMark()->render($thr['comment']));
 		$message->setRawComment($thr['comment']);

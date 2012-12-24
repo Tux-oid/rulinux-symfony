@@ -480,7 +480,7 @@ class User implements RLUserInterface, \Serializable, EquatableInterface
 	/**
 	 * Set birthday
 	 *
-	 * @param datetime $birthday
+	 * @param \Datetime $birthday
 	 */
 	public function setBirthday($birthday)
 	{
@@ -489,7 +489,7 @@ class User implements RLUserInterface, \Serializable, EquatableInterface
 	/**
 	 * Get birthday
 	 *
-	 * @return datetime
+	 * @return \Datetime
 	 */
 	public function getBirthday()
 	{
@@ -516,7 +516,7 @@ class User implements RLUserInterface, \Serializable, EquatableInterface
 	/**
 	 * Set additional
 	 *
-	 * @param text $additional
+	 * @param string $additional
 	 */
 	public function setAdditional($additional)
 	{
@@ -525,7 +525,7 @@ class User implements RLUserInterface, \Serializable, EquatableInterface
 	/**
 	 * Get additional
 	 *
-	 * @return text
+	 * @return string
 	 */
 	public function getAdditional()
 	{
@@ -534,7 +534,7 @@ class User implements RLUserInterface, \Serializable, EquatableInterface
 	/**
 	 * Set additionalRaw
 	 *
-	 * @param text $additionalRaw
+	 * @param string $additionalRaw
 	 */
 	public function setAdditionalRaw($additionalRaw)
 	{
@@ -543,7 +543,7 @@ class User implements RLUserInterface, \Serializable, EquatableInterface
 	/**
 	 * Get additionalRaw
 	 *
-	 * @return text
+	 * @return string
 	 */
 	public function getAdditionalRaw()
 	{
@@ -588,7 +588,7 @@ class User implements RLUserInterface, \Serializable, EquatableInterface
 	/**
 	 * Set registrationDate
 	 *
-	 * @param datetime $registrationDate
+	 * @param \Datetime $registrationDate
 	 */
 	public function setRegistrationDate($registrationDate)
 	{
@@ -597,7 +597,7 @@ class User implements RLUserInterface, \Serializable, EquatableInterface
 	/**
 	 * Get registrationDate
 	 *
-	 * @return datetime
+	 * @return \Datetime
 	 */
 	public function getRegistrationDate()
 	{
@@ -606,7 +606,7 @@ class User implements RLUserInterface, \Serializable, EquatableInterface
 	/**
 	 * Set lastVisitDate
 	 *
-	 * @param datetime $lastVisitDate
+	 * @param \Datetime $lastVisitDate
 	 */
 	public function setLastVisitDate($lastVisitDate)
 	{
@@ -615,7 +615,7 @@ class User implements RLUserInterface, \Serializable, EquatableInterface
 	/**
 	 * Get lastVisitDate
 	 *
-	 * @return datetime
+	 * @return \Datetime
 	 */
 	public function getLastVisitDate()
 	{
@@ -894,7 +894,7 @@ class User implements RLUserInterface, \Serializable, EquatableInterface
 	/**
 	 * Set mark
 	 *
-	 * @param RL\MainBundle\Entity\Mark $mark
+	 * @param \RL\MainBundle\Entity\Mark $mark
 	 */
 	public function setMark(\RL\MainBundle\Entity\Mark $mark)
 	{
@@ -903,7 +903,7 @@ class User implements RLUserInterface, \Serializable, EquatableInterface
 	/**
 	 * Get mark
 	 *
-	 * @return RL\MainBundle\Entity\Mark
+	 * @return \RL\MainBundle\Entity\Mark
 	 */
 	public function getMark()
 	{
@@ -912,7 +912,7 @@ class User implements RLUserInterface, \Serializable, EquatableInterface
 	/**
 	 * Set language
 	 *
-	 * @param text $language
+	 * @param string $language
 	 */
 	public function setLanguage($language)
 	{
@@ -921,7 +921,7 @@ class User implements RLUserInterface, \Serializable, EquatableInterface
 	/**
 	 * Get language
 	 *
-	 * @return text
+	 * @return string
 	 */
 	public function getLanguage()
 	{
@@ -1037,7 +1037,7 @@ class User implements RLUserInterface, \Serializable, EquatableInterface
 	/**
 	 * Add comments
 	 *
-	 * @param RL\ForumBundle\Entity\Message $comments
+	 * @param \RL\ForumBundle\Entity\Message $comments
 	 */
 	public function addMessage(\RL\ForumBundle\Entity\Message $comments)
 	{
@@ -1046,7 +1046,7 @@ class User implements RLUserInterface, \Serializable, EquatableInterface
 	/**
 	 * Get comments
 	 *
-	 * @return Doctrine\Common\Collections\Collection 
+	 * @return \Doctrine\Common\Collections\Collection
 	 */
 	public function getComments()
 	{
@@ -1056,7 +1056,7 @@ class User implements RLUserInterface, \Serializable, EquatableInterface
     /**
      * Set group
      *
-     * @param RL\SecurityBundle\Entity\Group $group
+     * @param \RL\SecurityBundle\Entity\Group $group
      */
     public function setGroup(\RL\SecurityBundle\Entity\Group $group)
     {
@@ -1066,7 +1066,7 @@ class User implements RLUserInterface, \Serializable, EquatableInterface
     /**
      * Get group
      *
-     * @return RL\SecurityBundle\Entity\Group 
+     * @return \RL\SecurityBundle\Entity\Group
      */
     public function getGroup()
     {

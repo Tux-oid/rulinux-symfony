@@ -31,9 +31,15 @@ class Message
 	 */
 	protected $user;
 	/**
-	 * @ORM\Column(type="integer")
+	 * @ORM\ManyToOne(targetEntity="RL\ForumBundle\Entity\Message", inversedBy="responses")
 	 */
 	protected $referer;
+	/**
+	 * @ORM\OneToMany(targetEntity="RL\ForumBundle\Entity\Message", mappedBy="referer")
+	 *
+	 * @var \Doctrine\Common\Collections\ArrayCollection
+	 */
+	protected $responses;
 	/**
 	 * @ORM\Column(type="datetime")
 	 */
@@ -71,7 +77,7 @@ class Message
 	/**
 	 * @ORM\Column(type="boolean", name="show_ua")
 	 */
-	protected $showUa = TRUE;
+	protected $showUa = true;
 	/**
 	 * @ORM\Column(type="string", length=128, name="session_id", nullable=true)
 	 */
@@ -80,6 +86,7 @@ class Message
 	public function __construct()
 	{
 		$this->postingTime = $this->changingTime = new \DateTime('now');
+		$this->responses = new ArrayCollection();
 	}
 	/**
 	 * @ORM\PrePersist
@@ -90,9 +97,9 @@ class Message
 		$this->sessionId = \session_id();
 		$this->useragent = $_SERVER['HTTP_USER_AGENT'];
 		if($this->user->getShowUA())
-			$this->showUa = TRUE;
+			$this->showUa = true;
 		else
-			$this->showUa = FALSE;
+			$this->showUa = false;
 		
 	}
 	/**
@@ -120,6 +127,7 @@ class Message
 	public function setReferer($referer)
 	{
 		$this->referer = $referer;
+		$this->addResponse($referer);
 	}
 	/**
 	 * Get referer
@@ -133,7 +141,7 @@ class Message
 	/**
 	 * Set postingTime
 	 *
-	 * @param datetime $postingTime
+	 * @param \Datetime $postingTime
 	 */
 	public function setPostingTime($postingTime)
 	{
@@ -142,7 +150,7 @@ class Message
 	/**
 	 * Get postingTime
 	 *
-	 * @return datetime 
+	 * @return \Datetime
 	 */
 	public function getPostingTime()
 	{
@@ -223,7 +231,7 @@ class Message
 	/**
 	 * Set changingTime
 	 *
-	 * @param datetime $changingTime
+	 * @param \Datetime $changingTime
 	 */
 	public function setChangingTime($changingTime)
 	{
@@ -232,7 +240,7 @@ class Message
 	/**
 	 * Get changingTime
 	 *
-	 * @return datetime 
+	 * @return \Datetime
 	 */
 	public function getChangingTime()
 	{
@@ -346,4 +354,36 @@ class Message
 	{
 		return $this->thread;
 	}
+
+	/**
+	 * Add responses
+	 *
+	 * @param \RL\ForumBundle\Entity\Message $response
+	 */
+	public function addResponse(Message $response)
+	{
+		$this->responses[] = $response;
+	}
+
+	/**
+	 * Remove responses
+	 *
+	 * @param \RL\ForumBundle\Entity\Message $response
+	 */
+	public function removeResponse(Message $response)
+	{
+		$this->responses->removeElement($response);
+	}
+
+	/**
+	 * Get responses
+	 *
+	 * @return \RL\ForumBundle\Entity\Message
+	 */
+	public function getResponses()
+	{
+		return $this->responses;
+	}
+
+
 }
