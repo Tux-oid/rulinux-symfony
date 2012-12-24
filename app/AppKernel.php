@@ -19,7 +19,7 @@ class AppKernel extends Kernel
             new JMS\AopBundle\JMSAopBundle(),
             new JMS\DiExtraBundle\JMSDiExtraBundle($this),
             new JMS\SecurityExtraBundle\JMSSecurityExtraBundle(),
-	    new Doctrine\Bundle\FixturesBundle\DoctrineFixturesBundle(),
+            new Doctrine\Bundle\FixturesBundle\DoctrineFixturesBundle(),
             new Netpositive\DiscriminatorMapBundle\NetpositiveDiscriminatorMapBundle(),
             new Gregwar\ImageBundle\GregwarImageBundle(),
             new RL\SecurityBundle\RLSecurityBundle(),

@@ -232,3 +232,8 @@ p.error {
     color: red;
     font-weight: bold;
 }
+
+.pages
+{
+    text-align: center;
+}

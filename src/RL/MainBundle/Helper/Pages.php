@@ -68,6 +68,7 @@ class Pages
 				$this->routeParameters['page'] = $pagesCount;
 				$pages = $pages.'<a href="'.$this->router->generate($this->routeName, $this->routeParameters).'" title="End page">→</a>&nbsp;';
 			}
+			$pages = '<div class="pages">'.$pages.'</div>';
 			return $pages;
 		}
 		else

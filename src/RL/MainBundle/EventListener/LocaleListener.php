@@ -2,21 +2,41 @@
 /**
  * @author Tux-oid
  */
-namespace RL\MainBundle\Listeners;
+namespace RL\MainBundle\EventListener;
 
 use Symfony\Component\HttpKernel\Event\GetResponseEvent;
 use Symfony\Component\HttpKernel\KernelEvents;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
+use JMS\DiExtraBundle\Annotation\Service;
+use JMS\DiExtraBundle\Annotation\Observe;
 
-class LocaleListener implements EventSubscriberInterface
+/**
+ * RL\MainBundle\EventListener\LocaleListener
+ *
+ * @Service("rl_main.locale.listener")
+ */
+class LocaleListener
 {
+	/**
+	 * @var string
+	 */
 	private $defaultLocale;
 
+	/**
+	 * Constructor
+	 *
+	 * @param string $defaultLocale
+	 */
 	public function __construct($defaultLocale = 'en')
 	{
 		$this->defaultLocale = $defaultLocale;
 	}
 
+	/**
+	 * @Observe("kernel.request", priority = 17)
+	 *
+	 * @param \Symfony\Component\HttpKernel\Event\GetResponseEvent $event
+	 */
 	public function onKernelRequest(GetResponseEvent $event)
 	{
 		$request = $event->getRequest();
@@ -29,13 +49,5 @@ class LocaleListener implements EventSubscriberInterface
 		} else {
 			$request->setLocale($request->getSession()->get('_locale', $this->defaultLocale));
 		}
-	}
-
-	static public function getSubscribedEvents()
-	{
-		return array(
-			// must be registered before the default Locale listener
-			KernelEvents::REQUEST => array(array('onKernelRequest', 17)),
-		);
 	}
 }

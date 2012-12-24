@@ -26,6 +26,7 @@ use RL\SecurityBundle\Form\AdministratorSettingsType;
 use RL\SecurityBundle\Form\AdministratorSettingsForm;
 use RL\SecurityBundle\Form\ModeratorSettingsType;
 use RL\SecurityBundle\Form\ModeratorSettingsForm;
+use RL\MainBundle\Helper\Pages;
 use LightOpenID;
 use Gregwar\ImageBundle\Image;
 
@@ -539,4 +540,27 @@ class SecurityController extends Controller
 			$theme->getPath('RLSecurityBundle', 'profile.html.twig'), array('theme' => $theme, 'user' => $user, 'userInfo'=> $userInProfile, 'commentsInfo' => $userComments,)
 		);
 	}
+
+	/**
+	 * @Route("/users/{page}", name="users", defaults={"page" = 1})
+	 */
+	public function usersAction($page)
+	{
+		$theme = $this->get('rl_themes.theme.provider');
+		$user = $this->get('security.context')->getToken()->getUser();
+		$userRepository = $this->getDoctrine()->getRepository('RLSecurityBundle:User');
+
+		$itemsCount = count($userRepository->findAll());
+		$itemsOnPage = $user->getCommentsOnPage();
+		$pagesCount = ceil(($itemsCount) / $itemsOnPage);
+		$pagesCount > 1 ? $offset = $itemsOnPage * ($page - 1) : $offset = 0;
+		$users = $userRepository->findBy(array(), null, $user->getCommentsOnPage(), $offset);
+		$pages = new Pages($this->get('router'), $itemsOnPage, $itemsCount, $page, 'users', array("page" => $page));
+		$pagesStr = $pages->draw();
+
+
+
+		return $this->render($theme->getPath('RLMainBundle', 'users.html.twig'), array('theme' => $theme, 'user' => $user, 'users' => $users, 'pagesStr' => $pagesStr));
+	}
+
 }

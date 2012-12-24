@@ -466,6 +466,30 @@
                 <source>Comments count</source>
                 <target>Всего</target>
             </trans-unit>
+            <trans-unit id="117">
+                <source>Users</source>
+                <target>Пользователи</target>
+            </trans-unit>
+            <trans-unit id="118">
+                <source>Users list</source>
+                <target>Список пользователей</target>
+            </trans-unit>
+            <trans-unit id="119">
+                <source>hidden</source>
+                <target>скрыт</target>
+            </trans-unit>
+            <trans-unit id="120">
+                <source>unknown city</source>
+                <target>неизвестно</target>
+            </trans-unit>
+            <trans-unit id="121">
+                <source>unknown country</source>
+                <target>неизвестно</target>
+            </trans-unit>
+            <trans-unit id="122">
+                <source>List of registered users</source>
+                <target>Список зарегистрированных пользователей</target>
+            </trans-unit>
         </body>
     </file>
 </xliff>
