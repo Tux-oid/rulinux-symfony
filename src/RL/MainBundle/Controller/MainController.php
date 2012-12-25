@@ -90,6 +90,27 @@ class MainController extends Controller
 	}
 
 	/**
+	 * @Route("/mark/{id}", name="mark", defaults={"id"=null})
+	 */
+	public function markAction($id)
+	{
+		/** @var $user \RL\SecurityBundle\Security\User\RLUserInterface */
+		$user = $this->get('security.context')->getToken()->getUser();
+		$theme = $this->get('rl_themes.theme.provider');
+		/** @var $markRepository \Doctrine\Orm\EntityRepository */
+		$markRepository = $this->getDoctrine()->getRepository('RLMainBundle:Mark');
+		if(null === $id)
+		{
+			$mark = $user->getMark();
+		}
+		else
+		{
+			$mark = $markRepository->findOneById($id);
+		}
+		return $this->render($theme->getPath('RLMainBundle', 'mark.html.twig'), array('user' => $user, 'theme' => $theme, 'mark' => $mark));
+	}
+
+	/**
 	 * @Route("/{page}", name="index", defaults={"page" = 1}, requirements = {"page"="[0-9]*"})
 	 */
 	public function homepageAction($page)

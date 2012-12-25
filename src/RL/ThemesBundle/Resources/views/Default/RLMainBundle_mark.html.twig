@@ -1,0 +1,22 @@
+{% extends theme.path('RLMainBundle', 'layout.html.twig') %}
+
+{% block content %}
+    <h2>{% trans %}Mark{% endtrans %} {{ mark.name }}</h2>
+    {{ mark.description|raw }}
+    <br>
+    <br>
+    <h2>{% trans %}List of highlighted languages{% endtrans %}</h2>
+    <table width="100%">
+        <tbody>
+            <tr>
+                {% for language in mark.highlightedLanguages %}
+                    <td>{{ language }}</td>
+                    {% if loop.index % 6 == 0 %}
+                        </tr><tr>
+                    {% endif %}
+                {% endfor %}
+            </tr>
+        </tbody>
+    </table>
+
+{% endblock content %}

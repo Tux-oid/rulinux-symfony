@@ -4,8 +4,11 @@
  */
 
 namespace RL\MainBundle\Entity;
+
 use Doctrine\ORM\Mapping as ORM;
 use PMP;
+
+require_once __DIR__.'/../../../../vendor/GeSHi/GeSHi/src/geshi.php';
 
 /**
  * @ORM\Entity
@@ -93,7 +96,7 @@ abstract class Mark
 	/**
 	 * Add users
 	 *
-	 * @param RL\SecurityBundle\Entity\User $users
+	 * @param \RL\SecurityBundle\Entity\User $users
 	 */
 	public function addUser(\RL\SecurityBundle\Entity\User $users)
 	{
@@ -103,7 +106,7 @@ abstract class Mark
 	/**
 	 * Get users
 	 *
-	 * @return Doctrine\Common\Collections\Collection
+	 * @return \Doctrine\Common\Collections\Collection
 	 */
 	public function getUsers()
 	{
@@ -131,5 +134,13 @@ abstract class Mark
 		$geshi->enable_line_numbers(GESHI_FANCY_LINE_NUMBERS, 1);
 		$code = geshi_highlight($code, $lang, $path, true);
 		return $code;
+	}
+
+	public function getHighlightedLanguages()
+	{
+		$geshi = new \GeSHi('', '');
+		$languages = $geshi->get_supported_languages();
+		asort($languages);
+		return $languages;
 	}
 }

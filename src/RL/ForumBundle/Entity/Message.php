@@ -122,12 +122,12 @@ class Message
 	/**
 	 * Set referer
 	 *
-	 * @param integer $referer
+	 * @param \RL\ForumBundle\Entity\Message $referer
 	 */
 	public function setReferer($referer)
 	{
 		$this->referer = $referer;
-		$this->addResponse($referer);
+		$referer->addResponse($this);
 	}
 	/**
 	 * Get referer
