@@ -5,7 +5,7 @@
 {%if is_granted('ROLE_MODER') or message.user == user%}
 	<a href="set_filter_142880"><img border="0" src="{{'/web/bundles/rlthemes/images/'~user.theme.directory~'/filter.png'}}" alt="{%trans%}Add filter{%endtrans%}"></a>
 	<a href="{{path('editMessage', {'messageId':message.id})}}"><img border="0" src="{{'/web/bundles/rlthemes/images/'~user.theme.directory~'/edit.png'}}" alt="{%trans%}Edit{%endtrans%}"></a>
-{%endif%}	
+{%endif%}
 {#{%trans%}Reply to:{%endtrans%} <a href="#{{'msg'~message.referer}}">{{message.thread.messages[message.referer-1].subject}}</a> {%trans%}from{%endtrans%} {{message.thread.messages[message.referer-1].user.username}}  {{message.thread.messages[message.referer-1].postingTime.date}}<br></div>#}
 <div class=msg id="{{'msg'~message.id}}">
 <table cellspacing="0" width="100%">

@@ -1,12 +1,10 @@
 <?php
 /**
- *@author Ax-xa-xa 
+ *@author Ax-xa-xa
  */
 namespace RL\MainBundle\DependencyInjection;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
-use Symfony\Component\Config\FileLocator;
 use Symfony\Component\HttpKernel\DependencyInjection\Extension;
-use Symfony\Component\DependencyInjection\Loader;
 
 /**
  * This is the class that loads and manages your bundle configuration
@@ -15,13 +13,13 @@ use Symfony\Component\DependencyInjection\Loader;
  */
 class RLMainExtension extends Extension
 {
-	/**
-	 * {@inheritDoc}
-	 */
-	public function load(array $configs, ContainerBuilder $container)
-	{
-		$configuration = new Configuration();
-		$config = $this->processConfiguration($configuration, $configs);
+    /**
+     * {@inheritDoc}
+     */
+    public function load(array $configs, ContainerBuilder $container)
+    {
+        $configuration = new Configuration();
+        $config = $this->processConfiguration($configuration, $configs);
 
-	}
+    }
 }

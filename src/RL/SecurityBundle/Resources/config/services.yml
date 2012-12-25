@@ -8,14 +8,14 @@ parameters:
 services:
   rl_security.anonymous.user.provider:
     class: %rl_security.anonymous.user.provider.class%
-    arguments: 
+    arguments:
       - "%rl_security.anonymous.class%"
       - "%rl_security.anonymous.defaults%"
       - "@doctrine"
 
   rl_security.anonymous.authentication.listener:
     class: %rl_security.anonymous.authentication.listener.class%
-    arguments: 
+    arguments:
       - "@security.context"
       - "@rl_security.anonymous.user.provider"
       - "%rl_security.anonymous.defaults%"

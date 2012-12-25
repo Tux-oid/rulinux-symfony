@@ -12,7 +12,7 @@
 {%if is_granted('ROLE_MODER') or startMessage.user == user%}
 	<a href="set_filter_142891"><img border="0" src="{{'/web/bundles/rlthemes/images/'~user.theme.directory~'/filter.png'}}" alt="{%trans%}Add filter{%endtrans%}"></a>
 	<a href="{{path('editMessage', {'messageId':startMessage.id})}}"><img border="0" src="{{'/web/bundles/rlthemes/images/'~user.theme.directory~'/edit.png'}}" alt="{%trans%}Edit{%endtrans%}"></a>
-{%endif%}	
+{%endif%}
 </div>
 <div class="msg" id="{{'msg'~startMessage.id}}"><h2 class="nt">{{startMessage.subject}}</h2>
 {{startMessage.comment|raw}}

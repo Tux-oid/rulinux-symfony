@@ -1,6 +1,6 @@
 <?php
 /**
- * @author Tux-oid 
+ * @author Tux-oid
  */
 
 namespace RL\SecurityBundle\Form;
@@ -9,24 +9,23 @@ use Symfony\Component\Form\FormBuilderInterface;
 
 class PasswordRestoringType extends AbstractType
 {
-	public function buildForm(FormBuilderInterface $builder, array $options)
-	{
-		$builder->add('username', 'text')
-			->add('email', 'email')
-			->add('question', 'text')
-			->add('answer', 'text');
-	}
-	public function getName()
-	{
-		return 'restorePassword';
-	}
-	public function getDefaultOptions(array $options)
-	{
-		return array(
-			'csrf_protection' => true,
-			'csrf_field_name' => '_csrf_token',
-			'intention' => 'authenticate'
-		);
-	}
+    public function buildForm(FormBuilderInterface $builder, array $options)
+    {
+        $builder->add('username', 'text')
+            ->add('email', 'email')
+            ->add('question', 'text')
+            ->add('answer', 'text');
+    }
+    public function getName()
+    {
+        return 'restorePassword';
+    }
+    public function getDefaultOptions(array $options)
+    {
+        return array(
+            'csrf_protection' => true,
+            'csrf_field_name' => '_csrf_token',
+            'intention' => 'authenticate'
+        );
+    }
 }
-?>

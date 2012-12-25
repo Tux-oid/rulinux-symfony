@@ -11,11 +11,11 @@ use RL\SecurityBundle\Security\Factory\AnonymousSecurityFactory;
 
 class RLSecurityBundle extends Bundle
 {
-	public function build(ContainerBuilder $container)
-	{
-		parent::build($container);
+    public function build(ContainerBuilder $container)
+    {
+        parent::build($container);
 
-		$extension = $container->getExtension('security');
-		$extension->addSecurityListenerFactory(new AnonymousSecurityFactory());
-	}
+        $extension = $container->getExtension('security');
+        $extension->addSecurityListenerFactory(new AnonymousSecurityFactory());
+    }
 }

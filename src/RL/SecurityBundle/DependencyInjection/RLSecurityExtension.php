@@ -1,6 +1,6 @@
 <?php
 /**
- * @author Ax-xa-xa 
+ * @author Ax-xa-xa
  */
 
 namespace RL\SecurityBundle\DependencyInjection;
@@ -16,17 +16,17 @@ use Symfony\Component\DependencyInjection\Loader;
  */
 class RLSecurityExtension extends Extension
 {
-	/**
-	 * {@inheritDoc}
-	 */
-	public function load(array $configs, ContainerBuilder $container)
-	{
-		$configuration = new Configuration();
-		$config = $this->processConfiguration($configuration, $configs);
-		$loader = new Loader\YamlFileLoader($container, new FileLocator(__DIR__.'/../Resources/config'));
-		$loader->load('services.yml');
+    /**
+     * {@inheritDoc}
+     */
+    public function load(array $configs, ContainerBuilder $container)
+    {
+        $configuration = new Configuration();
+        $config = $this->processConfiguration($configuration, $configs);
+        $loader = new Loader\YamlFileLoader($container, new FileLocator(__DIR__.'/../Resources/config'));
+        $loader->load('services.yml');
 
-		$container->setParameter('rl_security.anonymous.class', $config['anonymous']['class']);
-		$container->setParameter('rl_security.anonymous.defaults', $config['anonymous']['defaults']);
-	}
+        $container->setParameter('rl_security.anonymous.class', $config['anonymous']['class']);
+        $container->setParameter('rl_security.anonymous.defaults', $config['anonymous']['defaults']);
+    }
 }

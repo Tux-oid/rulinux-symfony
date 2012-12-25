@@ -4,7 +4,7 @@ parameters:
 services:
   rl_themes.theme.provider:
     class: %rl_themes.theme.provider.class%
-    arguments: 
+    arguments:
       - "@security.context"
       - "@kernel"
       - "@doctrine"

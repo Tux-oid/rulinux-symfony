@@ -1,6 +1,6 @@
 <?php
 /**
- *@author Ax-xa-xa 
+ *@author Ax-xa-xa
  */
 namespace RL\MainBundle\DependencyInjection;
 use Symfony\Component\Config\Definition\Builder\TreeBuilder;
@@ -13,13 +13,13 @@ use Symfony\Component\Config\Definition\ConfigurationInterface;
  */
 class Configuration implements ConfigurationInterface
 {
-	/**
-	 * {@inheritDoc}
-	 */
-	public function getConfigTreeBuilder()
-	{
-		$treeBuilder = new TreeBuilder();
-		$rootNode = $treeBuilder->root('r_l_main');
+    /**
+     * {@inheritDoc}
+     */
+    public function getConfigTreeBuilder()
+    {
+        $treeBuilder = new TreeBuilder();
+        $rootNode = $treeBuilder->root('r_l_main');
 //		  $rootNode->children()
 //		  ->arrayNode('user')
 //		  ->children()
@@ -33,10 +33,10 @@ class Configuration implements ConfigurationInterface
 //		  ->end()
 //		  ->end()
 //		  ->end();
-		return $treeBuilder;
-	}
-	public function getAliasName()
-	{
-		
-	}
+        return $treeBuilder;
+    }
+    public function getAliasName()
+    {
+
+    }
 }

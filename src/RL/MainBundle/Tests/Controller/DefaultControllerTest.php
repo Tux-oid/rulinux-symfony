@@ -1,6 +1,6 @@
 <?php
 /**
- *@author Ax-xa-xa 
+ *@author Ax-xa-xa
  */
 namespace RL\MainBundle\Tests\Controller;
 

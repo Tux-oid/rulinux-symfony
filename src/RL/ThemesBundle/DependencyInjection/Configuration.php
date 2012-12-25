@@ -1,6 +1,6 @@
 <?php
 /**
- * @author Tux-oid 
+ * @author Tux-oid
  */
 namespace RL\ThemesBundle\DependencyInjection;
 use Symfony\Component\Config\Definition\Builder\TreeBuilder;
@@ -13,32 +13,31 @@ use Symfony\Component\Config\Definition\ConfigurationInterface;
  */
 class Configuration implements ConfigurationInterface
 {
-	/**
-	 * {@inheritDoc}
-	 */
-	public function getConfigTreeBuilder()
-	{
-		$treeBuilder = new TreeBuilder();
-		$rootNode = $treeBuilder->root('rl_themes');
-		$rootNode->children()
-			->arrayNode('theme')
-			->children()
-			->scalarNode('default')->defaultNull()->end()
-			->arrayNode('availables')
+    /**
+     * {@inheritDoc}
+     */
+    public function getConfigTreeBuilder()
+    {
+        $treeBuilder = new TreeBuilder();
+        $rootNode = $treeBuilder->root('rl_themes');
+        $rootNode->children()
+            ->arrayNode('theme')
+            ->children()
+            ->scalarNode('default')->defaultNull()->end()
+            ->arrayNode('availables')
 //			->addDefaultsIfNotSet()
-			->defaultValue(array())
-			->useAttributeAsKey('name')
-			->prototype('variable')->end()
-			->end()
-			->end()
-			->end()
-			->end();
+            ->defaultValue(array())
+            ->useAttributeAsKey('name')
+            ->prototype('variable')->end()
+            ->end()
+            ->end()
+            ->end()
+            ->end();
 
+        return $treeBuilder;
+    }
+    public function getAliasName()
+    {
 
-		return $treeBuilder;
-	}
-	public function getAliasName()
-	{
-		
-	}
+    }
 }

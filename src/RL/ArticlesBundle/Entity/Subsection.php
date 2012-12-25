@@ -1,6 +1,6 @@
 <?php
 /**
- *@author Tux-oid 
+ *@author Tux-oid
  */
 
 namespace RL\ArticlesBundle\Entity;
@@ -9,10 +9,9 @@ use Doctrine\ORM\Mapping as ORM;
 
 /**
  *@ORM\Entity(repositoryClass="RL\ArticlesBundle\Entity\SubsectionRepository")
- * @ORM\Table(name="articles_subsection") 
+ * @ORM\Table(name="articles_subsection")
  */
 class Subsection extends ForumSubsection
 {
 
 }
-?>

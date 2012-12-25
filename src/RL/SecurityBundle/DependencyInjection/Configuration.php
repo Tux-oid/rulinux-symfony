@@ -1,6 +1,6 @@
 <?php
 /**
- *@author Ax-xa-xa 
+ *@author Ax-xa-xa
  */
 namespace RL\SecurityBundle\DependencyInjection;
 use Symfony\Component\Config\Definition\Builder\TreeBuilder;
@@ -13,29 +13,29 @@ use Symfony\Component\Config\Definition\ConfigurationInterface;
  */
 class Configuration implements ConfigurationInterface
 {
-	/**
-	 * {@inheritDoc}
-	 */
-	public function getConfigTreeBuilder()
-	{
-		$treeBuilder = new TreeBuilder();
-		$rootNode = $treeBuilder->root('rl_security');
-		$rootNode->children()
-			->arrayNode('anonymous')
-			->children()
-			->scalarNode('class')->isRequired()->end()
-			->arrayNode('defaults')
-			->defaultValue(array())
-			->useAttributeAsKey('name')
-			->prototype('variable')->end()
-			->end()
-			->end()
-			->end();
+    /**
+     * {@inheritDoc}
+     */
+    public function getConfigTreeBuilder()
+    {
+        $treeBuilder = new TreeBuilder();
+        $rootNode = $treeBuilder->root('rl_security');
+        $rootNode->children()
+            ->arrayNode('anonymous')
+            ->children()
+            ->scalarNode('class')->isRequired()->end()
+            ->arrayNode('defaults')
+            ->defaultValue(array())
+            ->useAttributeAsKey('name')
+            ->prototype('variable')->end()
+            ->end()
+            ->end()
+            ->end();
 
-		return $treeBuilder;
-	}
-	public function getAliasName()
-	{
-		return '';
-	}
+        return $treeBuilder;
+    }
+    public function getAliasName()
+    {
+        return '';
+    }
 }
