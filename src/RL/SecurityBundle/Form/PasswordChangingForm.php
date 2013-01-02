@@ -9,15 +9,15 @@ class PasswordChangingForm
     /**
      * @var
      */
-    private $oldPassword;
+    protected $oldPassword;
     /**
      * @var
      */
-    private $newPassword;
+    protected $newPassword;
     /**
      * @var
      */
-    private $validation;
+    protected $validation;
 
     /**
      * @param $newPassword

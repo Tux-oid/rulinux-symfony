@@ -3,6 +3,7 @@
  * @author Tux-oid
  */
 namespace RL\MainBundle\Entity;
+
 use Doctrine\ORM\Mapping as ORM;
 use RL\MainBundle\Entity\Mark;
 
@@ -23,7 +24,11 @@ final class BaseHtml extends Mark
         $vh = preg_match_all($re, $string, $match);
         for ($i = 0; $i < $vh; $i++) {
             $lang[$i] = $match[2][$i];
-            $with_breaks = parent::highlight(html_entity_decode($match[5][$i], ENT_QUOTES), $match[3][$i], "librarys/geshi/geshi");
+            $with_breaks = parent::highlight(
+                html_entity_decode($match[5][$i], ENT_QUOTES),
+                $match[3][$i],
+                "librarys/geshi/geshi"
+            );
             $code[$i] = $with_breaks;
             $string = str_replace($match[0][$i], '⓬' . $i . '⓬', $string);
         }
@@ -31,14 +36,18 @@ final class BaseHtml extends Mark
         $re = '#(<m>)(.*?)(</m>)#suim';
         $vh = preg_match_all($re, $string, $match);
         for ($i = 0; $i < $vh; $i++) {
-            $with_breaks = parent::make_formula($match[2][$i]);
+            $with_breaks = parent::makeFormula($match[2][$i]);
             $math[$i] = $with_breaks;
             $string = str_replace($match[0][$i], 'ᴥ' . $i . 'ᴥ', $string);
         }
         $string = htmlspecialchars($string);
         $string = str_replace('\\', '&#92;', $string);
         $string = preg_replace("#(&lt;b&gt;)(.*?[^&lt;/b&gt;]?)(&lt;/b&gt;)#suim", "<b>\$2</b>", $string);
-        $string = preg_replace("#(&lt;span class=&quot;spoiler&quot;&gt;)((?!&lt;/span&gt).*?)(&lt;/span&gt;)#suim", "<span class=\"spoiler\">\$2</span>", $string);
+        $string = preg_replace(
+            "#(&lt;span class=&quot;spoiler&quot;&gt;)((?!&lt;/span&gt).*?)(&lt;/span&gt;)#suim",
+            "<span class=\"spoiler\">\$2</span>",
+            $string
+        );
         $string = preg_replace("#(&lt;i&gt;)(.*?[^&lt;/i&gt;]?)(&lt;/i&gt;)#suim", "<i>\$2</i>", $string);
         $string = preg_replace("#(&lt;u&gt;)(.*?[^&lt;/u&gt;]?)(&lt;/u&gt;)#suim", "<u>\$2</u>", $string);
         $string = preg_replace("#(&lt;s&gt;)(.*?[^&lt;/s&gt;]?)(&lt;/s&gt;)#suim", "<s>\$2</s>", $string);
@@ -73,32 +82,57 @@ final class BaseHtml extends Mark
             $with_breaks = preg_replace('#&lt;li&gt;#suim', '<li>&nbsp;', $with_breaks);
             $string = str_replace($match[2][$i], $with_breaks, $string);
         }
-        $string = preg_replace('#(&lt;p align=&quot;)(left|right|center)(&quot;&gt;)(.*?(^/p&gt;)?)(&lt;/p&gt;)#suim', "<p align=\"\$2\">\$4</p>", $string);
+        $string = preg_replace(
+            '#(&lt;p align=&quot;)(left|right|center)(&quot;&gt;)(.*?(^/p&gt;)?)(&lt;/p&gt;)#suim',
+            "<p align=\"\$2\">\$4</p>",
+            $string
+        );
         $img_re = '#(&lt;img) ?(align=&quot;)?(left|right|middle|top|bottom)?(&quot;)?(src=&quot;)((?!&quot;).*?)(&quot;&gt;)#suim';
         $vt = preg_match_all($img_re, $string, $match);
         for ($i = 0; $i < $vt; $i++) {
             $imageinfo = getimagesize($match[5][$i]);
             if ($imageinfo[0] > 1024) {
                 if (!empty($match[3][$i])) {
-                    $string = preg_replace($img_re, "<img src=\"\$6\" align=\"$3\" width=\"1024\" alt=\"[путь к изображению некорректен]\" />", $string, 1);
+                    $string = preg_replace(
+                        $img_re,
+                        "<img src=\"\$6\" align=\"$3\" width=\"1024\" alt=\"[incorrect path to image]\" />",
+                        $string,
+                        1
+                    );
                 } else {
-                    $string = preg_replace($img_re, "<img src=\"\$6\" width=\"1024\" alt=\"[путь к изображению некорректен]\" />", $string, 1);
+                    $string = preg_replace(
+                        $img_re,
+                        "<img src=\"\$6\" width=\"1024\" alt=\"[incorrect path to image]\" />",
+                        $string,
+                        1
+                    );
                 }
             } else {
                 if (empty($match[3][$i])) {
-                    $string = preg_replace($img_re, "<img src=\"\$6\" align=\"$3\" alt=\"[путь к изображению некорректен]\" />", $string, 1);
+                    $string = preg_replace(
+                        $img_re,
+                        "<img src=\"\$6\" align=\"$3\" alt=\"[incorrect path to image]\" />",
+                        $string,
+                        1
+                    );
                 } else {
-                    $string = preg_replace($img_re, "<img src=\"\$6\" alt=\"[путь к изображению некорректен]\" />", $string, 1);
+                    $string = preg_replace(
+                        $img_re,
+                        "<img src=\"\$6\" alt=\"[incorrect path to image]\" />",
+                        $string,
+                        1
+                    );
                 }
             }
         }
         $user_re = "#(&lt;span class=&quot;user&quot;&gt;)((?!&lt;/span&gt;).*?)(&lt;/span&gt;)#suim";
         $arr = preg_match_all($user_re, $string, $match);
+        /** @var $userRepository \RL\SecurityBundle\Entity\UserRepository */
+        $userRepository = $this->entityManager->getRepository('RLSecurityBundle:User');
         for ($i = 0; $i < $arr; $i++) {
-            $where_arr = array(array("key" => 'nick', "value" => $match[2][$i], "oper" => '='));
-            $sel = base::select('users', '', '*', $where_arr, 'AND');
-            if (!empty($sel)) {
-                $string = preg_replace($user_re, "<b><a href=\"/profile.php?user=\$2\">\$2</a></b>", $string, 1);
+            $user = $userRepository->findOneByUsername($match[2][$i]);
+            if (null !== $user) {
+                $string = preg_replace($user_re, "<b><a href=\"/user/\$2\">\$2</a></b>", $string, 1);
             } else {
                 $string = preg_replace($user_re, "\$2", $string, 1);
             }
@@ -114,7 +148,11 @@ final class BaseHtml extends Mark
         $re = "#(⓬)([0-9]+)(⓬)#suim";
         $vt = preg_match_all($re, $string, $match);
         for ($i = 0; $i < $vt; $i++) {
-            $string = str_replace('⓬' . $match[2][$i] . '⓬', '<fieldset><legend>' . $lang[$match[2][$i]] . '</legend>' . $code[$match[2][$i]] . '</fieldset>', $string);
+            $string = str_replace(
+                '⓬' . $match[2][$i] . '⓬',
+                    '<fieldset><legend>' . $lang[$match[2][$i]] . '</legend>' . $code[$match[2][$i]] . '</fieldset>',
+                $string
+            );
         }
         $re = "#(ᴥ)([0-9]+)(ᴥ)#suim";
         $vt = preg_match_all($re, $string, $match);

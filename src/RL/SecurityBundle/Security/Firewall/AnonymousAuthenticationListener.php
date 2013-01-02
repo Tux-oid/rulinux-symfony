@@ -20,10 +20,10 @@ use RL\SecurityBundle\Security\User\RLUserInterface;
  */
 class AnonymousAuthenticationListener implements ListenerInterface
 {
-    private $userProvider;
-    private $options;
-    private $context;
-    private $logger;
+    protected  $userProvider;
+    protected $options;
+    protected $context;
+    protected $logger;
     public function __construct(SecurityContextInterface $context, AnonymousUserProvider $userProvider, $options, $doctrine, LoggerInterface $logger = null)
     {
         $this->userProvider = $userProvider;

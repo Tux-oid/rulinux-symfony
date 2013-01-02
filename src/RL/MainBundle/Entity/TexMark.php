@@ -3,6 +3,7 @@
  * @author Tux-oid
  */
 namespace RL\MainBundle\Entity;
+
 use Doctrine\ORM\Mapping as ORM;
 use RL\MainBundle\Entity\Mark;
 
@@ -24,14 +25,18 @@ final class TexMark extends Mark
         $vh = preg_match_all($re, $string, $match);
         for ($i = 0; $i < $vh; $i++) {
             $lang[$i] = $match[2][$i];
-            $with_breaks = parent::highlight(html_entity_decode($match[6][$i], ENT_QUOTES), $match[3][$i], "librarys/geshi/geshi");
+            $with_breaks = parent::highlight(
+                html_entity_decode($match[6][$i], ENT_QUOTES),
+                $match[3][$i],
+                "librarys/geshi/geshi"
+            );
             $code[$i] = $with_breaks;
             $string = str_replace($match[0][$i], '⓬' . $i . '⓬', $string);
         }
         $re = '#(\\\\begin\\{math\\})(.*?)(\\\\end\\{math\\})#suim';
         $vh = preg_match_all($re, $string, $match);
         for ($i = 0; $i < $vh; $i++) {
-            $with_breaks = parent::make_formula($match[2][$i]);
+            $with_breaks = parent::makeFormula($match[2][$i]);
             $math[$i] = $with_breaks;
             $string = str_replace($match[0][$i], 'ᴥ' . $i . 'ᴥ', $string);
         }
@@ -79,7 +84,11 @@ final class TexMark extends Mark
                 }
             }
         }
-        $tags1 = array('center' => '<p align="center">', 'flushleft' => '<p align="left">', 'flushright' => '<p align="right">',);
+        $tags1 = array(
+            'center' => '<p align="center">',
+            'flushleft' => '<p align="left">',
+            'flushright' => '<p align="right">',
+        );
         foreach ($tags1 as $tag1 => $val1) {
             $re = '#(\\\\begin{' . $tag1 . '})(.*?[^\\\\end{' . $tag1 . '}]?)(\\\\end{' . $tag1 . '})#sim';
             if ($tag1 == 'center' || $tag1 == 'flushleft' || $tag1 == 'flushright') {
@@ -94,12 +103,13 @@ final class TexMark extends Mark
         }
         $user_re = "#(\\\\user{)(.*?[^}]?)(})#sim";
         $arr = preg_match_all($user_re, $string, $match);
+        /** @var $userRepository \RL\SecurityBundle\Entity\UserRepository */
+        $userRepository = $this->entityManager->getRepository('RLSecurityBundle:User');
         for ($i = 0; $i < $arr; $i++) {
-            $where_arr = array(array("key" => 'nick', "value" => $match[2][$i], "oper" => '='));
-            $sel = base::select('users', '', '*', $where_arr, 'AND');
-            if(!empty($sel))
-                $string = preg_replace($user_re, "<b><a href=\"/profile.php?user=\$2\">\$2</a></b>", $string, 1);
-            else {
+            $user = $userRepository->findOneByUsername($match[2][$i]);
+            if (null !== $user) {
+                $string = preg_replace($user_re, "<b><a href=\"/user/\$2\">\$2</a></b>", $string, 1);
+            } else {
                 $string = preg_replace($user_re, "\$2", $string, 1);
             }
         }
@@ -107,10 +117,11 @@ final class TexMark extends Mark
         $vt = preg_match_all($url_re, $string, $match);
         for ($i = 0; $i < $vt; $i++) {
             if (filter_var($match[6][$i], FILTER_VALIDATE_URL)) {
-                if(empty($match[3][$i]))
+                if (empty($match[3][$i])) {
                     $string = preg_replace($url_re, "<a href=\"\$6\">\$6</a>", $string, 1);
-                else
+                } else {
                     $string = preg_replace($url_re, "<a href=\"\$6\">\$3</a>", $string, 1);
+                }
             }
         }
         $img_re = '#(\\\\img)(\\[?) ?(left|right|middle|top|bottom)? ?(\\])?{(.*?[^}]?)(})#sim';
@@ -118,15 +129,37 @@ final class TexMark extends Mark
         for ($i = 0; $i < $vt; $i++) {
             $imageinfo = getimagesize($match[5][$i]);
             if ($imageinfo[0] > 1024) {
-                if(!empty($match[3][$i]))
-                    $string = preg_replace($img_re, "<img src=\"\$5\" align=\"$3\" width=\"1024\" alt=\"[путь к изображению некорректен]\" />", $string, 1);
-                else
-                    $string = preg_replace($img_re, "<img src=\"\$5\" width=\"1024\" alt=\"[путь к изображению некорректен]\" />", $string, 1);
+                if (!empty($match[3][$i])) {
+                    $string = preg_replace(
+                        $img_re,
+                        "<img src=\"\$5\" align=\"$3\" width=\"1024\" alt=\"[incorrect path to image]\" />",
+                        $string,
+                        1
+                    );
+                } else {
+                    $string = preg_replace(
+                        $img_re,
+                        "<img src=\"\$5\" width=\"1024\" alt=\"[incorrect path to image]\" />",
+                        $string,
+                        1
+                    );
+                }
             } else {
-                if(!empty($match[3][$i]))
-                    $string = preg_replace($img_re, "<img src=\"\$5\" align=\"$3\" alt=\"[путь к изображению некорректен]\" />", $string, 1);
-                else
-                    $string = preg_replace($img_re, "<img src=\"\$5\" alt=\"[путь к изображению некорректен]\" />", $string, 1);
+                if (!empty($match[3][$i])) {
+                    $string = preg_replace(
+                        $img_re,
+                        "<img src=\"\$5\" align=\"$3\" alt=\"[incorrect path to image]\" />",
+                        $string,
+                        1
+                    );
+                } else {
+                    $string = preg_replace(
+                        $img_re,
+                        "<img src=\"\$5\" alt=\"[incorrect path to image]\" />",
+                        $string,
+                        1
+                    );
+                }
             }
         }
         $string = '<p>' . $string . '</p>';
@@ -136,7 +169,11 @@ final class TexMark extends Mark
         $re = "#(⓬)([0-9]+)(⓬)#sim";
         $vt = preg_match_all($re, $string, $match);
         for ($i = 0; $i < $vt; $i++) {
-            $string = str_replace('⓬' . $match[2][$i] . '⓬', '<fieldset><legend>' . $lang[$match[2][$i]] . '</legend>' . $code[$match[2][$i]] . '</fieldset>', $string);
+            $string = str_replace(
+                '⓬' . $match[2][$i] . '⓬',
+                    '<fieldset><legend>' . $lang[$match[2][$i]] . '</legend>' . $code[$match[2][$i]] . '</fieldset>',
+                $string
+            );
         }
         $re = "#(ᴥ)([0-9]+)(ᴥ)#suim";
         $vt = preg_match_all($re, $string, $match);

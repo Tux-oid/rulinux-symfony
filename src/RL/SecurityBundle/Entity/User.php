@@ -38,7 +38,7 @@ class User implements RLUserInterface, \Serializable, EquatableInterface
     /**
      * @ORM\Column(type="string", length=32)
      */
-    private $salt;
+    protected  $salt;
     /**
      * @ORM\Column(name="password", type="string", length=255)
      * @Assert\NotBlank()
@@ -190,6 +190,15 @@ class User implements RLUserInterface, \Serializable, EquatableInterface
      * @ORM\OneToMany(targetEntity="RL\ForumBundle\Entity\Message", mappedBy="user")
      */
     protected $comments;
+
+    /**
+     * @ORM\ManyToMany(targetEntity="RL\ForumBundle\Entity\Message", inversedBy="changedBy")
+     */
+    protected $editedComments;
+
+    /**
+     * Constructor
+     */
     public function __construct()
     {
         $this->active = true;
@@ -1029,7 +1038,7 @@ class User implements RLUserInterface, \Serializable, EquatableInterface
     }
     public function isAnonymous()
     {
-        return FALSE;
+        return false;
     }
     public function isActive()
     {
@@ -1072,5 +1081,20 @@ class User implements RLUserInterface, \Serializable, EquatableInterface
     public function getGroup()
     {
         return $this->group;
+    }
+
+    public function addEditedComment($editedComment)
+    {
+        $this->editedComments[] = $editedComment;
+    }
+
+    public function removeEditedComment($editedComment)
+    {
+        $this->editedComments->remove($editedComment);
+    }
+
+    public function getEditedComments()
+    {
+        return $this->editedComments;
     }
 }

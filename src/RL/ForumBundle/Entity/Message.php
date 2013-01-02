@@ -65,7 +65,7 @@ class Message
      */
     protected $changingTime;
     /**
-     * @ORM\OneToOne(targetEntity="RL\SecurityBundle\Entity\User")
+     * @ORM\ManyToMany(targetEntity="RL\SecurityBundle\Entity\User", inversedBy="editedComments")
      */
     protected $changedBy;
     /**
@@ -283,14 +283,25 @@ class Message
         return $this->showUa;
     }
     /**
-     * Set changedBy
+     * Add changedBy
      *
      * @param \RL\SecurityBundle\Entity\User $changedBy
      */
-    public function setChangedBy($changedBy)
+    public function addChangedBy($changedBy)
     {
-        $this->changedBy = $changedBy;
+        $this->changedBy[] = $changedBy;
     }
+
+    /**
+     * Remove changedBy
+     *
+     * @param \RL\SecurityBundle\Entity\User $changedBy
+     */
+    public function removeChangedBy($changedBy)
+    {
+        $this->changedBy[] = $changedBy;
+    }
+
     /**
      * Get changedBy
      *

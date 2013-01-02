@@ -21,9 +21,9 @@
 	<div class=sign>
 		{{message.user.username}}(<a href="{{path('user', {'name': message.user.username})}}">*</a>)({{message.postingTime.date}})
 		<br>
-		{%if message.changedBy is not null%}
-		<b><i>Changed by {{message.changedBy.username}} on account of "{{message.changedFor}}"</i></b>
-		{%endif%}
+        {%if message.changedBy.last != false%}
+            <b><i>Changed by {{message.changedBy.last.username}} on account of "{{message.changedFor}}"</i></b>
+        {%endif%}
 		<br>
 		{%if is_granted('ROLE_ADMIN')%}
 			<i>{{message.useragent}}</i>

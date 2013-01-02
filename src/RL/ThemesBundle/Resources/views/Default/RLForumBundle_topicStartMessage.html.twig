@@ -19,8 +19,8 @@
 <p>
 <i>{{startMessage.user.username}}(<a href="{{path('user', {'name': startMessage.user.username})}}">*</a>) ({{startMessage.postingTime.date}})</i>
 <br>
-{%if startMessage.changedBy is not null%}
-<b><i>Changed by {{startMessage.changedBy.username}} on account of "{{startMessage.changedFor}}"</i></b>
+{%if startMessage.changedBy.last != false%}
+<b><i>Changed by {{startMessage.changedBy.last.username}} on account of "{{startMessage.changedFor}}"</i></b>
 {%endif%}
 <br>
 {%if is_granted('ROLE_ADMIN')%}
@@ -34,3 +34,4 @@
 [<a href="{{path('comment', {'thread_id': startMessage.thread.id, 'comment_id': startMessage.id})}}">{%trans%}Reply to this message{%endtrans%}</a>]<br>
 </div>
 </div>
+

@@ -9,7 +9,7 @@ class AdministratorSettingsForm
     /**
      * @var
      */
-    private $group;
+    protected $group;
 
     /**
      * @param $groups

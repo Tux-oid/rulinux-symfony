@@ -177,13 +177,14 @@ class DefaultController extends Controller
     public function editMessage($messageId)
     {
         $theme = $this->get('rl_themes.theme.provider');
+        /** @var $securityContext \Symfony\Component\Security\Core\SecurityContext */
         $securityContext = $this->get('security.context');
         $user = $securityContext->getToken()->getUser();
         $doctrine = $this->get('doctrine');
         $messageRepository = $doctrine->getRepository('RLForumBundle:Message');
         $message = $messageRepository->findOneById($messageId);
         //check access
-        if ($message->getUser() != $user || !$securityContext->isGranted('ROLE_MODER')) {
+        if ($message->getUser() != $user && !$securityContext->isGranted('ROLE_MODER')) {
             $legend = 'Access denied';
             $title = 'Edit message';
             $text = 'You have not privelegies to edit this message';
@@ -223,7 +224,7 @@ class DefaultController extends Controller
             if ($user->isAnonymous()) {
                 $user = $user->getDbAnonymous();
             }
-            $message->setChangedBy($user);
+            $message->addChangedBy($user);
             $message->setChangedFor($cmnt['editionReason']);
             $em->flush();
 

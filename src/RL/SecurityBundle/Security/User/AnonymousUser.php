@@ -9,13 +9,35 @@ use Symfony\Component\Security\Core\User\EquatableInterface;
 use RL\SecurityBundle\Entity\Group;
 use RL\MainBundle\Entity\Mark;
 
+/**
+ * RL\SecurityBundle\Security\User\AnonymousUser
+ */
 class AnonymousUser implements RLUserInterface, EquatableInterface
 {
+    /**
+     * @var array
+     */
     protected $attributes;
+    /**
+     * @var mixed
+     */
     protected $identity;
+    /**
+     * @var \RL\SecurityBundle\Entity\User
+     */
     protected $dbAnon;
+    /**
+     * @var \Doctrine\Bundle\DoctrineBundle\Registry
+     */
     protected $doctrine;
-    public function __construct($identity, array $attributes = array(), \Doctrine\Bundle\DoctrineBundle\Registry &$doctrine, $logger = NULL)
+
+    /**
+     * @param $identity
+     * @param array $attributes
+     * @param \Doctrine\Bundle\DoctrineBundle\Registry $doctrine
+     * @param null $logger
+     */
+    public function __construct($identity, array $attributes = array(), \Doctrine\Bundle\DoctrineBundle\Registry &$doctrine, $logger = null)
     {
         $this->identity = $identity;
         $this->attributes = $attributes;
@@ -24,78 +46,140 @@ class AnonymousUser implements RLUserInterface, EquatableInterface
         $this->dbAnon = $userRepository->findOneByUsername('anonymous');
         $this->dbAnon->setLastVisitDate(new \DateTime('now'));
     }
+
+    /**
+     * @return string
+     */
     public function __toString()
     {
         return 'anon.';
     }
     // RLUserInterface
 
+    /**
+     * @return mixed
+     */
     public function getIdentity()
     {
         return $this->identity;
     }
+
+    /**
+     * @return bool
+     */
     public function isAnonymous()
     {
-        return TRUE;
+        return true;
     }
+
+    /**
+     * @return array
+     */
     public function getAttributes()
     {
         return $this->attributes;
     }
+
+    /**
+     * @return mixed
+     */
     public function getTheme()
     {
         return array_key_exists('theme', $this->attributes) ? $this->doctrine->getManager()->getRepository('RLThemesBundle:Theme')->findOneByName($this->attributes['theme']) : $this->dbAnon->getTheme();
     }
+
+    /**
+     * @param $value
+     */
     public function setTheme($value)
     {
         $this->attributes['theme'] = $value->getName();
     }
     // AdvancedUserInterface
 
+    /**
+     * @return bool
+     */
     public function isAccountNonExpired()
     {
         return true;
     }
+
+    /**
+     * @return bool
+     */
     public function isAccountNonLocked()
     {
-        return TRUE;
+        return true;
     }
+
+    /**
+     * @return bool
+     */
     public function isCredentialsNonExpired()
     {
         return true;
     }
+
+    /**
+     * @return bool
+     */
     public function isEnabled()
     {
-        return TRUE;
+        return true;
     }
     // UserInterface
 
+    /**
+     * @return mixed
+     */
     public function getRoles()
     {
         $userRole = $this->dbAnon->getRoles();
 
         return $userRole;
     }
+
+    /**
+     * @return null
+     */
     public function getPassword()
     {
-        return NULL;
+        return null;
     }
+
+    /**
+     * @return null
+     */
     public function getSalt()
     {
-        return NULL;
+        return null;
     }
+
+    /**
+     * @return mixed
+     */
     public function getUsername()
     {
         return $this->dbAnon->getUsername();
     }
+
+    /**
+     *
+     */
     public function eraseCredentials()
     {
 
     }
+
+    /**
+     * @param \Symfony\Component\Security\Core\User\UserInterface $user
+     * @return bool
+     */
     public function isEqualTo(UserInterface $user)
     {
-        if ($user instanceof RLUser) {
-            if ($user->isAnonymous) {
+        if ($user instanceof RLUserInterface) {
+            if ($user->isAnonymous()) {
                 return ($this->getIdentity() == $user->getIdentity());
             } else
 
@@ -104,308 +188,563 @@ class AnonymousUser implements RLUserInterface, EquatableInterface
 
             return false;
     }
+
+    /**
+     * @return mixed
+     */
     public function getBlocks()
     {
         return array_key_exists('blocks', $this->attributes) ? $this->attributes['blocks'] : $this->dbAnon->getCaptchaLevel();
     }
+
+    /**
+     * @param $value
+     */
     public function setBlocks($value)
     {
         $attributes = $this->getAttributes();
         $attributes['blocks'] = $value;
     }
+
+    /**
+     * @param \RL\SecurityBundle\Entity\Group $group
+     */
     public function setGroup(Group $group)
     {
     }
+
+    /**
+     * @return bool
+     */
     public function isActive()
     {
-        return TRUE;
+        return true;
     }
+
+    /**
+     * @return mixed
+     */
     public function getCaptchaLevel()
     {
         return array_key_exists('captchaLevel', $this->attributes) ? $this->attributes['captchaLevel'] : $this->dbAnon->getCaptchaLevel();
     }
+
+    /**
+     * @return mixed
+     */
     public function getCommentsOnPage()
     {
         return array_key_exists('commentsOnPage', $this->attributes) ? $this->attributes['commentsOnPage'] : $this->dbAnon->getCommentsOnPage();
     }
+
+    /**
+     * @return mixed
+     */
     public function getFilters()
     {
         return array_key_exists('filters', $this->attributes) ? $this->attributes['filters'] : $this->dbAnon->getFilters();
     }
+
+    /**
+     * @return mixed
+     */
     public function getGmt()
     {
         return array_key_exists('gmt', $this->attributes) ? $this->attributes['gmt'] : $this->dbAnon->getGmt();
     }
+
+    /**
+     * @return mixed
+     */
     public function getGroup()
     {
         return $this->getRoles();
     }
+
+    /**
+     * @return mixed
+     */
     public function getId()
     {
         return $this->dbAnon->getId();
     }
+
+    /**
+     * @return mixed
+     */
     public function getLanguage()
     {
         return array_key_exists('language', $this->attributes) ? $this->attributes['language'] : $this->dbAnon->getLanguage();
     }
+
+    /**
+     * @return mixed
+     */
     public function getLastVisitDate()
     {
         return $this->dbAnon->getLastVisitDate();
     }
+
+    /**
+     * @return mixed
+     */
     public function getMark()
     {
         return array_key_exists('mark', $this->attributes) ? $this->doctrine->getManager()->getRepository('RLMainBundle:Mark')->findOneByName($this->attributes['mark']) : $this->dbAnon->getMark();
     }
+
+    /**
+     * @return mixed
+     */
     public function getNewsOnPage()
     {
         return array_key_exists('newsOnPage', $this->attributes) ? $this->attributes['newsOnPage'] : $this->dbAnon->getNewsOnPage();
     }
+
+    /**
+     * @return mixed
+     */
     public function getRegistrationDate()
     {
         return $this->dbAnon->getRegistrationDate();
     }
+
+    /**
+     * @return mixed
+     */
     public function getShowAvatars()
     {
         return array_key_exists('showAvatars', $this->attributes) ? $this->attributes['showAvatars'] : $this->dbAnon->getShowAvatars();
     }
+
+    /**
+     * @return mixed
+     */
     public function getShowResp()
     {
         return array_key_exists('showResp', $this->attributes) ? $this->attributes['showResp'] : $this->dbAnon->getShowResp();
     }
+
+    /**
+     * @return mixed
+     */
     public function getShowUa()
     {
         return array_key_exists('showUa', $this->attributes) ? $this->attributes['showUa'] : $this->dbAnon->getShowUa();
     }
+
+    /**
+     * @return mixed
+     */
     public function getSortingType()
     {
         return array_key_exists('sortingType', $this->attributes) ? $this->attributes['sortingType'] : $this->dbAnon->getSortingType();
     }
+
+    /**
+     * @return mixed
+     */
     public function getThreadsOnPage()
     {
         return array_key_exists('threadsOnPage', $this->attributes) ? $this->attributes['threadsOnPage'] : $this->dbAnon->getThreadsOnPage();
     }
+
+    /**
+     * @param $captchaLevel
+     */
     public function setCaptchaLevel($captchaLevel)
     {
         $this->attributes['captchaLevel'] = $captchaLevel;
     }
+
+    /**
+     * @param $commentsOnPage
+     */
     public function setCommentsOnPage($commentsOnPage)
     {
         $this->attributes['commentsOnPage'] = $commentsOnPage;
     }
+
+    /**
+     * @param $filters
+     */
     public function setFilters($filters)
     {
         $this->attributes['filters'] = $filters;
     }
+
+    /**
+     * @param $gmt
+     */
     public function setGmt($gmt)
     {
         $this->attributes['gmt'] = $gmt;
     }
+
+    /**
+     * @param $language
+     */
     public function setLanguage($language)
     {
         $this->attributes['language'] = $language;
     }
+
+    /**
+     * @param $lastVisitDate
+     */
     public function setLastVisitDate($lastVisitDate)
     {
         $this->attributes['lastVisitDate'] = $lastVisitDate;
     }
+
+    /**
+     * @param \RL\MainBundle\Entity\Mark $mark
+     */
     public function setMark(\RL\MainBundle\Entity\Mark $mark)
     {
         $this->attributes['mark'] = $mark->getName();
     }
+
+    /**
+     * @param $newsOnPage
+     */
     public function setNewsOnPage($newsOnPage)
     {
         $this->attributes['newsOnPage'] = $newsOnPage;
     }
+
+    /**
+     * @param $registrationDate
+     */
     public function setRegistrationDate($registrationDate)
     {
         $this->attributes['registrationDate'] = $registrationDate;
     }
+
+    /**
+     * @param $showAvatars
+     */
     public function setShowAvatars($showAvatars)
     {
         $this->attributes['showAvatars'] = $showAvatars;
     }
+
+    /**
+     * @param $showResp
+     */
     public function setShowResp($showResp)
     {
         $this->attributes['showResp'] = $showResp;
     }
+
+    /**
+     * @param $showUa
+     */
     public function setShowUa($showUa)
     {
         $this->attributes['showUa'] = $showUa;
     }
+
+    /**
+     * @param $sortingType
+     */
     public function setSortingType($sortingType)
     {
         $this->attributes['sortingType'] = $sortingType;
     }
+
+    /**
+     * @param $threadsOnPage
+     */
     public function setThreadsOnPage($threadsOnPage)
     {
         $this->attributes['threadsOnPage'] = $threadsOnPage;
     }
 
+    /**
+     * @param $name
+     * @return mixed
+     */
     public function setName($name)
     {
         return $this->dbAnon->setName($name);
     }
 
+    /**
+     * @return mixed
+     */
     public function getName()
     {
         return $this->dbAnon->getName();
     }
 
+    /**
+     * @param $lastname
+     * @return mixed
+     */
     public function setLastname($lastname)
     {
         return $this->dbAnon->setLastname($lastname);
     }
 
+    /**
+     * @return mixed
+     */
     public function getLastname()
     {
         return $this->dbAnon->getLastname();
     }
 
+    /**
+     * @param $country
+     * @return mixed
+     */
     public function setCountry($country)
     {
         return $this->dbAnon->setCountry($country);
     }
 
+    /**
+     * @return mixed
+     */
     public function getCountry()
     {
         return $this->dbAnon->getCountry();
     }
 
+    /**
+     * @param $city
+     * @return mixed
+     */
     public function setCity($city)
     {
         return $this->dbAnon->setCity($city);
     }
 
+    /**
+     * @return mixed
+     */
     public function getCity()
     {
         return $this->dbAnon->getCity();
     }
 
+    /**
+     * @param $photo
+     * @return mixed
+     */
     public function setPhoto($photo)
     {
         return $this->dbAnon->setPhoto($photo);
     }
 
+    /**
+     * @return mixed
+     */
     public function getPhoto()
     {
         return $this->dbAnon->getPhoto();
     }
 
+    /**
+     * @param $birthday
+     * @return mixed
+     */
     public function setBirthday($birthday)
     {
         return $this->dbAnon->setBirthday($birthday);
     }
 
+    /**
+     * @return mixed
+     */
     public function getBirthday()
     {
         return $this->dbAnon->getBirthday();
     }
 
+    /**
+     * @param $gender
+     * @return mixed
+     */
     public function setGender($gender)
     {
         return $this->dbAnon->setGender($gender);
     }
 
+    /**
+     * @return mixed
+     */
     public function getGender()
     {
         return $this->dbAnon->getGender();
     }
 
+    /**
+     * @param $additional
+     * @return mixed
+     */
     public function setAdditional($additional)
     {
         return $this->dbAnon->setAdditional($additional);
     }
 
+    /**
+     * @return mixed
+     */
     public function getAdditional()
     {
         return $this->dbAnon->getAdditional();
     }
 
+    /**
+     * @param $additionalRaw
+     * @return mixed
+     */
     public function setAdditionalRaw($additionalRaw)
     {
         return $this->dbAnon->setAdditionalRaw($additionalRaw);
     }
 
+    /**
+     * @return mixed
+     */
     public function getAdditionalRaw()
     {
         return $this->dbAnon->getAdditionalRaw();
     }
 
+    /**
+     * @param $email
+     * @return mixed
+     */
     public function setEmail($email)
     {
         return $this->dbAnon->setEmail($email);
     }
 
+    /**
+     * @return mixed
+     */
     public function getEmail()
     {
         return $this->dbAnon->getEmail();
     }
 
+    /**
+     * @param $im
+     * @return mixed
+     */
     public function setIm($im)
     {
         return $this->dbAnon->setIm($im);
     }
 
+    /**
+     * @return mixed
+     */
     public function getIm()
     {
         return $this->dbAnon->getIm();
     }
 
+    /**
+     * @param $openid
+     * @return mixed
+     */
     public function setOpenid($openid)
     {
         return $this->dbAnon->setOpenid($openid);
     }
 
+    /**
+     * @return mixed
+     */
     public function getOpenid()
     {
         return $this->dbAnon->getOpenid();
     }
 
+    /**
+     * @param $showEmail
+     * @return mixed
+     */
     public function setShowEmail($showEmail)
     {
         return $this->dbAnon->setShowEmail($showEmail);
     }
 
+    /**
+     * @return mixed
+     */
     public function getShowEmail()
     {
         return $this->dbAnon->getShowEmail();
     }
 
+    /**
+     * @param $showIm
+     * @return mixed
+     */
     public function setShowIm($showIm)
     {
         return $this->dbAnon->setShowIm($showIm);
     }
 
+    /**
+     * @return mixed
+     */
     public function getShowIm()
     {
         return $this->dbAnon->getShowIm();
     }
 
+    /**
+     * @param $active
+     * @return mixed
+     */
     public function setActive($active)
     {
         return $this->dbAnon->setActive($active);
     }
 
+    /**
+     * @param $question
+     * @return mixed
+     */
     public function setQuestion($question)
     {
         return $this->dbAnon->setQuestion($question);
     }
 
+    /**
+     * @return mixed
+     */
     public function getQuestion()
     {
         return $this->dbAnon->getQuestion();
     }
 
+    /**
+     * @param $answer
+     * @return mixed
+     */
     public function setAnswer($answer)
     {
         return $this->dbAnon->setAnswer($answer);
     }
 
+    /**
+     * @return mixed
+     */
     public function getAnswer()
     {
         return $this->dbAnon->getAnswer();
     }
 
+    /**
+     * @return \RL\SecurityBundle\Entity\User
+     */
     public function getDbAnonymous()
     {
         return $this->dbAnon;

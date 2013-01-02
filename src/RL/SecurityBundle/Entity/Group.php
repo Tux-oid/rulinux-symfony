@@ -34,6 +34,10 @@ class Group implements RoleInterface, \Serializable
      * @ORM\OneToMany(targetEntity="User", mappedBy="group")
      */
     protected $users;
+
+    /**
+     * Constructor
+     */
     public function __construct()
     {
         $this->users = new \Doctrine\Common\Collections\ArrayCollection();
@@ -93,7 +97,7 @@ class Group implements RoleInterface, \Serializable
     /**
      * Add users
      *
-     * @param RL\SecurityBundle\Entity\User $users
+     * @param \RL\SecurityBundle\Entity\User $users
      */
     public function addUser(\RL\SecurityBundle\Entity\User $users)
     {
@@ -102,7 +106,7 @@ class Group implements RoleInterface, \Serializable
     /**
      * Get users
      *
-     * @return Doctrine\Common\Collections\Collection
+     * @return \Doctrine\Common\Collections\Collection
      */
     public function getUsers()
     {

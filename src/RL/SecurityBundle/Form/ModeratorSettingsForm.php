@@ -10,12 +10,12 @@ class ModeratorSettingsForm
     /**
      * @var
      */
-    private $active;
+    protected $active;
     /**
      * @var
      * @Assert\Regex("#([0-9]+)#")
      */
-    private $captchaLevel;
+    protected $captchaLevel;
 
     /**
      * @param $active

@@ -6,6 +6,7 @@
 namespace RL\MainBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use Doctrine\ORM\EntityManager;
 use PMP;
 
 require_once __DIR__.'/../../../../vendor/GeSHi/GeSHi/src/geshi.php';
@@ -38,6 +39,14 @@ abstract class Mark
      */
     protected $users;
 
+    /**
+     * @var \Doctrine\ORM\EntityManager
+     */
+    protected $entityManager;
+
+    /**
+     * Constructor
+     */
     public function __construct()
     {
         $this->users = new \Doctrine\Common\Collections\ArrayCollection();
@@ -113,8 +122,36 @@ abstract class Mark
         return $this->users;
     }
 
+    /**
+     * @param \Doctrine\ORM\EntityManager $entityManager
+     */
+    public function setEntityManager(EntityManager $entityManager)
+    {
+        $this->entityManager = $entityManager;
+    }
+
+    /**
+     * @return \Doctrine\ORM\EntityManager
+     */
+    public function getEntityManager()
+    {
+        return $this->entityManager;
+    }
+
+    /**
+     * Render message
+     *
+     * @param $string
+     * @return mixed
+     */
     abstract public function render($string);
 
+    /**
+     * Create formulas
+     *
+     * @param $string
+     * @return mixed|string
+     */
     public function makeFormula($string)
     {
         $text = '<m>' . $string . '</m>';
@@ -126,6 +163,13 @@ abstract class Mark
         return $str;
     }
 
+    /**
+     * Highlight source code
+     *
+     * @param $code
+     * @param $lang
+     * @return string
+     */
     public function highlight($code, $lang)
     {
         if(empty($lang))
@@ -138,6 +182,11 @@ abstract class Mark
         return $code;
     }
 
+    /**
+     * Get list of highlighted languages
+     *
+     * @return array
+     */
     public function getHighlightedLanguages()
     {
         $geshi = new \GeSHi('', '');
@@ -145,5 +194,11 @@ abstract class Mark
         asort($languages);
 
         return $languages;
+    }
+
+    public function __sleep()
+    {
+        unset($this->entityManager);
+        return array_keys(get_object_vars($this));
     }
 }

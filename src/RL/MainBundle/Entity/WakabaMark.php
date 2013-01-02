@@ -3,6 +3,7 @@
  * @author Tux-oid
  */
 namespace RL\MainBundle\Entity;
+
 use Doctrine\ORM\Mapping as ORM;
 use RL\MainBundle\Entity\Mark;
 
@@ -23,14 +24,18 @@ final class WakabaMark extends Mark
         $vh = preg_match_all($re, $string, $match);
         for ($i = 0; $i < $vh; $i++) {
             $lang[$i] = $match[2][$i];
-            $with_breaks = parent::highlight(html_entity_decode($match[4][$i], ENT_QUOTES), $match[3][$i], "librarys/geshi/geshi");
+            $with_breaks = parent::highlight(
+                html_entity_decode($match[4][$i], ENT_QUOTES),
+                $match[3][$i],
+                "librarys/geshi/geshi"
+            );
             $code[$i] = $with_breaks;
             $string = str_replace($match[0][$i], '⓬' . $i . '⓬', $string);
         }
         $re = '#(\\{\\{)(.*?)(\\}\\})#suim';
         $vh = preg_match_all($re, $string, $match);
         for ($i = 0; $i < $vh; $i++) {
-            $with_breaks = parent::make_formula($match[2][$i]);
+            $with_breaks = parent::makeFormula($match[2][$i]);
             $math[$i] = $with_breaks;
             $string = str_replace($match[0][$i], 'ᴥ' . $i . 'ᴥ', $string);
         }
@@ -64,9 +69,21 @@ final class WakabaMark extends Mark
             $with_breaks = preg_replace('/(\\r\\n)([0-9]\\. )/', '<li>&nbsp;', $match[2][$i]);
             $string = str_replace($match[2][$i], $with_breaks, $string);
         }
-        $string = preg_replace("#(>>|&gt;&gt;)(.*?(^>>|&gt;&gt;)?)(>>|&gt;&gt;)#sim", "<p align=\"right\">\$2</p>", $string);
-        $string = preg_replace("#(<<|&lt;&lt;)(.*?(^<<|&lt;&lt;)?)(<<|&lt;&lt;)#sim", "<p align=\"left\">\$2</p>", $string);
-        $string = preg_replace("#(<>|&lt;&gt;)(.*?(^<>|&lt;&gt;)?)(<>|&lt;&gt;)#sim", "<p align=\"center\">\$2</p>", $string);
+        $string = preg_replace(
+            "#(>>|&gt;&gt;)(.*?(^>>|&gt;&gt;)?)(>>|&gt;&gt;)#sim",
+            "<p align=\"right\">\$2</p>",
+            $string
+        );
+        $string = preg_replace(
+            "#(<<|&lt;&lt;)(.*?(^<<|&lt;&lt;)?)(<<|&lt;&lt;)#sim",
+            "<p align=\"left\">\$2</p>",
+            $string
+        );
+        $string = preg_replace(
+            "#(<>|&lt;&gt;)(.*?(^<>|&lt;&gt;)?)(<>|&lt;&gt;)#sim",
+            "<p align=\"center\">\$2</p>",
+            $string
+        );
         $quote = array();
         $re = '#(`)([^`].*?[^`]?)(`)#sim';
         $vt = preg_match_all($re, $string, $match);
@@ -80,11 +97,12 @@ final class WakabaMark extends Mark
         }
         $user_re = "#(\\^)(.*?[^\\^]?)(\\^)#sim";
         $arr = preg_match_all($user_re, $string, $match);
+        /** @var $userRepository \RL\SecurityBundle\Entity\UserRepository */
+        $userRepository = $this->entityManager->getRepository('RLSecurityBundle:User');
         for ($i = 0; $i < $arr; $i++) {
-            $where_arr = array(array("key" => 'nick', "value" => $match[2][$i], "oper" => '='));
-            $sel = base::select('users', '', '*', $where_arr, 'AND');
-            if (!empty($sel)) {
-                $string = preg_replace($user_re, "<b><a href=\"/profile.php?user=\$2\">\$2</a></b>", $string, 1);
+            $user = $userRepository->findOneByUsername($match[2][$i]);
+            if (null !== $user) {
+                $string = preg_replace($user_re, "<b><a href=\"/user/\$2\">\$2</a></b>", $string, 1);
             } else {
                 $string = preg_replace($user_re, "\$2", $string, 1);
             }
@@ -106,15 +124,35 @@ final class WakabaMark extends Mark
             $imageinfo = getimagesize($match[5][$i]);
             if ($imageinfo[0] > 1024) {
                 if (!empty($match[3][$i])) {
-                    $string = preg_replace($img_re, "<img src=\"\$6\" align=\"$4\" width=\"1024\" alt=\"[путь к изображению некорректен]\" />", $string, 1);
+                    $string = preg_replace(
+                        $img_re,
+                        "<img src=\"\$6\" align=\"$4\" width=\"1024\" alt=\"[incorrect path to image]\" />",
+                        $string,
+                        1
+                    );
                 } else {
-                    $string = preg_replace($img_re, "<img src=\"\$6\" width=\"1024\" alt=\"[путь к изображению некорректен]\" />", $string, 1);
+                    $string = preg_replace(
+                        $img_re,
+                        "<img src=\"\$6\" width=\"1024\" alt=\"[incorrect path to image]\" />",
+                        $string,
+                        1
+                    );
                 }
             } else {
                 if (!empty($match[4][$i])) {
-                    $string = preg_replace($img_re, "<img src=\"\$6\" align=\"$4\" alt=\"[путь к изображению некорректен]\" />", $string, 1);
+                    $string = preg_replace(
+                        $img_re,
+                        "<img src=\"\$6\" align=\"$4\" alt=\"[incorrect path to image]\" />",
+                        $string,
+                        1
+                    );
                 } else {
-                    $string = preg_replace($img_re, "<img src=\"\$6\" alt=\"[путь к изображению некорректен]\" />", $string, 1);
+                    $string = preg_replace(
+                        $img_re,
+                        "<img src=\"\$6\" alt=\"[incorrect path to image]\" />",
+                        $string,
+                        1
+                    );
                 }
             }
         }
@@ -128,7 +166,11 @@ final class WakabaMark extends Mark
         $re = "#(⓬)([0-9]+)(⓬)#sim";
         $vt = preg_match_all($re, $string, $match);
         for ($i = 0; $i < $vt; $i++) {
-            $string = str_replace('⓬' . $match[2][$i] . '⓬', '<fieldset><legend>' . $lang[$match[2][$i]] . '</legend>' . $code[$match[2][$i]] . '</fieldset>', $string);
+            $string = str_replace(
+                '⓬' . $match[2][$i] . '⓬',
+                    '<fieldset><legend>' . $lang[$match[2][$i]] . '</legend>' . $code[$match[2][$i]] . '</fieldset>',
+                $string
+            );
         }
         $re = "#(ᴥ)([0-9]+)(ᴥ)#suim";
         $vt = preg_match_all($re, $string, $match);
