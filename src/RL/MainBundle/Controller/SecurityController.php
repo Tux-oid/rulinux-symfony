@@ -49,6 +49,8 @@ use RL\MainBundle\Form\AdministratorSettingsType;
 use RL\MainBundle\Form\AdministratorSettingsForm;
 use RL\MainBundle\Form\ModeratorSettingsType;
 use RL\MainBundle\Form\ModeratorSettingsForm;
+use RL\MainBundle\Form\FiltersSettingsType;
+use RL\MainBundle\Form\FiltersSettingsForm;
 use RL\MainBundle\Helper\Pages;
 use LightOpenID;
 use Gregwar\ImageBundle\Image;
@@ -481,9 +483,10 @@ class SecurityController extends Controller
         $personalSettings = $this->createForm(new PersonalSettingsType(), $userInProfile);
         $moderatorSettings = $this->createForm(new ModeratorSettingsType(), $userInProfile);
         $administratorSettings = $this->createForm(new AdministratorSettingsType(), $userInProfile);
+        $filtersSettings = $this->createForm(new FiltersSettingsType(), new FiltersSettingsForm());
 
         return $this->render(
-            $theme->getPath('RLMainBundle', 'profileEdit.html.twig'), array('theme' => $theme, 'user' => $user, 'userInfo'=> $userInProfile, 'personalInformation' => $personalInformation->createView(), 'personalSettings'=>$personalSettings->createView(), 'passwordChanging'=>$passwordChanging->createView(), 'moderatorSettings'=>$moderatorSettings->createView(), 'administratorSettings'=>$administratorSettings->createView(), )
+            $theme->getPath('RLMainBundle', 'profileEdit.html.twig'), array('theme' => $theme, 'user' => $user, 'userInfo'=> $userInProfile, 'personalInformation' => $personalInformation->createView(), 'personalSettings'=>$personalSettings->createView(), 'passwordChanging'=>$passwordChanging->createView(), 'moderatorSettings'=>$moderatorSettings->createView(), 'administratorSettings'=>$administratorSettings->createView(), 'filtersSettings'=>$filtersSettings->createView())
         );
     }
 

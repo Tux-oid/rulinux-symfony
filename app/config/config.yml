@@ -21,12 +21,15 @@ framework:
 twig:
     debug:            %kernel.debug%
     strict_variables: %kernel.debug%
+    form:
+        resources:
+            - 'RLMainBundle:Form:fields.html.twig'
 
 # Assetic Configuration
 assetic:
     debug:          %kernel.debug%
     use_controller: false
-    bundles:        [RLMainBundle ]
+    bundles:        [RLMainBundle]
     #java: /usr/bin/java
     filters:
         cssrewrite: ~
