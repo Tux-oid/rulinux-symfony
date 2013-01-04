@@ -6,7 +6,7 @@
 namespace RL\ForumBundle\Entity;
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\ArrayCollection;
-use RL\SecurityBundle\Entity\User;
+use RL\MainBundle\Entity\User;
 use RL\ForumBundle\Entity\Thread;
 
 /**
@@ -27,7 +27,7 @@ class Message
      */
     protected $thread;
     /**
-     * @ORM\ManyToOne(targetEntity="RL\SecurityBundle\Entity\User", inversedBy="comments")
+     * @ORM\ManyToOne(targetEntity="RL\MainBundle\Entity\User", inversedBy="comments")
      */
     protected $user;
     /**
@@ -65,14 +65,18 @@ class Message
      */
     protected $changingTime;
     /**
-     * @ORM\ManyToMany(targetEntity="RL\SecurityBundle\Entity\User", inversedBy="editedComments")
+     * @ORM\ManyToMany(targetEntity="RL\MainBundle\Entity\User", mappedBy="editedComments")
      */
     protected $changedBy;
     /**
      * @ORM\Column(type="string", length=512, name="changed_for", nullable=true)
      */
     protected $changedFor;
-    //ManyToOne on filters Entity
+    /**
+     * @ORM\ManyToMany(targetEntity="RL\MainBundle\Entity\Filter", mappedBy="messages")
+     *
+     * @var \Doctrine\Common\Collections\ArrayCollection
+     */
     protected $filters;
     /**
      * @ORM\Column(type="boolean", name="show_ua")
@@ -285,7 +289,7 @@ class Message
     /**
      * Add changedBy
      *
-     * @param \RL\SecurityBundle\Entity\User $changedBy
+     * @param \RL\MainBundle\Entity\User $changedBy
      */
     public function addChangedBy($changedBy)
     {
@@ -295,7 +299,7 @@ class Message
     /**
      * Remove changedBy
      *
-     * @param \RL\SecurityBundle\Entity\User $changedBy
+     * @param \RL\MainBundle\Entity\User $changedBy
      */
     public function removeChangedBy($changedBy)
     {
@@ -305,7 +309,7 @@ class Message
     /**
      * Get changedBy
      *
-     * @return \RL\SecurityBundle\Entity\User
+     * @return \RL\MainBundle\Entity\User
      */
     public function getChangedBy()
     {
@@ -314,7 +318,7 @@ class Message
     /**
      * Set user
      *
-     * @param \RL\SecurityBundle\Entity\User $user
+     * @param \RL\MainBundle\Entity\User $user
      */
     public function setUser($user)
     {
@@ -323,7 +327,7 @@ class Message
     /**
      * Get user
      *
-     * @return \RL\SecurityBundle\Entity\User
+     * @return \RL\MainBundle\Entity\User
      */
     public function getUser()
     {
@@ -394,6 +398,34 @@ class Message
     public function getResponses()
     {
         return $this->responses;
+    }
+
+    /**
+     * Add filter
+     *
+     * @param \RL\MainBundle\Entity\Filter $filter
+     */
+    public function addFilter($filter)
+    {
+        $this->filters[] = $filter;
+    }
+
+    /**
+     * Remove filter
+     *
+     * @param \RL\MainBundle\Entity\Filter $filter
+     */
+    public function removeFilter($filter)
+    {
+        $this->filters->remove($filter);
+    }
+
+    /**
+     * @return \Doctrine\Common\Collections\ArrayCollection
+     */
+    public function getFilters()
+    {
+        return $this->filters;
     }
 
 }

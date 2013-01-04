@@ -1,0 +1,51 @@
+<?php
+/**
+ * @author Tux-oid
+ */
+namespace RL\MainBundle\Form;
+use Symfony\Component\Validator\Constraints as Assert;
+
+class ModeratorSettingsForm
+{
+    /**
+     * @var
+     */
+    protected $active;
+    /**
+     * @var
+     * @Assert\Regex("#([0-9]+)#")
+     */
+    protected $captchaLevel;
+
+    /**
+     * @param $active
+     */
+    public function setActive($active)
+    {
+        $this->active = $active;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getActive()
+    {
+        return $this->active;
+    }
+
+    /**
+     * @param $captchaLevel
+     */
+    public function setCaptchaLevel($captchaLevel)
+    {
+        $this->captchaLevel = $captchaLevel;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getCaptchaLevel()
+    {
+        return $this->captchaLevel;
+    }
+}

@@ -13,7 +13,7 @@ class BlockController extends Controller
      */
     public function renderAuthenticationAction()
     {
-        $theme = $this->get('rl_themes.theme.provider');
+        $theme = $this->get('rl_main.theme.provider');
         $security_context = $this->get('security.context');
         if ($security_context->isGranted('IS_AUTHENTICATED_FULLY') || $security_context->isGranted('IS_AUTHENTICATED_REMEMBERED')) {
             return $this->render($theme->getPath('welcome.html.twig'), array('user' => $security_context->getToken()->getUser()));

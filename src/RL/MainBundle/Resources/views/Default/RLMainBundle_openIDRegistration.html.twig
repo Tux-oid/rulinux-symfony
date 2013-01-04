@@ -1,0 +1,61 @@
+{%extends 'RLMainBundle:Security:registrationSecondPage.html.twig'%}
+
+{%block title%}
+Registration of new user
+{%endblock%}
+
+{%block email_line%}
+<tr>
+<td>
+{{form_label(form.email)}}
+</td>
+<td>
+{{form_widget(form.email, {'attr': {'value' : email}})}}
+</td>
+<td>
+{{form_errors(form.email)}}
+</td>
+</tr>
+{%endblock%}
+
+{%block openid_line%}
+<tr>
+<td>
+{{form_label(form.openid)}}
+</td>
+<td>
+{{form_widget(form.openid, {'attr':{'value' : openid}})}}
+</td>
+<td>
+{{form_errors(form.openid)}}
+</td>
+</tr>
+{%endblock%}
+
+{%block username_line%}
+<tr>
+<td>
+{{form_label(form.username)}}
+</td>
+<td>
+{{form_widget(form.username)}}
+</td>
+<td>
+{{form_errors(form.username)}}
+</td>
+</tr>
+{%endblock%}
+
+{%block password_line%}
+<tr>
+<td>
+{{form_label(form.password)}}
+</td>
+<td>
+{{form_widget(form.password)}}
+</td>
+<td>
+{{form_errors(form.password)}}
+</td>
+</tr>
+{%endblock%}

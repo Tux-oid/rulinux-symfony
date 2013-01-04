@@ -14,7 +14,7 @@ class ModerController extends Controller
      */
     public function approveThreadAction($id)
     {
-        $theme = $this->get('rl_themes.theme.provider');
+        $theme = $this->get('rl_main.theme.provider');
         $securityContext = $this->get('security.context');
         $user = $securityContext->getToken()->getUser();
         if (!$securityContext->isGranted('ROLE_MODER')) {
@@ -59,7 +59,7 @@ class ModerController extends Controller
      */
     public function attachThreadAction($id, $state)
     {
-        $theme = $this->get('rl_themes.theme.provider');
+        $theme = $this->get('rl_main.theme.provider');
         $securityContext = $this->get('security.context');
         $user = $securityContext->getToken()->getUser();
         if (!$securityContext->isGranted('ROLE_MODER')) {

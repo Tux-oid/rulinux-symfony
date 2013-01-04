@@ -39,6 +39,6 @@ class Subsection extends ForumSubsection
     }
     protected function getUploadDir()
     {
-        return 'web/bundles/rlthemes/images/CozyGreen/subsections';//FIXME:theme changing
+        return 'web/bundles/rlmain/images/CozyGreen/subsections';//FIXME:theme changing
     }
 }

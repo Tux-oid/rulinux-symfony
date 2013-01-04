@@ -26,7 +26,7 @@ twig:
 assetic:
     debug:          %kernel.debug%
     use_controller: false
-    bundles:        [RLThemesBundle ]
+    bundles:        [RLMainBundle ]
     #java: /usr/bin/java
     filters:
         cssrewrite: ~
@@ -89,9 +89,9 @@ netpositive_discriminator_map:
                 baseHtml: RL\MainBundle\Entity\BaseHtml
 
 
-rl_security:
+rl_main:
     anonymous:
-        class: RL\SecurityBundle\Security\User\AnonymousUser
+        class: RL\MainBundle\Security\User\AnonymousUser
         defaults:
             username: anonymous
             enabled: true

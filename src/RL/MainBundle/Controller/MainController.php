@@ -17,7 +17,7 @@ class MainController extends Controller
     public function unconfirmedAction()
     {
         $user = $this->get('security.context')->getToken()->getUser();
-        $theme = $this->get('rl_themes.theme.provider');
+        $theme = $this->get('rl_main.theme.provider');
         $doctrine = $this->get('doctrine');
         $threadRepository = $doctrine->getRepository('RLNewsBundle:Thread');
         $unconfirmedThreads = $threadRepository->getUnconfirmed();
@@ -33,7 +33,7 @@ class MainController extends Controller
     public function trackerAction($hours)
     {
         $user = $this->get('security.context')->getToken()->getUser();
-        $theme = $this->get('rl_themes.theme.provider');
+        $theme = $this->get('rl_main.theme.provider');
         $doctrine = $this->get('doctrine');
         $request = $this->getRequest();
         $sbm = $request->request->get('submit');
@@ -57,7 +57,7 @@ class MainController extends Controller
     public function rulesAction()
     {
         $user = $this->get('security.context')->getToken()->getUser();
-        $theme = $this->get('rl_themes.theme.provider');
+        $theme = $this->get('rl_main.theme.provider');
         $doctrine = $this->get('doctrine');
         $settingsRepository = $doctrine->getRepository('RLMainBundle:Settings');
         $rulesTitle = $settingsRepository->findOneByName('rulesTitle')->getValue();
@@ -74,7 +74,7 @@ class MainController extends Controller
     public function linksAction()
     {
         $user = $this->get('security.context')->getToken()->getUser();
-        $theme = $this->get('rl_themes.theme.provider');
+        $theme = $this->get('rl_main.theme.provider');
         $doctrine = $this->get('doctrine');
         $linksRepository = $doctrine->getRepository('RLMainBundle:Link');
         $links = $linksRepository->findAll();
@@ -95,9 +95,9 @@ class MainController extends Controller
      */
     public function markAction($id)
     {
-        /** @var $user \RL\SecurityBundle\Security\User\RLUserInterface */
+        /** @var $user \RL\MainBundle\Security\User\RLUserInterface */
         $user = $this->get('security.context')->getToken()->getUser();
-        $theme = $this->get('rl_themes.theme.provider');
+        $theme = $this->get('rl_main.theme.provider');
         /** @var $markRepository \Doctrine\Orm\EntityRepository */
         $markRepository = $this->getDoctrine()->getRepository('RLMainBundle:Mark');
         if (null === $id) {
@@ -115,7 +115,7 @@ class MainController extends Controller
     public function homepageAction($page)
     {
         $user = $this->get('security.context')->getToken()->getUser();
-        $theme = $this->get('rl_themes.theme.provider');
+        $theme = $this->get('rl_main.theme.provider');
         $doctrine = $this->get('doctrine');
         $sectionRepository = $doctrine->getRepository('RLMainBundle:Section');
         $section = $sectionRepository->findOneByRewrite('news');
@@ -129,7 +129,7 @@ class MainController extends Controller
         $pagesStr = $pages->draw();
 
         return $this->render(
-            $theme->getPath('RLMainBundle', 'index.html.twig'), array('user' => $user, 'theme' => $this->get('rl_themes.theme.provider'), 'threads' => $threads, 'pages' => $pagesStr, 'section' => $section,)
+            $theme->getPath('RLMainBundle', 'index.html.twig'), array('user' => $user, 'theme' => $this->get('rl_main.theme.provider'), 'threads' => $threads, 'pages' => $pagesStr, 'section' => $section,)
         );
     }
 

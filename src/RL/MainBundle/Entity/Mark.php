@@ -35,7 +35,7 @@ abstract class Mark
      */
     protected $description;
     /**
-     * @ORM\OneToMany(targetEntity="RL\SecurityBundle\Entity\User", mappedBy="mark")
+     * @ORM\OneToMany(targetEntity="RL\MainBundle\Entity\User", mappedBy="mark")
      */
     protected $users;
 
@@ -105,9 +105,9 @@ abstract class Mark
     /**
      * Add users
      *
-     * @param \RL\SecurityBundle\Entity\User $users
+     * @param \RL\MainBundle\Entity\User $users
      */
-    public function addUser(\RL\SecurityBundle\Entity\User $users)
+    public function addUser(\RL\MainBundle\Entity\User $users)
     {
         $this->users[] = $users;
     }

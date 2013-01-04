@@ -1,0 +1,36 @@
+{% extends theme.path('RLMainBundle', 'layout.html.twig') %}
+
+{% block content %}
+    <h1>{% trans %}List of registered users{% endtrans %}</h1>
+    <br>
+    <table width="100%" class="message-table">
+        <thead>
+        <tr>
+            <th>{% trans %}Users list{% endtrans %}</th>
+        </tr>
+        </thead>
+        <tfoot>
+        <tr>
+            <td></td>
+        </tr>
+        </tfoot>
+        <tbody>
+        {% for registeredUser in users  %}
+        <tr>
+            <td>
+                <img src="/web/bundles/rlmain/images/empty.gif" height="100" align="right" border="2" vspace="3" hspace="3" alt="user avatar">
+                <b>{% trans %}Nick{% endtrans %}:</b> {{ registeredUser.username }}<br>
+                <b>{% trans %}Group{% endtrans %}:</b> {{ registeredUser.group.description }}<br>
+                <b>{% trans %}Name{% endtrans %}:</b> {{ registeredUser.name }} <br>
+                <b>{% trans %}City{% endtrans %}:</b> {% if registeredUser.city != null %}{{ registeredUser.city }}{% else %}{% trans %}unknown city{% endtrans %}{% endif %}<br>
+                <b>{% trans %}Country{% endtrans %}:</b> {% if registeredUser.country != null %}{{ registeredUser.country }}{% else %}{% trans %}unknown country{% endtrans %}{% endif %}<br>
+                <b>e-mail:</b> {% if registeredUser.showEmail != true %}{% trans %}hidden{% endtrans %}{% else %}{{ registeredUser.email }}{% endif %}<br>
+                <b>IM:</b> {% if registeredUser.showIm != true %}{% trans %}hidden{% endtrans %}{% else %}{{ registeredUser.im }}{% endif %}<br>
+            <td>
+        </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+    <br>
+    {{ pagesStr|raw }}
+{% endblock content %}

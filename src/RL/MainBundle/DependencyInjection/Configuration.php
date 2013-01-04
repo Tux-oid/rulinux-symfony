@@ -19,24 +19,23 @@ class Configuration implements ConfigurationInterface
     public function getConfigTreeBuilder()
     {
         $treeBuilder = new TreeBuilder();
-        $rootNode = $treeBuilder->root('r_l_main');
-//		  $rootNode->children()
-//		  ->arrayNode('user')
-//		  ->children()
-//		  ->arrayNode('defaults')
-//		  ->children()
-//		  ->arrayNode('blocks')
-//		  ->defaultValue(array())
-//		  ->prototype('scalar')->end()
-//		  ->end()
-//		  ->end()
-//		  ->end()
-//		  ->end()
-//		  ->end();
+        $rootNode = $treeBuilder->root('rl_main');
+        $rootNode->children()
+                ->arrayNode('anonymous')
+                ->children()
+                ->scalarNode('class')->isRequired()->end()
+                ->arrayNode('defaults')
+                ->defaultValue(array())
+                ->useAttributeAsKey('name')
+                ->prototype('variable')->end()
+                ->end()
+                ->end()
+                ->end();
+
         return $treeBuilder;
     }
     public function getAliasName()
     {
-
+        return '';
     }
 }

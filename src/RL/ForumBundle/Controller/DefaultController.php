@@ -23,7 +23,7 @@ class DefaultController extends Controller
     public function newThreadAction($sectionRewrite, $subsectionRewrite)
     {
         //FIXME: add subsection selection in form
-        $theme = $this->get('rl_themes.theme.provider');
+        $theme = $this->get('rl_main.theme.provider');
         $user = $this->get('security.context')->getToken()->getUser();
         $doctrine = $this->get('doctrine');
         $request = $this->getRequest();
@@ -73,7 +73,7 @@ class DefaultController extends Controller
      */
     public function threadAction($id, $page)
     {
-        $theme = $this->get('rl_themes.theme.provider');
+        $theme = $this->get('rl_main.theme.provider');
         $user = $this->get('security.context')->getToken()->getUser();
         $doctrine = $this->get('doctrine');
         $threadRepository = $doctrine->getRepository('RLForumBundle:Thread');
@@ -117,7 +117,7 @@ class DefaultController extends Controller
      */
     public function commentAction($thread_id, $comment_id)
     {
-        $theme = $this->get('rl_themes.theme.provider');
+        $theme = $this->get('rl_main.theme.provider');
         $user = $this->get('security.context')->getToken()->getUser();
         $doctrine = $this->get('doctrine');
         $request = $this->getRequest();
@@ -176,7 +176,7 @@ class DefaultController extends Controller
      */
     public function editMessage($messageId)
     {
-        $theme = $this->get('rl_themes.theme.provider');
+        $theme = $this->get('rl_main.theme.provider');
         /** @var $securityContext \Symfony\Component\Security\Core\SecurityContext */
         $securityContext = $this->get('security.context');
         $user = $securityContext->getToken()->getUser();
@@ -248,7 +248,7 @@ class DefaultController extends Controller
      */
     public function subsectionAction($sectionRewrite, $subsectionRewrite, $page)
     {
-        $theme = $this->get('rl_themes.theme.provider');
+        $theme = $this->get('rl_main.theme.provider');
         $user = $this->get('security.context')->getToken()->getUser();
         $subsectionRepository = $this->get('doctrine')->getRepository('RLForumBundle:Subsection');
         $sectionRepository = $this->get('doctrine')->getRepository('RLMainBundle:Section');
@@ -293,7 +293,7 @@ class DefaultController extends Controller
      */
     public function sectionAction($sectionRewrite)
     {
-        $theme = $this->get('rl_themes.theme.provider');
+        $theme = $this->get('rl_main.theme.provider');
         $doctrine = $this->get('doctrine');
         $sectionRepository = $doctrine->getRepository('RLMainBundle:Section');
         $section = $sectionRepository->findOneByRewrite($sectionRewrite);

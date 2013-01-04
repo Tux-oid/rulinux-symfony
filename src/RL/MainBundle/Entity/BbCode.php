@@ -129,8 +129,8 @@ final class BbCode extends Mark
         }
         $userRegExp = "#(\\[user\\])(.*?[^\\[/user\\]]?)(\\[/user\\])#sim";
         $arr = preg_match_all($userRegExp, $string, $match);
-        /** @var $userRepository \RL\SecurityBundle\Entity\UserRepository */
-        $userRepository = $this->entityManager->getRepository('RLSecurityBundle:User');
+        /** @var $userRepository \RL\MainBundle\Entity\UserRepository */
+        $userRepository = $this->entityManager->getRepository('RLMainBundle:User');
         for ($i = 0; $i < $arr; $i++) {
             $user = $userRepository->findOneByUsername($match[2][$i]);
             if (null !== $user) {

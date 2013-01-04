@@ -97,8 +97,8 @@ final class WakabaMark extends Mark
         }
         $user_re = "#(\\^)(.*?[^\\^]?)(\\^)#sim";
         $arr = preg_match_all($user_re, $string, $match);
-        /** @var $userRepository \RL\SecurityBundle\Entity\UserRepository */
-        $userRepository = $this->entityManager->getRepository('RLSecurityBundle:User');
+        /** @var $userRepository \RL\MainBundle\Entity\UserRepository */
+        $userRepository = $this->entityManager->getRepository('RLMainBundle:User');
         for ($i = 0; $i < $arr; $i++) {
             $user = $userRepository->findOneByUsername($match[2][$i]);
             if (null !== $user) {

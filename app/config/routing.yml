@@ -18,18 +18,8 @@ RLForumBundle:
     type:     annotation
     prefix:   /
 
-RLThemesBundle:
-    resource: "@RLThemesBundle/Controller/"
-    type:     annotation
-    prefix:   /
-
 RLMainBundle:
     resource: "@RLMainBundle/Controller/"
-    type:     annotation
-    prefix:   /
-
-RLSecurityBundle:
-    resource: "@RLSecurityBundle/Controller/"
     type:     annotation
     prefix:   /
 

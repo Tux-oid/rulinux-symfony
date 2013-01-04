@@ -18,7 +18,7 @@ class Thread extends ForumThread
      */
     protected $approved = false;
     /**
-     * @ORM\ManyToOne(targetEntity="RL\SecurityBundle\Entity\User")
+     * @ORM\ManyToOne(targetEntity="RL\MainBundle\Entity\User")
      */
     protected $approvedBy;
     /**

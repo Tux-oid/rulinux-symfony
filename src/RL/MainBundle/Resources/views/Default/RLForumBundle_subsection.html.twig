@@ -1,0 +1,120 @@
+{% extends theme.path('RLMainBundle', 'layout.html.twig') %}
+
+{% block title %}
+    {{ parent() }} - {{ section.name }} - {{ subsection.name }}
+{% endblock title %}
+
+{% block navigation %}
+    <form name="navForm" action="/">
+        <table class=nav>
+            <tr>
+                <td align=left valign=middle>
+                    <a href="{{ path('section', {'sectionRewrite':section.rewrite}) }}">{{ section.name }}</a> -
+                    <b>{{ subsection.name }}</b>
+                </td>
+                <td align=right valign=middle>
+                    [<a href="{{ path('new_thread', {'sectionRewrite': section.rewrite, 'subsectionRewrite':subsection.rewrite}) }}">{% trans %}
+                    Add message{% endtrans %}</a>]
+                    <select name=id
+                            onChange='self.location = {{ section.rewrite }}"_"+document.navForm.id[document.navForm.id.selectedIndex].value'
+                            title="quick jump">
+                        {% for subsect in subsections %}
+                            <option value="{{ subsect.rewrite }}"
+                                    {% if subsect.name == subsection.name %}selected{% endif %}>{{ subsect.name }}</option>
+                        {% endfor %}
+                    </select>
+                </td>
+            </tr>
+        </table>
+    </form>
+{% endblock navigation %}
+
+{% block content %}
+<br>
+<h1>{{ section.name }} {{ subsection.name }}</h1>
+<!--<p style="margin-top: 0px;">-->
+<em>{{ subsection.description }}</em>
+<br/>
+<br/>
+<script type="text/javascript">
+    var mins = 2;
+    $(function ()
+    {
+        $("#trigger").click(function (event)
+        {
+            event.preventDefault();
+            $("#box").slideToggle();
+        });
+
+        $("#box a").click(function (event)
+        {
+            event.preventDefault();
+            $("#box").slideUp();
+        });
+    });
+</script>
+<div id="jq-wrapper">
+    <div id="bodyContent" style="padding-bottom:10px">
+        <a href="#" id="trigger">{% trans %}Subsection recomendations{% endtrans %}</a>
+
+        <div id="box">
+            {{ subsection.shortfaq }}
+        </div>
+    </div>
+</div>
+<!--</p>-->
+<div class=forum>
+    <table width="100%" class="message-table">
+        <thead>
+        <tr>
+            {% if is_granted('ROLE_MODER') %}
+                <th>{% trans %}Management{% endtrans %}</th>
+            {% endif %}
+            <th width="70%">{% trans %}Title{% endtrans %}</th>
+            <th>{% trans %}Comments count{% endtrans %}
+                <br>{% trans %}all/day/hour{% endtrans %}</th>
+        </tr>
+        </thead>
+
+        <tfoot>
+        <tr>
+            <td colspan=2>
+                <p>
+
+                <div style="float: left"></div>
+                <div style="float: right"></div>
+            </td>
+        </tr>
+        </tfoot>
+
+        <tbody>
+        {% for thread in threads %}
+            <tr>
+                {% if is_granted('ROLE_MODER') %}
+                    <td align=center>
+                        <img src="{{ '/web/bundles/rlmain/images/'~user.theme.directory~'/move.png' }}">
+                        {% if thread.attached == false %}
+                            <img src="{{ '/web/bundles/rlmain/images/'~user.theme.directory~'/attach.png' }}">
+                        {% else %}
+                            <img src="{{ '/web/bundles/rlmain/images/'~user.theme.directory~'/detach.png' }}">
+                        {% endif %}
+                    </td>
+                {% endif %}
+                <td>
+                    <a href="{{ path('thread', {'id': thread.id}) }}">
+                        {{ thread.messages[0].subject }}
+                    </a>
+                    ({{ thread.messages[0].user.username }})
+                </td>
+                <td align=center>
+                    <b>{% if commentsCount['all'][thread.id] is defined %}{{ commentsCount['all'][thread.id] }}{% else %}-{% endif %}</b>/<b>{% if commentsCount['day'][thread.id] is defined %}{{ commentsCount['day'][thread.id] }}{% else %}-{% endif %}</b>/<b>{% if commentsCount['hour'][thread.id] is defined %}{{ commentsCount['hour'][thread.id] }}{% else %}-{% endif %}</b>
+                </td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+    <p style="text-align: center">
+        {{ pages|raw }}
+    </p>
+
+    {% endblock content %}
