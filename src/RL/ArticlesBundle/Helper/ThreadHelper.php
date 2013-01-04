@@ -28,9 +28,9 @@
 
 namespace RL\ArticlesBundle\Helper;
 
-use RL\ForumBundle\Helper\ThreadHelperInterface;
+use RL\MainBundle\Helper\ThreadHelperInterface;
 use RL\ArticlesBundle\Entity\Thread;
-use RL\ForumBundle\Entity\Message;
+use RL\MainBundle\Entity\Message;
 
 /**
  * RL\ArticlesBundle\Helper\ThreadHelper

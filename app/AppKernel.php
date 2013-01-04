@@ -23,7 +23,6 @@ class AppKernel extends Kernel
             new Netpositive\DiscriminatorMapBundle\NetpositiveDiscriminatorMapBundle(),
             new Gregwar\ImageBundle\GregwarImageBundle(),
             new RL\MainBundle\RLMainBundle(),
-            new RL\ForumBundle\RLForumBundle(),
             new RL\ArticlesBundle\RLArticlesBundle(),
             new RL\NewsBundle\RLNewsBundle(),
             new RL\GalleryBundle\RLGalleryBundle(),

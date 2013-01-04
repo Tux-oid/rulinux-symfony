@@ -33,15 +33,20 @@ use Symfony\Component\HttpKernel\HttpKernel;
 use RL\MainBundle\Security\User\RLUserInterface;
 use Doctrine\Bundle\DoctrineBundle\Registry;
 use AppKernel;
+use JMS\DiExtraBundle\Annotation\Service;
+use JMS\DiExtraBundle\Annotation\Inject;
+use JMS\DiExtraBundle\Annotation\InjectParams;
 
 /**
  * RL\MainBundle\Theme\ThemeProvider
+ *
+ * @Service("rl_main.theme.provider")
  *
  * @author Ax-xa-xa
  * @author Peter Vasilevsky <tuxoiduser@gmail.com> a.k.a. Tux-oid
  * @license BSDL
  */
-class ThemeProvider implements ThemeProviderInterface
+class ThemeProvider
 {
     /**
      * @var \Symfony\Component\Security\Core\SecurityContextInterface
@@ -56,6 +61,19 @@ class ThemeProvider implements ThemeProviderInterface
      */
     private $doctrine;
 
+    /**
+     * Constructor
+     *
+     * @InjectParams({
+     * "context" = @Inject("security.context"),
+     * "kernel" = @Inject("kernel"),
+     * "doctrine" = @Inject("doctrine")
+     * })
+     *
+     * @param \Symfony\Component\Security\Core\SecurityContextInterface $context
+     * @param \AppKernel $kernel
+     * @param \Doctrine\Bundle\DoctrineBundle\Registry $doctrine
+     */
     public function __construct(SecurityContextInterface $context, AppKernel $kernel, Registry $doctrine)
     {
         $this->context = $context;
@@ -63,37 +81,11 @@ class ThemeProvider implements ThemeProviderInterface
         $this->httpKernel = $kernel;
     }
 
-    public function getTemplate($bundleName, $templateName)
-    {
-        /** @var $theme \RL\MainBundle\Entity\Theme */
-        $theme = $this->getTheme();
-        /** @var $defaultTheme \RL\MainBundle\Entity\Theme */
-        $defaultTheme = $this->doctrine->getRepository('RLMainBundle:Theme')->findOneByName('Ubertechno');
-        $tpl = '@RLMainBundle/Resources/views/' . $theme->getDirectory() . '/' . $bundleName . '_' . $templateName;
-        try {
-            $this->httpKernel->locateResource($tpl);
-        } catch(\Exception $e) {
-            $tpl = '@RLMainBundle/Resources/views/' . $defaultTheme->getDirectory(
-            ) . '/' . $bundleName . '_' . $templateName;
-            try {
-                $this->httpKernel->locateResource($tpl);
-            } catch(\Exception $e) {
-                $tpl = '@' . $bundleName . '/Resources/views/Default/' . $bundleName . '_' . $templateName;
-                try {
-                    $this->httpKernel->locateResource($tpl);
-                } catch(\Exception $e) {
-                    throw new \Exception('Template not found');
-                }
-
-                return $bundleName . ':Default';
-            }
-
-            return $defaultTheme->getPath();
-        }
-
-        return $theme->getPath();
-    }
-
+    /**
+     * Get theme
+     *
+     * @return mixed
+     */
     public function getTheme()
     {
         $theme = $this->doctrine->getRepository('RLMainBundle:Theme')->findOneByName('Ubertechno');
@@ -113,10 +105,48 @@ class ThemeProvider implements ThemeProviderInterface
         return $theme;
     }
 
+    /**
+     * Get path to template
+     *
+     * @param string $bundleName
+     * @param string $templateName
+     * @return string
+     * @throws \Exception
+     */
     public function getPath($bundleName, $templateName)
     {
-        $theme = $this->getTemplate($bundleName, $templateName);
+        /** @var $theme \RL\MainBundle\Entity\Theme */
+        $theme = $this->getTheme();
+        /** @var $defaultTheme \RL\MainBundle\Entity\Theme */
+        $defaultTheme = $this->doctrine->getRepository('RLMainBundle:Theme')->findOneByName('Ubertechno');
+        $tpl = '@RLMainBundle/Resources/views/' . $theme->getDirectory() . '/' . $bundleName . '/' . $templateName;
+        try {
+            $this->httpKernel->locateResource($tpl);
+        } catch(\Exception $e) {
+            $tpl = '@RLMainBundle/Resources/views/' . $defaultTheme->getDirectory() . '/' . $bundleName . '/' . $templateName;
+            try {
+                $this->httpKernel->locateResource($tpl);
+            } catch(\Exception $e) {
+                $tpl = '@' . $bundleName . '/Resources/views/' . $theme->getDirectory() . '/' . $templateName;
+                try {
+                    $this->httpKernel->locateResource($tpl);
+                } catch(\Exception $e) {
+                    $tpl = '@' . $bundleName . '/Resources/views/' . $defaultTheme->getDirectory() . '/' . $templateName;
+                    try {
+                        $this->httpKernel->locateResource($tpl);
+                    } catch(\Exception $e) {
+                        throw new \Exception('Template not found');
+                    }
 
-        return $theme . ":" . $bundleName . '_' . $templateName;
+                    return $bundleName . ':' . $defaultTheme->getDirectory() . ':' . $templateName;
+                }
+
+                return $bundleName . ':' . $theme->getDirectory() . ':' . $templateName;
+            }
+
+            return $defaultTheme->getPath() . ':' . $bundleName . '/' . $templateName;
+        }
+
+        return $theme->getPath() . ':' . $bundleName . '/' . $templateName;
     }
 }

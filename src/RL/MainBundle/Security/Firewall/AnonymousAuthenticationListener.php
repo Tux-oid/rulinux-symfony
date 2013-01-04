@@ -37,20 +37,58 @@ use Symfony\Component\Security\Core\Authentication\Token\AnonymousToken;
 use Symfony\Component\HttpFoundation\Cookie;
 use RL\MainBundle\Security\User\AnonymousUserProvider;
 use RL\MainBundle\Security\User\RLUserInterface;
+use JMS\DiExtraBundle\Annotation\Service;
+use JMS\DiExtraBundle\Annotation\Inject;
+use JMS\DiExtraBundle\Annotation\InjectParams;
+use JMS\DiExtraBundle\Annotation\Observe;
+use JMS\DiExtraBundle\Annotation\Tag;
 
 /**
  * RL\MainBundle\Security\Firewall\AnonymousAuthenticationListener
  * RL anonymous authentication listener
+ *
+ * @Service("rl_main.anonymous.authentication.listener")
+ * @Tag("monolog.logger", attributes = {"channel" = "security"})
  *
  * @author Ax-xa-xa
  * @license BSDL
 */
 class AnonymousAuthenticationListener implements ListenerInterface
 {
+    /**
+     * @var \RL\MainBundle\Security\User\AnonymousUserProvider
+     */
     protected  $userProvider;
+    /**
+     * @var array
+     */
     protected $options;
+    /**
+     * @var \Symfony\Component\Security\Core\SecurityContextInterface
+     */
     protected $context;
+    /**
+     * @var \Symfony\Component\HttpKernel\Log\LoggerInterface
+     */
     protected $logger;
+
+    /**
+     * Constructor
+     *
+     * @InjectParams({
+     * "context" = @Inject("security.context"),
+     * "userProvider" = @Inject("rl_main.anonymous.user.provider"),
+     * "options" = @Inject("%rl_main.anonymous.defaults%"),
+     * "doctrine" = @Inject("doctrine"),
+     * "logger" = @Inject("logger")
+     * })
+     *
+     * @param \Symfony\Component\Security\Core\SecurityContextInterface $context
+     * @param \RL\MainBundle\Security\User\AnonymousUserProvider $userProvider
+     * @param $options
+     * @param $doctrine
+     * @param \Symfony\Component\HttpKernel\Log\LoggerInterface $logger
+     */
     public function __construct(SecurityContextInterface $context, AnonymousUserProvider $userProvider, $options, $doctrine, LoggerInterface $logger = null)
     {
         $this->userProvider = $userProvider;
@@ -87,6 +125,13 @@ class AnonymousAuthenticationListener implements ListenerInterface
         }
     }
 
+    /**
+     * Save user
+     *
+     * @Observe("kernel.response")
+     *
+     * @param \Symfony\Component\HttpKernel\Event\FilterResponseEvent $event
+     */
     public function saveUser(FilterResponseEvent $event)
     {
 

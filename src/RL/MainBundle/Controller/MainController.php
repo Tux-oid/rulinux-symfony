@@ -73,8 +73,8 @@ class MainController extends Controller
             $tracker = $request->request->get('tracker');
             $hours = (int) $tracker['hours'];
         }
-        /** @var $messageRepository \RL\ForumBundle\Entity\MessageRepository */
-        $messageRepository = $doctrine->getRepository('RLForumBundle:Message');
+        /** @var $messageRepository \RL\MainBundle\Entity\MessageRepository */
+        $messageRepository = $doctrine->getRepository('RLMainBundle:Message');
         $messages = $messageRepository->getMessagesForLastHours($hours);
         $form = $this->createForm(new TrackerType(), new TrackerForm($hours));
 

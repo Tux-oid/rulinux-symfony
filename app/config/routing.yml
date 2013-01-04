@@ -13,11 +13,6 @@ RLArticlesBundle:
     type:     annotation
     prefix:   /
 
-RLForumBundle:
-    resource: "@RLForumBundle/Controller/"
-    type:     annotation
-    prefix:   /
-
 RLMainBundle:
     resource: "@RLMainBundle/Controller/"
     type:     annotation

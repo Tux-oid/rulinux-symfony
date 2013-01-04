@@ -28,7 +28,7 @@
 
 namespace RL\ArticlesBundle\Form;
 
-use RL\ForumBundle\Form\AddThreadType as ForumAdhreadForm;
+use RL\MainBundle\Form\AddThreadType as ForumAdhreadForm;
 
 /**
  * RL\ArticlesBundle\Form\AddThreadType

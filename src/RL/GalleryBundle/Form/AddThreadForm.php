@@ -29,7 +29,7 @@
 namespace RL\GalleryBundle\Form;
 
 use Symfony\Component\Validator\Constraints as Assert;
-use RL\ForumBundle\Form\AddThreadForm as ForumAddThreadForm;
+use RL\MainBundle\Form\AddThreadForm as ForumAddThreadForm;
 
 /**
  * RL\GalleryBundle\Form\AddThreadForm

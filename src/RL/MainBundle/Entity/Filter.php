@@ -70,7 +70,7 @@ final class Filter
     protected $users;
 
     /**
-     * @ORM\ManyToMany(targetEntity="RL\ForumBundle\Entity\Message", inversedBy="filters")
+     * @ORM\ManyToMany(targetEntity="RL\MainBundle\Entity\Message", inversedBy="filters")
      *
      * @var \Doctrine\Common\Collections\ArrayCollection
      */

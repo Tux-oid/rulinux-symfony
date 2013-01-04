@@ -32,9 +32,14 @@ use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Security\Core\User\UserProviderInterface;
 use Symfony\Component\Security\Core\Exception\UsernameNotFoundException;
 use Symfony\Component\Security\Core\Exception\UnsupportedUserException;
+use JMS\DiExtraBundle\Annotation\Service;
+use JMS\DiExtraBundle\Annotation\Inject;
+use JMS\DiExtraBundle\Annotation\InjectParams;
 
 /**
  * RL\MainBundle\Security\User\AnonymousUserProvider
+ *
+ * @Service("rl_main.anonymous.user.provider")
  *
  * @author Ax-xa-xa
  * @author Peter Vasilevsky <tuxoiduser@gmail.com> a.k.a. Tux-oid
@@ -42,10 +47,32 @@ use Symfony\Component\Security\Core\Exception\UnsupportedUserException;
  */
 class AnonymousUserProvider implements UserProviderInterface
 {
+    /**
+     * @var array
+     */
     protected $defaults;
+    /**
+     * @var \RL\MainBundle\Security\User\RLUserInterface
+     */
     protected $userClass;
+    /**
+     * @var \Doctrine\Bundle\DoctrineBundle\Registry
+     */
     protected $doctrine;
 
+    /**
+     * Constructor
+     *
+     * @InjectParams({
+     * "userClass" = @Inject("%rl_main.anonymous.class%"),
+     * "defaults" = @Inject("%rl_main.anonymous.defaults%"),
+     * "doctrine" = @Inject("doctrine")
+     * })
+     *
+     * @param $userClass
+     * @param $defaults
+     * @param $doctrine
+     */
     public function __construct($userClass, $defaults, $doctrine)
     {
         $this->defaults = $defaults;
@@ -53,6 +80,13 @@ class AnonymousUserProvider implements UserProviderInterface
         $this->doctrine = $doctrine;
     }
 
+    /**
+     * Load user
+     *
+     * @param $identity
+     * @param $attributes
+     * @return mixed
+     */
     public function loadUser($identity, $attributes)
     {
         $attributes['username'] = $this->defaults['username'];

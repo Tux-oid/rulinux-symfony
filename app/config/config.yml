@@ -68,14 +68,14 @@ jms_di_extra:
 netpositive_discriminator_map:
     discriminator_map:
         thread:
-            entity: RL\ForumBundle\Entity\Thread
+            entity: RL\MainBundle\Entity\Thread
             children:
                 article: RL\ArticlesBundle\Entity\Thread
                 news: RL\NewsBundle\Entity\Thread
                 gallery: RL\GalleryBundle\Entity\Thread
 
         section:
-            entity: RL\ForumBundle\Entity\Subsection
+            entity: RL\MainBundle\Entity\Subsection
             children:
                 articles: RL\ArticlesBundle\Entity\Subsection
                 news: RL\NewsBundle\Entity\Subsection

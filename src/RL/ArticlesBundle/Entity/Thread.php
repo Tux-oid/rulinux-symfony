@@ -29,12 +29,12 @@
 namespace RL\ArticlesBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
-use RL\ForumBundle\Entity\Thread as ForumThread;
+use RL\MainBundle\Entity\Thread as ForumThread;
 
 /**
  * RL\ArticlesBundle\Entity\Thread
  *
- * @ORM\Entity(repositoryClass="RL\ArticlesBundle\Entity\ThreadRepository")
+ * @ORM\Entity(repositoryClass="RL\ArticlesBundle\Entity\Repository\ThreadRepository")
  * @ORM\Table(name="articles")
  *
  * @author Peter Vasilevsky <tuxoiduser@gmail.com> a.k.a. Tux-oid

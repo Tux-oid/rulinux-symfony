@@ -30,7 +30,7 @@ namespace RL\MainBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\ArrayCollection;
-use RL\ForumBundle\Entity\Subsection;
+use RL\MainBundle\Entity\Subsection;
 
 /**
  * RL\MainBundle\Entity\Section
@@ -70,7 +70,7 @@ class Section
      */
     protected $bundleNamespace;
     /**
-     * @ORM\OneToMany(targetEntity="RL\ForumBundle\Entity\Subsection", mappedBy="section")
+     * @ORM\OneToMany(targetEntity="RL\MainBundle\Entity\Subsection", mappedBy="section")
      * @ORM\OrderBy({"id" = "ASC"})
      */
     protected $subsections;

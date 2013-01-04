@@ -1,0 +1,43 @@
+{% extends theme.path('RLMainBundle', 'newThread.html.twig') %}
+
+{%block recomendations%}
+<h2>{%trans%}Add news{%endtrans%}</h2>
+{%endblock recomendations%}
+
+{%block formTable%}
+<form action="{{path('new_thread', {'sectionRewrite':section.rewrite, 'subsectionRewrite':subsection})}}" method="post" {{form_enctype(form)}}>
+{{form_errors(form)}}
+<table border="0">
+<tr>
+<td style="vertical-align:top;">{{form_label(form.subject)}}:</td>
+<td>
+{{form_widget(form.subject, {'attr':{'style':'width:100%'}})}}
+<p class="error">{{form_errors(form.subject)}}</p>
+</td>
+</tr>
+<tr>
+	<td>{{form_label(form.prooflink)}}:</td>
+	<td>{{form_widget(form.prooflink, {'attr':{'style':'width:100%'}})}}</td>
+	<td><p class="error">{{form_errors(form.prooflink)}}</p></td>
+</tr>
+<tr>
+<td style="vertical-align:top;">{{form_label(form.comment)}}:</td>
+<td>
+{{form_widget(form.comment, {'attr': {'rows':'20', 'cols':'80'}})}}
+<p class="error">{{form_errors(form.comment)}}</p>
+</td>
+</tr>
+<tr>
+	<td>{{form_rest(form)}}</td>
+	<td></td>
+</tr>
+<tr>
+<td></td>
+<td>
+<input type="submit" name="submit" value="{%trans%}Send{%endtrans%}">
+<input type="submit" name="preview" value="{%trans%}Preview{%endtrans%}">
+</td>
+</tr>
+</table>
+</form>
+{%endblock formTable%}

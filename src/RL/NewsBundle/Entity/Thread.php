@@ -34,7 +34,7 @@ use RL\ArticlesBundle\Entity\Thread as ArticlesThread;
 /**
  * RL\NewsBundle\Entity\Thread
  *
- * @ORM\Entity(repositoryClass="RL\NewsBundle\Entity\ThreadRepository")
+ * @ORM\Entity(repositoryClass="RL\NewsBundle\Entity\Repository\ThreadRepository")
  * @ORM\Table(name="news")
  *
  * @author Peter Vasilevsky <tuxoiduser@gmail.com> a.k.a. Tux-oid

@@ -31,7 +31,7 @@ namespace RL\ArticlesBundle\DataFixtures\ORM;
 use Doctrine\Common\Persistence\ObjectManager;
 use Doctrine\Common\DataFixtures\FixtureInterface;
 use RL\MainBundle\Entity\Section;
-use RL\ForumBundle\Entity\Subsection;
+use RL\MainBundle\Entity\Subsection;
 
 /**
  * RL\ArticlesBundle\DataFixtures\ORM\FixtureLoader

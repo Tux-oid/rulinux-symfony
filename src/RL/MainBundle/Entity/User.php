@@ -40,7 +40,7 @@ use RL\MainBundle\Entity\Mark;
 /**
  * RL\MainBundle\Entity\User
  *
- * @ORM\Entity(repositoryClass="RL\MainBundle\Entity\UserRepository")
+ * @ORM\Entity(repositoryClass="RL\MainBundle\Entity\Repository\UserRepository")
  * @ORM\Table(name="users")
  *
  * @author Peter Vasilevsky <tuxoiduser@gmail.com> a.k.a. Tux-oid
@@ -218,12 +218,12 @@ class User implements RLUserInterface, \Serializable, EquatableInterface
      */
     protected $showResp;
     /**
-     * @ORM\OneToMany(targetEntity="RL\ForumBundle\Entity\Message", mappedBy="user")
+     * @ORM\OneToMany(targetEntity="RL\MainBundle\Entity\Message", mappedBy="user")
      */
     protected $comments;
 
     /**
-     * @ORM\ManyToMany(targetEntity="RL\ForumBundle\Entity\Message", inversedBy="changedBy")
+     * @ORM\ManyToMany(targetEntity="RL\MainBundle\Entity\Message", inversedBy="changedBy")
      */
     protected $editedComments;
 
@@ -1091,9 +1091,9 @@ class User implements RLUserInterface, \Serializable, EquatableInterface
     /**
      * Add comments
      *
-     * @param \RL\ForumBundle\Entity\Message $comments
+     * @param \RL\MainBundle\Entity\Message $comments
      */
-    public function addMessage(\RL\ForumBundle\Entity\Message $comments)
+    public function addMessage(\RL\MainBundle\Entity\Message $comments)
     {
         $this->comments[] = $comments;
     }

@@ -1,34 +1,7 @@
 # src/RL/MainBundle/Resources/config/services.yml
 parameters:
-  rl_main.theme.provider.class: RL\MainBundle\Theme\ThemeProvider
-  rl_main.anonymous.user.provider.class: RL\MainBundle\Security\User\AnonymousUserProvider
-  rl_main.anonymous.authentication.listener.class: RL\MainBundle\Security\Firewall\AnonymousAuthenticationListener
   rl_main.anonymous.defaults:
   rl_main.anonymous.class:
 
 services:
-  rl_main.anonymous.user.provider:
-    class: %rl_main.anonymous.user.provider.class%
-    arguments:
-      - "%rl_main.anonymous.class%"
-      - "%rl_main.anonymous.defaults%"
-      - "@doctrine"
 
-  rl_main.anonymous.authentication.listener:
-    class: %rl_main.anonymous.authentication.listener.class%
-    arguments:
-      - "@security.context"
-      - "@rl_main.anonymous.user.provider"
-      - "%rl_main.anonymous.defaults%"
-      - "@doctrine"
-      - "@?logger"
-    tags:
-      - {name: monolog.logger, channel: security}
-      - {name: kernel.event_listener, event: kernel.response, method: saveUser}
-
-  rl_main.theme.provider:
-    class: %rl_main.theme.provider.class%
-    arguments:
-      - "@security.context"
-      - "@kernel"
-      - "@doctrine"

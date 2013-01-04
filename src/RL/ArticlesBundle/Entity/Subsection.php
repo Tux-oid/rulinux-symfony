@@ -28,13 +28,13 @@
 
 namespace RL\ArticlesBundle\Entity;
 
-use RL\ForumBundle\Entity\Subsection as ForumSubsection;
+use RL\MainBundle\Entity\Subsection as ForumSubsection;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
  * RL\ArticlesBundle\Entity\Subsection
  *
- * @ORM\Entity(repositoryClass="RL\ArticlesBundle\Entity\SubsectionRepository")
+ * @ORM\Entity(repositoryClass="RL\ArticlesBundle\Entity\Repository\SubsectionRepository")
  * @ORM\Table(name="articles_subsection")
  *
  * @author Peter Vasilevsky <tuxoiduser@gmail.com> a.k.a. Tux-oid
