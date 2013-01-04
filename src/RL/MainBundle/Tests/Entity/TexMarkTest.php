@@ -26,34 +26,22 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 
-namespace RL\ForumBundle\Form;
+namespace RL\MainBundle\Tests;
 
-use Symfony\Component\Form\FormBuilderInterface;
-use Symfony\Component\Form\AbstractType;
+use RL\MainBundle\Entity\TexMark;
 
 /**
- * RL\ForumBundle\Form\AddCommentType
+ * RL\MainBundle\Tests\TexMarkTest
  *
  * @author Peter Vasilevsky <tuxoiduser@gmail.com> a.k.a. Tux-oid
  * @license BSDL
  */
-class AddCommentType extends AbstractType
+class TexMarkTest extends \PHPUnit_Framework_TestCase
 {
-    public function buildForm(FormBuilderInterface $builder, array $options)
+    public function testAdd()
     {
-        $builder->add('subject', 'text', array('required' => true))
-            ->add('comment', 'textarea', array('required' => true));
-    }
-    public function getName()
-    {
-        return 'addComment';
-    }
-    public function getDefaultOptions(array $options)
-    {
-        return array(
-            'csrf_protection' => true,
-            'csrf_field_name' => '_csrf_token',
-            'intention' => 'authenticate'
-        );
+        $texMark = new TexMark();
+        $result = $texMark->render('\b{test}');
+        $this->assertEquals('<p><b>test</b></p>', $result);
     }
 }
