@@ -1,30 +1,35 @@
 {% extends theme.path('blocksLayout.html.twig') %}
 
-{% block title %}
-{% trans %}Authentication{% endtrans %}
-{% endblock title %}
-
 {% block body %}
-<form action="{{ path('login_check') }} " method="post" >
-	<form action="{{ path('login_check') }}" method="post">
-	<table>
-		<tr>
-			<td>
-				<label for="username">{%trans%}Username{%endtrans%}:</label>
-			</td>
-			<td>
-				<input type="text" id="username" name="_username" value="{{ last_username }}" />
-			</td>
-		</tr>
-		<tr>
-			<td>
-				<label for="password">{%trans%}Password{%endtrans%}:</label>
-			</td>
-			<td>
-				<input type="password" id="password" name="_password" />
-			</td>
-		</tr>
-	</table>
-	<input type="submit">
-</form>
+    {% if authenticated == false %}
+        <form action="{{ path('login_check') }} " method="post">
+            <table>
+                <tr>
+                    <td>
+                        <label for="username">{% trans %}Username{% endtrans %}:</label>
+                    </td>
+                    <td>
+                        <input type="text" id="username" name="_username" value="{{ last_username }}"/>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <label for="password">{% trans %}Password{% endtrans %}:</label>
+                    </td>
+                    <td>
+                        <input type="password" id="password" name="_password"/>
+                    </td>
+                </tr>
+            </table>
+            <input type="submit">
+        </form>
+    {% else %}
+        <form action="{{ path('logout') }} " method="post">
+            {% trans %}You logged in as{% endtrans %} {{ user.username }}({{ user.group.description|capitalize }})
+            <input type="submit" value="{{ 'Logout'|trans }}">
+            <br>
+            <br>* <a href="{{ path('user', {'name': user.username}) }}">{% trans %}Profile{% endtrans %}</a>
+            <br>* <a href="{{ path('rules') }}">{% trans %}Rules{% endtrans %}</a>
+        </form>
+    {% endif %}
 {% endblock body %}

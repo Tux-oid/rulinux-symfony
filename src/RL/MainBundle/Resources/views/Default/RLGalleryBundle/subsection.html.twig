@@ -9,7 +9,7 @@
 <br/>
 <div class=forum>
 {% for thread in threads %}
-{%include theme.path('RLGalleryBundle', 'unconfirmedItem.html.twig')%}
+{%include theme.path('unconfirmedItem.html.twig', 'RLGalleryBundle')%}
 {%endfor%}
 <p style="text-align: center">
 	{{pages|raw}}

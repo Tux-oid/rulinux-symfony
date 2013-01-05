@@ -26,35 +26,27 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 
-namespace RL\MainBundle\DependencyInjection;
+namespace RL\GalleryBundle\Entity\Repository;
 
-use Symfony\Component\DependencyInjection\ContainerBuilder;
-use Symfony\Component\HttpKernel\DependencyInjection\Extension;
-use Symfony\Component\DependencyInjection\Loader;
-use Symfony\Component\Config\FileLocator;
+use RL\MainBundle\Entity\Message;
+use RL\MainBundle\Entity\Repository\ThreadRepository as ArticlesThreadRepository;
 
 /**
- * RL\MainBundle\DependencyInjection\RLMainExtension
+ * RL\GalleryBundle\Entity\Repository\ThreadRepository
  *
- * This is the class that loads and manages your bundle configuration
- *
- * To learn more see {@link http://symfony.com/doc/current/cookbook/bundles/extension.html}
- *
- * @author Ax-xa-xa
  * @author Peter Vasilevsky <tuxoiduser@gmail.com> a.k.a. Tux-oid
  * @license BSDL
  */
-class RLMainExtension extends Extension
+class ThreadRepository extends ArticlesThreadRepository
 {
-    /**
-     * {@inheritDoc}
-     */
-    public function load(array $configs, ContainerBuilder $container)
+    public function getLastThreads($count)
     {
-        $configuration = new Configuration();
-        $config = $this->processConfiguration($configuration, $configs);
+        $em = $this->_em;
+        $q = $em->createQuery('SELECT t, m FROM RL\GalleryBundle\Entity\Thread AS t INNER JOIN t.messages AS m WHERE m.id = (SELECT MIN(msg.id) AS msg_id FROM RL\MainBundle\Entity\Message AS msg WHERE msg.thread = t.id) AND t.approved = true ORDER BY t.id DESC')
+            ->setMaxResults($count);
+        $threads = $q->getResult();
 
-        $container->setParameter('rl_main.anonymous.class', $config['anonymous']['class']);
-        $container->setParameter('rl_main.anonymous.defaults', $config['anonymous']['defaults']);
+        return $threads;
     }
+
 }

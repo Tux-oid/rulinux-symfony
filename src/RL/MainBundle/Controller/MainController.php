@@ -80,7 +80,7 @@ class MainController extends Controller
         $form = $this->createForm(new TrackerType(), new TrackerForm($hours));
 
         return $this->render(
-            $theme->getPath('tracker.html.twig'), array('user' => $user, 'theme' => $theme, 'form'=>$form->createView(), 'messages'=>$messages, 'count'=>count($messages), 'hours' => $hours )
+            $theme->getPath('tracker.html.twig'), array('user' => $user, 'theme' => $theme, 'form'=>$form->createView(), 'messages'=>$messages, 'hours' => $hours )
         );
     }
 

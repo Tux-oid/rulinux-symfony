@@ -1,0 +1,9 @@
+{% extends theme.path('blocksLayout.html.twig') %}
+
+{% block body %}
+    <ul>
+        {% for link in links %}
+            <li><a href="{{ link.link }}">{{ link.name }}</a></li>
+        {% endfor %}
+    </ul>
+{% endblock body %}

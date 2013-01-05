@@ -75,6 +75,10 @@ class Thread
      * @ORM\Column(type="datetime", name="changing_timest")
      */
     protected $changingTime;
+
+    /**
+     * Constructor
+     */
     public function __construct()
     {
         $this->messages = new \Doctrine\Common\Collections\ArrayCollection();
@@ -174,4 +178,25 @@ class Thread
     {
         return $this->subsection;
     }
+
+    /**
+     * Set posting time
+     *
+     * @param $postingTime
+     */
+    public function setPostingTime($postingTime)
+    {
+        $this->postingTime = $postingTime;
+    }
+
+    /**
+     * Get posting time
+     *
+     * @return mixed
+     */
+    public function getPostingTime()
+    {
+        return $this->postingTime;
+    }
+
 }

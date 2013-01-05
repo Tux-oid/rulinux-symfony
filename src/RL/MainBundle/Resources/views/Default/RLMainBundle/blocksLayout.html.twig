@@ -1,5 +1,5 @@
 <div class="boxlet" style="padding: 2px">
-    <div class="boxlet_title_div"><span class="boxlet_title">{% block title %}title{% endblock title %}</span></div>
+    <div class="boxlet_title_div"><span class="boxlet_title">{% block title %}{{ block.name|capitalize|trans }}{% endblock title %}</span></div>
     <div class="boxlet_content">
         {% block body %}
         body

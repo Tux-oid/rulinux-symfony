@@ -1,0 +1,12 @@
+{% extends theme.path('blocksLayout.html.twig') %}
+
+{% block body %}
+    {% for message in messages %}
+        <a href="{{ path('thread', {'id': message.thread.id}) }}">{{ message.subject |truncate(50) }}</a>
+        <br><p>{{ message.comment |striptags |truncate(300) }}</p>
+        <b>{{ message.user.username }}</b>(<a href="{{ path('user', {'name' : message.user.username}) }}">*</a>)
+        <br>
+        <a href="{{ path('thread', {'id': message.thread.id}) }}">{% trans %}Go{% endtrans %}>></a>
+        <hr>
+    {% endfor %}
+{% endblock body %}

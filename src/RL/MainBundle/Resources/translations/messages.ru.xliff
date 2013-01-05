@@ -4,7 +4,7 @@
         <body>
             <trans-unit id="1">
                 <source>Username</source>
-                <target>Имя пользователя</target>
+                <target>Логин</target>
             </trans-unit>
             <trans-unit id="2">
                 <source>Password</source>
@@ -489,6 +489,14 @@
             <trans-unit id="122">
                 <source>List of registered users</source>
                 <target>Список зарегистрированных пользователей</target>
+            </trans-unit>
+            <trans-unit id="123">
+                <source>Profile</source>
+                <target>Профиль</target>
+            </trans-unit>
+            <trans-unit id="124">
+                <source>You logged in as</source>
+                <target>Вы вошли как</target>
             </trans-unit>
         </body>
     </file>

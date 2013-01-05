@@ -42,6 +42,10 @@ use RL\MainBundle\Entity\Group;
 use RL\MainBundle\Entity\User;
 use RL\MainBundle\Entity\Subsection;
 use RL\MainBundle\Entity\Section;
+use RL\MainBundle\Entity\AuthenticationBlock;
+use RL\MainBundle\Entity\TrackerBlock;
+use RL\MainBundle\Entity\LinksBlock;
+use RL\MainBundle\Entity\GalleryBlock;
 
 /**
  * RL\MainBundle\DataFixtures\ORM\FixtureLoader
@@ -59,6 +63,27 @@ class FixtureLoader implements FixtureInterface
      */
     public function load(ObjectManager $manager)
     {
+        /*****************************************Blocks***************************************************************/
+        $authenticationBlock = new AuthenticationBlock();
+        $authenticationBlock->setName('Authentication');
+        $authenticationBlock->setDescription('Authentication Block');
+        $manager->persist($authenticationBlock);
+
+        $trackerBlock = new TrackerBlock();
+        $trackerBlock->setName('Tracker');
+        $trackerBlock->setDescription('Tracker Block');
+        $manager->persist($trackerBlock);
+
+        $linksBlock = new LinksBlock();
+        $linksBlock->setName('Links');
+        $linksBlock->setDescription('Links Block');
+        $manager->persist($linksBlock);
+
+        $galleryBlock = new GalleryBlock();
+        $galleryBlock->setName('Gallery');
+        $galleryBlock->setDescription('Gallery Block');
+        $manager->persist($galleryBlock);
+
         /*****************************************Themes***************************************************************/
         $whiteTheme = new Theme();
         $whiteTheme->setName('simple-white');
@@ -202,19 +227,19 @@ class FixtureLoader implements FixtureInterface
         /*****************************************Groups***************************************************************/
         $anonymousRole = new Group();
         $anonymousRole->setName('ROLE_ANONYMOUS');
-        $anonymousRole->setDescription('anonymouses');
+        $anonymousRole->setDescription('anonymous');
         $manager->persist($anonymousRole);
         $userRole = new Group();
         $userRole->setName('ROLE_USER');
-        $userRole->setDescription('site users');
+        $userRole->setDescription('user');
         $manager->persist($userRole);
         $moderRole = new Group();
         $moderRole->setName('ROLE_MODER');
-        $moderRole->setDescription('site moderators');
+        $moderRole->setDescription('moderator');
         $manager->persist($moderRole);
         $adminRole = new Group();
         $adminRole->setName('ROLE_ADMIN');
-        $adminRole->setDescription('site administrators');
+        $adminRole->setDescription('administrator');
         $manager->persist($adminRole);
         $captchaLevel = 0;
 
@@ -428,6 +453,10 @@ class FixtureLoader implements FixtureInterface
         $anonymous->setGender(1);
         $anonymous->setRegistrationDate(new \DateTime('2009-02-12 14:42:51'));
         $anonymous->setLastVisitDate(new \DateTime('now'));
+        $anonymous->addLeftBlock($authenticationBlock);
+        $anonymous->addLeftBlock($trackerBlock);
+        $anonymous->addLeftBlock($galleryBlock);
+        $anonymous->addRightBlock($linksBlock);
         $anonymous->setCaptchaLevel($captchaLevel);
         $anonymous->setTheme($ubertechnoTheme);
         $anonymous->setMark($texMark);
@@ -462,6 +491,10 @@ class FixtureLoader implements FixtureInterface
         $admin->setGender(1);
         $admin->setRegistrationDate(new \DateTime('now'));
         $admin->setLastVisitDate(new \DateTime('now'));
+        $admin->addLeftBlock($authenticationBlock);
+        $admin->addLeftBlock($trackerBlock);
+        $admin->addLeftBlock($linksBlock);
+        $admin->addRightBlock($galleryBlock);
         $admin->setCaptchaLevel($captchaLevel);
         $admin->setTheme($ubertechnoTheme);
         $admin->setMark($texMark);

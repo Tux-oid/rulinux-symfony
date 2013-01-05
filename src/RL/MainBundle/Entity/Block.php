@@ -29,17 +29,22 @@
 namespace RL\MainBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use Doctrine\Common\Collections\ArrayCollection;
+use RL\MainBundle\Security\User\RLUserInterface;
 
 /**
  * RL\MainBundle\Entity\Block
  *
  * @ORM\Entity
  * @ORM\Table(name="blocks")
+ * @ORM\InheritanceType("SINGLE_TABLE")
+ * @ORM\DiscriminatorColumn(name="content_type", type="string", length=20)
+ * @ORM\DiscriminatorMap({"block"="Block"})
  *
  * @author Peter Vasilevsky <tuxoiduser@gmail.com> a.k.a. Tux-oid
  * @license BSDL
  */
-class Block implements \Serializable
+abstract class Block
 {
     /**
      * @ORM\Id
@@ -47,14 +52,27 @@ class Block implements \Serializable
      * @ORM\GeneratedValue(strategy="AUTO")
      */
     protected $id;
+
     /**
      * @ORM\Column(name="name", type="string", length=256)
      */
     protected $name;
+
     /**
      * @ORM\Column(name="description", type="string", length=512, unique=true, nullable=true)
      */
     protected $description;
+
+    /**
+     * @var \Doctrine\Common\Collections\ArrayCollection
+     */
+    protected $leftBlocksUsers;
+
+    /**
+     * @var \Doctrine\Common\Collections\ArrayCollection
+     */
+    protected $rightBlocksUsers;
+
     /**
      * Get id
      *
@@ -64,6 +82,7 @@ class Block implements \Serializable
     {
         return $this->id;
     }
+
     /**
      * Set name
      *
@@ -73,6 +92,7 @@ class Block implements \Serializable
     {
         $this->name = $name;
     }
+
     /**
      * Get name
      *
@@ -82,6 +102,7 @@ class Block implements \Serializable
     {
         return $this->name;
     }
+
     /**
      * Set description
      *
@@ -91,6 +112,7 @@ class Block implements \Serializable
     {
         $this->description = $description;
     }
+
     /**
      * Get description
      *
@@ -100,12 +122,81 @@ class Block implements \Serializable
     {
         return $this->description;
     }
-    public function serialize()
-    {
 
-    }
-    public function unserialize($serialized)
+    /**
+     * Add left block user
+     *
+     * @param $leftBlocksUser
+     */
+    public function addLeftBlocksUser(RLUserInterface $leftBlocksUser)
     {
-
+        $this->leftBlocksUsers[] = $leftBlocksUser;
     }
+
+    /**
+     * Remove left block user
+     *
+     * @param $leftBlocksUser
+     */
+    public function removeLeftBlocksUser(RLUserInterface $leftBlocksUser)
+    {
+        $this->leftBlocksUsers->remove($leftBlocksUser);
+    }
+
+    /**
+     * Get left block users
+     *
+     * @return \Doctrine\Common\Collections\ArrayCollection
+     */
+    public function getLeftBlocksUsers()
+    {
+        return $this->leftBlocksUsers;
+    }
+
+    /**
+     * Add right block user
+     *
+     * @param $rightBlocksUser
+     */
+    public function addRightBlocksUser(RLUserInterface $rightBlocksUser)
+    {
+        $this->rightBlocksUsers[] = $rightBlocksUser;
+    }
+
+    /**
+     * Remove right block user
+     *
+     * @param $rightBlocksUser
+     */
+    public function removeRightBlocksUser(RLUserInterface $rightBlocksUser)
+    {
+        $this->rightBlocksUsers->remove($rightBlocksUser);
+    }
+
+    /**
+     * Get right block users
+     *
+     * @return \Doctrine\Common\Collections\ArrayCollection
+     */
+    public function getRightBlocksUsers()
+    {
+        return $this->rightBlocksUsers;
+    }
+
+    /**
+     * Get list of services which needed to block
+     *
+     * @return array
+     */
+    abstract public function getNeededServicesList();
+
+    /**
+     * Render block
+     * Returns array('templateFile'=> 'fileName.html.twig', 'parameters'=>array())
+     *
+     * @param array $services
+     * @return array
+     */
+    abstract public function render(array $services);
+
 }

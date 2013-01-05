@@ -11,6 +11,6 @@
 	{%for thread in threads%}
 		{%set section = thread.subsection.section %}
 		{%set subsection = thread.subsection %}
-		{%include theme.path(thread.subsection.section.bundle ,'unconfirmedItem.html.twig')%}
+		{%include theme.path('unconfirmedItem.html.twig', thread.subsection.section.bundle)%}
 	{%endfor%}
 {%endblock content%}

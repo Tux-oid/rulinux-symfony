@@ -19,11 +19,11 @@
             <td colspan="2">{% block header %}HEADER_BLOCK{% endblock %}</td>
         </tr>
         <tr class="middle">
-        {%block middle%}
-        <td class="content">
-	{% block content %}CONTENT_BLOCK{% endblock %}
+            <td>
+                {%block middle%}
+	                {% block content %}CONTENT_BLOCK{% endblock %}
+                {% endblock %}
         </td>
-        {% endblock %}
         </tr>
         <tr class="footer">
             <td colspan="2">{%block footer%}FOOTER{%endblock%}</td>

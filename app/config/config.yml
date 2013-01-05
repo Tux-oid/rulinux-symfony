@@ -90,6 +90,13 @@ netpositive_discriminator_map:
                 bbcode: RL\MainBundle\Entity\BbCode
                 wakabaMark: RL\MainBundle\Entity\WakabaMark
                 baseHtml: RL\MainBundle\Entity\BaseHtml
+        block:
+            entity: RL\MainBundle\Entity\Block
+            children:
+                authentication: RL\MainBundle\Entity\AuthenticationBlock
+                tracker: RL\MainBundle\Entity\TrackerBlock
+                links: RL\MainBundle\Entity\LinksBlock
+                gallery: RL\MainBundle\Entity\GalleryBlock
 
 
 rl_main:
@@ -98,4 +105,3 @@ rl_main:
         defaults:
             username: anonymous
             enabled: true
-            blocks: [Authentication, Links, Gallery, Tracker]

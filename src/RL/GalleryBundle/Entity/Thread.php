@@ -35,7 +35,7 @@ use Gregwar\ImageBundle\Image;
 /**
  * RL\GalleryBundle\Entity\Thread
  *
- * @ORM\Entity(repositoryClass="RL\ArticlesBundle\Entity\Repository\ThreadRepository")
+ * @ORM\Entity(repositoryClass="RL\GalleryBundle\Entity\Repository\ThreadRepository")
  * @ORM\Table(name="gallery")
  * @ORM\HasLifecycleCallbacks
  *

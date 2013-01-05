@@ -34,15 +34,22 @@ tr.footer
 	text-align: center;
 }
 
-td.aside
+td.left-sidebar
 {
-	width: 240px;
-	background: #CED4E5;
+	width:240px;
+	text-align: center;
 }
-
 td.content
 {
+	width: 100%;
 	vertical-align: top;
+}
+
+td.right-sidebar
+{
+	width:240px;
+	float: right;
+	text-align: center;
 }
 
 A

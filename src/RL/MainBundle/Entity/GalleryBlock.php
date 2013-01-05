@@ -24,37 +24,47 @@
  * ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-*/
+ */
 
-namespace RL\MainBundle\DependencyInjection;
+namespace RL\MainBundle\Entity;
 
-use Symfony\Component\DependencyInjection\ContainerBuilder;
-use Symfony\Component\HttpKernel\DependencyInjection\Extension;
-use Symfony\Component\DependencyInjection\Loader;
-use Symfony\Component\Config\FileLocator;
+use Doctrine\ORM\Mapping as ORM;
 
 /**
- * RL\MainBundle\DependencyInjection\RLMainExtension
+ * RL\MainBundle\Entity\GalleryBlock
  *
- * This is the class that loads and manages your bundle configuration
+ * @ORM\Entity
  *
- * To learn more see {@link http://symfony.com/doc/current/cookbook/bundles/extension.html}
- *
- * @author Ax-xa-xa
  * @author Peter Vasilevsky <tuxoiduser@gmail.com> a.k.a. Tux-oid
  * @license BSDL
  */
-class RLMainExtension extends Extension
+class GalleryBlock extends Block
 {
-    /**
-     * {@inheritDoc}
-     */
-    public function load(array $configs, ContainerBuilder $container)
-    {
-        $configuration = new Configuration();
-        $config = $this->processConfiguration($configuration, $configs);
 
-        $container->setParameter('rl_main.anonymous.class', $config['anonymous']['class']);
-        $container->setParameter('rl_main.anonymous.defaults', $config['anonymous']['defaults']);
+    /**
+     * Get list of services which needed to block
+     *
+     * @return array
+     */
+    public function getNeededServicesList()
+    {
+        return array('doctrine');
+    }
+
+    /**
+     * Render block
+     * Returns array('templateFile'=> 'fileName.html.twig', 'parameters'=>array())
+     *
+     * @param array $services
+     * @return array
+     */
+    public function render(array $services)
+    {
+        /** @var $doctrine \Doctrine\Bundle\DoctrineBundle\Registry */
+        $doctrine = $services['doctrine'];
+        /** @var $threadsRepository \RL\GalleryBundle\Entity\Repository\ThreadRepository */
+        $threadsRepository = $doctrine->getRepository('RLGalleryBundle:Thread');
+        $threads = $threadsRepository->getLastThreads(3);
+        return array('templateFile'=> 'galleryBlock.html.twig', 'parameters'=>array('threads'=>$threads));
     }
 }

@@ -55,7 +55,7 @@ class User implements RLUserInterface, \Serializable, EquatableInterface
      */
     protected $id;
     /**
-     * @ORM\ManyToOne(targetEntity="Group", inversedBy="users")
+     * @ORM\ManyToOne(targetEntity="Group", inversedBy="users", cascade={"all"})
      */
     protected $group;
     /**
@@ -160,9 +160,37 @@ class User implements RLUserInterface, \Serializable, EquatableInterface
      */
     protected $language;
     /**
-     * @ORM\Column(name="blocks", type="array")
+     * @ORM\ManyToMany(targetEntity="RL\MainBundle\Entity\Block", cascade={"all"})
+     * @ORM\JoinTable(name="left_blocks_users",
+     *      joinColumns={@ORM\JoinColumn(name="user_id", referencedColumnName="id")},
+     *      inverseJoinColumns={@ORM\JoinColumn(name="block_id", referencedColumnName="id")}
+     *      )
+     *
+     * @var \Doctrine\Common\Collections\ArrayCollection
      */
-    protected $blocks;
+    protected $leftBlocks;
+
+    /**
+     * @var array
+     */
+    protected $leftBlocksWeights;
+
+    /**
+     * @ORM\ManyToMany(targetEntity="RL\MainBundle\Entity\Block", cascade={"all"})
+     * @ORM\JoinTable(name="right_blocks_users",
+     *      joinColumns={@ORM\JoinColumn(name="user_id", referencedColumnName="id")},
+     *      inverseJoinColumns={@ORM\JoinColumn(name="block_id", referencedColumnName="id")}
+     *      )
+     *
+     * @var \Doctrine\Common\Collections\ArrayCollection
+     */
+    protected $rightBlocks;
+
+    /**
+     * @var array
+     */
+    protected $rightBlocksWeights;
+
     /**
      * @ORM\ManyToOne(targetEntity="RL\MainBundle\Entity\Theme")
      */
@@ -172,13 +200,13 @@ class User implements RLUserInterface, \Serializable, EquatableInterface
      */
     protected $gmt;
     /**
-     * @ORM\ManyToMany(targetEntity="RL\MainBundle\Entity\Filter", mappedBy="users")
+     * @ORM\ManyToMany(targetEntity="RL\MainBundle\Entity\Filter", mappedBy="users", cascade={"all"})
      *
      * @var \Doctrine\Common\Collections\ArrayCollection
      */
     protected $filters;
     /**
-     * @ORM\ManyToOne(targetEntity="RL\MainBundle\Entity\Mark", inversedBy="users")
+     * @ORM\ManyToOne(targetEntity="RL\MainBundle\Entity\Mark", inversedBy="users", cascade={"all"})
      */
     protected $mark;
     /**
@@ -218,12 +246,12 @@ class User implements RLUserInterface, \Serializable, EquatableInterface
      */
     protected $showResp;
     /**
-     * @ORM\OneToMany(targetEntity="RL\MainBundle\Entity\Message", mappedBy="user")
+     * @ORM\OneToMany(targetEntity="RL\MainBundle\Entity\Message", mappedBy="user", cascade={"all"})
      */
     protected $comments;
 
     /**
-     * @ORM\ManyToMany(targetEntity="RL\MainBundle\Entity\Message", inversedBy="changedBy")
+     * @ORM\ManyToMany(targetEntity="RL\MainBundle\Entity\Message", inversedBy="changedBy", cascade={"all"})
      */
     protected $editedComments;
 
@@ -236,6 +264,10 @@ class User implements RLUserInterface, \Serializable, EquatableInterface
         $this->salt = md5(uniqid(null, true));
         $this->groups = new ArrayCollection();
     }
+
+    /**
+     * @return string
+     */
     public function serialize()
     {
         return serialize(
@@ -264,7 +296,8 @@ class User implements RLUserInterface, \Serializable, EquatableInterface
                     'question' => $this->question,
                     'answer' => $this->answer,
                     'language' => $this->language,
-                    'blocks' => $this->blocks,
+                    'leftBlocks' => $this->leftBlocks,
+                    'rightBlocks' => $this->rightBlocks,
                     'theme' => $this->theme,
                     'gmt' => $this->gmt,
                     'filters' => $this->filters,
@@ -281,6 +314,10 @@ class User implements RLUserInterface, \Serializable, EquatableInterface
                 )
         );
     }
+
+    /**
+     * @param string $serializedData
+     */
     public function unserialize($serializedData)
     {
         $unserializedData = unserialize($serializedData);
@@ -308,7 +345,8 @@ class User implements RLUserInterface, \Serializable, EquatableInterface
         $this->question = isset($unserializedData['question']) ? $unserializedData['question'] : null;
         $this->answer = isset($unserializedData['answer']) ? $unserializedData['answer'] : null;
         $this->language = isset($unserializedData['language']) ? $unserializedData['language'] : null;
-        $this->blocks = isset($unserializedData['blocks']) ? $unserializedData['blocks'] : null;
+        $this->leftBlocks = isset($unserializedData['leftBlocks']) ? $unserializedData['leftBlocks'] : null;
+        $this->rightBlocks = isset($unserializedData['rightBlocks']) ? $unserializedData['rightBlocks'] : null;
         $this->theme = isset($unserializedData['theme']) ? $unserializedData['theme'] : null;
         $this->gmt = isset($unserializedData['gmt']) ? $unserializedData['gmt'] : null;
         $this->filters = isset($unserializedData['filters']) ? $unserializedData['filters'] : null;
@@ -323,18 +361,34 @@ class User implements RLUserInterface, \Serializable, EquatableInterface
         $this->showUa = isset($unserializedData['showUa']) ? $unserializedData['showUa'] : null;
         $this->showResp = isset($unserializedData['showResp']) ? $unserializedData['showResp'] : null;
     }
+
+    /**
+     * @return bool
+     */
     public function isAccountNonExpired()
     {
         return true;
     }
+
+    /**
+     * @return bool
+     */
     public function isAccountNonLocked()
     {
         return true;
     }
+
+    /**
+     * @return bool
+     */
     public function isCredentialsNonExpired()
     {
         return true;
     }
+
+    /**
+     * @return bool
+     */
     public function isEnabled()
     {
         return $this->active;
@@ -382,6 +436,11 @@ class User implements RLUserInterface, \Serializable, EquatableInterface
     {
         return $this->username === $user->getUsername();
     }
+
+    /**
+     * @param \Symfony\Component\Security\Core\User\UserInterface $user
+     * @return bool
+     */
     public function eq(UserInterface $user)
     {
         $thisHash = md5($this->serialize());
@@ -699,22 +758,35 @@ class User implements RLUserInterface, \Serializable, EquatableInterface
         return $this->openid;
     }
     /**
-     * Set blocks
+     * Add left blocks
      *
-     * @param array $blocks
+     * @param \RL\MainBundle\Entity\Block $block
      */
-    public function setBlocks($blocks)
+    public function addLeftBlock($block)
     {
-        $this->blocks = $blocks;
+        $this->leftBlocks[] = $block;
+        $block->addLeftBlocksUser($this);
     }
+
+    /**
+     * Remove left blocks
+     *
+     * @param \RL\MainBundle\Entity\Block $block
+     */
+    public function removeLeftBlock($block)
+    {
+        $this->leftBlocks->remove($block);
+        $block->removeLeftBlocksUser($this);
+    }
+
     /**
      * Get blocks
      *
      * @return array
      */
-    public function getBlocks()
+    public function getLeftBlocks()
     {
-        return $this->blocks;
+        return $this->leftBlocks;
     }
     /**
      * Set theme
@@ -1035,6 +1107,10 @@ class User implements RLUserInterface, \Serializable, EquatableInterface
     {
         return $this->answer;
     }
+
+    /**
+     * @return array
+     */
     public function getAttributes()
     {
         return array('id' => $this->id,
@@ -1061,7 +1137,8 @@ class User implements RLUserInterface, \Serializable, EquatableInterface
             'question' => $this->question,
             'answer' => $this->answer,
             'language' => $this->language,
-            'blocks' => $this->blocks,
+            'leftBlocks' => $this->leftBlocks,
+            'rightBlocks' => $this->rightBlocks,
             'theme' => $this->theme,
             'gmt' => $this->gmt,
             'filters' => $this->filters,
@@ -1076,14 +1153,26 @@ class User implements RLUserInterface, \Serializable, EquatableInterface
             'showUa' => $this->showUa,
             'showResp' => $this->showResp);
     }
+
+    /**
+     * @return string
+     */
     public function getIdentity()
     {
         return md5($this->username);
     }
+
+    /**
+     * @return bool
+     */
     public function isAnonymous()
     {
         return false;
     }
+
+    /**
+     * @return bool
+     */
     public function isActive()
     {
         return $this->active;
@@ -1127,18 +1216,85 @@ class User implements RLUserInterface, \Serializable, EquatableInterface
         return $this->group;
     }
 
+    /**
+     * @param $editedComment
+     */
     public function addEditedComment($editedComment)
     {
         $this->editedComments[] = $editedComment;
     }
 
+    /**
+     * @param $editedComment
+     */
     public function removeEditedComment($editedComment)
     {
         $this->editedComments->remove($editedComment);
     }
 
+    /**
+     * @return mixed
+     */
     public function getEditedComments()
     {
         return $this->editedComments;
+    }
+
+    /**
+     * @param \RL\MainBundle\Entity\Block $rightBlock
+     */
+    public function addRightBlock($rightBlock)
+    {
+        $this->rightBlocks[] = $rightBlock;
+        $rightBlock->addRightBlocksUser($this);
+    }
+
+    /**
+     * @param \RL\MainBundle\Entity\Block $rightBlock
+     */
+    public function removeRightBlock($rightBlock)
+    {
+        $this->rightBlocks->remove($rightBlock);
+        $rightBlock->removeRightBlocksUser($this);
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getRightBlocks()
+    {
+        return $this->rightBlocks;
+    }
+
+    /**
+     * @param array $rightBlocksWeights
+     */
+    public function setRightBlocksWeights($rightBlocksWeights)
+    {
+        $this->rightBlocksWeights = $rightBlocksWeights;
+    }
+
+    /**
+     * @return array
+     */
+    public function getRightBlocksWeights()
+    {
+        return $this->rightBlocksWeights;
+    }
+
+    /**
+     * @param array $leftBlocksWeights
+     */
+    public function setLeftBlocksWeights($leftBlocksWeights)
+    {
+        $this->leftBlocksWeights = $leftBlocksWeights;
+    }
+
+    /**
+     * @return array
+     */
+    public function getLeftBlocksWeights()
+    {
+        return $this->leftBlocksWeights;
     }
 }

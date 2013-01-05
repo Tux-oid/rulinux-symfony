@@ -24,37 +24,46 @@
  * ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-*/
+ */
 
-namespace RL\MainBundle\DependencyInjection;
+namespace RL\MainBundle\Twig;
 
-use Symfony\Component\DependencyInjection\ContainerBuilder;
-use Symfony\Component\HttpKernel\DependencyInjection\Extension;
-use Symfony\Component\DependencyInjection\Loader;
-use Symfony\Component\Config\FileLocator;
+use JMS\DiExtraBundle\Annotation\Service;
+use JMS\DiExtraBundle\Annotation\Tag;
 
 /**
- * RL\MainBundle\DependencyInjection\RLMainExtension
+ * RL\MainBundle\Twig\TextExtension
  *
- * This is the class that loads and manages your bundle configuration
+ * @Service("rl_main.twig.text_extension")
+ * @Tag("twig.extension")
  *
- * To learn more see {@link http://symfony.com/doc/current/cookbook/bundles/extension.html}
- *
- * @author Ax-xa-xa
  * @author Peter Vasilevsky <tuxoiduser@gmail.com> a.k.a. Tux-oid
- * @license BSDL
  */
-class RLMainExtension extends Extension
+class TextExtension extends \Twig_Extension
 {
-    /**
-     * {@inheritDoc}
-     */
-    public function load(array $configs, ContainerBuilder $container)
-    {
-        $configuration = new Configuration();
-        $config = $this->processConfiguration($configuration, $configs);
 
-        $container->setParameter('rl_main.anonymous.class', $config['anonymous']['class']);
-        $container->setParameter('rl_main.anonymous.defaults', $config['anonymous']['defaults']);
+    public function getFilters()
+    {
+        return array(
+            'truncate' => new \Twig_Filter_Method($this, 'capitalize')
+        );
+    }
+
+    public function capitalize($string, $max = 300)
+    {
+        $len = (mb_strlen($string) > $max) ? mb_strripos(mb_substr($string, 0, $max), ' ') : $max;
+        $cutStr = mb_substr($string, 0, $len);
+
+        return (mb_strlen($string) > $max) ? $cutStr . '...' : $cutStr;
+    }
+
+    /**
+     * Returns the name of the extension.
+     *
+     * @return string The extension name
+     */
+    public function getName()
+    {
+        return 'text_extension';
     }
 }

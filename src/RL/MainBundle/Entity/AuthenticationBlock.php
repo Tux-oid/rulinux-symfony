@@ -24,37 +24,52 @@
  * ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-*/
+ */
 
-namespace RL\MainBundle\DependencyInjection;
+namespace RL\MainBundle\Entity;
 
-use Symfony\Component\DependencyInjection\ContainerBuilder;
-use Symfony\Component\HttpKernel\DependencyInjection\Extension;
-use Symfony\Component\DependencyInjection\Loader;
-use Symfony\Component\Config\FileLocator;
+use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Security\Core\SecurityContext;
 
 /**
- * RL\MainBundle\DependencyInjection\RLMainExtension
+ * RL\MainBundle\Entity\AuthenticationBlock
  *
- * This is the class that loads and manages your bundle configuration
+ * @ORM\Entity
  *
- * To learn more see {@link http://symfony.com/doc/current/cookbook/bundles/extension.html}
- *
- * @author Ax-xa-xa
  * @author Peter Vasilevsky <tuxoiduser@gmail.com> a.k.a. Tux-oid
  * @license BSDL
  */
-class RLMainExtension extends Extension
+class AuthenticationBlock extends Block
 {
+
+
     /**
      * {@inheritDoc}
      */
-    public function load(array $configs, ContainerBuilder $container)
+    public function render(array $services)
     {
-        $configuration = new Configuration();
-        $config = $this->processConfiguration($configuration, $configs);
+        if ($services['security.context']->isGranted('IS_AUTHENTICATED_FULLY') || $services['security.context']->isGranted('IS_AUTHENTICATED_REMEMBERED')) {
+            return array('templateFile'=> 'authenticationBlock.html.twig', 'parameters'=>array('authenticated' => true));
+        } else {
+            /** @var $request \Symfony\Component\HttpFoundation\Request */
+            $request = $services['request'];
+            $session = $request->getSession();
+            if ($request->attributes->has(SecurityContext::AUTHENTICATION_ERROR)) {
+                $error = $request->attributes->get(SecurityContext::AUTHENTICATION_ERROR);
+            } else {
+                $error = $session->get(SecurityContext::AUTHENTICATION_ERROR);
+                $session->remove(SecurityContext::AUTHENTICATION_ERROR);
+            }
 
-        $container->setParameter('rl_main.anonymous.class', $config['anonymous']['class']);
-        $container->setParameter('rl_main.anonymous.defaults', $config['anonymous']['defaults']);
+            return array('templateFile'=> 'authenticationBlock.html.twig', 'parameters'=>array('error' => $error, 'last_username' => $session->get(SecurityContext::LAST_USERNAME), 'authenticated' => false));
+        }
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function getNeededServicesList()
+    {
+        return array('security.context', 'request');
     }
 }

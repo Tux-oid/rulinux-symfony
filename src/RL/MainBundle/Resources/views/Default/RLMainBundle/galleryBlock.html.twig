@@ -1,0 +1,18 @@
+{% extends theme.path('blocksLayout.html.twig') %}
+
+{% block body %}
+    {% for thread in threads %}
+        <div>
+            <a href="thread_38653_page_1">{{ thread.messages.first.subject }}</a>
+            <p id="newstext">
+                <a href="{{ thread.webPath }}">
+                    <img alt="gallery" src="{{ thread.thumbWebPath }}">
+                </a>
+            </p>
+            <p id="newsbottom">{% trans %}Published{% endtrans %}: {{ thread.postingTime.date }}<br>
+                {% trans %}Author{% endtrans %}: <a href="{{ path('user', {'name': thread.messages.first.user.username}) }}">{{ thread.messages.first.user.username }}</a>
+            </p>
+        </div>
+        <hr>
+    {% endfor %}
+{% endblock body %}

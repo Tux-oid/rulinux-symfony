@@ -1,20 +1,34 @@
 {% extends theme.path('layout.html.twig') %}
 
 {% block middle %}
-        <td class="aside">
-	{% block lblocks %}
-        {# Authentication block #}
-        {% if 'Authentication' in user.blocks %}
-                {% render "RLMainBundle:Block:renderAuthentication" %}
-        {% endif %}
-        {% endblock %}
-        </td>
-        <td class="content">
-	{% block content %}
-			{%for thread in threads%}
-			{%include theme.path('news.html.twig')%}
-			{%endfor%}
-			{{pages|raw}}
-	{% endblock %}
-        </td>
+    <table class="content">
+        <tr>
+            {% if user.leftBlocks|length > 0 %}
+                <td class="left-sidebar">
+                    {% block lblocks %}
+                        {%for block in user.leftBlocks%}
+                            {% render "RLMainBundle:Block:renderBlock" with { 'block': block } %}
+                        {%endfor%}
+                    {% endblock lblocks%}
+                </td>
+            {% endif %}
+            <td class="content">
+                {% block content %}
+                        {%for thread in threads%}
+                        {%include theme.path('news.html.twig')%}
+                        {%endfor%}
+                        {{pages|raw}}
+                {% endblock %}
+            </td>
+            {% if user.rightBlocks|length > 0 %}
+                <td class="right-sidebar">
+                    {% block rblocks %}
+                        {%for block in user.rightBlocks%}
+                            {% render "RLMainBundle:Block:renderBlock" with { 'block': block } %}
+                        {%endfor%}
+                    {% endblock rblocks%}
+                </td>
+            {% endif %}
+        </tr>
+    </table>
 {% endblock %}
