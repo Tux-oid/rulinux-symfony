@@ -1,4 +1,4 @@
-{% extends theme.path('RLMainBundle', 'layout.html.twig') %}
+{% extends theme.path('layout.html.twig') %}
 
 {%block title%}
 {{parent()}} - {%trans%}Add material{%endtrans%}
@@ -19,7 +19,7 @@
 {%endblock recomendations%}
 {%else%}
 <h2>{%trans%}Preview{%endtrans%}</h2>
-{% include theme.path('RLMainBundle', 'preview.html.twig')%}
+{% include theme.path('preview.html.twig')%}
 {%endif%}
 {%block formTable%}
 <form action="{{path('new_thread', {'sectionRewrite':section.rewrite, 'subsectionRewrite':subsection})}}" method="post" {{form_enctype(form)}}>

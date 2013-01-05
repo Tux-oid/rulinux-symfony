@@ -59,20 +59,26 @@ class FixtureLoader implements FixtureInterface
      */
     public function load(ObjectManager $manager)
     {
+        /*****************************************Themes***************************************************************/
         $whiteTheme = new Theme();
         $whiteTheme->setName('simple-white');
         $whiteTheme->setDescription('White theme with rounded corners');
-        $whiteTheme->setPath('RLMainBundle:White');
         $whiteTheme->setDirectory('White');
         $manager->persist($whiteTheme);
 
         $cozyGreenTheme = new Theme();
         $cozyGreenTheme->setName('Cozy-Green');
         $cozyGreenTheme->setDescription('Green theme copied from theme for IPB');
-        $cozyGreenTheme->setPath('RLMainBundle:CozyGreen');
         $cozyGreenTheme->setDirectory('CozyGreen');
         $manager->persist($cozyGreenTheme);
 
+        $ubertechnoTheme = new Theme();
+        $ubertechnoTheme->setName('Ubertechno');
+        $ubertechnoTheme->setDescription('Acidic theme provided by the user Nosferatu');
+        $ubertechnoTheme->setDirectory('Default');
+        $manager->persist($ubertechnoTheme);
+
+        /*****************************************Subsections**********************************************************/
         $forumSection = new Section();
         $forumSection->setName('Forum');
         $forumSection->setDescription('Forum about GNU\Linux and not only');
@@ -193,6 +199,7 @@ class FixtureLoader implements FixtureInterface
         $trashSubsection->setSection($forumSection);
         $manager->persist($trashSubsection);
 
+        /*****************************************Groups***************************************************************/
         $anonymousRole = new Group();
         $anonymousRole->setName('ROLE_ANONYMOUS');
         $anonymousRole->setDescription('anonymouses');
@@ -210,6 +217,8 @@ class FixtureLoader implements FixtureInterface
         $adminRole->setDescription('site administrators');
         $manager->persist($adminRole);
         $captchaLevel = 0;
+
+        /*****************************************Settings*************************************************************/
         $captchaSetting = new Settings();
         $captchaSetting->setName('captchaLevel');
         $captchaSetting->setValue($captchaLevel);
@@ -270,13 +279,7 @@ class FixtureLoader implements FixtureInterface
         $gmtSetting->setValue($gmt);
         $manager->persist($gmtSetting);
 
-        $ubertechnoTheme = new Theme();
-        $ubertechnoTheme->setName('Ubertechno');
-        $ubertechnoTheme->setDescription('Acidic theme provided by the user Nosferatu');
-        $ubertechnoTheme->setPath('RLMainBundle:Default');
-        $ubertechnoTheme->setDirectory('Default');
-        $manager->persist($ubertechnoTheme);
-
+        /*****************************************Marks****************************************************************/
         $texMark = new TexMark();
         $texMark->setName('Tex-Mark');
         $texMark->setDescription('\b{<b>Bold text</b>[}<br>
@@ -312,123 +315,6 @@ class FixtureLoader implements FixtureInterface
                 spoiler{spoiler}<br>
                 \begin{math}formula\end{math}');
         $manager->persist($texMark);
-
-        //adding anonymous
-        $anonymous = new User();
-        $anonymous->setUsername('anonymous');
-        $anonymous->setName('unregistered users');
-        $anonymous->setLastName('');
-        $anonymous->setEmail('anonymous@example.com');
-        $anonymous->setSalt(md5(time()));
-        $anonymous->setAdditional('');
-        $anonymous->setAdditionalRaw('');
-        $anonymous->setBirthday(new \DateTime('now'));
-        $anonymous->setGender(1);
-        $anonymous->setRegistrationDate(new \DateTime('2009-02-12 14:42:51'));
-        $anonymous->setLastVisitDate(new \DateTime('now'));
-        $anonymous->setCaptchaLevel($captchaLevel);
-        $anonymous->setTheme($ubertechnoTheme);
-        $anonymous->setMark($texMark);
-        $anonymous->setSortingType($sortingType);
-        $anonymous->setNewsOnPage($newsOnPage);
-        $anonymous->setThreadsOnPage($threadsOnPage);
-        $anonymous->setCommentsOnPage($commentsOnPage);
-        $anonymous->setShowEmail($showEmail);
-        $anonymous->setShowIm($showIm);
-        $anonymous->setShowAvatars($showAvatars);
-        $anonymous->setShowUa($showUa);
-        $anonymous->setShowResp($showResp);
-        $anonymous->setLanguage($language);
-        $anonymous->setQuestion('');
-        $anonymous->setAnswer('');
-        $anonymous->setGmt($gmt);
-        $encoder = new MessageDigestPasswordEncoder('md5', false, 1);
-        $password = $encoder->encodePassword('anonymous', $anonymous->getSalt());
-        $anonymous->setPassword($password);
-        $anonymous->setGroup($anonymousRole);
-        $manager->persist($anonymous);
-        //Adding admin
-        $admin = new User();
-        $admin->setUsername('Admin');
-        $admin->setName('Site Administrator');
-        $admin->setLastName('');
-        $admin->setEmail('admin@example.com');
-        $admin->setSalt(md5(time()));
-        $admin->setAdditional('');
-        $admin->setAdditionalRaw('');
-        $admin->setBirthday(new \DateTime('now'));
-        $admin->setGender(1);
-        $admin->setRegistrationDate(new \DateTime('now'));
-        $admin->setLastVisitDate(new \DateTime('now'));
-        $admin->setCaptchaLevel($captchaLevel);
-        $admin->setTheme($ubertechnoTheme);
-        $admin->setMark($texMark);
-        $admin->setSortingType($sortingType);
-        $admin->setNewsOnPage($newsOnPage);
-        $admin->setThreadsOnPage($threadsOnPage);
-        $admin->setCommentsOnPage($commentsOnPage);
-        $admin->setShowEmail($showEmail);
-        $admin->setShowIm($showIm);
-        $admin->setShowAvatars($showAvatars);
-        $admin->setShowUa($showUa);
-        $admin->setShowResp($showResp);
-        $admin->setLanguage($language);
-        $admin->setQuestion('');
-        $admin->setAnswer('');
-        $admin->setGmt($gmt);
-        $encoder = new MessageDigestPasswordEncoder('md5', false, 1);
-        $password = $encoder->encodePassword('admin', $admin->getSalt());
-        $admin->setPassword($password);
-        $admin->setGroup($adminRole);
-        $manager->persist($admin);
-
-        $rulesTitle = 'Rules of Rulinux.net';
-        $rulesTitleSetting = new Settings();
-        $rulesTitleSetting->setName('rulesTitle');
-        $rulesTitleSetting->setValue($rulesTitle);
-        $manager->persist($rulesTitleSetting);
-
-        $rulesText = '<p style="margin-bottom: 0cm;">Rulinux is a free resource about Unix systems and not . </p>
-                <p style="margin-bottom: 0cm;">The rules are designed to maintain an adequate discussion of the given topic, and are advisory in nature with the exception of one item: Do not posting child porn and links to it.</p>
-                <p style="margin-bottom: 0cm;">Do not recomended :<br> </p>
-                <p style="margin-bottom: 0cm;">
-                <ol>
-                <li>Use filthy language in username
-                <li>Use more than one active account
-                <li>Use the same account collectively, except for the account anonymous
-                <li>Write software for authomatic posting without the knowledge of the administration of the resource
-                <li>Posting messages with binary data encoded to text message, for example base64
-                <li>Posting messages with filthy language
-                <li>Posting messages with links to malicious software
-                <li>Posting messages with porn or links to porno sites
-                <li>Posting messages with spam
-                <li>Posting messages with flood
-                </ol>
-                </p><br>';
-        $rulesTextSetting = new Settings();
-        $rulesTextSetting->setName('rulesText');
-        $rulesTextSetting->setValue($rulesText);
-        $manager->persist($rulesTextSetting);
-
-        $gpLink = new Link();
-        $gpLink->setName('GNU Planet');
-        $gpLink->setLink('http://gnuplanet.org');
-        $manager->persist($gpLink);
-
-        $opennetLink = new Link();
-        $opennetLink->setName('OpenNET');
-        $opennetLink->setLink('http://opennet.ru');
-        $manager->persist($opennetLink);
-
-        $lorLink = new Link();
-        $lorLink->setName('linux.org.ru');
-        $lorLink->setLink('http://linux.org.ru');
-        $manager->persist($lorLink);
-
-        $lolksLink = new Link();
-        $lolksLink->setName('lolks');
-        $lolksLink->setLink('http://lolks.ru');
-        $manager->persist($lolksLink);
 
         $bbCode = new BbCode();
         $bbCode->setName('BBCode');
@@ -528,6 +414,125 @@ class FixtureLoader implements FixtureInterface
         &lt;span class="spoiler"&gt;spoiler&lt;/span&gt;<br>
         &lt;m&gt;formula&lt;/m&gt;');
         $manager->persist($baseHTML);
+
+        /*****************************************Users****************************************************************/
+        $anonymous = new User();
+        $anonymous->setUsername('anonymous');
+        $anonymous->setName('unregistered users');
+        $anonymous->setLastName('');
+        $anonymous->setEmail('anonymous@example.com');
+        $anonymous->setSalt(md5(time()));
+        $anonymous->setAdditional('');
+        $anonymous->setAdditionalRaw('');
+        $anonymous->setBirthday(new \DateTime('now'));
+        $anonymous->setGender(1);
+        $anonymous->setRegistrationDate(new \DateTime('2009-02-12 14:42:51'));
+        $anonymous->setLastVisitDate(new \DateTime('now'));
+        $anonymous->setCaptchaLevel($captchaLevel);
+        $anonymous->setTheme($ubertechnoTheme);
+        $anonymous->setMark($texMark);
+        $anonymous->setSortingType($sortingType);
+        $anonymous->setNewsOnPage($newsOnPage);
+        $anonymous->setThreadsOnPage($threadsOnPage);
+        $anonymous->setCommentsOnPage($commentsOnPage);
+        $anonymous->setShowEmail($showEmail);
+        $anonymous->setShowIm($showIm);
+        $anonymous->setShowAvatars($showAvatars);
+        $anonymous->setShowUa($showUa);
+        $anonymous->setShowResp($showResp);
+        $anonymous->setLanguage($language);
+        $anonymous->setQuestion('');
+        $anonymous->setAnswer('');
+        $anonymous->setGmt($gmt);
+        $encoder = new MessageDigestPasswordEncoder('md5', false, 1);
+        $password = $encoder->encodePassword('anonymous', $anonymous->getSalt());
+        $anonymous->setPassword($password);
+        $anonymous->setGroup($anonymousRole);
+        $manager->persist($anonymous);
+
+        $admin = new User();
+        $admin->setUsername('Admin');
+        $admin->setName('Site Administrator');
+        $admin->setLastName('');
+        $admin->setEmail('admin@example.com');
+        $admin->setSalt(md5(time()));
+        $admin->setAdditional('');
+        $admin->setAdditionalRaw('');
+        $admin->setBirthday(new \DateTime('now'));
+        $admin->setGender(1);
+        $admin->setRegistrationDate(new \DateTime('now'));
+        $admin->setLastVisitDate(new \DateTime('now'));
+        $admin->setCaptchaLevel($captchaLevel);
+        $admin->setTheme($ubertechnoTheme);
+        $admin->setMark($texMark);
+        $admin->setSortingType($sortingType);
+        $admin->setNewsOnPage($newsOnPage);
+        $admin->setThreadsOnPage($threadsOnPage);
+        $admin->setCommentsOnPage($commentsOnPage);
+        $admin->setShowEmail($showEmail);
+        $admin->setShowIm($showIm);
+        $admin->setShowAvatars($showAvatars);
+        $admin->setShowUa($showUa);
+        $admin->setShowResp($showResp);
+        $admin->setLanguage($language);
+        $admin->setQuestion('');
+        $admin->setAnswer('');
+        $admin->setGmt($gmt);
+        $encoder = new MessageDigestPasswordEncoder('md5', false, 1);
+        $password = $encoder->encodePassword('admin', $admin->getSalt());
+        $admin->setPassword($password);
+        $admin->setGroup($adminRole);
+        $manager->persist($admin);
+
+        /*****************************************Rules****************************************************************/
+        $rulesTitle = 'Rules of Rulinux.net';
+        $rulesTitleSetting = new Settings();
+        $rulesTitleSetting->setName('rulesTitle');
+        $rulesTitleSetting->setValue($rulesTitle);
+        $manager->persist($rulesTitleSetting);
+
+        $rulesText = '<p style="margin-bottom: 0cm;">Rulinux is a free resource about Unix systems and not . </p>
+                <p style="margin-bottom: 0cm;">The rules are designed to maintain an adequate discussion of the given topic, and are advisory in nature with the exception of one item: Do not posting child porn and links to it.</p>
+                <p style="margin-bottom: 0cm;">Do not recomended :<br> </p>
+                <p style="margin-bottom: 0cm;">
+                <ol>
+                <li>Use filthy language in username
+                <li>Use more than one active account
+                <li>Use the same account collectively, except for the account anonymous
+                <li>Write software for authomatic posting without the knowledge of the administration of the resource
+                <li>Posting messages with binary data encoded to text message, for example base64
+                <li>Posting messages with filthy language
+                <li>Posting messages with links to malicious software
+                <li>Posting messages with porn or links to porno sites
+                <li>Posting messages with spam
+                <li>Posting messages with flood
+                </ol>
+                </p><br>';
+        $rulesTextSetting = new Settings();
+        $rulesTextSetting->setName('rulesText');
+        $rulesTextSetting->setValue($rulesText);
+        $manager->persist($rulesTextSetting);
+
+        /*****************************************Links****************************************************************/
+        $gpLink = new Link();
+        $gpLink->setName('GNU Planet');
+        $gpLink->setLink('http://gnuplanet.org');
+        $manager->persist($gpLink);
+
+        $opennetLink = new Link();
+        $opennetLink->setName('OpenNET');
+        $opennetLink->setLink('http://opennet.ru');
+        $manager->persist($opennetLink);
+
+        $lorLink = new Link();
+        $lorLink->setName('linux.org.ru');
+        $lorLink->setLink('http://linux.org.ru');
+        $manager->persist($lorLink);
+
+        $lolksLink = new Link();
+        $lolksLink->setName('lolks');
+        $lolksLink->setLink('http://lolks.ru');
+        $manager->persist($lolksLink);
 
         $manager->flush();
     }

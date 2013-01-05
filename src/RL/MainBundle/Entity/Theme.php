@@ -59,10 +59,6 @@ class Theme
     /**
      * @ORM\Column(type="string", length=255)
      */
-    protected $path;
-    /**
-     * @ORM\Column(type="string", length=255)
-     */
     protected $directory;
     /**
      * @param $description
@@ -110,22 +106,6 @@ class Theme
     public function getName()
     {
         return $this->name;
-    }
-
-    /**
-     * @param $path
-     */
-    public function setPath($path)
-    {
-        $this->path = $path;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getPath()
-    {
-        return $this->path;
     }
 
     /**

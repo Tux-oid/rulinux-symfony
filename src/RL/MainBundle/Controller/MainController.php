@@ -46,16 +46,17 @@ class MainController extends Controller
     /**
      * @Route("/unconfirmed", name="unconfirmed")
      */
-    public function unconfirmedAction()
+    public function unconfirmedAction()//TODO:move to articles bundle
     {
         $user = $this->get('security.context')->getToken()->getUser();
         $theme = $this->get('rl_main.theme.provider');
         $doctrine = $this->get('doctrine');
+        /** @var $threadRepository \RL\ArticlesBundle\Entity\Repository\ThreadRepository */
         $threadRepository = $doctrine->getRepository('RLNewsBundle:Thread');
         $unconfirmedThreads = $threadRepository->getUnconfirmed();
 
         return $this->render(
-            $theme->getPath('RLMainBundle', 'unconfirmed.html.twig'), array('user' => $user, 'theme' => $theme, 'threads' => $unconfirmedThreads,)
+            $theme->getPath('unconfirmed.html.twig'), array('user' => $user, 'theme' => $theme, 'threads' => $unconfirmedThreads,)
         );
     }
 
@@ -73,13 +74,13 @@ class MainController extends Controller
             $tracker = $request->request->get('tracker');
             $hours = (int) $tracker['hours'];
         }
-        /** @var $messageRepository \RL\MainBundle\Entity\MessageRepository */
+        /** @var $messageRepository \RL\MainBundle\Entity\Repository\MessageRepository */
         $messageRepository = $doctrine->getRepository('RLMainBundle:Message');
         $messages = $messageRepository->getMessagesForLastHours($hours);
         $form = $this->createForm(new TrackerType(), new TrackerForm($hours));
 
         return $this->render(
-            $theme->getPath('RLMainBundle', 'tracker.html.twig'), array('user' => $user, 'theme' => $theme, 'form'=>$form->createView(), 'messages'=>$messages, 'count'=>count($messages), 'hours' => $hours )
+            $theme->getPath('tracker.html.twig'), array('user' => $user, 'theme' => $theme, 'form'=>$form->createView(), 'messages'=>$messages, 'count'=>count($messages), 'hours' => $hours )
         );
     }
 
@@ -96,7 +97,7 @@ class MainController extends Controller
         $rulesText = $settingsRepository->findOneByName('rulesText')->getValue();
 
         return $this->render(
-            $theme->getPath('RLMainBundle', 'page.html.twig'), array('user' => $user, 'theme' => $theme, 'title' => $rulesTitle, 'text' => $rulesText,)
+            $theme->getPath('page.html.twig'), array('user' => $user, 'theme' => $theme, 'title' => $rulesTitle, 'text' => $rulesText,)
         );
     }
 
@@ -108,17 +109,19 @@ class MainController extends Controller
         $user = $this->get('security.context')->getToken()->getUser();
         $theme = $this->get('rl_main.theme.provider');
         $doctrine = $this->get('doctrine');
+        /** @var $linksRepository \Doctrine\Orm\EntityRepository */
         $linksRepository = $doctrine->getRepository('RLMainBundle:Link');
         $links = $linksRepository->findAll();
         $title = 'Links';
         $text = '<ul>';
+        /** @var $link \RL\MainBundle\Entity\Link */
         foreach ($links as $link) {
             $text = $text . '<li><a href="' . $link->getLink() . '">' . $link->getName() . '</a></li>';
         }
         $text = $text . '</ul>';
 
         return $this->render(
-            $theme->getPath('RLMainBundle', 'page.html.twig'), array('user' => $user, 'theme' => $theme, 'title' => $title, 'text' => $text,)
+            $theme->getPath('page.html.twig'), array('user' => $user, 'theme' => $theme, 'title' => $title, 'text' => $text,)
         );
     }
 
@@ -138,7 +141,7 @@ class MainController extends Controller
             $mark = $markRepository->findOneById($id);
         }
 
-        return $this->render($theme->getPath('RLMainBundle', 'mark.html.twig'), array('user' => $user, 'theme' => $theme, 'mark' => $mark));
+        return $this->render($theme->getPath('mark.html.twig'), array('user' => $user, 'theme' => $theme, 'mark' => $mark));
     }
 
     /**
@@ -146,11 +149,13 @@ class MainController extends Controller
      */
     public function homepageAction($page)
     {
+        /** @var $user \RL\MainBundle\Security\User\RLUserInterface */
         $user = $this->get('security.context')->getToken()->getUser();
         $theme = $this->get('rl_main.theme.provider');
         $doctrine = $this->get('doctrine');
         $sectionRepository = $doctrine->getRepository('RLMainBundle:Section');
         $section = $sectionRepository->findOneByRewrite('news');
+        /** @var $threadRepository \RL\NewsBundle\Entity\Repository\ThreadRepository */
         $threadRepository = $doctrine->getRepository('RLNewsBundle:Thread');
         $itemsCount = $threadRepository->getNewsCount();
         $itemsOnPage = $user->getNewsOnPage();
@@ -161,7 +166,7 @@ class MainController extends Controller
         $pagesStr = $pages->draw();
 
         return $this->render(
-            $theme->getPath('RLMainBundle', 'index.html.twig'), array('user' => $user, 'theme' => $this->get('rl_main.theme.provider'), 'threads' => $threads, 'pages' => $pagesStr, 'section' => $section,)
+            $theme->getPath('index.html.twig'), array('user' => $user, 'theme' => $theme, 'threads' => $threads, 'pages' => $pagesStr, 'section' => $section,)
         );
     }
 

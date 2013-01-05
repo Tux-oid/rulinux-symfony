@@ -59,7 +59,7 @@ class BlockController extends Controller
             }
 
             return $this->render(
-                $theme->getPath('RLMainBundle', 'authenticationBlock.html.twig'), array('theme' => $theme, 'user' => $this->get('security.context')->getToken()->getUser(), 'error' => $error, 'last_username' => $session->get(SecurityContext::LAST_USERNAME))
+                $theme->getPath('authenticationBlock.html.twig'), array('theme' => $theme, 'user' => $this->get('security.context')->getToken()->getUser(), 'error' => $error, 'last_username' => $session->get(SecurityContext::LAST_USERNAME))
             );
         }
     }

@@ -61,14 +61,16 @@ class ModerController extends Controller
                 ));
         }
         $doctrine = $this->get('doctrine');
+        /** @var $em \Doctrine\ORM\EntityManager */
         $em = $doctrine->getEntityManager();
+        /** @var $thread \RL\MainBundle\Entity\Thread */
         $thread = $doctrine->getRepository('RLMainBundle:Thread')->findOneById($id);
         if (null === $thread) {
             $legend = 'Thread not found';
             $title = 'Thread not found';
             $text = 'Thread with specified id isn\'t found';
 
-            return $this->render($theme->getPath('RLMainBundle', 'fieldset.html.twig'), array(
+            return $this->render($theme->getPath('fieldset.html.twig'), array(
                     'theme' => $theme,
                     'user' => $user,
                     'legend' => $legend,
@@ -97,7 +99,7 @@ class ModerController extends Controller
             $title = 'Edit message';
             $text = 'You have not privelegies to edit this message';
 
-            return $this->render($theme->getPath('RLMainBundle', 'fieldset.html.twig'), array(
+            return $this->render($theme->getPath('fieldset.html.twig'), array(
                     'theme' => $theme,
                     'user' => $user,
                     'legend' => $legend,
@@ -106,14 +108,16 @@ class ModerController extends Controller
                 ));
         }
         $doctrine = $this->get('doctrine');
+        /** @var $em \Doctrine\ORM\EntityManager */
         $em = $doctrine->getEntityManager();
+        /** @var $thread \RL\MainBundle\Entity\Thread */
         $thread = $doctrine->getRepository('RLMainBundle:Thread')->findOneById($id);
         if (null === $thread) {
             $legend = 'Thread not found';
             $title = 'Thread not found';
             $text = 'Thread with specified id isn\'t found';
 
-            return $this->render($theme->getPath('RLMainBundle', 'fieldset.html.twig'), array(
+            return $this->render($theme->getPath('fieldset.html.twig'), array(
                     'theme' => $theme,
                     'user' => $user,
                     'legend' => $legend,

@@ -113,7 +113,7 @@ class ThemeProvider
      * @return string
      * @throws \Exception
      */
-    public function getPath($bundleName, $templateName)
+    public function getPath($templateName, $bundleName = 'RLMainBundle')
     {
         /** @var $theme \RL\MainBundle\Entity\Theme */
         $theme = $this->getTheme();
@@ -144,9 +144,9 @@ class ThemeProvider
                 return $bundleName . ':' . $theme->getDirectory() . ':' . $templateName;
             }
 
-            return $defaultTheme->getPath() . ':' . $bundleName . '/' . $templateName;
+            return 'RLMainBundle:' . $defaultTheme->getDirectory() . ':' . $bundleName . '/' . $templateName;
         }
 
-        return $theme->getPath() . ':' . $bundleName . '/' . $templateName;
+        return 'RLMainBundle:' . $theme->getDirectory() . ':' . $bundleName . '/' . $templateName;
     }
 }

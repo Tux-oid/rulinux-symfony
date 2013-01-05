@@ -1,4 +1,4 @@
-{% extends theme.path('RLMainBundle', 'layout.html.twig') %}
+{% extends theme.path('layout.html.twig') %}
 
 {% block title %}
     {{ parent() }} - {% transchoice hours%}{0} Posted during last %hours% hours|{1} Posted during last %hours% hour| ]1,Inf] Posted during last %hours% hours{% endtranschoice %}

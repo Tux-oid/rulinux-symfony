@@ -57,12 +57,14 @@ class ForumController extends Controller
         $user = $this->get('security.context')->getToken()->getUser();
         $doctrine = $this->get('doctrine');
         $request = $this->getRequest();
+        /** @var $section \RL\MainBundle\Entity\Section */
         $section = $doctrine->getRepository('RLMainBundle:Section')->findOneByRewrite($sectionRewrite);
         $subsectionRepository = $doctrine->getRepository($section->getBundle().':Subsection');
         $subsection = $subsectionRepository->getSubsectionByRewrite($subsectionRewrite, $section);
         //save thread in database
         $sbm = $request->request->get('submit');
         $hlpCls = $section->getBundleNamespace().'\Helper\ThreadHelper';
+        /** @var $helper \RL\MainBundle\Helper\ThreadHelperInterface */
         $helper = new $hlpCls();
         if (isset($sbm)) {
             $helper->saveThread($doctrine, $request, $section, $subsection, $user);
@@ -87,7 +89,7 @@ class ForumController extends Controller
         $typeCls = $section->getBundleNamespace().'\Form\AddThreadType';
         $form = $this->createForm(new $typeCls(), $newThread);
 
-        return $this->render($theme->getPath($section->getBundle(), 'newThread.html.twig'), array(
+        return $this->render($theme->getPath('newThread.html.twig', $section->getBundle()), array(
                 'theme' => $theme,
                 'user' => $user,
                 'form' => $form->createView(),
@@ -104,9 +106,11 @@ class ForumController extends Controller
     public function threadAction($id, $page)
     {
         $theme = $this->get('rl_main.theme.provider');
+        /** @var $user \RL\MainBundle\Security\User\RLUserInterface */
         $user = $this->get('security.context')->getToken()->getUser();
         $doctrine = $this->get('doctrine');
         $threadRepository = $doctrine->getRepository('RLMainBundle:Thread');
+        /** @var $section \RL\MainBundle\Entity\Section */
         $section = $threadRepository->findOneById($id)->getSubsection()->getSection();
         $itemsCount = count($threadRepository->findOneById($id)->getMessages());
         $threadRepository = $doctrine->getRepository($section->getBundle().':Thread');
@@ -132,7 +136,7 @@ class ForumController extends Controller
         $pagesStr = $pages->draw();
         $neighborThreads = $threadRepository->getNeighborThreadsById($id);
 
-        return $this->render($theme->getPath('RLMainBundle', 'thread.html.twig'), array(
+        return $this->render($theme->getPath('thread.html.twig'), array(
                 'theme' => $theme,
                 'user' => $user,
                 'startMessage' => $startMessage,
@@ -148,6 +152,7 @@ class ForumController extends Controller
     public function commentAction($thread_id, $comment_id)
     {
         $theme = $this->get('rl_main.theme.provider');
+        /** @var $user \RL\MainBundle\Security\User\RLUserInterface */
         $user = $this->get('security.context')->getToken()->getUser();
         $doctrine = $this->get('doctrine');
         $request = $this->getRequest();
@@ -194,7 +199,7 @@ class ForumController extends Controller
         }
         $form = $this->createForm(new AddCommentType(), $newComment);
 
-        return $this->render($theme->getPath('RLMainBundle', 'addComment.html.twig'), array(
+        return $this->render($theme->getPath('addComment.html.twig'), array(
                 'theme' => $theme,
                 'user' => $user,
                 'preview' => $preview,
@@ -212,6 +217,7 @@ class ForumController extends Controller
         $user = $securityContext->getToken()->getUser();
         $doctrine = $this->get('doctrine');
         $messageRepository = $doctrine->getRepository('RLMainBundle:Message');
+        /** @var $message \RL\MainBundle\Entity\Message */
         $message = $messageRepository->findOneById($messageId);
         //check access
         if ($message->getUser() != $user && !$securityContext->isGranted('ROLE_MODER')) {
@@ -219,7 +225,7 @@ class ForumController extends Controller
             $title = 'Edit message';
             $text = 'You have not privelegies to edit this message';
 
-            return $this->render($theme->getPath('RLMainBundle', 'fieldset.html.twig'), array(
+            return $this->render($theme->getPath('fieldset.html.twig'), array(
                     'theme' => $theme,
                     'user' => $user,
                     'legend' => $legend,
@@ -228,12 +234,12 @@ class ForumController extends Controller
                 ));
         }
         if ($user->isAnonymous()) {
-            if ($message->getSessionId != \session_id()) {
+            if ($message->getSessionId() != \session_id()) {
                 $legend = 'Access denied';
                 $title = 'Edit message';
                 $text = 'You have not privelegies to edit this message';
 
-                return $this->render($theme->getPath('RLMainBundle', 'fieldset.html.twig'), array(
+                return $this->render($theme->getPath('fieldset.html.twig'), array(
                         'theme' => $theme,
                         'user' => $user,
                         'legend' => $legend,
@@ -246,6 +252,7 @@ class ForumController extends Controller
         $request = $this->getRequest();
         $sbm = $request->request->get('submit');
         if (isset($sbm)) {
+            /** @var $em \Doctrine\ORM\EntityManager */
             $em = $doctrine->getEntityManager();
             $cmnt = $request->request->get('editComment');
             $message->setSubject($cmnt['subject']);
@@ -266,7 +273,7 @@ class ForumController extends Controller
         $comment->setComment($message->getRawComment());
         $form = $this->createForm(new EditCommentType(), $comment);
 
-        return $this->render($theme->getPath('RLMainBundle', 'editComment.html.twig'), array(
+        return $this->render($theme->getPath('editComment.html.twig'), array(
                 'theme' => $theme,
                 'user' => $user,
                 'message' => $message,
@@ -279,17 +286,20 @@ class ForumController extends Controller
     public function subsectionAction($sectionRewrite, $subsectionRewrite, $page)
     {
         $theme = $this->get('rl_main.theme.provider');
+        /** @var $user \RL\MainBundle\Security\User\RLUserInterface */
         $user = $this->get('security.context')->getToken()->getUser();
         $subsectionRepository = $this->get('doctrine')->getRepository('RLMainBundle:Subsection');
         $sectionRepository = $this->get('doctrine')->getRepository('RLMainBundle:Section');
+        /** @var $section \RL\MainBundle\Entity\Section */
         $section = $sectionRepository->findOneByRewrite($sectionRewrite);
+        /** @var $subsection \RL\MainBundle\Entity\Subsection */
         $subsection = $subsectionRepository->getSubsectionByRewrite($subsectionRewrite, $section);
         if (empty($subsection)) {
             $legend = 'subsection not found';
             $title = 'unknown subsection';
             $text = 'subsection '.$subsectionRewrite.' not found';
 
-            return $this->render($theme->getPath('RLMainBundle', 'fieldset.html.twig'), array(
+            return $this->render($theme->getPath('fieldset.html.twig'), array(
                     'theme' => $theme,
                     'user' => $user,
                     'legend' => $legend,
@@ -307,7 +317,7 @@ class ForumController extends Controller
         $pages = new Pages($this->get('router'), $itemsOnPage, $itemsCount, $page, 'subsection', array("sectionRewrite" => $sectionRewrite, "subsectionRewrite" => $subsectionRewrite, "page" => $page));
         $pagesStr = $pages->draw();
 
-        return $this->render($theme->getPath($section->getBundle(), 'subsection.html.twig'), array('theme' => $theme,
+        return $this->render($theme->getPath('subsection.html.twig', $section->getBundle()), array('theme' => $theme,
                 'user' => $user,
                 'subsection' => $subsection,
                 'subsections' => $section->getSubsections(),
@@ -326,11 +336,12 @@ class ForumController extends Controller
         $theme = $this->get('rl_main.theme.provider');
         $doctrine = $this->get('doctrine');
         $sectionRepository = $doctrine->getRepository('RLMainBundle:Section');
+        /** @var $section \RL\MainBundle\Entity\Section */
         $section = $sectionRepository->findOneByRewrite($sectionRewrite);
         $subsections = $section->getSubsections();
         $threadsCount = $doctrine->getRepository($section->getBundle().':Thread')->getThreadsCount($section);
 
-        return $this->render($theme->getPath($section->getBundle(), 'forum.html.twig'), array('theme' => $theme,
+        return $this->render($theme->getPath('forum.html.twig', $section->getBundle()), array('theme' => $theme,
                 'user' => $this->get('security.context')->getToken()->getUser(),
                 'subsections' => $subsections,
                 'threadsCount' => $threadsCount,
