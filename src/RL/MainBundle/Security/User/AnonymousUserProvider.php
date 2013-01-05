@@ -30,8 +30,14 @@ namespace RL\MainBundle\Security\User;
 
 use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Security\Core\User\UserProviderInterface;
+use Symfony\Component\EventDispatcher\EventDispatcher;
 use Symfony\Component\Security\Core\Exception\UsernameNotFoundException;
 use Symfony\Component\Security\Core\Exception\UnsupportedUserException;
+use RL\MainBundle\AuthenticationEvents;
+use RL\MainBundle\Event\AnonymousLoginEvent;
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\DependencyInjection\Container;
+use Doctrine\Bundle\DoctrineBundle\Registry;
 use JMS\DiExtraBundle\Annotation\Service;
 use JMS\DiExtraBundle\Annotation\Inject;
 use JMS\DiExtraBundle\Annotation\InjectParams;
@@ -61,23 +67,39 @@ class AnonymousUserProvider implements UserProviderInterface
     protected $doctrine;
 
     /**
+     * @var \Symfony\Component\EventDispatcher\EventDispatcher
+     */
+    protected $eventDispatcher;
+
+    /**
+     * @var Symfony\Component\HttpFoundation\Request;
+     */
+    protected $request;
+
+    /**
      * Constructor
      *
      * @InjectParams({
      * "userClass" = @Inject("%rl_main.anonymous.class%"),
      * "defaults" = @Inject("%rl_main.anonymous.defaults%"),
-     * "doctrine" = @Inject("doctrine")
+     * "doctrine" = @Inject("doctrine"),
+     * "eventDispatcher" = @Inject("event_dispatcher"),
+     * "container" = @Inject("service_container")
      * })
      *
      * @param $userClass
-     * @param $defaults
-     * @param $doctrine
+     * @param array $defaults
+     * @param \Doctrine\Bundle\DoctrineBundle\Registry $doctrine
+     * @param \Symfony\Component\EventDispatcher\EventDispatcher $eventDispatcher
+     * @param \Symfony\Component\DependencyInjection\Container $container
      */
-    public function __construct($userClass, $defaults, $doctrine)
+    public function __construct($userClass, array $defaults, Registry $doctrine, EventDispatcher $eventDispatcher, Container $container)
     {
         $this->defaults = $defaults;
         $this->userClass = $userClass;
         $this->doctrine = $doctrine;
+        $this->eventDispatcher = $eventDispatcher;
+        $this->request = $container->get('request');
     }
 
     /**
@@ -96,8 +118,10 @@ class AnonymousUserProvider implements UserProviderInterface
                 $attributes[$key] = $this->defaults[$key];
             }
         }
+        $user = new $this->userClass($identity, $attributes, $this->doctrine);
+        $this->eventDispatcher->dispatch(AuthenticationEvents::onAnonymousLogin, new AnonymousLoginEvent($user, $this->request));
 
-        return new $this->userClass($identity, $attributes, $this->doctrine);
+        return $user;
     }
 
     /**

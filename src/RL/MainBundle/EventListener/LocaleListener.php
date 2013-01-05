@@ -24,11 +24,13 @@
  * ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-*/
+ */
 
 namespace RL\MainBundle\EventListener;
 
 use Symfony\Component\HttpKernel\Event\GetResponseEvent;
+use Symfony\Component\Security\Http\Event\InteractiveLoginEvent;
+use RL\MainBundle\Event\AnonymousLoginEvent;
 use JMS\DiExtraBundle\Annotation\Service;
 use JMS\DiExtraBundle\Annotation\Observe;
 
@@ -39,7 +41,7 @@ use JMS\DiExtraBundle\Annotation\Observe;
  *
  * @author Peter Vasilevsky <tuxoiduser@gmail.com> a.k.a. Tux-oid
  * @license BSDL
-*/
+ */
 class LocaleListener
 {
     /**
@@ -73,6 +75,38 @@ class LocaleListener
             $request->getSession()->set('_locale', $locale);
         } else {
             $request->setLocale($request->getSession()->get('_locale', $this->defaultLocale));
+        }
+    }
+
+    /**
+     * @Observe("security.interactive_login")
+     *
+     * @param \Symfony\Component\Security\Http\Event\InteractiveLoginEvent $event
+     */
+    public function onLogin(InteractiveLoginEvent $event)
+    {
+        /** @var $user \RL\MainBundle\Security\User\RLUserInterface */
+        $user = $event->getAuthenticationToken()->getUser();
+        $language = $user->getLanguage();
+        if ($language) {
+            $event->getRequest()->getSession()->set('_locale', $language);
+            $event->getRequest()->setLocale($language);
+        }
+    }
+
+    /**
+     * @Observe("security.anonymous_login")
+     *
+     * @param \Symfony\Component\Security\Http\Event\InteractiveLoginEvent $event
+     */
+    public function onAnonymousLogin(AnonymousLoginEvent $event)
+    {
+        /** @var $user \RL\MainBundle\Security\User\RLUserInterface */
+        $user = $event->getUser();
+        $language = $user->getLanguage();
+        if ($language) {
+            $event->getRequest()->getSession()->set('_locale', $language);
+            $event->getRequest()->setLocale($language);
         }
     }
 }
