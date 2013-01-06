@@ -456,7 +456,11 @@ class FixtureLoader implements FixtureInterface
         $anonymous->addLeftBlock($authenticationBlock);
         $anonymous->addLeftBlock($trackerBlock);
         $anonymous->addLeftBlock($galleryBlock);
+        $anonymous->setLeftBlocksWeights(
+            array($authenticationBlock->getName() => 9, $galleryBlock->getName() => 5, $trackerBlock->getName() => 1)
+        );
         $anonymous->addRightBlock($linksBlock);
+        $anonymous->setRightBlocksWeights(array($linksBlock->getName()=>1));
         $anonymous->setCaptchaLevel($captchaLevel);
         $anonymous->setTheme($ubertechnoTheme);
         $anonymous->setMark($texMark);
@@ -494,7 +498,11 @@ class FixtureLoader implements FixtureInterface
         $admin->addLeftBlock($authenticationBlock);
         $admin->addLeftBlock($trackerBlock);
         $admin->addLeftBlock($linksBlock);
+        $admin->setLeftBlocksWeights(
+            array($authenticationBlock->getName() => 9, $linksBlock->getName() => 5, $trackerBlock->getName() => 1)
+        );
         $admin->addRightBlock($galleryBlock);
+        $admin->setRightBlocksWeights(array($galleryBlock->getName()=>1));
         $admin->setCaptchaLevel($captchaLevel);
         $admin->setTheme($ubertechnoTheme);
         $admin->setMark($texMark);

@@ -6,9 +6,13 @@
             {% if app.user.leftBlocks|length > 0 %}
                 <td class="left-sidebar">
                     {% block lblocks %}
-                        {%for block in app.user.leftBlocks%}
-                            {% render "RLMainBundle:Block:renderBlock" with { 'block': block } %}
-                        {%endfor%}
+                        {% for blockName, weight in app.user.leftBlocksWeights %}
+                            {%for block in app.user.leftBlocks%}
+                                {% if block.name == blockName %}
+                                    {% render "RLMainBundle:Block:renderBlock" with { 'block': block } %}
+                                {% endif %}
+                            {%endfor%}
+                        {% endfor %}
                     {% endblock lblocks%}
                 </td>
             {% endif %}
@@ -23,8 +27,12 @@
             {% if app.user.rightBlocks|length > 0 %}
                 <td class="right-sidebar">
                     {% block rblocks %}
-                        {%for block in app.user.rightBlocks%}
-                            {% render "RLMainBundle:Block:renderBlock" with { 'block': block } %}
+                        {% for blockName, weight in app.user.rightBlocksWeights %}
+                            {%for block in app.user.rightBlocks%}
+                                {% if block.name == blockName %}
+                                    {% render "RLMainBundle:Block:renderBlock" with { 'block': block } %}
+                                {% endif %}
+                            {%endfor%}
                         {%endfor%}
                     {% endblock rblocks%}
                 </td>
