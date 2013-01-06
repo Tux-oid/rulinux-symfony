@@ -7,7 +7,7 @@
         <p><p>{{preview.comment|raw}}</p></p>
         <div class="sign">{{preview.user.username}} (<a href="{{path('user', {'name':preview.user.username})}}">*</a>) ({{preview.postingTime.date}})
 		<br>
-		{%if user.showUa == true%}
+		{%if app.user.showUa == true%}
 			{{preview.useragent}}
 		{%endif%}
 	</div>

@@ -76,7 +76,7 @@
             </trans-unit>
             <trans-unit id="19">
                 <source>Subject</source>
-                <target>Заколовок</target>
+                <target>Заголовок</target>
             </trans-unit>
             <trans-unit id="20">
                 <source>Comment</source>
@@ -497,6 +497,30 @@
             <trans-unit id="124">
                 <source>You logged in as</source>
                 <target>Вы вошли как</target>
+            </trans-unit>
+            <trans-unit id="125">
+                <source>Last comments for user</source>
+                <target>Последние комментарии пользователя</target>
+            </trans-unit>
+            <trans-unit id="126">
+                <source>View</source>
+                <target>Просмотр</target>
+            </trans-unit>
+            <trans-unit id="127">
+                <source>Section</source>
+                <target>Раздел</target>
+            </trans-unit>
+            <trans-unit id="128">
+                <source>Subsection</source>
+                <target>Подраздел</target>
+            </trans-unit>
+            <trans-unit id="129">
+                <source>Date</source>
+                <target>Дата</target>
+            </trans-unit>
+            <trans-unit id="130">
+                <source>My comments</source>
+                <target>Мой комментарии</target>
             </trans-unit>
         </body>
     </file>

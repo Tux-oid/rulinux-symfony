@@ -92,7 +92,7 @@
 		<td>{{commentsInfo['lastCommentDate']}}</td>
 	</tr>
 	<tr>
-		<td><a href="comments_Tux-oid">{%trans%}Comments count{%endtrans%}</a>:</td>
+		<td><a href="{{ path('userComments') }}">{%trans%}Comments count{%endtrans%}</a>:</td>
 		<td>{{commentsInfo['allComments']}}</td>
 	</tr>
 	<tr>
@@ -100,7 +100,7 @@
 		<td>{{commentsInfo['allThreads']}}</td>
 	</tr>
 </table>
-{%if is_granted('ROLE_MODER') or user.username == userInfo.username%}
+{%if is_granted('ROLE_MODER') or app.user.username == userInfo.username%}
 <form action="{{path("user_edit", {"name":userInfo.username})}}" method="get">
 	<input type="submit" value="{%trans%}Edit{%endtrans%}">
 </form>

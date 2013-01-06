@@ -29,6 +29,7 @@
 namespace RL\MainBundle\Entity\Repository;
 
 use Doctrine\ORM\EntityRepository;
+use RL\MainBundle\Security\User\RLUserInterface;
 
 /**
  * RL\MainBundle\Entity\UserRepository
@@ -38,32 +39,52 @@ use Doctrine\ORM\EntityRepository;
  */
 class UserRepository extends EntityRepository
 {
+    /**
+     * @param $user
+     * @return array
+     */
     public function getUserCommentsInformation($user)
     {
         $ret = array();
-        $em = $this->_em;
-        $q = $em->createQuery('SELECT COUNT(m) AS cnt FROM RL\MainBundle\Entity\Message AS m WHERE m.user = :user')
+        $q = $this->_em->createQuery('SELECT COUNT(m) AS cnt FROM RL\MainBundle\Entity\Message AS m WHERE m.user = :user')
             ->setParameter('user', $user);
         $userComments = $q->getSingleResult();
         $ret['allComments'] = $userComments['cnt'];
 
-        $q = $em->createQuery('SELECT COUNT(t) AS thrcnt FROM RL\MainBundle\Entity\Thread AS t INNER JOIN t.messages AS m WHERE m.id = (SELECT MIN(msg.id) AS msg_id FROM RL\MainBundle\Entity\Message AS msg WHERE msg.thread = t.id) AND m.user = :user')
+        $q = $this->_em->createQuery('SELECT COUNT(t) AS thrcnt FROM RL\MainBundle\Entity\Thread AS t INNER JOIN t.messages AS m WHERE m.id = (SELECT MIN(msg.id) AS msg_id FROM RL\MainBundle\Entity\Message AS msg WHERE msg.thread = t.id) AND m.user = :user')
             ->setParameter('user', $user);
         $userComments = $q->getSingleResult();
         $ret['allThreads'] = $userComments['thrcnt'];
 
-        $q = $em->createQuery('SELECT MIN(m.postingTime) AS minimum, MAX(m.postingTime) AS maximum FROM RL\MainBundle\Entity\Message AS m WHERE m.id IN (SELECT min(msg.id) FROM RL\MainBundle\Entity\Message AS msg INNER JOIN msg.thread AS t WHERE msg.user = :user GROUP BY t.id ORDER BY t.id)')
+        $q = $this->_em->createQuery('SELECT MIN(m.postingTime) AS minimum, MAX(m.postingTime) AS maximum FROM RL\MainBundle\Entity\Message AS m WHERE m.id IN (SELECT min(msg.id) FROM RL\MainBundle\Entity\Message AS msg INNER JOIN msg.thread AS t WHERE msg.user = :user GROUP BY t.id ORDER BY t.id)')
             ->setParameter('user', $user);
         $userComments = $q->getSingleResult();
         $ret['firstThreadDate'] = $userComments['minimum'];
         $ret['lastThreadDate'] = $userComments['maximum'];
 
-        $q = $em->createQuery('SELECT MIN(m.postingTime) AS minimum, MAX(m.postingTime) AS maximum FROM RL\MainBundle\Entity\Message AS m WHERE m.user = :user AND m.id NOT IN (SELECT min(msg.id) FROM RL\MainBundle\Entity\Message AS msg INNER JOIN msg.thread AS t WHERE msg.user = :user GROUP BY t.id ORDER BY t.id)')
+        $q = $this->_em->createQuery('SELECT MIN(m.postingTime) AS minimum, MAX(m.postingTime) AS maximum FROM RL\MainBundle\Entity\Message AS m WHERE m.user = :user AND m.id NOT IN (SELECT min(msg.id) FROM RL\MainBundle\Entity\Message AS msg INNER JOIN msg.thread AS t WHERE msg.user = :user GROUP BY t.id ORDER BY t.id)')
             ->setParameter('user', $user);
         $userComments = $q->getSingleResult();
         $ret['firstCommentDate'] = $userComments['minimum'];
         $ret['lastCommentDate'] = $userComments['maximum'];
 
         return $ret;
+    }
+
+    /**
+     * @param \RL\MainBundle\Security\User\RLUserInterface $user
+     * @param int $limit
+     * @param int $offset
+     */
+    public function getLastMessages($user, $limit, $offset)
+    {
+        if($user->isAnonymous()) {
+            $user = $user->getDbAnonymous();
+        }
+        $q = $this->_em->createQuery('SELECT m FROM RL\MainBundle\Entity\Message AS m WHERE m.user = :user ORDER BY m.postingTime DESC')
+                ->setMaxResults($limit)
+                ->setFirstResult($offset)
+                ->setParameter('user', $user);
+        return $q->getResult();
     }
 }

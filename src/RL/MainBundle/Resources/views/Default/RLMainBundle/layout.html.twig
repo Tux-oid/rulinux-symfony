@@ -25,14 +25,14 @@
             {% block header %}
                 <table border="0" cellspacing="0" cellpadding="0" width="100%" class="head">
                     <tr>
-                        <td><a href="{{ path('user', {'name':user.username}) }}">{{ user.username }}</a>@<a href="/">RULINUX.NET~#</a>
+                        <td><a href="{{ path('user', {'name':app.user.username}) }}">{{ app.user.username }}</a>@<a href="/">RULINUX.NET~#</a>
                         </td>
                         <td align=right valign=top>{% trans %}Last login{% endtrans %}
-                            : {{ user.lastVisitDate.date }}</td>
+                            : {{ app.user.lastVisitDate.date }}</td>
                     </tr>
                     <tr>
                         <td align=left>
-                            {% if user.anonymous == false %}
+                            {% if app.user.anonymous == false %}
                                 <a href="{{ path('logout') }}">{% trans %}Logout{% endtrans %}</a>
                             {% else %}
                                 <a href="{{ path('register') }}">{% trans %}Registration{% endtrans %}</a>

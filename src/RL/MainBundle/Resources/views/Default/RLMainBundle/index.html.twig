@@ -3,10 +3,10 @@
 {% block middle %}
     <table class="content">
         <tr>
-            {% if user.leftBlocks|length > 0 %}
+            {% if app.user.leftBlocks|length > 0 %}
                 <td class="left-sidebar">
                     {% block lblocks %}
-                        {%for block in user.leftBlocks%}
+                        {%for block in app.user.leftBlocks%}
                             {% render "RLMainBundle:Block:renderBlock" with { 'block': block } %}
                         {%endfor%}
                     {% endblock lblocks%}
@@ -20,10 +20,10 @@
                         {{pages|raw}}
                 {% endblock %}
             </td>
-            {% if user.rightBlocks|length > 0 %}
+            {% if app.user.rightBlocks|length > 0 %}
                 <td class="right-sidebar">
                     {% block rblocks %}
-                        {%for block in user.rightBlocks%}
+                        {%for block in app.user.rightBlocks%}
                             {% render "RLMainBundle:Block:renderBlock" with { 'block': block } %}
                         {%endfor%}
                     {% endblock rblocks%}

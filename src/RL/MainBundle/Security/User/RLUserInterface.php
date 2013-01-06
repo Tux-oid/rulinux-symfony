@@ -132,4 +132,7 @@ interface RLUserInterface extends AdvancedUserInterface
     public function addEditedComment($editedComment);
     public function removeEditedComment($editedComment);
     public function getEditedComments();
+    public function addMessage(\RL\MainBundle\Entity\Message $message);
+    public function removeMessage(\RL\MainBundle\Entity\Message $message);
+    public function getMessages();
 }

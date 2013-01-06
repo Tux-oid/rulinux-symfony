@@ -24,6 +24,7 @@ tr.footer
 td.left-sidebar
 {
     width:240px;
+    vertical-align: top;
     text-align: center;
 }
 td.content
@@ -37,6 +38,7 @@ td.right-sidebar
 	width:240px;
 	float: right;
 	text-align: center;
+	vertical-align: top;
 }
 
 A { color: black; text-decoration: underline}

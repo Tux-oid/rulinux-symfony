@@ -46,9 +46,8 @@ class MainController extends Controller
     /**
      * @Route("/unconfirmed", name="unconfirmed")
      */
-    public function unconfirmedAction()//TODO:move to articles bundle
+    public function unconfirmedAction()
     {
-        $user = $this->get('security.context')->getToken()->getUser();
         $theme = $this->get('rl_main.theme.provider');
         $doctrine = $this->get('doctrine');
         /** @var $threadRepository \RL\ArticlesBundle\Entity\Repository\ThreadRepository */
@@ -56,7 +55,7 @@ class MainController extends Controller
         $unconfirmedThreads = $threadRepository->getUnconfirmed();
 
         return $this->render(
-            $theme->getPath('unconfirmed.html.twig'), array('user' => $user, 'theme' => $theme, 'threads' => $unconfirmedThreads,)
+            $theme->getPath('unconfirmed.html.twig'), array('threads' => $unconfirmedThreads,)
         );
     }
 
@@ -65,7 +64,6 @@ class MainController extends Controller
      */
     public function trackerAction($hours)
     {
-        $user = $this->get('security.context')->getToken()->getUser();
         $theme = $this->get('rl_main.theme.provider');
         $doctrine = $this->get('doctrine');
         $request = $this->getRequest();
@@ -80,7 +78,7 @@ class MainController extends Controller
         $form = $this->createForm(new TrackerType(), new TrackerForm($hours));
 
         return $this->render(
-            $theme->getPath('tracker.html.twig'), array('user' => $user, 'theme' => $theme, 'form'=>$form->createView(), 'messages'=>$messages, 'hours' => $hours )
+            $theme->getPath('tracker.html.twig'), array('form'=>$form->createView(), 'messages'=>$messages, 'hours' => $hours )
         );
     }
 
@@ -89,7 +87,6 @@ class MainController extends Controller
      */
     public function rulesAction()
     {
-        $user = $this->get('security.context')->getToken()->getUser();
         $theme = $this->get('rl_main.theme.provider');
         $doctrine = $this->get('doctrine');
         $settingsRepository = $doctrine->getRepository('RLMainBundle:Settings');
@@ -97,7 +94,7 @@ class MainController extends Controller
         $rulesText = $settingsRepository->findOneByName('rulesText')->getValue();
 
         return $this->render(
-            $theme->getPath('page.html.twig'), array('user' => $user, 'theme' => $theme, 'title' => $rulesTitle, 'text' => $rulesText,)
+            $theme->getPath('page.html.twig'), array('title' => $rulesTitle, 'text' => $rulesText,)
         );
     }
 
@@ -106,7 +103,6 @@ class MainController extends Controller
      */
     public function linksAction()
     {
-        $user = $this->get('security.context')->getToken()->getUser();
         $theme = $this->get('rl_main.theme.provider');
         $doctrine = $this->get('doctrine');
         /** @var $linksRepository \Doctrine\Orm\EntityRepository */
@@ -121,7 +117,7 @@ class MainController extends Controller
         $text = $text . '</ul>';
 
         return $this->render(
-            $theme->getPath('page.html.twig'), array('user' => $user, 'theme' => $theme, 'title' => $title, 'text' => $text,)
+            $theme->getPath('page.html.twig'), array('title' => $title, 'text' => $text,)
         );
     }
 
@@ -141,7 +137,7 @@ class MainController extends Controller
             $mark = $markRepository->findOneById($id);
         }
 
-        return $this->render($theme->getPath('mark.html.twig'), array('user' => $user, 'theme' => $theme, 'mark' => $mark));
+        return $this->render($theme->getPath('mark.html.twig'), array('mark' => $mark));
     }
 
     /**
@@ -166,7 +162,7 @@ class MainController extends Controller
         $pagesStr = $pages->draw();
 
         return $this->render(
-            $theme->getPath('index.html.twig'), array('user' => $user, 'theme' => $theme, 'threads' => $threads, 'pages' => $pagesStr, 'section' => $section,)
+            $theme->getPath('index.html.twig'), array('threads' => $threads, 'pages' => $pagesStr, 'section' => $section,)
         );
     }
 

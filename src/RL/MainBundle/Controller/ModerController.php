@@ -53,8 +53,6 @@ class ModerController extends Controller
             $text = 'You have not privelegies to edit this message';
 
             return $this->render($theme->getPath('RLMainBundle', 'fieldset.html.twig'), array(
-                    'theme' => $theme,
-                    'user' => $user,
                     'legend' => $legend,
                     'title' => $title,
                     'text' => $text,
@@ -71,8 +69,6 @@ class ModerController extends Controller
             $text = 'Thread with specified id isn\'t found';
 
             return $this->render($theme->getPath('fieldset.html.twig'), array(
-                    'theme' => $theme,
-                    'user' => $user,
                     'legend' => $legend,
                     'title' => $title,
                     'text' => $text,
@@ -100,8 +96,6 @@ class ModerController extends Controller
             $text = 'You have not privelegies to edit this message';
 
             return $this->render($theme->getPath('fieldset.html.twig'), array(
-                    'theme' => $theme,
-                    'user' => $user,
                     'legend' => $legend,
                     'title' => $title,
                     'text' => $text,
@@ -118,8 +112,6 @@ class ModerController extends Controller
             $text = 'Thread with specified id isn\'t found';
 
             return $this->render($theme->getPath('fieldset.html.twig'), array(
-                    'theme' => $theme,
-                    'user' => $user,
                     'legend' => $legend,
                     'title' => $title,
                     'text' => $text,

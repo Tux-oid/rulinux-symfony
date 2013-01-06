@@ -931,4 +931,28 @@ class AnonymousUser implements RLUserInterface, EquatableInterface
     {
         return array_key_exists('rightBlocksWeights', $this->attributes) ? $this->attributes['rightBlocksWeights'] : $this->dbAnon->getRightBlocksWeights();
     }
+
+    /**
+     * @param \RL\MainBundle\Entity\Message $message
+     */
+    public function addMessage(\RL\MainBundle\Entity\Message $message)
+    {
+        $this->dbAnon->addMessage($message);
+    }
+
+    /**
+     * @param \RL\MainBundle\Entity\Message $message
+     */
+    public function removeMessage(\RL\MainBundle\Entity\Message $message)
+    {
+        $this->dbAnon->removeMessage($message);
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getMessages()
+    {
+        return $this->dbAnon->getMessages();
+    }
 }

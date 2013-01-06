@@ -248,7 +248,7 @@ class User implements RLUserInterface, \Serializable, EquatableInterface
     /**
      * @ORM\OneToMany(targetEntity="RL\MainBundle\Entity\Message", mappedBy="user", cascade={"all"})
      */
-    protected $comments;
+    protected $messages;
 
     /**
      * @ORM\ManyToMany(targetEntity="RL\MainBundle\Entity\Message", inversedBy="changedBy", cascade={"all"})
@@ -1177,23 +1177,35 @@ class User implements RLUserInterface, \Serializable, EquatableInterface
     {
         return $this->active;
     }
+
     /**
      * Add comments
      *
-     * @param \RL\MainBundle\Entity\Message $comments
+     * @param \RL\MainBundle\Entity\Message $message
      */
-    public function addMessage(\RL\MainBundle\Entity\Message $comments)
+    public function addMessage(\RL\MainBundle\Entity\Message $message)
     {
-        $this->comments[] = $comments;
+        $this->messages[] = $message;
     }
+
+    /**
+     * Add comments
+     *
+     * @param \RL\MainBundle\Entity\Message $message
+     */
+    public function removeMessage(\RL\MainBundle\Entity\Message $message)
+    {
+        $this->messages->remove($message);
+    }
+
     /**
      * Get comments
      *
      * @return \Doctrine\Common\Collections\Collection
      */
-    public function getComments()
+    public function getMessages()
     {
-        return $this->comments;
+        return $this->messages;
     }
 
     /**

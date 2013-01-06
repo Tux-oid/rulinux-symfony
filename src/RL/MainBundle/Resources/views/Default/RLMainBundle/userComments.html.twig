@@ -1,0 +1,43 @@
+{% extends theme.path('layout.html.twig') %}
+
+
+{% block title %}
+    {{ parent() }} - {% trans %}Last comments{% endtrans %}
+{% endblock title %}
+
+{% block content %}
+    <h1>{% trans %}Last comments for user{% endtrans %} {{ pageUser.username }}</h1><br>
+    <table width="100%" class="message-table">
+        <thead>
+        <tr>
+            <th>{% trans %}Section{% endtrans %}</th>
+            <th>{% trans %}Subject{% endtrans %}</th>
+            <th>{% trans %}Posting time{% endtrans %}</th>
+        </tr>
+        </thead>
+        <tfoot>
+        <tr>
+            <th></th>
+            <th></th>
+            <th></th>
+        </tr>
+        </tfoot>
+        <tbody>
+        {% for message in messages %}
+            <tr>
+                <td>
+                    <a href="{{ path('section', {'sectionRewrite': message.thread.subsection.section.rewrite}) }}">{{ message.thread.subsection.section.name }}</a>
+                    \<a href="{{ path('subsection', {'sectionRewrite': message.thread.subsection.section.rewrite, 'subsectionRewrite': message.thread.subsection.rewrite}) }}">{{ message.thread.subsection.name }}</a>
+                </td>
+                <td>
+                    <a href="{{ path('thread', {'id': message.thread.id}) }}">{{ message.subject }}</a>
+                </td>
+                <td>
+                    {{ message.postingTime.date }}
+                </td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+    <p align="center">{{pages|raw}}</p>
+{% endblock content %}

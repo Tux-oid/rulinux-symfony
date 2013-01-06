@@ -56,7 +56,7 @@ class Message
      */
     protected $thread;
     /**
-     * @ORM\ManyToOne(targetEntity="RL\MainBundle\Entity\User", inversedBy="comments")
+     * @ORM\ManyToOne(targetEntity="RL\MainBundle\Entity\User", inversedBy="messages")
      */
     protected $user;
     /**

@@ -92,7 +92,7 @@ class SecurityController extends Controller
         }
 
         return $this->render(
-            $theme->getPath('login.html.twig'), array('theme' => $theme, 'user' => $this->get('security.context')->getToken()->getUser(), 'last_username' => $session->get(SecurityContext::LAST_USERNAME), 'error' => $error,)
+            $theme->getPath('login.html.twig'), array('last_username' => $session->get(SecurityContext::LAST_USERNAME), 'error' => $error,)
         );
     }
 
@@ -106,7 +106,7 @@ class SecurityController extends Controller
         $form = $this->createForm(new RegistrationFirstType(), $newUser);
 
         return $this->render(
-            $theme->getPath('registrationFirstPage.html.twig'), array('theme' => $theme, 'user' => $this->get('security.context')->getToken()->getUser(), 'form' => $form->createView())
+            $theme->getPath('registrationFirstPage.html.twig'), array('form' => $form->createView())
         );
     }
 
@@ -135,7 +135,7 @@ class SecurityController extends Controller
                 $title = 'Mail sended';
 
                 return $this->render(
-                    $theme->getPath('fieldset.html.twig'), array('theme' => $theme, 'user' => $this->get('security.context')->getToken()->getUser(), 'legend' => $legend, 'text' => $text, 'title' => $title)
+                    $theme->getPath('fieldset.html.twig'), array('legend' => $legend, 'text' => $text, 'title' => $title)
                 );
             } else {
                 throw new \Exception('Registration form is invalid.');
@@ -157,7 +157,7 @@ class SecurityController extends Controller
             $form = $this->createForm(new RegisterType(), $newUser);
 
             return $this->render(
-                $theme->getPath('registrationSecondPage.html.twig'), array('theme' => $theme, 'user' => $this->get('security.context')->getToken()->getUser(), 'username' => $username, 'password' => $password, 'email' => $email, 'form' => $form->createView())
+                $theme->getPath('registrationSecondPage.html.twig'), array('username' => $username, 'password' => $password, 'email' => $email, 'form' => $form->createView())
             );
         } else {
             throw new \Exception('Hash is invalid');
@@ -207,7 +207,7 @@ class SecurityController extends Controller
                 $title = '';
 
                 return $this->render(
-                    $theme->getPath('fieldset.html.twig'), array('theme' => $theme, 'user' => $this->get('security.context')->getToken()->getUser(), 'legend' => $legend, 'text' => $text, 'title' => $title)
+                    $theme->getPath('fieldset.html.twig'), array('legend' => $legend, 'text' => $text, 'title' => $title)
                 );
             } else {
                 throw new \Exception('Registration form is invalid.');
@@ -253,7 +253,7 @@ class SecurityController extends Controller
                         $title = '';
 
                         return $this->render(
-                            $theme->getPath('fieldset.html.twig'), array('theme' => $theme, 'user' => $this->get('security.context')->getToken()->getUser(), 'legend' => $legend, 'text' => $text, 'title' => $title)
+                            $theme->getPath('fieldset.html.twig'), array('legend' => $legend, 'text' => $text, 'title' => $title)
                         );
                     } else {
                         $attr = $openid->getAttributes();
@@ -262,7 +262,7 @@ class SecurityController extends Controller
                         $form = $this->createForm(new RegisterType(), $newUser);
 
                         return $this->render(
-                            $theme->getPath('openIDRegistration.html.twig'), array('theme' => $theme, 'user' => $this->get('security.context')->getToken()->getUser(), 'openid' => $identity, 'password' => '', 'email' => $email, 'form' => $form->createView())
+                            $theme->getPath('openIDRegistration.html.twig'), array('openid' => $identity, 'password' => '', 'email' => $email, 'form' => $form->createView())
                         );
                     }
                 } else {
@@ -284,7 +284,7 @@ class SecurityController extends Controller
         $form = $this->createForm(new PasswordRestoringType(), $resForm);
 
         return $this->render(
-            $theme->getPath('passwordRestoringForm.html.twig'), array('theme' => $theme, 'user' => $this->get('security.context')->getToken()->getUser(), 'form' => $form->createView())
+            $theme->getPath('passwordRestoringForm.html.twig'), array('form' => $form->createView())
         );
     }
 
@@ -335,7 +335,7 @@ class SecurityController extends Controller
                 $title = 'Mail sended';
 
                 return $this->render(
-                    $theme->getPath('fieldset.html.twig'), array('theme' => $theme, 'user' => $this->get('security.context')->getToken()->getUser(), 'legend' => $legend, 'text' => $text, 'title' => $title)
+                    $theme->getPath('fieldset.html.twig'), array('legend' => $legend, 'text' => $text, 'title' => $title)
                 );
             } else {
                 throw new \Exception('Password restoring form is invalid');
@@ -490,7 +490,7 @@ class SecurityController extends Controller
         $filtersSettings = $this->createForm(new FiltersSettingsType(), new FiltersSettingsForm());
 
         return $this->render(
-            $theme->getPath('profileEdit.html.twig'), array('theme' => $theme, 'user' => $user, 'userInfo'=> $userInProfile, 'personalInformation' => $personalInformation->createView(), 'personalSettings'=>$personalSettings->createView(), 'passwordChanging'=>$passwordChanging->createView(), 'moderatorSettings'=>$moderatorSettings->createView(), 'administratorSettings'=>$administratorSettings->createView(), 'filtersSettings'=>$filtersSettings->createView())
+            $theme->getPath('profileEdit.html.twig'), array('userInfo'=> $userInProfile, 'personalInformation' => $personalInformation->createView(), 'personalSettings'=>$personalSettings->createView(), 'passwordChanging'=>$passwordChanging->createView(), 'moderatorSettings'=>$moderatorSettings->createView(), 'administratorSettings'=>$administratorSettings->createView(), 'filtersSettings'=>$filtersSettings->createView())
         );
     }
 
@@ -500,7 +500,6 @@ class SecurityController extends Controller
     public function userAction($name)
     {
         $theme = $this->get('rl_main.theme.provider');
-        $user = $this->get('security.context')->getToken()->getUser();
         $userRepository = $this->getDoctrine()->getRepository('RLMainBundle:User');
         $userInProfile = $userRepository->findOneByUsername($name);
         if (empty($userInProfile)) {
@@ -509,7 +508,7 @@ class SecurityController extends Controller
         $userComments = $userRepository->getUserCommentsInformation($userInProfile);
 
         return $this->render(
-            $theme->getPath('profile.html.twig'), array('theme' => $theme, 'user' => $user, 'userInfo'=> $userInProfile, 'commentsInfo' => $userComments,)
+            $theme->getPath('profile.html.twig'), array('userInfo'=> $userInProfile, 'commentsInfo' => $userComments,)
         );
     }
 
@@ -530,7 +529,7 @@ class SecurityController extends Controller
         $pages = new Pages($this->get('router'), $itemsOnPage, $itemsCount, $page, 'users', array("page" => $page));
         $pagesStr = $pages->draw();
 
-        return $this->render($theme->getPath('users.html.twig'), array('theme' => $theme, 'user' => $user, 'users' => $users, 'pagesStr' => $pagesStr));
+        return $this->render($theme->getPath('users.html.twig'), array('users' => $users, 'pagesStr' => $pagesStr));
     }
 
 }

@@ -26,31 +26,61 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-namespace RL\MainBundle\Controller;
+namespace RL\MainBundle\Twig;
 
-use Symfony\Bundle\FrameworkBundle\Controller\Controller;
-use Symfony\Component\Security\Core\SecurityContext;
-use RL\MainBundle\Entity\Block;
+use RL\MainBundle\Theme\ThemeProvider;
+use JMS\DiExtraBundle\Annotation\Service;
+use JMS\DiExtraBundle\Annotation\Tag;
+use JMS\DiExtraBundle\Annotation\Inject;
+use JMS\DiExtraBundle\Annotation\InjectParams;
 
 /**
- * RL\MainBundle\Controller\BlockController
+ * RL\MainBundle\Twig\ThemeExtension
  *
- * @author Ax-xa-xa
+ * @Service("rl_main.twig.theme_extension")
+ * @Tag("twig.extension")
+ *
  * @author Peter Vasilevsky <tuxoiduser@gmail.com> a.k.a. Tux-oid
- * @license BSDL
  */
-class BlockController extends Controller
+class ThemeExtension extends \Twig_Extension
 {
-    public function renderBlockAction(Block $block)
-    {
-        /** @var $theme \RL\MainBundle\Theme\ThemeProvider */
-        $theme = $this->get('rl_main.theme.provider');
-        $services = array();
-        foreach ($block->getNeededServicesList() as $serviceName) {
-            $services[$serviceName] = $this->get($serviceName);
-        }
-        $ret = $block->render($services);
 
-        return $this->render($theme->getPath($ret['templateFile']), array_merge(array('block'=>$block), $ret['parameters']));
+    /**
+     * @var \RL\MainBundle\Theme\ThemeProvider
+     */
+    protected $theme;
+
+    /**
+     * Constructor
+     *
+     * @InjectParams({
+     * "theme" = @Inject("rl_main.theme.provider")
+     * })
+     *
+     * @param \RL\MainBundle\Theme\ThemeProvider $theme
+     */
+    public function __construct(ThemeProvider $theme)
+    {
+        $this->theme = $theme;
+    }
+
+    /**
+     * @return array
+     */
+    public function getGlobals()
+    {
+        return array(
+            'theme' => $this->theme
+        );
+    }
+
+    /**
+     * Returns the name of the extension.
+     *
+     * @return string The extension name
+     */
+    public function getName()
+    {
+        return 'theme_extension';
     }
 }

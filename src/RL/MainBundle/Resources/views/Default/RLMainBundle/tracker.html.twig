@@ -50,7 +50,7 @@
                 &nbsp<a href="{{ path('section', {'sectionRewrite': message.thread.subsection.section.rewrite}) }}">{{ message.thread.subsection.section.name }}</a>/<a href="{{ path('subsection', {'sectionRewrite': message.thread.subsection.section.rewrite, 'subsectionRewrite': message.thread.subsection.rewrite}) }}">{{ message.thread.subsection.name }}</a>&nbsp
             </td>
             <td>
-                <a href="{{ path('thread', {'id': message.thread.id}) }}">{{ message.subject }}</a>({{ message.user.username }}{% if user.showResp == true %}{% if message.referer != null  %}→{{ message.referer.user.username }}{% endif %}{% endif %})
+                <a href="{{ path('thread', {'id': message.thread.id}) }}">{{ message.subject }}</a>({{ message.user.username }}{% if app.user.showResp == true %}{% if message.referer != null  %}→{{ message.referer.user.username }}{% endif %}{% endif %})
             </td>
             <td align='center'>{{ message.postingTime.date }}</td>
         </tr>
