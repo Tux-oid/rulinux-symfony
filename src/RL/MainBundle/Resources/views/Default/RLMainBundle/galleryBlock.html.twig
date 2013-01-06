@@ -3,7 +3,7 @@
 {% block body %}
     {% for thread in threads %}
         <div>
-            <a href="thread_38653_page_1">{{ thread.messages.first.subject }}</a>
+            <a href="{{ path('thread', {'id':thread.id}) }}">{{ thread.messages.first.subject }}</a>
             <p id="newstext">
                 <a href="{{ thread.webPath }}">
                     <img alt="gallery" src="{{ thread.thumbWebPath }}">

@@ -520,7 +520,15 @@
             </trans-unit>
             <trans-unit id="130">
                 <source>My comments</source>
-                <target>Мой комментарии</target>
+                <target>Мои комментарии</target>
+            </trans-unit>
+            <trans-unit id="131">
+                <source>Responses on comments for user</source>
+                <target>Ответы на комментарии пользователя</target>
+            </trans-unit>
+            <trans-unit id="132">
+                <source>Responses on my comments</source>
+                <target>Ответы на мои комментарии</target>
             </trans-unit>
         </body>
     </file>

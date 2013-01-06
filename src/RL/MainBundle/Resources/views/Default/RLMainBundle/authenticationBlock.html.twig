@@ -27,11 +27,11 @@
         <form action="{{ path('logout') }} " method="post">
             {% trans %}You logged in as{% endtrans %} {{ app.user.username }}({{ app.user.group.description|capitalize }})
             <input type="submit" value="{{ 'Logout'|trans }}">
-            <br>
-            <br>* <a href="{{ path('user', {'name': app.user.username}) }}">{% trans %}Profile{% endtrans %}</a>
-            <br>* <a href="{{ path('rules') }}">{% trans %}Rules{% endtrans %}</a>
-            <br>
-            <br>* <a href="{{ path('userComments') }}">{% trans %}My comments{% endtrans %}</a>
         </form>
     {% endif %}
+    <br>* <a href="{{ path('user', {'name': app.user.username}) }}">{% trans %}Profile{% endtrans %}</a>
+    <br>* <a href="{{ path('rules') }}">{% trans %}Rules{% endtrans %}</a>
+    <br>
+    <br>* <a href="{{ path('userComments') }}">{% trans %}My comments{% endtrans %}</a>
+    <br>* <a href="{{ path('userResponses') }}">{% trans %}Responses on my comments{% endtrans %}</a>
 {% endblock body %}

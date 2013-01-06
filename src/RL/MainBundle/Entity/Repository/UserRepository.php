@@ -75,13 +75,32 @@ class UserRepository extends EntityRepository
      * @param \RL\MainBundle\Security\User\RLUserInterface $user
      * @param int $limit
      * @param int $offset
+     * @return array
      */
-    public function getLastMessages($user, $limit, $offset)
+    public function getLastMessages(RLUserInterface $user, $limit, $offset)
     {
         if($user->isAnonymous()) {
             $user = $user->getDbAnonymous();
         }
         $q = $this->_em->createQuery('SELECT m FROM RL\MainBundle\Entity\Message AS m WHERE m.user = :user ORDER BY m.postingTime DESC')
+                ->setMaxResults($limit)
+                ->setFirstResult($offset)
+                ->setParameter('user', $user);
+        return $q->getResult();
+    }
+
+    /**
+     * @param \RL\MainBundle\Security\User\RLUserInterface $user
+     * @param int $limit
+     * @param int $offset
+     * @return array
+     */
+    public function getLastResponses($user, $limit, $offset)
+    {
+        if($user->isAnonymous()) {
+            $user = $user->getDbAnonymous();
+        }
+        $q = $this->_em->createQuery('SELECT m FROM RL\MainBundle\Entity\Message AS m WHERE m.referer IN (SELECT mes FROM \RL\MainBundle\Entity\Message AS mes WHERE mes.user = :user) ORDER BY m.postingTime DESC')
                 ->setMaxResults($limit)
                 ->setFirstResult($offset)
                 ->setParameter('user', $user);

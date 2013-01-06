@@ -417,7 +417,7 @@ class ForumController extends Controller
                 );
             }
         }
-        $itemsCount = count($user->getMessages());
+        $itemsCount = count($pageUser->getMessages());
         $itemsOnPage = $user->getCommentsOnPage();
         $pagesCount = ceil(($itemsCount) / $itemsOnPage);
         $pagesCount > 1 ? $offset = $itemsOnPage * ($page - 1) : $offset = 0;
@@ -433,6 +433,60 @@ class ForumController extends Controller
 
         return $this->render(
             $theme->getPath('userComments.html.twig'),
+            array(
+                'pageUser' => $pageUser,
+                'messages' => $messages,
+                'pages' => $pagesStr
+            )
+        );
+    }
+
+    /**
+     * @Route("/responses/{pageUserName}/{page}", name="userResponses", defaults={"pageUserName" = "", "page" = 1})
+     */
+    public function responsesAction($pageUserName, $page)
+    {
+        /** @var $theme \RL\MainBundle\Theme\ThemeProvider */
+        $theme = $this->get('rl_main.theme.provider');
+        /** @var $user \RL\MainBundle\Security\User\RLUserInterface */
+        $user = $this->get('security.context')->getToken()->getUser();
+        /** @var $userRepository \RL\MainBundle\Entity\Repository\UserRepository */
+        $userRepository = $this->get('doctrine')->getRepository("RLMainBundle:User");
+        if ($pageUserName === "") {
+            $pageUser = $user;
+        } else {
+            $pageUser = $userRepository->findOneByUsername($pageUserName);
+            if (null === $pageUser) {
+                $legend = 'user not found';
+                $title = 'unknown user';
+                $text = 'user ' . $pageUserName . ' not found';
+
+                return $this->render(
+                    $theme->getPath('fieldset.html.twig'),
+                    array(
+                        'legend' => $legend,
+                        'title' => $title,
+                        'text' => $text,
+                    )
+                );
+            }
+        }
+        $itemsCount = count($pageUser->getMessages());
+        $itemsOnPage = $user->getCommentsOnPage();
+        $pagesCount = ceil(($itemsCount) / $itemsOnPage);
+        $pagesCount > 1 ? $offset = $itemsOnPage * ($page - 1) : $offset = 0;
+        $messages = $userRepository->getLastResponses($pageUser, $itemsOnPage, $offset);
+        $pages = new Pages($this->get(
+            'router'
+        ), $itemsOnPage, $itemsCount, $page, 'userComments', array(
+            "pageUserName" => $pageUser->getUsername(),
+            "page" => $page
+        ));
+        $pagesStr = $pages->draw();
+
+
+        return $this->render(
+            $theme->getPath('userResponses.html.twig'),
             array(
                 'pageUser' => $pageUser,
                 'messages' => $messages,
