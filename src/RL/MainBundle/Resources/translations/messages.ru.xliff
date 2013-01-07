@@ -530,6 +530,26 @@
                 <source>Responses on my comments</source>
                 <target>Ответы на мои комментарии</target>
             </trans-unit>
+            <trans-unit id="133">
+                <source>Search</source>
+                <target>Поиск</target>
+            </trans-unit>
+            <trans-unit id="134">
+                <source>Search by site</source>
+                <target>Поиск по сайту</target>
+            </trans-unit>
+            <trans-unit id="135">
+                <source>Period</source>
+                <target>Период</target>
+            </trans-unit>
+            <trans-unit id="136">
+                <source>Fields</source>
+                <target>Поля</target>
+            </trans-unit>
+            <trans-unit id="137">
+                <source>Query</source>
+                <target>Запрос</target>
+            </trans-unit>
         </body>
     </file>
 </xliff>

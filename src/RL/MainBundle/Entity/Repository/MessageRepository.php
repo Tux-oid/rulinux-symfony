@@ -39,7 +39,8 @@ use Doctrine\ORM\EntityRepository;
 class MessageRepository extends EntityRepository
 {
     /**
-     * @param integer $lastTime
+     * @param int $lastTime
+     * @return array
      */
     public function getMessagesForLastHours($lastTime)
     {
@@ -49,6 +50,57 @@ class MessageRepository extends EntityRepository
         $subsection = $q->getResult();
 
         return $subsection;
+    }
+
+    /**
+     * @param array $params
+     * @return array
+     */
+    public function search(array $params)
+    {
+        $where = 'm.thread IN (SELECT t FROM RL\MainBundle\Entity\Thread AS t WHERE t.subsection IN (SELECT sub FROM RL\MainBundle\Entity\Subsection AS sub WHERE sub.section = :section)) ';
+        $where .= 'AND m.postingTime <= :period ';
+        if (!empty($params['user'])) {
+            $where .= 'AND m.user = (SELECT u FROM RL\MainBundle\Entity\User AS u WHERE u.username = :user) ';
+        }
+        switch ($params['fields']) {
+            case 'both':
+                $where .= 'AND (LOWER(m.subject) LIKE LOWER(:query) OR LOWER(m.comment) LIKE LOWER(:query)) ';
+                break;
+            case 'subjects':
+                $where .= 'AND LOWER(m.subject) LIKE LOWER(:query) ';
+                break;
+            case 'messages':
+            default:
+                $where .= 'AND LOWER(m.comment) LIKE LOWER(:query) ';
+                break;
+        }
+
+        $qb = $this->_em->createQueryBuilder()
+                ->add('select', 'm')
+                ->add('from', 'RL\MainBundle\Entity\Message m')
+                ->add('where', $where)
+                ->add('orderBy', 'm.postingTime' . ' DESC')
+                ->setParameter('section', $params['section'])
+                ->setParameter('query', '%'.$params['query'].'%');
+
+        switch ($params['period']) {
+            case 'month':
+                $qb->setParameter('period', new \DateTime('-1 month'));
+                break;
+            case 'year':
+                $qb->setParameter('period', new \DateTime('-1 year'));
+                break;
+            case 'all':
+            default:
+                $qb->setParameter('period', new \DateTime());
+                break;
+        }
+        if (!empty($params['user'])) {
+            $qb->setParameter('user', $params['user']);
+        }
+
+        return $qb->getQuery()->getResult();
     }
 
 }

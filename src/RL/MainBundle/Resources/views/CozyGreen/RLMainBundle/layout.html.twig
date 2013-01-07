@@ -61,6 +61,8 @@
                             <a href="{{ path('users') }}">{% trans %}Users{% endtrans %}</a>
                             -
                             <a href="{{ path('mark') }}">{% trans %}Mark{% endtrans %}</a>
+                            -
+                            <a href="{{ path('search') }}">{% trans %}Search{% endtrans %}</a>
                         </td>
                         <td align=right>{% trans %}Welcome,{% endtrans %} <a
                                 href="{{ path('user', {'name':app.user.username}) }}">{{ app.user.username }}</a>!

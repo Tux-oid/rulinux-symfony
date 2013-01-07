@@ -1,0 +1,66 @@
+{% extends theme.path('layout.html.twig') %}
+
+{%block title%}
+    {{parent()}} - {% trans %}Search{% endtrans %}
+{%endblock title%}
+
+{%block content%}
+    <br><h1>{% trans %}Search by site{% endtrans %}</h1><br>
+    <form action="{{ path('search') }}" method="post" {{form_enctype(form)}}>
+        <table>
+            <tr>
+                <td>{{ form_label(form.query) }}:</td>
+                <td>{{ form_widget(form.query) }}</td>
+                <td>{{ form_errors(form.query) }}</td>
+            </tr>
+            <tr>
+                <td>{{ form_label(form.fields) }}:</td>
+                <td>{{ form_widget(form.fields) }}</td>
+                <td>{{ form_errors(form.fields) }}</td>
+            </tr>
+            <tr>
+                <td>{{ form_label(form.period) }}:</td>
+                <td>{{ form_widget(form.period) }}</td>
+                <td>{{ form_errors(form.period) }}</td>
+            </tr>
+            <tr>
+                <td>{{ form_label(form.section) }}:</td>
+                <td>{{ form_widget(form.section) }}</td>
+                <td>{{ form_errors(form.section) }}</td>
+            </tr>
+            <tr>
+                <td>{{ form_label(form.user) }}:</td>
+                <td>{{ form_widget(form.user) }}</td>
+                <td>{{ form_errors(form.user) }}</td>
+            </tr>
+        </table>
+        <input type="submit" name="sbm" value="{{ 'Search'|trans }}">
+        {{ form_rest(form) }}
+    </form>
+    {% if messages is not null %}
+        {% for message in messages %}
+            <br>
+            <div class="comment">
+                <div class="title">
+                    <br>
+                </div>
+                <div class="msg">
+                    <table cellspacing="0" width="100%">
+                        <tr>
+                            <td valign="top"><h2><a href="{{ path('thread', {'id': message.thread.id}) }}#msg{{ message.id }}">{{message.subject}}</a></h2>
+                                <p><p>{{message.comment|raw}}</p></p>
+                                <div class="sign">{{message.user.username}} (<a href="{{path('user', {'name':message.user.username})}}">*</a>) ({{message.postingTime.date}})
+                                    <br>
+                                    {%if app.user.showUa == true%}
+                                        {{message.useragent}}
+                                    {%endif%}
+                                </div>
+                            </td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+        {% endfor %}
+    {% endif %}
+
+{% endblock content %}
