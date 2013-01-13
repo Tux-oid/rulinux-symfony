@@ -24,35 +24,76 @@
  * ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
- */
+*/
 
-namespace RL\MainBundle\Form;
-
-use Symfony\Component\Form\FormBuilderInterface;
-use Symfony\Component\Form\AbstractType;
+namespace RL\MainBundle\Form\Model;
 
 /**
- * RL\MainBundle\Form\FiltersSettingsType
+ * RL\MainBundle\Form\PasswordChangingForm
  *
  * @author Peter Vasilevsky <tuxoiduser@gmail.com> a.k.a. Tux-oid
  * @license BSDL
  */
-class FiltersSettingsType extends AbstractType
+class PasswordChangingForm
 {
-    public function buildForm(FormBuilderInterface $builder, array $options)
+    /**
+     * @var
+     */
+    protected $oldPassword;
+    /**
+     * @var
+     */
+    protected $newPassword;
+    /**
+     * @var
+     */
+    protected $validation;
+
+    /**
+     * @param $newPassword
+     */
+    public function setNewPassword($newPassword)
     {
-        $builder->add('filthyLanguage', 'range');
+        $this->newPassword = $newPassword;
     }
-    public function getName()
+
+    /**
+     * @return mixed
+     */
+    public function getNewPassword()
     {
-        return 'filtersSettings';
+        return $this->newPassword;
     }
-    public function getDefaultOptions(array $options)
+
+    /**
+     * @param $oldPassword
+     */
+    public function setOldPassword($oldPassword)
     {
-        return array(
-            'csrf_protection' => true,
-            'csrf_field_name' => '_csrf_token',
-            'intention' => 'authenticate'
-        );
+        $this->oldPassword = $oldPassword;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getOldPassword()
+    {
+        return $this->oldPassword;
+    }
+
+    /**
+     * @param $validation
+     */
+    public function setValidation($validation)
+    {
+        $this->validation = $validation;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getValidation()
+    {
+        return $this->validation;
     }
 }

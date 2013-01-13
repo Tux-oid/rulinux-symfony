@@ -24,35 +24,28 @@
  * ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-*/
+ */
 
-namespace RL\MainBundle\Form;
+namespace RL\MainBundle\Form\Type;
 
-use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
+use Symfony\Component\Form\AbstractType;
 
 /**
- * RL\MainBundle\Form\PasswordChangingType
+ * RL\MainBundle\Form\FiltersSettingsType
  *
  * @author Peter Vasilevsky <tuxoiduser@gmail.com> a.k.a. Tux-oid
  * @license BSDL
  */
-class PasswordChangingType extends AbstractType
+class FiltersSettingsType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        $builder->add('oldPassword', 'password')
-            ->add('newPassword', 'password')
-            ->add('validation', 'password');
+        $builder->add('filthyLanguage', 'range');
     }
-    /**
-     * Returns the name of this type.
-     *
-     * @return string The name of this type
-     */
     public function getName()
     {
-        return 'passwordChanging';
+        return 'filtersSettings';
     }
     public function getDefaultOptions(array $options)
     {

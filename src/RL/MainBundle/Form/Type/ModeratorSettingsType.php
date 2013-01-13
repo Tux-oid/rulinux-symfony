@@ -26,41 +26,33 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 
-namespace RL\MainBundle\Form;
+namespace RL\MainBundle\Form\Type;
 
-use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\FormBuilderInterface;
 
 /**
- * RL\MainBundle\Form\PersonalInformationType
+ * RL\MainBundle\Form\ModeratorSettingsType
  *
  * @author Peter Vasilevsky <tuxoiduser@gmail.com> a.k.a. Tux-oid
  * @license BSDL
  */
-class PersonalInformationType extends AbstractType
+class ModeratorSettingsType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        $builder->add('name', 'text', array('required' => false))
-            ->add('openid', 'text', array('required' => false))
-            ->add('lastname', 'text', array('required' => false))
-            ->add('photo', 'file', array('required' => false))
-            ->add('gender', 'choice', array('choices' => array('1' => 'Male', '0' => 'Female'), 'required' => true,))
-            ->add('birthday', 'date', array('input'  => 'datetime', 'widget' => 'choice', 'required' => false,))
-            ->add('email', 'email', array('required' => false))
-            ->add('im', 'email', array('required' => false))
-            ->add('showEmail', 'checkbox', array('required' => false))
-            ->add('showIm', 'checkbox', array('required' => false))
-            ->add('country', 'country', array('required' => true))
-            ->add('city', 'text', array('required' => false))
-            ->add('additionalRaw', 'textarea', array('required' => false));
+        $builder->add('active', 'checkbox', array('required' => false))
+        ->add('captchaLevel', 'text', array('required' => true));//TODO:set choice type
     }
-
+    /**
+     * Returns the name of this type.
+     *
+     * @return string The name of this type
+     */
     public function getName()
     {
-        return 'personalInformation';
+        return 'moderatorSettings';
     }
-
     public function getDefaultOptions(array $options)
     {
         return array(

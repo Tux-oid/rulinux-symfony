@@ -24,76 +24,41 @@
  * ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-*/
+ */
 
-namespace RL\MainBundle\Form;
+namespace RL\MainBundle\Form\Type;
+
+use Symfony\Component\Form\AbstractType;
+use JMS\DiExtraBundle\Annotation\Service;
+use JMS\DiExtraBundle\Annotation\Tag;
 
 /**
- * RL\MainBundle\Form\PasswordChangingForm
+ * RL\MainBundle\Form\RangeType
+ *
+ * @Service("rl_main.form.type.range")
+ * @Tag("form.type", attributes = {"alias" = "range"})
  *
  * @author Peter Vasilevsky <tuxoiduser@gmail.com> a.k.a. Tux-oid
- * @license BSDL
  */
-class PasswordChangingForm
+class RangeType extends AbstractType
 {
     /**
-     * @var
+     * Get parent
+     *
+     * @return string
      */
-    protected $oldPassword;
-    /**
-     * @var
-     */
-    protected $newPassword;
-    /**
-     * @var
-     */
-    protected $validation;
-
-    /**
-     * @param $newPassword
-     */
-    public function setNewPassword($newPassword)
+    public function getParent()
     {
-        $this->newPassword = $newPassword;
+        return 'text';
     }
 
     /**
-     * @return mixed
+     * Get name
+     *
+     * @return string
      */
-    public function getNewPassword()
+    public function getName()
     {
-        return $this->newPassword;
-    }
-
-    /**
-     * @param $oldPassword
-     */
-    public function setOldPassword($oldPassword)
-    {
-        $this->oldPassword = $oldPassword;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getOldPassword()
-    {
-        return $this->oldPassword;
-    }
-
-    /**
-     * @param $validation
-     */
-    public function setValidation($validation)
-    {
-        $this->validation = $validation;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getValidation()
-    {
-        return $this->validation;
+        return 'range';
     }
 }

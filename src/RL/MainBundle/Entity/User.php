@@ -92,12 +92,12 @@ class User implements RLUserInterface, EquatableInterface
     protected $city;
     /**
      * @ORM\Column(name="photo", type="string", length=512, nullable=true)
-     * * @Assert\Image
+     * @Assert\Image
      */
     protected $photo;
     /**
      * @ORM\Column(name="birthday", type="datetime", nullable=true)
-     * * @Assert\DateTime
+     * @Assert\DateTime
      */
     protected $birthday;
     /**
@@ -114,7 +114,7 @@ class User implements RLUserInterface, EquatableInterface
     protected $additionalRaw;
     /**
      * @ORM\Column(name="email", type="string", length=512, unique=true, nullable=false)
-     * * @Assert\Email
+     * @Assert\Email
      */
     protected $email;
     /**

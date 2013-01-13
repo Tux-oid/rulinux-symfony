@@ -24,37 +24,42 @@
  * ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
- */
+*/
 
-namespace RL\MainBundle\Form;
+namespace RL\MainBundle\Form\Type;
+
+use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\FormBuilderInterface;
 
 /**
- * RL\MainBundle\Form\FiltersSettingsForm
+ * RL\MainBundle\Form\PasswordChangingType
  *
  * @author Peter Vasilevsky <tuxoiduser@gmail.com> a.k.a. Tux-oid
  * @license BSDL
  */
-class FiltersSettingsForm
+class PasswordChangingType extends AbstractType
 {
-    /**
-     * @var int
-     */
-    protected $filthyLanguage;
-
-    /**
-     * @param int $filthyLanguage
-     */
-    public function setFilthyLanguage($filthyLanguage)
+    public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        $this->filthyLanguage = $filthyLanguage;
+        $builder->add('oldPassword', 'password')
+            ->add('newPassword', 'password')
+            ->add('validation', 'password');
     }
-
     /**
-     * @return int
+     * Returns the name of this type.
+     *
+     * @return string The name of this type
      */
-    public function getFilthyLanguage()
+    public function getName()
     {
-        return $this->filthyLanguage;
+        return 'passwordChanging';
     }
-
+    public function getDefaultOptions(array $options)
+    {
+        return array(
+            'csrf_protection' => true,
+            'csrf_field_name' => '_csrf_token',
+            'intention' => 'authenticate'
+        );
+    }
 }

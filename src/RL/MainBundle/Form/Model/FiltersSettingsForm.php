@@ -24,59 +24,37 @@
  * ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-*/
+ */
 
-namespace RL\MainBundle\Form;
-
-use Symfony\Component\Validator\Constraints as Assert;
+namespace RL\MainBundle\Form\Model;
 
 /**
- * RL\MainBundle\Form\ModeratorSettingsForm
+ * RL\MainBundle\Form\FiltersSettingsForm
  *
  * @author Peter Vasilevsky <tuxoiduser@gmail.com> a.k.a. Tux-oid
  * @license BSDL
  */
-class ModeratorSettingsForm
+class FiltersSettingsForm
 {
     /**
-     * @var
+     * @var int
      */
-    protected $active;
-    /**
-     * @var
-     * @Assert\Regex("#([0-9]+)#")
-     */
-    protected $captchaLevel;
+    protected $filthyLanguage;
 
     /**
-     * @param $active
+     * @param int $filthyLanguage
      */
-    public function setActive($active)
+    public function setFilthyLanguage($filthyLanguage)
     {
-        $this->active = $active;
+        $this->filthyLanguage = $filthyLanguage;
     }
 
     /**
-     * @return mixed
+     * @return int
      */
-    public function getActive()
+    public function getFilthyLanguage()
     {
-        return $this->active;
+        return $this->filthyLanguage;
     }
 
-    /**
-     * @param $captchaLevel
-     */
-    public function setCaptchaLevel($captchaLevel)
-    {
-        $this->captchaLevel = $captchaLevel;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getCaptchaLevel()
-    {
-        return $this->captchaLevel;
-    }
 }
