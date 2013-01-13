@@ -26,7 +26,7 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-namespace RL\MainBundle\Form;
+namespace RL\MainBundle\Form\Model;
 
 /**
  * RL\MainBundle\Form\SearchForm

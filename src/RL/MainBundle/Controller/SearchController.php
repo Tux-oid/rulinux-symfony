@@ -30,8 +30,8 @@ namespace RL\MainBundle\Controller;
 
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
-use RL\MainBundle\Form\SearchType;
-use RL\MainBundle\Form\SearchForm;
+use RL\MainBundle\Form\Type\SearchType;
+use RL\MainBundle\Form\Model\SearchForm;
 
 /**
  * RL\MainBundle\Controller\ModerController
