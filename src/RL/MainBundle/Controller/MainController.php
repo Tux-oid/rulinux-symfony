@@ -29,8 +29,8 @@
 namespace RL\MainBundle\Controller;
 
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
-use RL\MainBundle\Form\TrackerForm;
-use RL\MainBundle\Form\TrackerType;
+use RL\MainBundle\Form\Model\TrackerForm;
+use RL\MainBundle\Form\Type\TrackerType;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use RL\MainBundle\Helper\Pages;
 
