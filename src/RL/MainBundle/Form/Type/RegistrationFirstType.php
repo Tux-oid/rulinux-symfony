@@ -26,66 +26,36 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 
-namespace RL\MainBundle\Form;
+namespace RL\MainBundle\Form\Type;
 
-use Symfony\Component\Validator\Constraints as Assert;
+use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\FormBuilderInterface;
 
 /**
- * RL\MainBundle\Form\PasswordRestoringForm
+ * RL\MainBundle\Form\RegistrationFirstType
  *
  * @author Peter Vasilevsky <tuxoiduser@gmail.com> a.k.a. Tux-oid
  * @license BSDL
  */
-class PasswordRestoringForm
+class RegistrationFirstType extends AbstractType
 {
-    /**
-     * @Assert\NotBlank()
-     * @Assert\Regex("#([a-zA-Z0-9\_\-\/\.]{2,})$#")
-     */
-    protected $username;
-    /**
-     * @Assert\NotBlank()
-     * @Assert\Email
-     */
-    protected $email;
-    /**
-     * Assert\NotBlank()
-     */
-    protected $question;
-    /**
-     * @Assert\NotBlank()
-     */
-    protected $answer;
-    public function getUsername()
+    public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        return $this->username;
+        $builder->add('name', 'text')
+            ->add('password', 'password')
+            ->add('validation', 'password')
+            ->add('email', 'email');
     }
-    public function setUsername($username)
+    public function getName()
     {
-        $this->username = $username;
+        return 'registerFirst';
     }
-    public function getEmail()
+    public function getDefaultOptions(array $options)
     {
-        return $this->email;
-    }
-    public function setEmail($email)
-    {
-        $this->email = $email;
-    }
-    public function getQuestion()
-    {
-        return $this->question;
-    }
-    public function setQuestion($question)
-    {
-        $this->question = $question;
-    }
-    public function getAnswer()
-    {
-        return $this->answer;
-    }
-    public function setAnswer($answer)
-    {
-        $this->answer = $answer;
+        return array(
+            'csrf_protection' => true,
+            'csrf_field_name' => '_csrf_token',
+            'intention' => 'authenticate'
+        );
     }
 }

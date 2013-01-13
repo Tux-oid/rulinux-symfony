@@ -26,36 +26,66 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 
-namespace RL\MainBundle\Form;
+namespace RL\MainBundle\Form\Model;
 
-use Symfony\Component\Form\AbstractType;
-use Symfony\Component\Form\FormBuilderInterface;
+use Symfony\Component\Validator\Constraints as Assert;
 
 /**
- * RL\MainBundle\Form\PasswordRestoringType
+ * RL\MainBundle\Form\PasswordRestoringForm
  *
  * @author Peter Vasilevsky <tuxoiduser@gmail.com> a.k.a. Tux-oid
  * @license BSDL
  */
-class PasswordRestoringType extends AbstractType
+class PasswordRestoringForm
 {
-    public function buildForm(FormBuilderInterface $builder, array $options)
+    /**
+     * @Assert\NotBlank()
+     * @Assert\Regex("#([a-zA-Z0-9\_\-\/\.]{2,})$#")
+     */
+    protected $username;
+    /**
+     * @Assert\NotBlank()
+     * @Assert\Email
+     */
+    protected $email;
+    /**
+     * Assert\NotBlank()
+     */
+    protected $question;
+    /**
+     * @Assert\NotBlank()
+     */
+    protected $answer;
+    public function getUsername()
     {
-        $builder->add('username', 'text')
-            ->add('email', 'email')
-            ->add('question', 'text')
-            ->add('answer', 'text');
+        return $this->username;
     }
-    public function getName()
+    public function setUsername($username)
     {
-        return 'restorePassword';
+        $this->username = $username;
     }
-    public function getDefaultOptions(array $options)
+    public function getEmail()
     {
-        return array(
-            'csrf_protection' => true,
-            'csrf_field_name' => '_csrf_token',
-            'intention' => 'authenticate'
-        );
+        return $this->email;
+    }
+    public function setEmail($email)
+    {
+        $this->email = $email;
+    }
+    public function getQuestion()
+    {
+        return $this->question;
+    }
+    public function setQuestion($question)
+    {
+        $this->question = $question;
+    }
+    public function getAnswer()
+    {
+        return $this->answer;
+    }
+    public function setAnswer($answer)
+    {
+        $this->answer = $answer;
     }
 }

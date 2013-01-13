@@ -26,29 +26,29 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 
-namespace RL\MainBundle\Form;
+namespace RL\MainBundle\Form\Type;
 
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 
 /**
- * RL\MainBundle\Form\RegistrationFirstType
+ * RL\MainBundle\Form\PasswordRestoringType
  *
  * @author Peter Vasilevsky <tuxoiduser@gmail.com> a.k.a. Tux-oid
  * @license BSDL
  */
-class RegistrationFirstType extends AbstractType
+class PasswordRestoringType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        $builder->add('name', 'text')
-            ->add('password', 'password')
-            ->add('validation', 'password')
-            ->add('email', 'email');
+        $builder->add('username', 'text')
+            ->add('email', 'email')
+            ->add('question', 'text')
+            ->add('answer', 'text');
     }
     public function getName()
     {
-        return 'registerFirst';
+        return 'restorePassword';
     }
     public function getDefaultOptions(array $options)
     {

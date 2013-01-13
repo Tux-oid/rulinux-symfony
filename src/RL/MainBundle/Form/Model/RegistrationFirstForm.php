@@ -27,7 +27,7 @@
 */
 
 
-namespace RL\MainBundle\Form;
+namespace RL\MainBundle\Form\Model;
 
 use Symfony\Component\Validator\Constraints as Assert;
 

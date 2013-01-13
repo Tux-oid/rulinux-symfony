@@ -33,24 +33,12 @@ use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Component\Security\Core\Encoder\MessageDigestPasswordEncoder;
 use Symfony\Component\HttpFoundation\Request;
-use RL\MainBundle\Form\RegistrationFirstForm;
-use RL\MainBundle\Form\PasswordRestoringForm;
+use RL\MainBundle\Form\Type\RegistrationFirstType;
+use RL\MainBundle\Form\Model\RegistrationFirstForm;
+use RL\MainBundle\Form\Type\PasswordRestoringType;
+use RL\MainBundle\Form\Model\PasswordRestoringForm;
 use RL\MainBundle\Entity\User;
-use RL\MainBundle\Form\RegisterType;
-use RL\MainBundle\Form\RegistrationFirstType;
-use RL\MainBundle\Form\PasswordRestoringType;
-use RL\MainBundle\Form\PersonalInformationType;
-use RL\MainBundle\Form\PersonalInformationForm;
-use RL\MainBundle\Form\PersonalSettingsType;
-use RL\MainBundle\Form\PersonalSettingsForm;
-use RL\MainBundle\Form\PasswordChangingType;
-use RL\MainBundle\Form\PasswordChangingForm;
-use RL\MainBundle\Form\AdministratorSettingsType;
-use RL\MainBundle\Form\AdministratorSettingsForm;
-use RL\MainBundle\Form\ModeratorSettingsType;
-use RL\MainBundle\Form\ModeratorSettingsForm;
-use RL\MainBundle\Form\FiltersSettingsType;
-use RL\MainBundle\Form\FiltersSettingsForm;
+use RL\MainBundle\Form\Type\RegisterType;
 use RL\MainBundle\Helper\Pages;
 use LightOpenID;
 use Gregwar\ImageBundle\Image;
@@ -130,9 +118,9 @@ class SecurityController extends Controller
                 $message = \Swift_Message::newInstance()->setSubject('Registration letter')->setFrom('noemail@rulinux.net') //FIXME:load email from settings
                     ->setTo($newUser->getEmail())->setContentType('text/html')->setBody($this->renderView($theme->getPath('RLMainBundle', 'registrationLetter.html.twig'), array('link' => $link, 'user' => $user, 'site' => $site)));
                 $mailer->send($message);
-                $legend = 'Registration mail is sended.';
-                $text = 'Registration mail is sended. Please check your email.';
-                $title = 'Mail sended';
+                $legend = 'Registration mail is sent.';
+                $text = 'Registration mail is sent. Please check your email.';
+                $title = 'Mail sent';
 
                 return $this->render(
                     $theme->getPath('fieldset.html.twig'), array('legend' => $legend, 'text' => $text, 'title' => $title)
