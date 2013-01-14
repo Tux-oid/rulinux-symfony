@@ -26,17 +26,17 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 
-namespace RL\MainBundle\Form;
+namespace RL\MainBundle\Form\Model;
 
 use Symfony\Component\Validator\Constraints as Assert;
 
 /**
- * RL\MainBundle\Form\EditCommentForm
+ * RL\MainBundle\Form\AddThreadForm
  *
  * @author Peter Vasilevsky <tuxoiduser@gmail.com> a.k.a. Tux-oid
  * @license BSDL
  */
-class EditCommentForm
+class AddThreadForm
 {
     /**
      * @Assert\NotBlank()
@@ -46,7 +46,15 @@ class EditCommentForm
      * @Assert\NotBlank()
      */
     protected $comment;
-    protected $editionReason;
+    protected $useragent;
+    protected $postingTime;
+    protected $user;
+    public function __construct($user)
+    {
+         $this->useragent = $_SERVER['HTTP_USER_AGENT'];
+         $this->postingTime = new \DateTime('now');
+         $this->user = $user;
+    }
     public function getSubject()
     {
         return $this->subject;
@@ -63,13 +71,29 @@ class EditCommentForm
     {
         $this->comment = $comment;
     }
-    public function getEditionReason()
+    public function getUseragent()
     {
-        return $this->editionReason;
+        return $this->useragent;
     }
-    public function setEditionReason($editionReason)
+    public function setUseragent($useragent)
     {
-        $this->editionReason = $editionReason;
+        $this->useragent = $useragent;
+    }
+    public function getPostingTime()
+    {
+        return $this->postingTime;
+    }
+    public function setPostingTime($postingTime)
+    {
+        $this->postingTime = $postingTime;
+    }
+    public function getUser()
+    {
+        return $this->user;
+    }
+    public function setUser($user)
+    {
+        $this->user = $user;
     }
 
 }

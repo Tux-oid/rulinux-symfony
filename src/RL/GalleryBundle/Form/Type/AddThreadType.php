@@ -26,35 +26,35 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 
-namespace RL\NewsBundle\Form;
+namespace RL\GalleryBundle\Form\Type;
 
-use Symfony\Component\Validator\Constraints as Assert;
-use RL\MainBundle\Form\AddThreadForm as ForumAddThreadForm;
+use Symfony\Component\Form\FormBuilderInterface;
+use Symfony\Component\Form\AbstractType;
 
 /**
- * RL\NewsBundle\Form\AddThreadForm
+ * RL\GalleryBundle\Form\AddThreadType
  *
  * @author Peter Vasilevsky <tuxoiduser@gmail.com> a.k.a. Tux-oid
  * @license BSDL
  */
-class AddThreadForm extends ForumAddThreadForm
+class AddThreadType extends AbstractType
 {
-    /**
-     * @Assert\NotBlank()
-     * @Assert\Url
-     */
-    protected $prooflink;
-    public function __construct($user)
+    public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        parent::__construct($user);
+        $builder->add('subject', 'text', array('required' => true))
+            ->add('comment', 'textarea', array('required' => true))
+            ->add('file', 'file', array('required'=>true));
     }
-    public function getProoflink()
+    public function getName()
     {
-        return $this->prooflink;
+        return 'addThread';
     }
-    public function setProoflink($prooflink)
+    public function getDefaultOptions(array $options)
     {
-        $this->prooflink = $prooflink;
+        return array(
+            'csrf_protection' => true,
+            'csrf_field_name' => '_csrf_token',
+            'intention' => 'authenticate'
+        );
     }
-
 }

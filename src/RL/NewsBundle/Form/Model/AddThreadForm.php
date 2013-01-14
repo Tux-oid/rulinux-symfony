@@ -26,17 +26,35 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 
-namespace RL\ArticlesBundle\Form;
+namespace RL\NewsBundle\Form\Model;
 
-use RL\MainBundle\Form\AddThreadType as ForumAdhreadForm;
+use Symfony\Component\Validator\Constraints as Assert;
+use RL\MainBundle\Form\Model\AddThreadForm as ForumAddThreadForm;
 
 /**
- * RL\ArticlesBundle\Form\AddThreadType
+ * RL\NewsBundle\Form\AddThreadForm
  *
  * @author Peter Vasilevsky <tuxoiduser@gmail.com> a.k.a. Tux-oid
  * @license BSDL
  */
-class AddThreadType extends ForumAdhreadForm
+class AddThreadForm extends ForumAddThreadForm
 {
+    /**
+     * @Assert\NotBlank()
+     * @Assert\Url
+     */
+    protected $prooflink;
+    public function __construct($user)
+    {
+        parent::__construct($user);
+    }
+    public function getProoflink()
+    {
+        return $this->prooflink;
+    }
+    public function setProoflink($prooflink)
+    {
+        $this->prooflink = $prooflink;
+    }
 
 }

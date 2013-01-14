@@ -26,27 +26,28 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 
-namespace RL\MainBundle\Form;
+namespace RL\MainBundle\Form\Type;
 
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Form\AbstractType;
 
 /**
- * RL\MainBundle\Form\AddCommentType
+ * RL\MainBundle\Form\EditCommentType
  *
  * @author Peter Vasilevsky <tuxoiduser@gmail.com> a.k.a. Tux-oid
  * @license BSDL
  */
-class AddCommentType extends AbstractType
+class EditCommentType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder->add('subject', 'text', array('required' => true))
-            ->add('comment', 'textarea', array('required' => true));
+            ->add('comment', 'textarea', array('required' => true))
+            ->add('editionReason', 'text', array('required' => false));
     }
     public function getName()
     {
-        return 'addComment';
+        return 'editComment';
     }
     public function getDefaultOptions(array $options)
     {

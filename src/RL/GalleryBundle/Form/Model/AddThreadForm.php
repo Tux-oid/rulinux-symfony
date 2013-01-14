@@ -26,74 +26,35 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 
-namespace RL\MainBundle\Form;
+namespace RL\GalleryBundle\Form\Model;
 
 use Symfony\Component\Validator\Constraints as Assert;
+use RL\MainBundle\Form\Model\AddThreadForm as ForumAddThreadForm;
 
 /**
- * RL\MainBundle\Form\AddCommentForm
+ * RL\GalleryBundle\Form\AddThreadForm
  *
  * @author Peter Vasilevsky <tuxoiduser@gmail.com> a.k.a. Tux-oid
  * @license BSDL
  */
-class AddCommentForm
+class AddThreadForm extends ForumAddThreadForm
 {
     /**
      * @Assert\NotBlank()
+     * @Assert\File(maxSize="700000")
      */
-    protected $subject;
-    /**
-     * @Assert\NotBlank()
-     */
-    protected $comment;
-    protected $useragent;
-    protected $postingTime;
-    protected $user;
+    protected $file;
     public function __construct($user)
     {
-         $this->useragent = $_SERVER['HTTP_USER_AGENT'];
-         $this->postingTime = new \DateTime('now');
-         $this->user = $user;
+        parent::__construct($user);
     }
-    public function getSubject()
+    public function getFile()
     {
-        return $this->subject;
+        return $this->file;
     }
-    public function setSubject($subject)
+    public function setFile($file)
     {
-        $this->subject = $subject;
-    }
-    public function getComment()
-    {
-        return $this->comment;
-    }
-    public function setComment($comment)
-    {
-        $this->comment = $comment;
-    }
-    public function getUseragent()
-    {
-        return $this->useragent;
-    }
-    public function setUseragent($useragent)
-    {
-        $this->useragent = $useragent;
-    }
-    public function getPostingTime()
-    {
-        return $this->postingTime;
-    }
-    public function setPostingTime($postingTime)
-    {
-        $this->postingTime = $postingTime;
-    }
-    public function getUser()
-    {
-        return $this->user;
-    }
-    public function setUser($user)
-    {
-        $this->user = $user;
+        $this->file = $file;
     }
 
 }

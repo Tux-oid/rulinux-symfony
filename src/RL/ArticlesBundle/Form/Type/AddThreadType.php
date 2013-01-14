@@ -26,34 +26,17 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 
-namespace RL\MainBundle\Form;
+namespace RL\ArticlesBundle\Form\Type;
 
-use Symfony\Component\Form\FormBuilderInterface;
-use Symfony\Component\Form\AbstractType;
+use RL\MainBundle\Form\Type\AddThreadType as ForumAdhreadForm;
 
 /**
- * RL\MainBundle\Form\AddThreadType
+ * RL\ArticlesBundle\Form\AddThreadType
  *
  * @author Peter Vasilevsky <tuxoiduser@gmail.com> a.k.a. Tux-oid
  * @license BSDL
  */
-class AddThreadType extends AbstractType
+class AddThreadType extends ForumAdhreadForm
 {
-    public function buildForm(FormBuilderInterface $builder, array $options)
-    {
-        $builder->add('subject', 'text', array('required' => true))
-            ->add('comment', 'textarea', array('required' => true));
-    }
-    public function getName()
-    {
-        return 'addThread';
-    }
-    public function getDefaultOptions(array $options)
-    {
-        return array(
-            'csrf_protection' => true,
-            'csrf_field_name' => '_csrf_token',
-            'intention' => 'authenticate'
-        );
-    }
+
 }

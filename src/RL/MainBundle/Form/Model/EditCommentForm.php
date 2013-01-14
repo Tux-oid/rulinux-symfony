@@ -26,35 +26,50 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 
-namespace RL\GalleryBundle\Form;
+namespace RL\MainBundle\Form\Model;
 
-use Symfony\Component\Form\FormBuilderInterface;
-use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Validator\Constraints as Assert;
 
 /**
- * RL\GalleryBundle\Form\AddThreadType
+ * RL\MainBundle\Form\EditCommentForm
  *
  * @author Peter Vasilevsky <tuxoiduser@gmail.com> a.k.a. Tux-oid
  * @license BSDL
  */
-class AddThreadType extends AbstractType
+class EditCommentForm
 {
-    public function buildForm(FormBuilderInterface $builder, array $options)
+    /**
+     * @Assert\NotBlank()
+     */
+    protected $subject;
+    /**
+     * @Assert\NotBlank()
+     */
+    protected $comment;
+    protected $editionReason;
+    public function getSubject()
     {
-        $builder->add('subject', 'text', array('required' => true))
-            ->add('comment', 'textarea', array('required' => true))
-            ->add('file', 'file', array('required'=>true));
+        return $this->subject;
     }
-    public function getName()
+    public function setSubject($subject)
     {
-        return 'addThread';
+        $this->subject = $subject;
     }
-    public function getDefaultOptions(array $options)
+    public function getComment()
     {
-        return array(
-            'csrf_protection' => true,
-            'csrf_field_name' => '_csrf_token',
-            'intention' => 'authenticate'
-        );
+        return $this->comment;
     }
+    public function setComment($comment)
+    {
+        $this->comment = $comment;
+    }
+    public function getEditionReason()
+    {
+        return $this->editionReason;
+    }
+    public function setEditionReason($editionReason)
+    {
+        $this->editionReason = $editionReason;
+    }
+
 }

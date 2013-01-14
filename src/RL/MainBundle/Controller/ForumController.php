@@ -32,10 +32,10 @@ use Symfony\Component\Security\Core\SecurityContext;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use RL\MainBundle\Helper\Pages;
-use RL\MainBundle\Form\AddCommentType;
-use RL\MainBundle\Form\AddCommentForm;
-use RL\MainBundle\Form\EditCommentType;
-use RL\MainBundle\Form\EditCommentForm;
+use RL\MainBundle\Form\Type\AddCommentType;
+use RL\MainBundle\Form\Model\AddCommentForm;
+use RL\MainBundle\Form\Type\EditCommentType;
+use RL\MainBundle\Form\Model\EditCommentForm;
 use RL\MainBundle\Entity\Message;
 use RL\MainBundle\Entity\Section;
 
@@ -48,7 +48,7 @@ use RL\MainBundle\Entity\Section;
 class ForumController extends Controller
 {
     /**
-     * @Route("/new_thread_in_{sectionRewrite}_{subsectionRewrite}", name="new_thread", requirements = {"subsectionRewrite"=".*"})
+     * @Route("/new_thread/{sectionRewrite}/{subsectionRewrite}", name="new_thread", requirements = {"subsectionRewrite"=".*"})
      */
     public function newThreadAction($sectionRewrite, $subsectionRewrite)
     {
@@ -79,7 +79,7 @@ class ForumController extends Controller
         //preview
         $previewMode = false;
         $pr_val = $request->request->get('preview');
-        $formCls = $section->getBundleNamespace() . '\Form\AddThreadForm';
+        $formCls = $section->getBundleNamespace() . '\Form\Model\AddThreadForm';
         $preview = '';
         if (isset($pr_val)) {
             $previewMode = true;
@@ -92,7 +92,7 @@ class ForumController extends Controller
             $newThread = new $formCls($user);
         }
         //show form
-        $typeCls = $section->getBundleNamespace() . '\Form\AddThreadType';
+        $typeCls = $section->getBundleNamespace() . '\Form\Type\AddThreadType';
         $form = $this->createForm(new $typeCls(), $newThread);
 
         return $this->render(
@@ -161,9 +161,9 @@ class ForumController extends Controller
     }
 
     /**
-     * @Route("/comment_into_{thread_id}_on_{comment_id}", name="comment")
+     * @Route("/comment_into_{threadId}_on_{commentId}", name="comment")
      */
-    public function commentAction($thread_id, $comment_id)
+    public function commentAction($threadId, $commentId)
     {
         $theme = $this->get('rl_main.theme.provider');
         /** @var $user \RL\MainBundle\Security\User\RLUserInterface */
@@ -176,7 +176,7 @@ class ForumController extends Controller
             $em = $doctrine->getEntityManager();
             $thr = $request->request->get('addComment');
             $threadRepository = $doctrine->getRepository('RLMainBundle:Thread');
-            $thread = $threadRepository->findOneById($thread_id);
+            $thread = $threadRepository->findOneById($threadId);
             $message = new Message();
             if ($user->isAnonymous()) {
                 $user = $user->getDbAnonymous();
@@ -186,28 +186,28 @@ class ForumController extends Controller
             $message->setComment($user->getMark()->render($thr['comment']));
             $message->setRawComment($thr['comment']);
             $message->setThread($thread);
-            $message->setReferer($doctrine->getRepository('RLMainBundle:Message')->findOneById($comment_id));
+            $message->setReferer($doctrine->getRepository('RLMainBundle:Message')->findOneById($commentId));
             $em->persist($message);
             $em->flush();
 
             return $this->redirect(
-                $this->generateUrl("thread", array("id" => $thread_id, "page" => 1))
+                $this->generateUrl("thread", array("id" => $threadId, "page" => 1))
             ); //FIXME: set url for redirecting
         }
         //preview
-        $pr_val = $request->request->get('preview');
+        $previewValue = $request->request->get('preview');
         $preview = '';
         $newComment = new AddCommentForm($user);
-        if (isset($pr_val)) {
-            $prv_thr = $request->request->get('addComment');
-            $newComment->setSubject($prv_thr['subject']);
-            $newComment->setComment($prv_thr['comment']);
+        if (isset($previewValue)) {
+            $previewThread = $request->request->get('addComment');
+            $newComment->setSubject($previewThread['subject']);
+            $newComment->setComment($previewThread['comment']);
             $preview = new AddCommentForm($user);
-            $preview->setSubject($prv_thr['subject']);
-            $preview->setComment($user->getMark()->render($prv_thr['comment']));
+            $preview->setSubject($previewThread['subject']);
+            $preview->setComment($user->getMark()->render($previewThread['comment']));
         } else {
             $messageRepository = $doctrine->getRepository('RLMainBundle:Message');
-            $preview = $messageRepository->findOneById($comment_id);
+            $preview = $messageRepository->findOneById($commentId);
             $re = '';
             if (substr($preview->getSubject(), 0, 3) != 'Re:') {
                 $re = 'Re:';

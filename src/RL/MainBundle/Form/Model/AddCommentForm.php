@@ -26,17 +26,17 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 
-namespace RL\MainBundle\Form;
+namespace RL\MainBundle\Form\Model;
 
 use Symfony\Component\Validator\Constraints as Assert;
 
 /**
- * RL\MainBundle\Form\AddThreadForm
+ * RL\MainBundle\Form\AddCommentForm
  *
  * @author Peter Vasilevsky <tuxoiduser@gmail.com> a.k.a. Tux-oid
  * @license BSDL
  */
-class AddThreadForm
+class AddCommentForm
 {
     /**
      * @Assert\NotBlank()

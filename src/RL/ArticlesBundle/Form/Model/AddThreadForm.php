@@ -26,9 +26,9 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 
-namespace RL\ArticlesBundle\Form;
+namespace RL\ArticlesBundle\Form\Model;
 
-use RL\MainBundle\Form\AddThreadForm as ForumAddThreadForm;
+use RL\MainBundle\Form\Model\AddThreadForm as ForumAddThreadForm;
 
 /**
  * RL\ArticlesBundle\Form\AddThreadForm

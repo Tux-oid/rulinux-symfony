@@ -26,35 +26,34 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 
-namespace RL\GalleryBundle\Form;
+namespace RL\MainBundle\Form\Type;
 
-use Symfony\Component\Validator\Constraints as Assert;
-use RL\MainBundle\Form\AddThreadForm as ForumAddThreadForm;
+use Symfony\Component\Form\FormBuilderInterface;
+use Symfony\Component\Form\AbstractType;
 
 /**
- * RL\GalleryBundle\Form\AddThreadForm
+ * RL\MainBundle\Form\AddThreadType
  *
  * @author Peter Vasilevsky <tuxoiduser@gmail.com> a.k.a. Tux-oid
  * @license BSDL
  */
-class AddThreadForm extends ForumAddThreadForm
+class AddThreadType extends AbstractType
 {
-    /**
-     * @Assert\NotBlank()
-     * @Assert\File(maxSize="700000")
-     */
-    protected $file;
-    public function __construct($user)
+    public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        parent::__construct($user);
+        $builder->add('subject', 'text', array('required' => true))
+            ->add('comment', 'textarea', array('required' => true));
     }
-    public function getFile()
+    public function getName()
     {
-        return $this->file;
+        return 'addThread';
     }
-    public function setFile($file)
+    public function getDefaultOptions(array $options)
     {
-        $this->file = $file;
+        return array(
+            'csrf_protection' => true,
+            'csrf_field_name' => '_csrf_token',
+            'intention' => 'authenticate'
+        );
     }
-
 }
