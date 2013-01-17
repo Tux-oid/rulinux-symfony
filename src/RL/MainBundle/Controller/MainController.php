@@ -28,7 +28,7 @@
 
 namespace RL\MainBundle\Controller;
 
-use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use RL\MainBundle\Controller\AbstractController;
 use RL\MainBundle\Form\Model\TrackerForm;
 use RL\MainBundle\Form\Type\TrackerType;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
@@ -41,21 +41,20 @@ use RL\MainBundle\Helper\Pages;
  * @author Peter Vasilevsky <tuxoiduser@gmail.com> a.k.a. Tux-oid
  * @license BSDL
  */
-class MainController extends Controller
+class MainController extends AbstractController
 {
     /**
      * @Route("/unconfirmed", name="unconfirmed")
      */
     public function unconfirmedAction()
     {
-        $theme = $this->get('rl_main.theme.provider');
         $doctrine = $this->get('doctrine');
         /** @var $threadRepository \RL\ArticlesBundle\Entity\Repository\ThreadRepository */
         $threadRepository = $doctrine->getRepository('RLNewsBundle:Thread');
         $unconfirmedThreads = $threadRepository->getUnconfirmed();
 
         return $this->render(
-            $theme->getPath('unconfirmed.html.twig'), array('threads' => $unconfirmedThreads,)
+            $this->theme->getPath('unconfirmed.html.twig'), array('threads' => $unconfirmedThreads,)
         );
     }
 
@@ -64,7 +63,6 @@ class MainController extends Controller
      */
     public function trackerAction($hours)
     {
-        $theme = $this->get('rl_main.theme.provider');
         $doctrine = $this->get('doctrine');
         $request = $this->getRequest();
         $sbm = $request->request->get('submit');
@@ -78,7 +76,7 @@ class MainController extends Controller
         $form = $this->createForm(new TrackerType(), new TrackerForm($hours));
 
         return $this->render(
-            $theme->getPath('tracker.html.twig'), array('form'=>$form->createView(), 'messages'=>$messages, 'hours' => $hours )
+            $this->theme->getPath('tracker.html.twig'), array('form'=>$form->createView(), 'messages'=>$messages, 'hours' => $hours )
         );
     }
 
@@ -87,14 +85,13 @@ class MainController extends Controller
      */
     public function rulesAction()
     {
-        $theme = $this->get('rl_main.theme.provider');
         $doctrine = $this->get('doctrine');
         $settingsRepository = $doctrine->getRepository('RLMainBundle:Settings');
         $rulesTitle = $settingsRepository->findOneByName('rulesTitle')->getValue();
         $rulesText = $settingsRepository->findOneByName('rulesText')->getValue();
 
         return $this->render(
-            $theme->getPath('page.html.twig'), array('title' => $rulesTitle, 'text' => $rulesText,)
+            $this->theme->getPath('page.html.twig'), array('title' => $rulesTitle, 'text' => $rulesText,)
         );
     }
 
@@ -103,7 +100,6 @@ class MainController extends Controller
      */
     public function linksAction()
     {
-        $theme = $this->get('rl_main.theme.provider');
         $doctrine = $this->get('doctrine');
         /** @var $linksRepository \Doctrine\Orm\EntityRepository */
         $linksRepository = $doctrine->getRepository('RLMainBundle:Link');
@@ -117,7 +113,7 @@ class MainController extends Controller
         $text = $text . '</ul>';
 
         return $this->render(
-            $theme->getPath('page.html.twig'), array('title' => $title, 'text' => $text,)
+            $this->theme->getPath('page.html.twig'), array('title' => $title, 'text' => $text,)
         );
     }
 
@@ -128,7 +124,6 @@ class MainController extends Controller
     {
         /** @var $user \RL\MainBundle\Security\User\RLUserInterface */
         $user = $this->get('security.context')->getToken()->getUser();
-        $theme = $this->get('rl_main.theme.provider');
         /** @var $markRepository \Doctrine\Orm\EntityRepository */
         $markRepository = $this->getDoctrine()->getRepository('RLMainBundle:Mark');
         if (null === $id) {
@@ -137,7 +132,7 @@ class MainController extends Controller
             $mark = $markRepository->findOneById($id);
         }
 
-        return $this->render($theme->getPath('mark.html.twig'), array('mark' => $mark));
+        return $this->render($this->theme->getPath('mark.html.twig'), array('mark' => $mark));
     }
 
     /**
@@ -147,7 +142,6 @@ class MainController extends Controller
     {
         /** @var $user \RL\MainBundle\Security\User\RLUserInterface */
         $user = $this->get('security.context')->getToken()->getUser();
-        $theme = $this->get('rl_main.theme.provider');
         $doctrine = $this->get('doctrine');
         $sectionRepository = $doctrine->getRepository('RLMainBundle:Section');
         $section = $sectionRepository->findOneByRewrite('news');
@@ -162,7 +156,7 @@ class MainController extends Controller
         $pagesStr = $pages->draw();
 
         return $this->render(
-            $theme->getPath('index.html.twig'), array('threads' => $threads, 'pages' => $pagesStr, 'section' => $section,)
+            $this->theme->getPath('index.html.twig'), array('threads' => $threads, 'pages' => $pagesStr, 'section' => $section,)
         );
     }
 

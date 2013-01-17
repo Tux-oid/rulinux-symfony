@@ -24,19 +24,56 @@
  * ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-*/
+ */
 
+namespace RL\MainBundle\EventListener;
 
-namespace RL\MainBundle\Helper;
+use Symfony\Component\DependencyInjection\Container;
+use RL\MainBundle\Controller\AbstractController;
+use Symfony\Component\HttpKernel\Event\FilterControllerEvent;
+use JMS\DiExtraBundle\Annotation\Service;
+use JMS\DiExtraBundle\Annotation\Tag;
+use JMS\DiExtraBundle\Annotation\InjectParams;
+use JMS\DiExtraBundle\Annotation\Inject;
+use JMS\DiExtraBundle\Annotation\Observe;
 
 /**
- * RL\MainBundle\Helper\ThreadHelperInterface
+ * RL\MainBundle\EventListener\ControllerListener
+ *
+ * @Service("rl.main.controller_listener")
  *
  * @author Peter Vasilevsky <tuxoiduser@gmail.com> a.k.a. Tux-oid
  * @license BSDL
  */
-interface ThreadHelperInterface
+class ControllerListener
 {
-    public function saveThread(\Doctrine\Bundle\DoctrineBundle\Registry &$doctrine, \Symfony\Component\HttpFoundation\Request &$request, $section, $subsection, $user);
-    public function preview(&$thread, \Symfony\Component\HttpFoundation\Request &$request);
+    /**
+     * @var \Symfony\Component\DependencyInjection\Container
+     */
+    private $container;
+
+    /**
+     * @param \Symfony\Component\DependencyInjection\Container $container
+     *
+     * @InjectParams({
+     * "container" = @Inject("service_container")
+     * })
+     */
+    public function __construct(Container $container)
+    {
+        $this->container = $container;
+    }
+
+    /**
+     * @Observe("kernel.controller", priority = 17)
+     *
+     * @param \Symfony\Component\HttpKernel\Event\FilterControllerEvent $event
+     */
+    public function onKernelController(FilterControllerEvent $event)
+    {
+        $controller = $event->getController();
+        if (is_subclass_of($controller[0], '\RL\MainBundle\Controller\AbstractController')) {
+            $controller[0]->theme = $this->container->get('rl_main.theme.provider');
+        }
+    }
 }

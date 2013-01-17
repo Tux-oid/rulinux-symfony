@@ -28,7 +28,7 @@
 
 namespace RL\MainBundle\Controller;
 
-use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use RL\MainBundle\Controller\AbstractController;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use RL\MainBundle\Form\Type\SearchType;
 use RL\MainBundle\Form\Model\SearchForm;
@@ -39,15 +39,13 @@ use RL\MainBundle\Form\Model\SearchForm;
  * @author Peter Vasilevsky <tuxoiduser@gmail.com> a.k.a. Tux-oid
  * @license BSDL
  */
-class SearchController extends Controller
+class SearchController extends AbstractController
 {
     /**
      * @Route("/search", name="search")
      */
     public function searchAction()
     {
-        /** @var $theme \RL\MainBundle\Theme\ThemeProvider */
-        $theme = $this->get('rl_main.theme.provider');
         $searchForm = new SearchForm();
         $form = $this->createForm(new SearchType(), $searchForm);
         $request = $this->getRequest();
@@ -62,13 +60,13 @@ class SearchController extends Controller
                     $messages = $messageRepository->search($searchForm->toArray());
 
                     return $this->render(
-                        $theme->getPath('search.html.twig'),
+                        $this->theme->getPath('search.html.twig'),
                         array('form' => $form->createView(), 'messages' => $messages)
                     );
                 }
             }
         }
 
-        return $this->render($theme->getPath('search.html.twig'), array('form' => $form->createView()));
+        return $this->render($this->theme->getPath('search.html.twig'), array('form' => $form->createView()));
     }
 }

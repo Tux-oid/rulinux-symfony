@@ -29,7 +29,7 @@
 namespace RL\MainBundle\Controller;
 
 use Symfony\Component\Security\Core\SecurityContext;
-use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use RL\MainBundle\Controller\AbstractController;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Component\Security\Core\Encoder\MessageDigestPasswordEncoder;
 use Symfony\Component\HttpFoundation\Request;
@@ -51,7 +51,7 @@ use Gregwar\ImageBundle\Image;
  * @author Peter Vasilevsky <tuxoiduser@gmail.com> a.k.a. Tux-oid
  * @license BSDL
 */
-class SecurityController extends Controller
+class SecurityController extends AbstractController
 {
     /**
      * Declares Symfony Security routes.
@@ -69,7 +69,6 @@ class SecurityController extends Controller
      */
     public function loginAction()
     {
-        $theme = $this->get('rl_main.theme.provider');
         $request = $this->getRequest();
         $session = $request->getSession();
         if ($request->attributes->has(SecurityContext::AUTHENTICATION_ERROR)) {
@@ -80,7 +79,7 @@ class SecurityController extends Controller
         }
 
         return $this->render(
-            $theme->getPath('login.html.twig'), array('last_username' => $session->get(SecurityContext::LAST_USERNAME), 'error' => $error,)
+            $this->theme->getPath('login.html.twig'), array('last_username' => $session->get(SecurityContext::LAST_USERNAME), 'error' => $error,)
         );
     }
 
@@ -90,11 +89,10 @@ class SecurityController extends Controller
     public function registrationAction()
     {
         $newUser = new RegistrationFirstForm;
-        $theme = $this->get('rl_main.theme.provider');
         $form = $this->createForm(new RegistrationFirstType(), $newUser);
 
         return $this->render(
-            $theme->getPath('registrationFirstPage.html.twig'), array('form' => $form->createView())
+            $this->theme->getPath('registrationFirstPage.html.twig'), array('form' => $form->createView())
         );
     }
 
@@ -103,7 +101,6 @@ class SecurityController extends Controller
      */
     public function registrationSendAction(Request $request)
     {
-        $theme = $this->get('rl_main.theme.provider');
         $method = $request->getMethod();
         if ($method == 'POST') {
             $newUser = new RegistrationFirstForm;
@@ -116,15 +113,9 @@ class SecurityController extends Controller
                 $user = $newUser->getName();
                 $site = $request->getHttpHost();
                 $message = \Swift_Message::newInstance()->setSubject('Registration letter')->setFrom('noemail@rulinux.net') //FIXME:load email from settings
-                    ->setTo($newUser->getEmail())->setContentType('text/html')->setBody($this->renderView($theme->getPath('registrationLetter.html.twig'), array('link' => $link, 'user' => $user, 'site' => $site)));
+                    ->setTo($newUser->getEmail())->setContentType('text/html')->setBody($this->renderView($this->theme->getPath('registrationLetter.html.twig'), array('link' => $link, 'user' => $user, 'site' => $site)));
                 $mailer->send($message);
-                $legend = 'Registration mail is sent.';
-                $text = 'Registration mail is sent. Please check your email.';
-                $title = 'Mail sent';
-
-                return $this->render(
-                    $theme->getPath('fieldset.html.twig'), array('legend' => $legend, 'text' => $text, 'title' => $title)
-                );
+                return $this->renderMessage('Registration mail was sent.', 'Registration mail was sent. Please check your email.');
             } else {
                 throw new \Exception('Registration form is invalid.');
             }
@@ -138,14 +129,13 @@ class SecurityController extends Controller
      */
     public function registrationConfirmAction($username, $password, $email, $hash)
     {
-        $theme = $this->get('rl_main.theme.provider');
         $secret = $this->container->getParameter('secret');
         if ($hash == md5(md5($username . $password . $email . $secret))) {
             $newUser = new User;
             $form = $this->createForm(new RegisterType(), $newUser);
 
             return $this->render(
-                $theme->getPath('registrationSecondPage.html.twig'), array('username' => $username, 'password' => $password, 'email' => $email, 'form' => $form->createView())
+                $this->theme->getPath('registrationSecondPage.html.twig'), array('username' => $username, 'password' => $password, 'email' => $email, 'form' => $form->createView())
             );
         } else {
             throw new \Exception('Hash is invalid');
@@ -157,7 +147,6 @@ class SecurityController extends Controller
      */
     public function registrationSaveAction(Request $request)
     {
-        $theme = $this->get('rl_main.theme.provider');
         $method = $request->getMethod();
         if ($method == 'POST') {
             $newUser = new User;
@@ -190,13 +179,7 @@ class SecurityController extends Controller
                 $em = $this->getDoctrine()->getManager();
                 $em->persist($newUser);
                 $em->flush();
-                $legend = 'Registration completed.';
-                $text = 'Registration completed. Now you can <a href="' . $this->generateUrl('login') . '">login</a> on this site.';
-                $title = '';
-
-                return $this->render(
-                    $theme->getPath('fieldset.html.twig'), array('legend' => $legend, 'text' => $text, 'title' => $title)
-                );
+                return $this->renderMessage('Registration complete.', 'Registration complete. Now you can <a href="' . $this->generateUrl('login') . '">login</a> on this site.');
             } else {
                 throw new \Exception('Registration form is invalid.');
             }
@@ -210,12 +193,11 @@ class SecurityController extends Controller
      */
     public function restorePasswordAction()
     {
-        $theme = $this->get('rl_main.theme.provider');
         $resForm = new PasswordRestoringForm;
         $form = $this->createForm(new PasswordRestoringType(), $resForm);
 
         return $this->render(
-            $theme->getPath('passwordRestoringForm.html.twig'), array('form' => $form->createView())
+            $this->theme->getPath('passwordRestoringForm.html.twig'), array('form' => $form->createView())
         );
     }
 
@@ -224,7 +206,6 @@ class SecurityController extends Controller
      */
     public function restorePasswordCheckAction(Request $request)
     {
-        $theme = $this->get('rl_main.theme.provider');
         $method = $request->getMethod();
         if ($method == 'POST') {
             $resForm = new PasswordRestoringForm;
@@ -259,15 +240,9 @@ class SecurityController extends Controller
                 $em->flush();
                 $mailer = $this->get('mailer');
                 $message = \Swift_Message::newInstance()->setSubject('Password restoring')->setFrom('noemail@rulinux.net') //FIXME:load email from settings
-                    ->setTo($resForm->getEmail())->setContentType('text/html')->setBody($this->renderView($theme->getPath('RLMainBundle', 'passwordRestoringLetter.html.twig'), array('username' => $username, 'password' => $password)));
+                    ->setTo($resForm->getEmail())->setContentType('text/html')->setBody($this->renderView($this->theme->getPath('RLMainBundle', 'passwordRestoringLetter.html.twig'), array('username' => $username, 'password' => $password)));
                 $mailer->send($message);
-                $legend = 'Mail with your new password is sended.';
-                $text = 'Mail with your new password is sended. Please check your email.';
-                $title = 'Mail sended';
-
-                return $this->render(
-                    $theme->getPath('fieldset.html.twig'), array('legend' => $legend, 'text' => $text, 'title' => $title)
-                );
+                return $this->renderMessage('Mail with your new password was sent.', 'Mail with your new password was sent. Please check your email.');
             } else {
                 throw new \Exception('Password restoring form is invalid');
             }
@@ -281,7 +256,6 @@ class SecurityController extends Controller
      */
     public function usersAction($page)
     {
-        $theme = $this->get('rl_main.theme.provider');
         $user = $this->get('security.context')->getToken()->getUser();
         $userRepository = $this->getDoctrine()->getRepository('RLMainBundle:User');
 
@@ -293,7 +267,7 @@ class SecurityController extends Controller
         $pages = new Pages($this->get('router'), $itemsOnPage, $itemsCount, $page, 'users', array("page" => $page));
         $pagesStr = $pages->draw();
 
-        return $this->render($theme->getPath('users.html.twig'), array('users' => $users, 'pagesStr' => $pagesStr));
+        return $this->render($this->theme->getPath('users.html.twig'), array('users' => $users, 'pagesStr' => $pagesStr));
     }
 
 }

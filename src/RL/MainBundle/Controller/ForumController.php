@@ -29,8 +29,8 @@
 namespace RL\MainBundle\Controller;
 
 use Symfony\Component\Security\Core\SecurityContext;
-use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
+use RL\MainBundle\Controller\AbstractController;
 use RL\MainBundle\Helper\Pages;
 use RL\MainBundle\Form\Type\AddCommentType;
 use RL\MainBundle\Form\Model\AddCommentForm;
@@ -45,7 +45,7 @@ use RL\MainBundle\Entity\Section;
  * @author Peter Vasilevsky <tuxoiduser@gmail.com> a.k.a. Tux-oid
  * @license BSDL
  */
-class ForumController extends Controller
+class ForumController extends AbstractController
 {
     /**
      * @Route("/new_thread/{sectionRewrite}/{subsectionRewrite}", name="new_thread", requirements = {"subsectionRewrite"=".*"})
@@ -53,7 +53,6 @@ class ForumController extends Controller
     public function newThreadAction($sectionRewrite, $subsectionRewrite)
     {
         //FIXME: add subsection selection in form
-        $theme = $this->get('rl_main.theme.provider');
         $user = $this->get('security.context')->getToken()->getUser();
         $doctrine = $this->get('doctrine');
         $request = $this->getRequest();
@@ -63,8 +62,8 @@ class ForumController extends Controller
         $subsection = $subsectionRepository->getSubsectionByRewrite($subsectionRewrite, $section);
         //save thread in database
         $sbm = $request->request->get('submit');
-        $hlpCls = $section->getBundleNamespace() . '\Helper\ThreadHelper';
-        /** @var $helper \RL\MainBundle\Helper\ThreadHelperInterface */
+        $hlpCls = $section->getBundleNamespace() . '\Form\Handler\ThreadHandler';
+        /** @var $helper \RL\MainBundle\Form\Handler\ThreadHandlerInterface */
         $helper = new $hlpCls();
         if (isset($sbm)) {
             $helper->saveThread($doctrine, $request, $section, $subsection, $user);
@@ -96,7 +95,7 @@ class ForumController extends Controller
         $form = $this->createForm(new $typeCls(), $newThread);
 
         return $this->render(
-            $theme->getPath('newThread.html.twig', $section->getBundle()),
+            $this->theme->getPath('newThread.html.twig', $section->getBundle()),
             array(
                 'form' => $form->createView(),
                 'subsection' => $subsectionRewrite,
@@ -113,7 +112,6 @@ class ForumController extends Controller
      */
     public function threadAction($id, $page)
     {
-        $theme = $this->get('rl_main.theme.provider');
         /** @var $user \RL\MainBundle\Security\User\RLUserInterface */
         $user = $this->get('security.context')->getToken()->getUser();
         $doctrine = $this->get('doctrine');
@@ -127,18 +125,7 @@ class ForumController extends Controller
         $pagesCount > 1 ? $offset = $itemsOnPage * ($page - 1) : $offset = 0;
         $startMessage = $threadRepository->getThreadStartMessageById($id);
         if (null === $startMessage) {
-            $legend = 'Thread not found';
-            $title = 'Thread not found';
-            $text = 'Thread with specified id isn\'t found';
-
-            return $this->render(
-                $theme->getPath('RLMainBundle', 'fieldset.html.twig'),
-                array(
-                    'legend' => $legend,
-                    'title' => $title,
-                    'text' => $text,
-                )
-            );
+            return $this->renderMessage('Thread not found', 'Thread with specified id isn\'t found');
         }
         $threadComments = $threadRepository->getThreadCommentsById($id, $itemsOnPage, $offset);
         $pages = new Pages($this->get('router'), $itemsOnPage, $itemsCount - 1, $page, 'thread', array(
@@ -149,7 +136,7 @@ class ForumController extends Controller
         $neighborThreads = $threadRepository->getNeighborThreadsById($id);
 
         return $this->render(
-            $theme->getPath('thread.html.twig'),
+            $this->theme->getPath('thread.html.twig'),
             array(
                 'startMessage' => $startMessage,
                 'messages' => $threadComments,
@@ -165,7 +152,6 @@ class ForumController extends Controller
      */
     public function commentAction($threadId, $commentId)
     {
-        $theme = $this->get('rl_main.theme.provider');
         /** @var $user \RL\MainBundle\Security\User\RLUserInterface */
         $user = $this->get('security.context')->getToken()->getUser();
         $doctrine = $this->get('doctrine');
@@ -217,7 +203,7 @@ class ForumController extends Controller
         $form = $this->createForm(new AddCommentType(), $newComment);
 
         return $this->render(
-            $theme->getPath('addComment.html.twig'),
+            $this->theme->getPath('addComment.html.twig'),
             array(
                 'preview' => $preview,
                 'form' => $form->createView(),
@@ -230,7 +216,6 @@ class ForumController extends Controller
      */
     public function editMessage($messageId)
     {
-        $theme = $this->get('rl_main.theme.provider');
         /** @var $securityContext \Symfony\Component\Security\Core\SecurityContext */
         $securityContext = $this->get('security.context');
         $user = $securityContext->getToken()->getUser();
@@ -240,33 +225,11 @@ class ForumController extends Controller
         $message = $messageRepository->findOneById($messageId);
         //check access
         if ($message->getUser() != $user && !$securityContext->isGranted('ROLE_MODER')) {
-            $legend = 'Access denied';
-            $title = 'Edit message';
-            $text = 'You have not privelegies to edit this message';
-
-            return $this->render(
-                $theme->getPath('fieldset.html.twig'),
-                array(
-                    'legend' => $legend,
-                    'title' => $title,
-                    'text' => $text,
-                )
-            );
+            return $this->renderMessage('Access denied', 'You haven\'t privileges to edit this message');
         }
         if ($user->isAnonymous()) {
-            if ($message->getSessionId() != \session_id()) {
-                $legend = 'Access denied';
-                $title = 'Edit message';
-                $text = 'You have not privelegies to edit this message';
-
-                return $this->render(
-                    $theme->getPath('fieldset.html.twig'),
-                    array(
-                        'legend' => $legend,
-                        'title' => $title,
-                        'text' => $text,
-                    )
-                );
+            if ($message->getSessionId() != $this->get('session')->getId()) {
+                return $this->renderMessage('Access denied', 'You haven\'t privileges to edit this message');
             }
         }
         //save comment in database
@@ -297,7 +260,7 @@ class ForumController extends Controller
         $form = $this->createForm(new EditCommentType(), $comment);
 
         return $this->render(
-            $theme->getPath('editComment.html.twig'),
+            $this->theme->getPath('editComment.html.twig'),
             array(
                 'message' => $message,
                 'form' => $form->createView(),
@@ -310,7 +273,6 @@ class ForumController extends Controller
      */
     public function subsectionAction($sectionRewrite, $subsectionRewrite, $page)
     {
-        $theme = $this->get('rl_main.theme.provider');
         /** @var $user \RL\MainBundle\Security\User\RLUserInterface */
         $user = $this->get('security.context')->getToken()->getUser();
         $subsectionRepository = $this->get('doctrine')->getRepository('RLMainBundle:Subsection');
@@ -320,18 +282,7 @@ class ForumController extends Controller
         /** @var $subsection \RL\MainBundle\Entity\Subsection */
         $subsection = $subsectionRepository->getSubsectionByRewrite($subsectionRewrite, $section);
         if (empty($subsection)) {
-            $legend = 'subsection not found';
-            $title = 'unknown subsection';
-            $text = 'subsection ' . $subsectionRewrite . ' not found';
-
-            return $this->render(
-                $theme->getPath('fieldset.html.twig'),
-                array(
-                    'legend' => $legend,
-                    'title' => $title,
-                    'text' => $text,
-                )
-            );
+            return $this->renderMessage('unknown subsection', 'subsection ' . $subsectionRewrite . ' not found');
         }
         $threadRepository = $this->get('doctrine')->getRepository($section->getBundle() . ':Thread');
         $itemsCount = count($subsection->getThreads());
@@ -350,7 +301,7 @@ class ForumController extends Controller
         $pagesStr = $pages->draw();
 
         return $this->render(
-            $theme->getPath('subsection.html.twig', $section->getBundle()),
+            $this->theme->getPath('subsection.html.twig', $section->getBundle()),
             array(
                 'subsection' => $subsection,
                 'subsections' => $section->getSubsections(),
@@ -367,7 +318,6 @@ class ForumController extends Controller
      */
     public function sectionAction($sectionRewrite)
     {
-        $theme = $this->get('rl_main.theme.provider');
         $doctrine = $this->get('doctrine');
         $sectionRepository = $doctrine->getRepository('RLMainBundle:Section');
         /** @var $section \RL\MainBundle\Entity\Section */
@@ -376,7 +326,7 @@ class ForumController extends Controller
         $threadsCount = $doctrine->getRepository($section->getBundle() . ':Thread')->getThreadsCount($section);
 
         return $this->render(
-            $theme->getPath('forum.html.twig', $section->getBundle()),
+            $this->theme->getPath('forum.html.twig', $section->getBundle()),
             array(
                 'subsections' => $subsections,
                 'threadsCount' => $threadsCount,
@@ -390,8 +340,6 @@ class ForumController extends Controller
      */
     public function commentsAction($pageUserName, $page)
     {
-        /** @var $theme \RL\MainBundle\Theme\ThemeProvider */
-        $theme = $this->get('rl_main.theme.provider');
         /** @var $user \RL\MainBundle\Security\User\RLUserInterface */
         $user = $this->get('security.context')->getToken()->getUser();
         /** @var $doctrine \Doctrine\Bundle\DoctrineBundle\Registry */
@@ -403,18 +351,7 @@ class ForumController extends Controller
         } else {
             $pageUser = $userRepository->findOneByUsername($pageUserName);
             if (null === $pageUser) {
-                $legend = 'user not found';
-                $title = 'unknown user';
-                $text = 'user ' . $pageUserName . ' not found';
-
-                return $this->render(
-                    $theme->getPath('fieldset.html.twig'),
-                    array(
-                        'legend' => $legend,
-                        'title' => $title,
-                        'text' => $text,
-                    )
-                );
+                return $this->renderMessage('unknown user', 'user ' . $pageUserName . ' not found');
             }
         }
         $itemsCount = count($pageUser->getMessages());
@@ -432,7 +369,7 @@ class ForumController extends Controller
 
 
         return $this->render(
-            $theme->getPath('userComments.html.twig'),
+            $this->theme->getPath('userComments.html.twig'),
             array(
                 'pageUser' => $pageUser,
                 'messages' => $messages,
@@ -446,8 +383,6 @@ class ForumController extends Controller
      */
     public function responsesAction($pageUserName, $page)
     {
-        /** @var $theme \RL\MainBundle\Theme\ThemeProvider */
-        $theme = $this->get('rl_main.theme.provider');
         /** @var $user \RL\MainBundle\Security\User\RLUserInterface */
         $user = $this->get('security.context')->getToken()->getUser();
         /** @var $userRepository \RL\MainBundle\Entity\Repository\UserRepository */
@@ -457,18 +392,7 @@ class ForumController extends Controller
         } else {
             $pageUser = $userRepository->findOneByUsername($pageUserName);
             if (null === $pageUser) {
-                $legend = 'user not found';
-                $title = 'unknown user';
-                $text = 'user ' . $pageUserName . ' not found';
-
-                return $this->render(
-                    $theme->getPath('fieldset.html.twig'),
-                    array(
-                        'legend' => $legend,
-                        'title' => $title,
-                        'text' => $text,
-                    )
-                );
+                return $this->renderMessage('unknown user', 'user ' . $pageUserName . ' not found');
             }
         }
         $itemsCount = count($pageUser->getMessages());
@@ -486,7 +410,7 @@ class ForumController extends Controller
 
 
         return $this->render(
-            $theme->getPath('userResponses.html.twig'),
+            $this->theme->getPath('userResponses.html.twig'),
             array(
                 'pageUser' => $pageUser,
                 'messages' => $messages,

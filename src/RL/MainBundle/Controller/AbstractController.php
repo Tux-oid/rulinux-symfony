@@ -24,46 +24,38 @@
  * ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-*/
+ */
 
-namespace RL\MainBundle\Helper;
+namespace RL\MainBundle\Controller;
 
-use RL\MainBundle\Helper\ThreadHelperInterface;
-use RL\MainBundle\Entity\Thread;
-use RL\MainBundle\Entity\Message;
+use Symfony\Bundle\FrameworkBundle\Controller\Controller as BaseController;
 
 /**
- * RL\MainBundle\Helper\ThreadHelper
+ * RL\MainBundle\Controller\Controller
  *
  * @author Peter Vasilevsky <tuxoiduser@gmail.com> a.k.a. Tux-oid
  * @license BSDL
  */
-class ThreadHelper implements ThreadHelperInterface
+abstract class AbstractController extends BaseController
 {
-    public function saveThread(\Doctrine\Bundle\DoctrineBundle\Registry &$doctrine, \Symfony\Component\HttpFoundation\Request &$request, $section, $subsection, $user)
+    /**
+     * @var \RL\MainBundle\Theme\ThemeProvider
+     */
+    public $theme;
+
+    /**
+     * @param $title
+     * @param $message
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
+    public function renderMessage($title, $message)
     {
-        $em = $doctrine->getManager();
-        $thr = $request->request->get('addThread');
-        $threadCls = $section->getBundleNamespace().'\Entity\Thread';
-        $thread = new $threadCls();
-        $thread->setSubsection($subsection);
-        $em->persist($thread);
-        $message = new Message();
-        if ($user->isAnonymous()) {
-            $user = $user->getDbAnonymous();
-        }
-        $message->setUser($user);
-        $message->setSubject($thr['subject']);
-        $message->setComment($user->getMark()->render($thr['comment']));
-        $message->setRawComment($thr['comment']);
-        $message->setThread($thread);
-        $em->persist($message);
-        $em->flush();
-    }
-    public function preview(&$thread, \Symfony\Component\HttpFoundation\Request &$request)
-    {
-        $prv_thr = $request->request->get('addThread');
-        $thread->setSubject($prv_thr['subject']);
-        $thread->setComment($prv_thr['comment']);
+        return $this->render(
+            $this->theme->getPath('fieldset.html.twig'),
+            array(
+                'title' => $title,
+                'text' => $message,
+            )
+        );
     }
 }

@@ -29,7 +29,7 @@
 namespace RL\MainBundle\Controller;
 
 use Symfony\Component\Security\Core\SecurityContext;
-use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use RL\MainBundle\Controller\AbstractController;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Component\Security\Core\Encoder\MessageDigestPasswordEncoder;
 use Symfony\Component\HttpFoundation\Request;
@@ -52,14 +52,13 @@ use Gregwar\ImageBundle\Image;
  * @author Peter Vasilevsky <tuxoiduser@gmail.com> a.k.a. Tux-oid
  * @license BSDL
  */
-class ProfileController extends Controller
+class ProfileController extends AbstractController
 {
     /**
      * @Route("/user/{name}/edit", name="user_edit")
      */
     public function editUserAction($name)
     {
-        $theme = $this->get('rl_main.theme.provider');
         /** @var $user \RL\MainBundle\Security\User\RLUserInterface */
         $user = $this->get('security.context')->getToken()->getUser();
         /** @var $userInProfile \RL\MainBundle\Security\User\RLUserInterface */
@@ -175,7 +174,7 @@ class ProfileController extends Controller
         }
 
         return $this->render(
-            $theme->getPath('profileEdit.html.twig'),
+            $this->theme->getPath('profileEdit.html.twig'),
             array(
                 'userInfo' => $userInProfile,
                 'personalInformation' => $personalInformation->createView(),
@@ -193,7 +192,6 @@ class ProfileController extends Controller
      */
     public function userAction($name)
     {
-        $theme = $this->get('rl_main.theme.provider');
         $userRepository = $this->getDoctrine()->getRepository('RLMainBundle:User');
         $userInProfile = $userRepository->findOneByUsername($name);
         if (empty($userInProfile)) {
@@ -202,7 +200,7 @@ class ProfileController extends Controller
         $userComments = $userRepository->getUserCommentsInformation($userInProfile);
 
         return $this->render(
-            $theme->getPath('profile.html.twig'),
+            $this->theme->getPath('profile.html.twig'),
             array('userInfo' => $userInProfile, 'commentsInfo' => $userComments,)
         );
     }

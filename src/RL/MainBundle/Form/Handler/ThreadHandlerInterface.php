@@ -24,31 +24,43 @@
  * ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
- */
+*/
 
-namespace RL\MainBundle\Controller;
 
-use RL\MainBundle\Controller\AbstractController;
-use Symfony\Component\Security\Core\SecurityContext;
-use RL\MainBundle\Entity\Block;
+namespace RL\MainBundle\Form\Handler;
+
+use RL\MainBundle\Security\User\RLUserInterface;
+use RL\MainBundle\Entity\Subsection;
+use RL\MainBundle\Entity\Section;
+use Symfony\Component\HttpFoundation\Request;
+use Doctrine\Bundle\DoctrineBundle\Registry;
 
 /**
- * RL\MainBundle\Controller\BlockController
+ * RL\MainBundle\Form\Handler\ThreadHandlerInterface
  *
- * @author Ax-xa-xa
  * @author Peter Vasilevsky <tuxoiduser@gmail.com> a.k.a. Tux-oid
  * @license BSDL
  */
-class BlockController extends AbstractController
+interface ThreadHandlerInterface
 {
-    public function renderBlockAction(Block $block)
-    {
-        $services = array();
-        foreach ($block->getNeededServicesList() as $serviceName) {
-            $services[$serviceName] = $this->get($serviceName);
-        }
-        $ret = $block->render($services);
+    /**
+     * Save thread
+     *
+     * @param \Doctrine\Bundle\DoctrineBundle\Registry $doctrine
+     * @param \Symfony\Component\HttpFoundation\Request $request
+     * @param \RL\MainBundle\Entity\Section $section
+     * @param \RL\MainBundle\Entity\Subsection $subsection
+     * @param \RL\MainBundle\Security\User\RLUserInterface $user
+     * @return mixed
+     */
+    public function saveThread(Registry &$doctrine, Request &$request, Section $section, Subsection $subsection, RLUserInterface $user);
 
-        return $this->render($this->theme->getPath($ret['templateFile']), array_merge(array('block'=>$block), $ret['parameters']));
-    }
+    /**
+     * Preview thread
+     *
+     * @param $thread
+     * @param \Symfony\Component\HttpFoundation\Request $request
+     * @return mixed
+     */
+    public function preview(&$thread, Request &$request);
 }

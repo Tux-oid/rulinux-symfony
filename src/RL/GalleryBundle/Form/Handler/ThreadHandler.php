@@ -24,31 +24,47 @@
  * ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-*/
+ */
 
+namespace RL\GalleryBundle\Form\Handler;
 
-namespace RL\NewsBundle\Helper;
-
-use RL\MainBundle\Helper\ThreadHelperInterface;
-use RL\NewsBundle\Entity\Thread;
+use RL\MainBundle\Form\Handler\ThreadHandlerInterface;
+use RL\GalleryBundle\Entity\Thread;
+use RL\MainBundle\Entity\Section;
+use RL\MainBundle\Entity\Subsection;
+use RL\MainBundle\Security\User\RLUserInterface;
 use RL\MainBundle\Entity\Message;
+use Symfony\Component\HttpFoundation\Request;
+use Doctrine\Bundle\DoctrineBundle\Registry;
 
 /**
- * RL\NewsBundle\Helper\ThreadHelper
+ * RL\GalleryBundle\Helper\ThreadHelper
  *
  * @author Peter Vasilevsky <tuxoiduser@gmail.com> a.k.a. Tux-oid
  * @license BSDL
  */
-class ThreadHelper implements ThreadHelperInterface
+class ThreadHandler implements ThreadHandlerInterface
 {
-    public function saveThread(\Doctrine\Bundle\DoctrineBundle\Registry &$doctrine, \Symfony\Component\HttpFoundation\Request &$request, $section, $subsection, $user)
-    {
+    /**
+     * @param \Doctrine\Bundle\DoctrineBundle\Registry $doctrine
+     * @param \Symfony\Component\HttpFoundation\Request $request
+     * @param \RL\MainBundle\Entity\Section $section
+     * @param \RL\MainBundle\Entity\Subsection $subsection
+     * @param \RL\MainBundle\Security\User\RLUserInterface $user
+     */
+    public function saveThread(
+        Registry &$doctrine,
+        Request &$request,
+        Section $section,
+        Subsection $subsection,
+        RLUserInterface $user
+    ) {
         $em = $doctrine->getManager();
         $thr = $request->request->get('addThread');
-        $threadCls = $section->getBundleNamespace().'\Entity\Thread';
-        $thread = new $threadCls();
+        $thread = new Thread();
         $thread->setSubsection($subsection);
-        $thread->setProoflink($thr['prooflink']);
+        $filesArr = $request->files->get('addThread');
+        $thread->setFile($filesArr['file']);
         $em->persist($thread);
         $message = new Message();
         if ($user->isAnonymous()) {
@@ -62,11 +78,15 @@ class ThreadHelper implements ThreadHelperInterface
         $em->persist($message);
         $em->flush();
     }
-    public function preview(&$thread, \Symfony\Component\HttpFoundation\Request &$request)
+
+    /**
+     * @param $thread
+     * @param \Symfony\Component\HttpFoundation\Request $request
+     */
+    public function preview(&$thread, Request &$request)
     {
-        $prv_thr = $request->request->get('addThread');
-        $thread->setSubject($prv_thr['subject']);
-        $thread->setComment($prv_thr['comment']);
-        $thread->setProoflink($prv_thr['prooflink']);
+        $previewThread = $request->request->get('addThread');
+        $thread->setSubject($previewThread['subject']);
+        $thread->setComment($previewThread['comment']);
     }
 }

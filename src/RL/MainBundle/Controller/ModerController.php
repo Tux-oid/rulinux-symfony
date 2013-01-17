@@ -28,7 +28,7 @@
 
 namespace RL\MainBundle\Controller;
 
-use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use RL\MainBundle\Controller\AbstractController;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 
 /**
@@ -37,26 +37,17 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
  * @author Peter Vasilevsky <tuxoiduser@gmail.com> a.k.a. Tux-oid
  * @license BSDL
  */
-class ModerController extends Controller
+class ModerController extends AbstractController
 {
     /**
      * @Route("/approve_thread_{id}", name="approve_thread", requirements = {"id"="[0-9]+"})
      */
     public function approveThreadAction($id)
     {
-        $theme = $this->get('rl_main.theme.provider');
         $securityContext = $this->get('security.context');
         $user = $securityContext->getToken()->getUser();
         if (!$securityContext->isGranted('ROLE_MODER')) {
-            $legend = 'Access denied';
-            $title = 'Edit message';
-            $text = 'You have not privelegies to edit this message';
-
-            return $this->render($theme->getPath('RLMainBundle', 'fieldset.html.twig'), array(
-                    'legend' => $legend,
-                    'title' => $title,
-                    'text' => $text,
-                ));
+            return $this->renderMessage('Access denied', 'You haven\'t privileges to edit this message');
         }
         $doctrine = $this->get('doctrine');
         /** @var $em \Doctrine\ORM\EntityManager */
@@ -64,15 +55,7 @@ class ModerController extends Controller
         /** @var $thread \RL\MainBundle\Entity\Thread */
         $thread = $doctrine->getRepository('RLMainBundle:Thread')->findOneById($id);
         if (null === $thread) {
-            $legend = 'Thread not found';
-            $title = 'Thread not found';
-            $text = 'Thread with specified id isn\'t found';
-
-            return $this->render($theme->getPath('fieldset.html.twig'), array(
-                    'legend' => $legend,
-                    'title' => $title,
-                    'text' => $text,
-                ));
+            return $this->renderMessage('Thread not found', 'Thread with specified id was not found');
         }
         $thread->setApproved(true);
         $thread->setApprovedBy($user);
@@ -87,19 +70,9 @@ class ModerController extends Controller
      */
     public function attachThreadAction($id, $state)
     {
-        $theme = $this->get('rl_main.theme.provider');
         $securityContext = $this->get('security.context');
-        $user = $securityContext->getToken()->getUser();
         if (!$securityContext->isGranted('ROLE_MODER')) {
-            $legend = 'Access denied';
-            $title = 'Edit message';
-            $text = 'You have not privelegies to edit this message';
-
-            return $this->render($theme->getPath('fieldset.html.twig'), array(
-                    'legend' => $legend,
-                    'title' => $title,
-                    'text' => $text,
-                ));
+            return $this->renderMessage('Access denied', 'You haven\'t privileges to edit this message');
         }
         $doctrine = $this->get('doctrine');
         /** @var $em \Doctrine\ORM\EntityManager */
@@ -107,15 +80,7 @@ class ModerController extends Controller
         /** @var $thread \RL\MainBundle\Entity\Thread */
         $thread = $doctrine->getRepository('RLMainBundle:Thread')->findOneById($id);
         if (null === $thread) {
-            $legend = 'Thread not found';
-            $title = 'Thread not found';
-            $text = 'Thread with specified id isn\'t found';
-
-            return $this->render($theme->getPath('fieldset.html.twig'), array(
-                    'legend' => $legend,
-                    'title' => $title,
-                    'text' => $text,
-                ));
+            return $this->renderMessage('Thread not found', 'Thread with specified id was not found');
         }
         if ($state == "true") {
             $thread->setAttached(true);

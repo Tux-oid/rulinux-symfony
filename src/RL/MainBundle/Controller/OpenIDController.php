@@ -29,11 +29,11 @@
 namespace RL\MainBundle\Controller;
 
 use Symfony\Component\Security\Core\SecurityContext;
-use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use RL\MainBundle\Controller\AbstractController;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Component\HttpFoundation\Request;
 use RL\MainBundle\Entity\User;
-use RL\MainBundle\Form\RegisterType;
+use RL\MainBundle\Form\Type\RegisterType;
 use LightOpenID;
 use Gregwar\ImageBundle\Image;
 
@@ -44,14 +44,13 @@ use Gregwar\ImageBundle\Image;
  * @author Peter Vasilevsky <tuxoiduser@gmail.com> a.k.a. Tux-oid
  * @license BSDL
 */
-class OpenIDController extends Controller
+class OpenIDController extends AbstractController
 {
     /**
      * @Route("/openid_check", name="openid_check")
      */
     public function openidCheckAction(Request $request)
     {
-        $theme = $this->get('rl_main.theme.provider');
         try {
             $openid = new \LightOpenID($request->getHttpHost());
             if (!$openid->mode) {
@@ -77,13 +76,7 @@ class OpenIDController extends Controller
                     $user = $userRepository->findOneByOpenid($identity);
                     if (isset($user)) {
                         //FIXME: login user by openid
-                        $legend = 'msg';
-                        $text = 'login user';
-                        $title = '';
-
-                        return $this->render(
-                            $theme->getPath('fieldset.html.twig'), array('legend' => $legend, 'text' => $text, 'title' => $title)
-                        );
+                        return $this->renderMessage('login user', 'login user');
                     } else {
                         $attr = $openid->getAttributes();
                         $email = '';
@@ -91,7 +84,7 @@ class OpenIDController extends Controller
                         $form = $this->createForm(new RegisterType(), $newUser);
 
                         return $this->render(
-                            $theme->getPath('openIDRegistration.html.twig'), array('openid' => $identity, 'password' => '', 'email' => $email, 'form' => $form->createView())
+                            $this->theme->getPath('openIDRegistration.html.twig'), array('openid' => $identity, 'password' => '', 'email' => $email, 'form' => $form->createView())
                         );
                     }
                 } else {
