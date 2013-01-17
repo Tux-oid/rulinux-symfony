@@ -116,7 +116,7 @@ class SecurityController extends Controller
                 $user = $newUser->getName();
                 $site = $request->getHttpHost();
                 $message = \Swift_Message::newInstance()->setSubject('Registration letter')->setFrom('noemail@rulinux.net') //FIXME:load email from settings
-                    ->setTo($newUser->getEmail())->setContentType('text/html')->setBody($this->renderView($theme->getPath('RLMainBundle', 'registrationLetter.html.twig'), array('link' => $link, 'user' => $user, 'site' => $site)));
+                    ->setTo($newUser->getEmail())->setContentType('text/html')->setBody($this->renderView($theme->getPath('registrationLetter.html.twig'), array('link' => $link, 'user' => $user, 'site' => $site)));
                 $mailer->send($message);
                 $legend = 'Registration mail is sent.';
                 $text = 'Registration mail is sent. Please check your email.';

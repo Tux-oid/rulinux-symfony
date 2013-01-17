@@ -43,6 +43,6 @@
 	<br>Approved by: {{startMessage.thread.approvedBy.username}}(<a href="{{path('user', {'name':startMessage.thread.approvedBy.username})}}">*</a>) ({{startMessage.thread.approveTimest.date}})
 {%endif%}
 </p>
-[<a href="{{path('comment', {'thread_id': startMessage.thread.id, 'comment_id': startMessage.id})}}">{%trans%}Reply to this article{%endtrans%}</a>]<br>
+[<a href="{{path('comment', {'threadId': startMessage.thread.id, 'commentId': startMessage.id})}}">{%trans%}Reply to this article{%endtrans%}</a>]<br>
 </div>
 </div>

@@ -18,42 +18,6 @@
 					"reference":"master"
 				}
 			}
-		},
-		{
-			"type":"package",
-			"package":{
-				"name":"RL/Ucaptcha",
-				"version":"dev-master",
-				"source":{
-					"url":"git://gitorious.org/rulinux-engine/ucaptcha.git",
-					"type":"git",
-					"reference":"master"
-				}
-			}
-		},
-		{
-			"type":"package",
-			"package":{
-				"name":"GeSHi/GeSHi",
-				"version":"dev-master",
-				"source":{
-					"url":"https://geshi.svn.sourceforge.net/svnroot/geshi",
-					"type":"svn",
-					"reference":"branches/RELEASE_1_0_X_STABLE/geshi-1.0.X/"
-				}
-			}
-		},
-		{
-			"type":"package",
-			"package":{
-				"name":"RL/phpMathPublisher",
-				"version":"dev-master",
-				"source":{
-					"url":"git://gitorious.org/rulinux-engine/phpmathpublisher.git",
-					"type":"git",
-					"reference":"master"
-				}
-			}
 		}
 	],
 	"require":{
@@ -64,7 +28,8 @@
 		"twig/extensions":"1.0.*",
 		"symfony/assetic-bundle":"2.1.*",
 		"symfony/swiftmailer-bundle":"2.1.*",
-		"symfony/monolog-bundle":"2.1.*",
+		"monolog/monolog" : "1.*",
+		"symfony/monolog-bundle": "2.1.*@stable",
 		"sensio/distribution-bundle":"2.1.*",
 		"sensio/framework-extra-bundle":"2.1.*",
 		"sensio/generator-bundle":"2.1.*",
@@ -74,9 +39,9 @@
 		"gregwar/image-bundle":"1.0.0",
 		"doctrine/doctrine-fixtures-bundle":"dev-master",
 		"formapro/LightOpenID":"dev-master",
-		"RL/Ucaptcha":"dev-master",
-		"GeSHi/GeSHi":"dev-master",
-		"RL/phpMathPublisher":"dev-master"
+		"rl/ucaptcha":"*",
+		"rl/geshibundle": "dev-master",
+		"rl/mathbundle":"dev-master"
 	},
 	"scripts":{
 		"post-install-cmd":[

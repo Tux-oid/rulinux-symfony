@@ -9,7 +9,7 @@
     <table width="100%">
         <tbody>
             <tr>
-                {% for language in mark.highlightedLanguages %}
+                {% for language in mark.geshi.highlightedLanguagesList %}
                     <td>{{ language }}</td>
                     {% if loop.index % 6 == 0 %}
                         </tr><tr>

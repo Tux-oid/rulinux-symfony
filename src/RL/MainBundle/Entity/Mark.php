@@ -30,9 +30,8 @@ namespace RL\MainBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\ORM\EntityManager;
-use PMP;
-
-require_once __DIR__.'/../../../../vendor/GeSHi/GeSHi/src/geshi.php';
+use RL\GeSHiBundle\GeSHi;
+use RL\phpMathPublisher\PhpMathPublisher;
 
 /**
  * RL\MainBundle\Entity\Mark
@@ -71,6 +70,16 @@ abstract class Mark
      * @var \Doctrine\ORM\EntityManager
      */
     protected $entityManager;
+
+    /**
+     * @var \RL\GeSHiBundle\GeSHi
+     */
+    protected $geshi;
+
+    /**
+     * @var \RL\MathBundle\Math
+     */
+    protected $math;
 
     /**
      * Constructor
@@ -167,6 +176,38 @@ abstract class Mark
     }
 
     /**
+     * @param \RL\GeSHiBundle\GeSHi $geshi
+     */
+    public function setGeshi(GeSHi $geshi)
+    {
+        $this->geshi = $geshi;
+    }
+
+    /**
+     * @return \RL\GeSHiBundle\GeSHi
+     */
+    public function getGeshi()
+    {
+        return $this->geshi;
+    }
+
+    /**
+     * @param \RL\MathBundle\Math $math
+     */
+    public function setMath($math)
+    {
+        $this->math = $math;
+    }
+
+    /**
+     * @return \RL\MathBundle\Math
+     */
+    public function getMath()
+    {
+        return $this->math;
+    }
+
+    /**
      * Render message
      *
      * @param $string
@@ -175,55 +216,8 @@ abstract class Mark
     abstract public function render($string);
 
     /**
-     * Create formulas
-     *
-     * @param $string
-     * @return mixed|string
-     */
-    public function makeFormula($string)
-    {
-        $text = '<m>' . $string . '</m>';
-        $size = 10;
-        $pathToImg = '/web/bundles/rlmain/images/formulas/'; //TODO:save path to config file
-        $phpMathPublisher = new \PMP\PhpMathPublisher();
-        $str = $phpMathPublisher->mathfilter($text, $size, $pathToImg);
-
-        return $str;
-    }
-
-    /**
-     * Highlight source code
-     *
-     * @param $code
-     * @param $lang
-     * @return string
-     */
-    public function highlight($code, $lang)
-    {
-        if(empty($lang))
-            $lang = 'c';
-        $path = $_SERVER["DOCUMENT_ROOT"] . 'vendor/geshi/lib/Geshi/src/geshi'; //TODO:save path to config file
-        $geshi = new \GeSHi($code, $lang);
-        $geshi->enable_line_numbers(GESHI_FANCY_LINE_NUMBERS, 1);
-        $code = geshi_highlight($code, $lang, $path, true);
-
-        return $code;
-    }
-
-    /**
-     * Get list of highlighted languages
-     *
      * @return array
      */
-    public function getHighlightedLanguages()
-    {
-        $geshi = new \GeSHi('', '');
-        $languages = $geshi->get_supported_languages();
-        asort($languages);
-
-        return $languages;
-    }
-
     public function __sleep()
     {
         unset($this->entityManager);

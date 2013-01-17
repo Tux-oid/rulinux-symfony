@@ -68,6 +68,8 @@ class DoctrineListener
     {
         if(($entity=$args->getEntity()) instanceof Mark){
             $entity->setEntityManager($this->container->get('doctrine.orm.entity_manager'));
+            $entity->setGeSHi($this->container->get('rl_geshi.geshi'));
+            $entity->setMath($this->container->get('rl_math.math'));
         }
     }
 }

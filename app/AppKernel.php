@@ -22,6 +22,8 @@ class AppKernel extends Kernel
             new Doctrine\Bundle\FixturesBundle\DoctrineFixturesBundle(),
             new Netpositive\DiscriminatorMapBundle\NetpositiveDiscriminatorMapBundle(),
             new Gregwar\ImageBundle\GregwarImageBundle(),
+            new RL\GeSHiBundle\RLGeSHiBundle(),
+            new RL\MathBundle\RLMathBundle(),
             new RL\MainBundle\RLMainBundle(),
             new RL\ArticlesBundle\RLArticlesBundle(),
             new RL\NewsBundle\RLNewsBundle(),

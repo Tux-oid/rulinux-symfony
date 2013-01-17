@@ -50,23 +50,22 @@ final class TexMark extends Mark
     {
         $code = array();
         $lang = array();
-        $re = '#(\\\\begin)(\[)?(abap|actionscript|actionscript3|ada|apache|applescript|apt_sources|asm|asp|autoit|avisynth|bash|basic4gl|bf|bibtex|blitzbasic|bnf|boo|c|c_mac|caddcl|cadlisp|cfdg|cfm|cil|cmake|cobol|cpp|cpp-qt|csharp|css|d|dcs|delphi|diff|div|dos|dot|eiffel|e-mail|erlang|fo|fortran|freebasic|genero|gettext|glsl|gml|gnuplot|groovy|haskell|hq9plus|html4strict|idl|ini|inno|intercal|io|java|java5|javascript|kixtart|klonec|latex|lisp|locobasic|lolcode|lotusformulas|lotusscript|lscript|lsl2|lua|m68k|make|matlab|mirc|modula3|mpasm|mxml|mysql|nsis|oberon2|objc|ocaml|ocaml-brief|oobas|oracle11|oracle8|pascal|per|perl|php|php-brief|pic16|pixelbender|plsql|povray|powershell|progress|prolog|providex||python|qbasic|rails|rebol|reg|robots|ruby|sas|scala|scheme|scilab|sdlbasic|smalltalk|smarty|sql|tcl|teraterm|text|thinbasic|tsql|typoscript|vb|vbnet|verilog|vhdl|vim|visualfoxpro|visualprolog|whitespace|whois|winbatch|xml|xorg_conf|xpp|z80)?(\])?({highlight})(.*?[^\\\\end{highlight}]?)(\\\\end{highlight})#sim';
+        $re = '#(\\\\begin)(\[)?('.implode('|', $this->geshi->getHighlightedLanguagesList()).')?(\])?({highlight})(.*?[^\\\\end{highlight}]?)(\\\\end{highlight})#sim';
         $vh = preg_match_all($re, $string, $match);
         for ($i = 0; $i < $vh; $i++) {
             $lang[$i] = $match[2][$i];
-            $with_breaks = parent::highlight(
+            $withBreaks = $this->geshi->highlight(
                 html_entity_decode($match[6][$i], ENT_QUOTES),
-                $match[3][$i],
-                "librarys/geshi/geshi"
+                $match[3][$i]
             );
-            $code[$i] = $with_breaks;
+            $code[$i] = $withBreaks;
             $string = str_replace($match[0][$i], '⓬' . $i . '⓬', $string);
         }
         $re = '#(\\\\begin\\{math\\})(.*?)(\\\\end\\{math\\})#suim';
         $vh = preg_match_all($re, $string, $match);
         for ($i = 0; $i < $vh; $i++) {
-            $with_breaks = parent::makeFormula($match[2][$i]);
-            $math[$i] = $with_breaks;
+            $withBreaks = $this->math->render($match[2][$i]);
+            $math[$i] = $withBreaks;
             $string = str_replace($match[0][$i], 'ᴥ' . $i . 'ᴥ', $string);
         }
         $string = htmlspecialchars($string);
@@ -89,8 +88,8 @@ final class TexMark extends Mark
                 $vt = preg_match_all($re, $string, $match);
                 for ($i = 0; $i < $vt; $i++) {
                     $string = preg_replace($re, "$val\$3</ul>", $string, 1);
-                    $with_breaks = str_replace('{*}', '<li>&nbsp;', $match[3][$i]);
-                    $string = str_replace($match[3][$i], $with_breaks, $string);
+                    $withBreaks = str_replace('{*}', '<li>&nbsp;', $match[3][$i]);
+                    $string = str_replace($match[3][$i], $withBreaks, $string);
                 }
             }
             if ($tag == 'num') {
@@ -98,8 +97,8 @@ final class TexMark extends Mark
                 $vt = preg_match_all($re, $string, $match);
                 for ($i = 0; $i < $vt; $i++) {
                     $string = preg_replace($re, "$val\$3</ol>", $string, 1);
-                    $with_breaks = str_replace('{*}', '<li>&nbsp;', $match[3][$i]);
-                    $string = str_replace($match[3][$i], $with_breaks, $string);
+                    $withBreaks = str_replace('{*}', '<li>&nbsp;', $match[3][$i]);
+                    $string = str_replace($match[3][$i], $withBreaks, $string);
                 }
             }
             if ($tag == 'quote') {
@@ -107,9 +106,9 @@ final class TexMark extends Mark
                 $vt = preg_match_all($re, $string, $match);
                 for ($i = 0; $i < $vt; $i++) {
                     $string = preg_replace($re, "$val\$3</pre></div>", $string, 1);
-                    $with_breaks = preg_replace('#^(\\r\\n)+#', '', $match[3][$i]);
-                    $with_breaks = preg_replace('/(\\r\\n)+$/', '', $with_breaks);
-                    $string = str_replace($match[3][$i], $with_breaks, $string);
+                    $withBreaks = preg_replace('#^(\\r\\n)+#', '', $match[3][$i]);
+                    $withBreaks = preg_replace('/(\\r\\n)+$/', '', $withBreaks);
+                    $string = str_replace($match[3][$i], $withBreaks, $string);
                 }
             }
         }
@@ -124,15 +123,15 @@ final class TexMark extends Mark
                 $vh = preg_match_all($re, $string, $match);
                 for ($i = 0; $i < $vh; $i++) {
                     $string = preg_replace($re, $val1 . '$2</p>', $string, 1);
-                    $with_breaks = str_replace("\\", '<br>', $match[2][$i]);
-                    $with_breaks = str_replace("\n", ' ', $with_breaks);
-                    $string = str_replace($match[2][$i], $with_breaks, $string);
+                    $withBreaks = str_replace("\\", '<br>', $match[2][$i]);
+                    $withBreaks = str_replace("\n", ' ', $withBreaks);
+                    $string = str_replace($match[2][$i], $withBreaks, $string);
                 }
             }
         }
         $user_re = "#(\\\\user{)(.*?[^}]?)(})#sim";
         $arr = preg_match_all($user_re, $string, $match);
-        /** @var $userRepository \RL\MainBundle\Entity\UserRepository */
+        /** @var $userRepository \RL\MainBundle\Entity\Repository\UserRepository */
         $userRepository = $this->entityManager->getRepository('RLMainBundle:User');
         for ($i = 0; $i < $arr; $i++) {
             $user = $userRepository->findOneByUsername($match[2][$i]);

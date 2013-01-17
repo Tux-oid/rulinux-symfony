@@ -49,24 +49,23 @@ final class BaseHtml extends Mark
     {
         $code = array();
         $lang = array();
-        $re = '#(<code)([ ]?lang=["]?(abap|actionscript|actionscript3|ada|apache|applescript|apt_sources|asm|asp|autoit|avisynth|bash|basic4gl|bf|bibtex|blitzbasic|bnf|boo|c|c_mac|caddcl|cadlisp|cfdg|cfm|cil|cmake|cobol|cpp|cpp-qt|csharp|css|d|dcs|delphi|diff|div|dos|dot|eiffel|e-mail|erlang|fo|fortran|freebasic|genero|gettext|glsl|gml|gnuplot|groovy|haskell|hq9plus|html4strict|idl|ini|inno|intercal|io|java|java5|javascript|kixtart|klonec|latex|lisp|locobasic|lolcode|lotusformulas|lotusscript|lscript|lsl2|lua|m68k|make|matlab|mirc|modula3|mpasm|mxml|mysql|nsis|oberon2|objc|ocaml|ocaml-brief|oobas|oracle11|oracle8|pascal|per|perl|php|php-brief|pic16|pixelbender|plsql|povray|powershell|progress|prolog|providex||python|qbasic|rails|rebol|reg|robots|ruby|sas|scala|scheme|scilab|sdlbasic|smalltalk|smarty|sql|tcl|teraterm|text|thinbasic|tsql|typoscript|vb|vbnet|verilog|vhdl|vim|visualfoxpro|visualprolog|whitespace|whois|winbatch|xml|xorg_conf|xpp|z80)["]?)?(>)((?!</code>).*?)(</code>)#suim';
+        $re = '#(<code)([ ]?lang=["]?('.implode('|', $this->geshi->getHighlightedLanguagesList()).')["]?)?(>)((?!</code>).*?)(</code>)#suim';
         $vh = preg_match_all($re, $string, $match);
         for ($i = 0; $i < $vh; $i++) {
             $lang[$i] = $match[2][$i];
-            $with_breaks = parent::highlight(
+            $withBreaks = $this->geshi->highlight(
                 html_entity_decode($match[5][$i], ENT_QUOTES),
-                $match[3][$i],
-                "librarys/geshi/geshi"
+                $match[3][$i]
             );
-            $code[$i] = $with_breaks;
+            $code[$i] = $withBreaks;
             $string = str_replace($match[0][$i], '⓬' . $i . '⓬', $string);
         }
         $math = array();
         $re = '#(<m>)(.*?)(</m>)#suim';
         $vh = preg_match_all($re, $string, $match);
         for ($i = 0; $i < $vh; $i++) {
-            $with_breaks = parent::makeFormula($match[2][$i]);
-            $math[$i] = $with_breaks;
+            $withBreaks = $this->math->render($match[2][$i]);
+            $math[$i] = $withBreaks;
             $string = str_replace($match[0][$i], 'ᴥ' . $i . 'ᴥ', $string);
         }
         $string = htmlspecialchars($string);
@@ -89,27 +88,27 @@ final class BaseHtml extends Mark
         $vt = preg_match_all($qoute_re, $string, $match);
         for ($i = 0; $i < $vt; $i++) {
             $string = preg_replace($qoute_re, "<div class=\"quote\"><pre>\$2</pre></div>", $string, 1);
-            $with_breaks = preg_replace('/^(\\r\\n)+/', '', $match[2][$i]);
-            $with_breaks = preg_replace('/(\\r\\n)+$/', '', $with_breaks);
-            $string = str_replace($match[2][$i], $with_breaks, $string);
+            $withBreaks = preg_replace('/^(\\r\\n)+/', '', $match[2][$i]);
+            $withBreaks = preg_replace('/(\\r\\n)+$/', '', $withBreaks);
+            $string = str_replace($match[2][$i], $withBreaks, $string);
         }
         $list_re = "#(&lt;ul&gt;)(.*?(?!ul&gt;))(&lt;/ul&gt;)#suim";
         $vt = preg_match_all($list_re, $string, $match);
         for ($i = 0; $i < $vt; $i++) {
             $string = preg_replace($list_re, "<ul>\$2</ul>", $string, 1);
-            $with_breaks = preg_replace('/^(\\r\\n)+/', '', $match[2][$i]);
-            $with_breaks = preg_replace('/(\\r\\n)+$/', '', $with_breaks);
-            $with_breaks = preg_replace('#&lt;li&gt;#suim', '<li>&nbsp;', $with_breaks);
-            $string = str_replace($match[2][$i], $with_breaks, $string);
+            $withBreaks = preg_replace('/^(\\r\\n)+/', '', $match[2][$i]);
+            $withBreaks = preg_replace('/(\\r\\n)+$/', '', $withBreaks);
+            $withBreaks = preg_replace('#&lt;li&gt;#suim', '<li>&nbsp;', $withBreaks);
+            $string = str_replace($match[2][$i], $withBreaks, $string);
         }
         $num_re = "#(&lt;ol&gt;)(.*?(?!ol&gt;))(&lt;/ol&gt;)#suim";
         $vt = preg_match_all($num_re, $string, $match);
         for ($i = 0; $i < $vt; $i++) {
             $string = preg_replace($num_re, "<ol start=\"1\">\$2</ol>", $string, 1);
-            $with_breaks = preg_replace('/^(\\r\\n)+/', '', $match[2][$i]);
-            $with_breaks = preg_replace('/(\\r\\n)+$/', '', $with_breaks);
-            $with_breaks = preg_replace('#&lt;li&gt;#suim', '<li>&nbsp;', $with_breaks);
-            $string = str_replace($match[2][$i], $with_breaks, $string);
+            $withBreaks = preg_replace('/^(\\r\\n)+/', '', $match[2][$i]);
+            $withBreaks = preg_replace('/(\\r\\n)+$/', '', $withBreaks);
+            $withBreaks = preg_replace('#&lt;li&gt;#suim', '<li>&nbsp;', $withBreaks);
+            $string = str_replace($match[2][$i], $withBreaks, $string);
         }
         $string = preg_replace(
             '#(&lt;p align=&quot;)(left|right|center)(&quot;&gt;)(.*?(^/p&gt;)?)(&lt;/p&gt;)#suim',
@@ -119,8 +118,8 @@ final class BaseHtml extends Mark
         $img_re = '#(&lt;img) ?(align=&quot;)?(left|right|middle|top|bottom)?(&quot;)?(src=&quot;)((?!&quot;).*?)(&quot;&gt;)#suim';
         $vt = preg_match_all($img_re, $string, $match);
         for ($i = 0; $i < $vt; $i++) {
-            $imageinfo = getimagesize($match[5][$i]);
-            if ($imageinfo[0] > 1024) {
+            $imageInfo = getimagesize($match[6][$i]);
+            if ($imageInfo[0] > 1024) {
                 if (!empty($match[3][$i])) {
                     $string = preg_replace(
                         $img_re,
@@ -156,7 +155,7 @@ final class BaseHtml extends Mark
         }
         $user_re = "#(&lt;span class=&quot;user&quot;&gt;)((?!&lt;/span&gt;).*?)(&lt;/span&gt;)#suim";
         $arr = preg_match_all($user_re, $string, $match);
-        /** @var $userRepository \RL\MainBundle\Entity\UserRepository */
+        /** @var $userRepository \RL\MainBundle\Entity\Repository\UserRepository */
         $userRepository = $this->entityManager->getRepository('RLMainBundle:User');
         for ($i = 0; $i < $arr; $i++) {
             $user = $userRepository->findOneByUsername($match[2][$i]);

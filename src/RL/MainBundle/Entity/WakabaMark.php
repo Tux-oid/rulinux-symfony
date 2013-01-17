@@ -49,23 +49,22 @@ final class WakabaMark extends Mark
     {
         $code = array();
         $lang = array();
-        $re = '#(``)(@(abap|actionscript|actionscript3|ada|apache|applescript|apt_sources|asm|asp|autoit|avisynth|bash|basic4gl|bf|bibtex|blitzbasic|bnf|boo|c|c_mac|caddcl|cadlisp|cfdg|cfm|cil|cmake|cobol|cpp|cpp-qt|csharp|css|d|dcs|delphi|diff|div|dos|dot|eiffel|e-mail|erlang|fo|fortran|freebasic|genero|gettext|glsl|gml|gnuplot|groovy|haskell|hq9plus|html4strict|idl|ini|inno|intercal|io|java|java5|javascript|kixtart|klonec|latex|lisp|locobasic|lolcode|lotusformulas|lotusscript|lscript|lsl2|lua|m68k|make|matlab|mirc|modula3|mpasm|mxml|mysql|nsis|oberon2|objc|ocaml|ocaml-brief|oobas|oracle11|oracle8|pascal|per|perl|php|php-brief|pic16|pixelbender|plsql|povray|powershell|progress|prolog|providex||python|qbasic|rails|rebol|reg|robots|ruby|sas|scala|scheme|scilab|sdlbasic|smalltalk|smarty|sql|tcl|teraterm|text|thinbasic|tsql|typoscript|vb|vbnet|verilog|vhdl|vim|visualfoxpro|visualprolog|whitespace|whois|winbatch|xml|xorg_conf|xpp|z80)@)?(.*?[^``]?)(``)#sim';
+        $re = '#(``)(@('.implode('|', $this->geshi->getHighlightedLanguagesList()).')@)?(.*?[^``]?)(``)#sim';
         $vh = preg_match_all($re, $string, $match);
         for ($i = 0; $i < $vh; $i++) {
             $lang[$i] = $match[2][$i];
-            $with_breaks = parent::highlight(
+            $withBreaks = $this->geshi->highlight(
                 html_entity_decode($match[4][$i], ENT_QUOTES),
-                $match[3][$i],
-                "librarys/geshi/geshi"
+                $match[3][$i]
             );
-            $code[$i] = $with_breaks;
+            $code[$i] = $withBreaks;
             $string = str_replace($match[0][$i], '⓬' . $i . '⓬', $string);
         }
         $re = '#(\\{\\{)(.*?)(\\}\\})#suim';
         $vh = preg_match_all($re, $string, $match);
         for ($i = 0; $i < $vh; $i++) {
-            $with_breaks = parent::makeFormula($match[2][$i]);
-            $math[$i] = $with_breaks;
+            $withBreaks = $this->math->render($match[2][$i]);
+            $math[$i] = $withBreaks;
             $string = str_replace($match[0][$i], 'ᴥ' . $i . 'ᴥ', $string);
         }
         $string = htmlspecialchars($string);
@@ -87,16 +86,16 @@ final class WakabaMark extends Mark
         $vt = preg_match_all($re, $string, $match);
         for ($i = 0; $i < $vt; $i++) {
             $string = preg_replace($re, "<ul><li>&nbsp;$2</ul>", $string, 1);
-            $with_breaks = preg_replace('/(\\r\\n)(\\* |\\+ |- )/', '<li>&nbsp;', $match[2][$i]);
-            $string = str_replace($match[2][$i], $with_breaks, $string);
+            $withBreaks = preg_replace('/(\\r\\n)(\\* |\\+ |- )/', '<li>&nbsp;', $match[2][$i]);
+            $string = str_replace($match[2][$i], $withBreaks, $string);
         }
         $string = preg_replace("#([0-9]\\. ){2,}+#", "$1", $string);
         $re = '#([0-9]\\. )(.*?[^((\\r\\n){2,}|</p>)]?)((\\r\\n){2,}|</p>)#sim';
         $vt = preg_match_all($re, $string, $match);
         for ($i = 0; $i < $vt; $i++) {
             $string = preg_replace($re, "<ol><li>&nbsp;$2</ol>", $string, 1);
-            $with_breaks = preg_replace('/(\\r\\n)([0-9]\\. )/', '<li>&nbsp;', $match[2][$i]);
-            $string = str_replace($match[2][$i], $with_breaks, $string);
+            $withBreaks = preg_replace('/(\\r\\n)([0-9]\\. )/', '<li>&nbsp;', $match[2][$i]);
+            $string = str_replace($match[2][$i], $withBreaks, $string);
         }
         $string = preg_replace(
             "#(>>|&gt;&gt;)(.*?(^>>|&gt;&gt;)?)(>>|&gt;&gt;)#sim",
@@ -118,15 +117,15 @@ final class WakabaMark extends Mark
         $vt = preg_match_all($re, $string, $match);
         for ($i = 0; $i < $vt; $i++) {
             $string = preg_replace($re, "<div class=\"quote\"><pre>\$2</pre></div>", $string, 1);
-            $with_breaks = preg_replace('/^(\\r\\n)+/', '', $match[2][$i]);
-            $with_breaks = preg_replace('/(\\r\\n)+$/', '', $with_breaks);
+            $withBreaks = preg_replace('/^(\\r\\n)+/', '', $match[2][$i]);
+            $withBreaks = preg_replace('/(\\r\\n)+$/', '', $withBreaks);
             //$with_breaks = preg_replace('/\n/', '<li>&nbsp;', $with_breaks);
-            $quote[$i] = $with_breaks;
+            $quote[$i] = $withBreaks;
             $string = str_replace($match[2][$i], '⓬⓬' . $i . '⓬⓬', $string);
         }
         $user_re = "#(\\^)(.*?[^\\^]?)(\\^)#sim";
         $arr = preg_match_all($user_re, $string, $match);
-        /** @var $userRepository \RL\MainBundle\Entity\UserRepository */
+        /** @var $userRepository \RL\MainBundle\Entity\Repository\UserRepository */
         $userRepository = $this->entityManager->getRepository('RLMainBundle:User');
         for ($i = 0; $i < $arr; $i++) {
             $user = $userRepository->findOneByUsername($match[2][$i]);
