@@ -67,9 +67,11 @@ class DoctrineListener
     public function postLoad(LifecycleEventArgs $args)
     {
         if(($entity=$args->getEntity()) instanceof Mark){
+            /** @var $entity \RL\MainBundle\Entity\Mark */
             $entity->setEntityManager($this->container->get('doctrine.orm.entity_manager'));
             $entity->setGeSHi($this->container->get('rl_geshi.geshi'));
             $entity->setMath($this->container->get('rl_math.math'));
+            $entity->setRouter($this->container->get('router'));
         }
     }
 }

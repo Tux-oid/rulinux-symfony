@@ -24,7 +24,7 @@
  * ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-*/
+ */
 
 namespace RL\MainBundle\Entity;
 
@@ -38,7 +38,7 @@ use RL\MainBundle\Entity\Mark;
  *
  * @author Peter Vasilevsky <tuxoiduser@gmail.com> a.k.a. Tux-oid
  * @license BSDL
-*/
+ */
 final class BbCode extends Mark
 {
 
@@ -50,7 +50,10 @@ final class BbCode extends Mark
     {
         $code = array();
         $lang = array();
-        $codeRegExp = '#(\\[code)=?('.implode('|', $this->geshi->getHighlightedLanguagesList()).')?(\\])(.*?[^\\[/code\\]]?)(\\[/code\\])#sim';
+        $codeRegExp = '#(\\[code)=?(' . implode(
+            '|',
+            $this->geshi->getHighlightedLanguagesList()
+        ) . ')?(\\])(.*?[^\\[/code\\]]?)(\\[/code\\])#sim';
         $arr = preg_match_all($codeRegExp, $string, $match);
         for ($i = 0; $i < $arr; $i++) {
             $lang[$i] = $match[2][$i];
@@ -162,9 +165,10 @@ final class BbCode extends Mark
         for ($i = 0; $i < $arr; $i++) {
             $user = $userRepository->findOneByUsername($match[2][$i]);
             if (null !== $user) {
+                $userUrl = $this->router->generate('user', array("name" => $match[2][$i]));
                 $string = preg_replace(
                     $userRegExp,
-                    "<b><a href=\"/user/\$2\">\$2</a></b>",
+                        '<b><a href="' . $userUrl . '">' . $match[2][$i] . '</a></b>',
                     $string,
                     1
                 );

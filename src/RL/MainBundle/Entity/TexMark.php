@@ -129,34 +129,40 @@ final class TexMark extends Mark
                 }
             }
         }
-        $user_re = "#(\\\\user{)(.*?[^}]?)(})#sim";
-        $arr = preg_match_all($user_re, $string, $match);
+        $userRegExp = "#(\\\\user{)(.*?[^}]?)(})#sim";
+        $arr = preg_match_all($userRegExp, $string, $match);
         /** @var $userRepository \RL\MainBundle\Entity\Repository\UserRepository */
         $userRepository = $this->entityManager->getRepository('RLMainBundle:User');
         for ($i = 0; $i < $arr; $i++) {
             $user = $userRepository->findOneByUsername($match[2][$i]);
             if (null !== $user) {
-                $string = preg_replace($user_re, "<b><a href=\"/user/\$2\">\$2</a></b>", $string, 1);
+                $userUrl = $this->router->generate('user', array("name" => $match[2][$i]));
+                $string = preg_replace(
+                    $userRegExp,
+                        '<b><a href="' . $userUrl . '">' . $match[2][$i] . '</a></b>',
+                    $string,
+                    1
+                );
             } else {
-                $string = preg_replace($user_re, "\$2", $string, 1);
+                $string = preg_replace($userRegExp, "\$2", $string, 1);
             }
         }
-        $url_re = '#(\\\\url)(\\[)?(.*?[^\\]]?)(\\])?({)(.*?[^}]?)(})#sim';
-        $vt = preg_match_all($url_re, $string, $match);
+        $urlRegExp = '#(\\\\url)(\\[)?(.*?[^\\]]?)(\\])?({)(.*?[^}]?)(})#sim';
+        $vt = preg_match_all($urlRegExp, $string, $match);
         for ($i = 0; $i < $vt; $i++) {
             if (filter_var($match[6][$i], FILTER_VALIDATE_URL)) {
                 if (empty($match[3][$i])) {
-                    $string = preg_replace($url_re, "<a href=\"\$6\">\$6</a>", $string, 1);
+                    $string = preg_replace($urlRegExp, "<a href=\"\$6\">\$6</a>", $string, 1);
                 } else {
-                    $string = preg_replace($url_re, "<a href=\"\$6\">\$3</a>", $string, 1);
+                    $string = preg_replace($urlRegExp, "<a href=\"\$6\">\$3</a>", $string, 1);
                 }
             }
         }
         $img_re = '#(\\\\img)(\\[?) ?(left|right|middle|top|bottom)? ?(\\])?{(.*?[^}]?)(})#sim';
         $vt = preg_match_all($img_re, $string, $match);
         for ($i = 0; $i < $vt; $i++) {
-            $imageinfo = getimagesize($match[5][$i]);
-            if ($imageinfo[0] > 1024) {
+            $imageInfo = getimagesize($match[5][$i]);
+            if ($imageInfo[0] > 1024) {
                 if (!empty($match[3][$i])) {
                     $string = preg_replace(
                         $img_re,

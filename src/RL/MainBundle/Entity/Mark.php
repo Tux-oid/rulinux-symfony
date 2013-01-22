@@ -82,6 +82,11 @@ abstract class Mark
     protected $math;
 
     /**
+     * @var \Symfony\Bundle\FrameworkBundle\Routing\Router
+     */
+    protected $router;
+
+    /**
      * Constructor
      */
     public function __construct()
@@ -208,6 +213,22 @@ abstract class Mark
     }
 
     /**
+     * @param \Symfony\Bundle\FrameworkBundle\Routing\Router $router
+     */
+    public function setRouter($router)
+    {
+        $this->router = $router;
+    }
+
+    /**
+     * @return \Symfony\Bundle\FrameworkBundle\Routing\Router
+     */
+    public function getRouter()
+    {
+        return $this->router;
+    }
+
+    /**
      * Render message
      *
      * @param $string
@@ -221,6 +242,9 @@ abstract class Mark
     public function __sleep()
     {
         unset($this->entityManager);
+        unset($this->geshi);
+        unset($this->math);
+        unset($this->router);
         return array_keys(get_object_vars($this));
     }
 }

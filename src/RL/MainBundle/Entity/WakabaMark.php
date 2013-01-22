@@ -24,7 +24,7 @@
  * ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-*/
+ */
 
 namespace RL\MainBundle\Entity;
 
@@ -49,7 +49,7 @@ final class WakabaMark extends Mark
     {
         $code = array();
         $lang = array();
-        $re = '#(``)(@('.implode('|', $this->geshi->getHighlightedLanguagesList()).')@)?(.*?[^``]?)(``)#sim';
+        $re = '#(``)(@(' . implode('|', $this->geshi->getHighlightedLanguagesList()) . ')@)?(.*?[^``]?)(``)#sim';
         $vh = preg_match_all($re, $string, $match);
         for ($i = 0; $i < $vh; $i++) {
             $lang[$i] = $match[2][$i];
@@ -123,34 +123,40 @@ final class WakabaMark extends Mark
             $quote[$i] = $withBreaks;
             $string = str_replace($match[2][$i], '⓬⓬' . $i . '⓬⓬', $string);
         }
-        $user_re = "#(\\^)(.*?[^\\^]?)(\\^)#sim";
-        $arr = preg_match_all($user_re, $string, $match);
+        $userRegexp = "#(\\^)(.*?[^\\^]?)(\\^)#sim";
+        $arr = preg_match_all($userRegexp, $string, $match);
         /** @var $userRepository \RL\MainBundle\Entity\Repository\UserRepository */
         $userRepository = $this->entityManager->getRepository('RLMainBundle:User');
         for ($i = 0; $i < $arr; $i++) {
             $user = $userRepository->findOneByUsername($match[2][$i]);
             if (null !== $user) {
-                $string = preg_replace($user_re, "<b><a href=\"/user/\$2\">\$2</a></b>", $string, 1);
+                $userUrl = $this->router->generate('user', array("name" => $match[2][$i]));
+                $string = preg_replace(
+                    $userRegexp,
+                        '<b><a href="' . $userUrl . '">' . $match[2][$i] . '</a></b>',
+                    $string,
+                    1
+                );
             } else {
-                $string = preg_replace($user_re, "\$2", $string, 1);
+                $string = preg_replace($userRegexp, "\$2", $string, 1);
             }
         }
-        $url_re = '#(~)((@)(.*?[^@]?)(@))?(.*?[^~]?)(~)#sim';
-        $vt = preg_match_all($url_re, $string, $match);
+        $urlRegexp = '#(~)((@)(.*?[^@]?)(@))?(.*?[^~]?)(~)#sim';
+        $vt = preg_match_all($urlRegexp, $string, $match);
         for ($i = 0; $i < $vt; $i++) {
             if (filter_var($match[6][$i], FILTER_VALIDATE_URL)) {
                 if (empty($match[4][$i])) {
-                    $string = preg_replace($url_re, "<a href=\"\$6\">\$6</a>", $string, 1);
+                    $string = preg_replace($urlRegexp, "<a href=\"\$6\">\$6</a>", $string, 1);
                 } else {
-                    $string = preg_replace($url_re, "<a href=\"\$6\">\$4</a>", $string, 1);
+                    $string = preg_replace($urlRegexp, "<a href=\"\$6\">\$4</a>", $string, 1);
                 }
             }
         }
         $img_re = '#(~~)((@)(left|right|middle|top|bottom)(@))?(.*?[^~]{2}?)(~~)#sim';
         $vt = preg_match_all($img_re, $string, $match);
         for ($i = 0; $i < $vt; $i++) {
-            $imageinfo = getimagesize($match[5][$i]);
-            if ($imageinfo[0] > 1024) {
+            $imageInfo = getimagesize($match[5][$i]);
+            if ($imageInfo[0] > 1024) {
                 if (!empty($match[3][$i])) {
                     $string = preg_replace(
                         $img_re,

@@ -84,10 +84,10 @@ final class BaseHtml extends Mark
         $string = str_replace('imgh://', 'http://', $string);
         $string = str_replace('imghs://', 'https://', $string);
         $string = preg_replace("#(&lt;) ?(br) ?/?(&gt;)#suim", "<br>", $string);
-        $qoute_re = "#(&lt;q&gt;)(.*?(?!&lt;q))(&lt;/q&gt;)#suim";
-        $vt = preg_match_all($qoute_re, $string, $match);
+        $quoteRegExp = "#(&lt;q&gt;)(.*?(?!&lt;q))(&lt;/q&gt;)#suim";
+        $vt = preg_match_all($quoteRegExp, $string, $match);
         for ($i = 0; $i < $vt; $i++) {
-            $string = preg_replace($qoute_re, "<div class=\"quote\"><pre>\$2</pre></div>", $string, 1);
+            $string = preg_replace($quoteRegExp, "<div class=\"quote\"><pre>\$2</pre></div>", $string, 1);
             $withBreaks = preg_replace('/^(\\r\\n)+/', '', $match[2][$i]);
             $withBreaks = preg_replace('/(\\r\\n)+$/', '', $withBreaks);
             $string = str_replace($match[2][$i], $withBreaks, $string);
@@ -115,21 +115,21 @@ final class BaseHtml extends Mark
             "<p align=\"\$2\">\$4</p>",
             $string
         );
-        $img_re = '#(&lt;img) ?(align=&quot;)?(left|right|middle|top|bottom)?(&quot;)?(src=&quot;)((?!&quot;).*?)(&quot;&gt;)#suim';
-        $vt = preg_match_all($img_re, $string, $match);
+        $imgRegExp = '#(&lt;img) ?(align=&quot;)?(left|right|middle|top|bottom)?(&quot;)?(src=&quot;)((?!&quot;).*?)(&quot;&gt;)#suim';
+        $vt = preg_match_all($imgRegExp, $string, $match);
         for ($i = 0; $i < $vt; $i++) {
             $imageInfo = getimagesize($match[6][$i]);
             if ($imageInfo[0] > 1024) {
                 if (!empty($match[3][$i])) {
                     $string = preg_replace(
-                        $img_re,
+                        $imgRegExp,
                         "<img src=\"\$6\" align=\"$3\" width=\"1024\" alt=\"[incorrect path to image]\" />",
                         $string,
                         1
                     );
                 } else {
                     $string = preg_replace(
-                        $img_re,
+                        $imgRegExp,
                         "<img src=\"\$6\" width=\"1024\" alt=\"[incorrect path to image]\" />",
                         $string,
                         1
@@ -138,14 +138,14 @@ final class BaseHtml extends Mark
             } else {
                 if (empty($match[3][$i])) {
                     $string = preg_replace(
-                        $img_re,
+                        $imgRegExp,
                         "<img src=\"\$6\" align=\"$3\" alt=\"[incorrect path to image]\" />",
                         $string,
                         1
                     );
                 } else {
                     $string = preg_replace(
-                        $img_re,
+                        $imgRegExp,
                         "<img src=\"\$6\" alt=\"[incorrect path to image]\" />",
                         $string,
                         1
@@ -153,23 +153,29 @@ final class BaseHtml extends Mark
                 }
             }
         }
-        $user_re = "#(&lt;span class=&quot;user&quot;&gt;)((?!&lt;/span&gt;).*?)(&lt;/span&gt;)#suim";
-        $arr = preg_match_all($user_re, $string, $match);
+        $userRegExp = "#(&lt;span class=&quot;user&quot;&gt;)((?!&lt;/span&gt;).*?)(&lt;/span&gt;)#suim";
+        $arr = preg_match_all($userRegExp, $string, $match);
         /** @var $userRepository \RL\MainBundle\Entity\Repository\UserRepository */
         $userRepository = $this->entityManager->getRepository('RLMainBundle:User');
         for ($i = 0; $i < $arr; $i++) {
             $user = $userRepository->findOneByUsername($match[2][$i]);
             if (null !== $user) {
-                $string = preg_replace($user_re, "<b><a href=\"/user/\$2\">\$2</a></b>", $string, 1);
+                $userUrl = $this->router->generate('user', array("name" => $match[2][$i]));
+                $string = preg_replace(
+                    $userRegExp,
+                        '<b><a href="' . $userUrl . '">' . $match[2][$i] . '</a></b>',
+                    $string,
+                    1
+                );
             } else {
-                $string = preg_replace($user_re, "\$2", $string, 1);
+                $string = preg_replace($userRegExp, "\$2", $string, 1);
             }
         }
-        $url_re = '#(&lt;a href=&quot;)((?!&quot;).*?)(&quot;&gt;)((?!&lt;/a&gt;).*?)(&lt;/a&gt;)#suim';
-        $vt = preg_match_all($url_re, $string, $match);
+        $urlRegExp = '#(&lt;a href=&quot;)((?!&quot;).*?)(&quot;&gt;)((?!&lt;/a&gt;).*?)(&lt;/a&gt;)#suim';
+        $vt = preg_match_all($urlRegExp, $string, $match);
         for ($i = 0; $i < $vt; $i++) {
             if (filter_var($match[2][$i], FILTER_VALIDATE_URL)) {
-                $string = preg_replace($url_re, "<a href=\"\$2\">\$4</a>", $string);
+                $string = preg_replace($urlRegExp, "<a href=\"\$2\">\$4</a>", $string);
             }
         }
         $string = '<p>' . $string . '</p>';
