@@ -31,7 +31,6 @@ namespace RL\MainBundle\Controller;
 use Symfony\Component\Security\Core\SecurityContext;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use RL\MainBundle\Controller\AbstractController;
-use RL\MainBundle\Helper\Pages;
 use RL\MainBundle\Form\Type\AddCommentType;
 use RL\MainBundle\Form\Model\AddCommentForm;
 use RL\MainBundle\Form\Type\EditCommentType;
@@ -128,11 +127,16 @@ class ForumController extends AbstractController
             return $this->renderMessage('Thread not found', 'Thread with specified id isn\'t found');
         }
         $threadComments = $threadRepository->getThreadCommentsById($id, $itemsOnPage, $offset);
-        $pages = new Pages($this->get('router'), $itemsOnPage, $itemsCount - 1, $page, 'thread', array(
-            "id" => $id,
-            "page" => $page
-        ));
-        $pagesStr = $pages->draw();
+        $pagesStr = $this->get('rl_main.paginator')->draw(
+            $itemsOnPage,
+            $itemsCount - 1,
+            $page,
+            'thread',
+            array(
+                "id" => $id,
+                "page" => $page
+            )
+        );
         $neighborThreads = $threadRepository->getNeighborThreadsById($id);
 
         return $this->render(
@@ -291,14 +295,17 @@ class ForumController extends AbstractController
         $pagesCount > 1 ? $offset = $itemsOnPage * ($page - 1) : $offset = 0;
         $threads = $threadRepository->getThreads($subsection, $user->getThreadsOnPage(), $offset);
         $commentsCount = $threadRepository->getCommentsCount($subsection, $user->getThreadsOnPage(), $offset);
-        $pages = new Pages($this->get(
-            'router'
-        ), $itemsOnPage, $itemsCount, $page, 'subsection', array(
-            "sectionRewrite" => $sectionRewrite,
-            "subsectionRewrite" => $subsectionRewrite,
-            "page" => $page
-        ));
-        $pagesStr = $pages->draw();
+        $pagesStr = $this->get('rl_main.paginator')->draw(
+            $itemsOnPage,
+            $itemsCount,
+            $page,
+            'subsection',
+            array(
+                "sectionRewrite" => $sectionRewrite,
+                "subsectionRewrite" => $subsectionRewrite,
+                "page" => $page
+            )
+        );
 
         return $this->render(
             $this->theme->getPath('subsection.html.twig', $section->getBundle()),
@@ -359,13 +366,17 @@ class ForumController extends AbstractController
         $pagesCount = ceil(($itemsCount) / $itemsOnPage);
         $pagesCount > 1 ? $offset = $itemsOnPage * ($page - 1) : $offset = 0;
         $messages = $userRepository->getLastMessages($pageUser, $itemsOnPage, $offset);
-        $pages = new Pages($this->get(
-            'router'
-        ), $itemsOnPage, $itemsCount, $page, 'userComments', array(
-            "pageUserName" => $pageUser->getUsername(),
-            "page" => $page
-        ));
-        $pagesStr = $pages->draw();
+        $pagesStr = $this->get('rl_main.paginator')
+            ->draw(
+            $itemsOnPage,
+            $itemsCount,
+            $page,
+            'userComments',
+            array(
+                "pageUserName" => $pageUser->getUsername(),
+                "page" => $page
+            )
+        );
 
 
         return $this->render(
@@ -400,13 +411,16 @@ class ForumController extends AbstractController
         $pagesCount = ceil(($itemsCount) / $itemsOnPage);
         $pagesCount > 1 ? $offset = $itemsOnPage * ($page - 1) : $offset = 0;
         $messages = $userRepository->getLastResponses($pageUser, $itemsOnPage, $offset);
-        $pages = new Pages($this->get(
-            'router'
-        ), $itemsOnPage, $itemsCount, $page, 'userComments', array(
-            "pageUserName" => $pageUser->getUsername(),
-            "page" => $page
-        ));
-        $pagesStr = $pages->draw();
+        $pagesStr = $this->get('rl_main.paginator')->draw(
+            $itemsOnPage,
+            $itemsCount,
+            $page,
+            'userComments',
+            array(
+                "pageUserName" => $pageUser->getUsername(),
+                "page" => $page
+            )
+        );
 
 
         return $this->render(

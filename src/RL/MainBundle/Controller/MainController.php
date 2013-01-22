@@ -32,7 +32,6 @@ use RL\MainBundle\Controller\AbstractController;
 use RL\MainBundle\Form\Model\TrackerForm;
 use RL\MainBundle\Form\Type\TrackerType;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
-use RL\MainBundle\Helper\Pages;
 
 /**
  * RL\MainBundle\Controller\MainController
@@ -152,8 +151,7 @@ class MainController extends AbstractController
         $pagesCount = ceil(($itemsCount) / $itemsOnPage);
         $pagesCount > 1 ? $offset = $itemsOnPage * ($page - 1) : $offset = 0;
         $threads = $threadRepository->getNews($itemsOnPage, $offset);
-        $pages = new Pages($this->get('router'), $itemsOnPage, $itemsCount, $page, 'index', array("page" => $page));
-        $pagesStr = $pages->draw();
+        $pagesStr = $this->get('rl_main.paginator')->draw($itemsOnPage, $itemsCount, $page, 'index', array("page" => $page));
 
         return $this->render(
             $this->theme->getPath('index.html.twig'), array('threads' => $threads, 'pages' => $pagesStr, 'section' => $section,)

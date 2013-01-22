@@ -39,7 +39,6 @@ use RL\MainBundle\Form\Type\PasswordRestoringType;
 use RL\MainBundle\Form\Model\PasswordRestoringForm;
 use RL\MainBundle\Entity\User;
 use RL\MainBundle\Form\Type\RegisterType;
-use RL\MainBundle\Helper\Pages;
 use LightOpenID;
 use Gregwar\ImageBundle\Image;
 
@@ -264,8 +263,13 @@ class SecurityController extends AbstractController
         $pagesCount = ceil(($itemsCount) / $itemsOnPage);
         $pagesCount > 1 ? $offset = $itemsOnPage * ($page - 1) : $offset = 0;
         $users = $userRepository->findBy(array(), null, $user->getCommentsOnPage(), $offset);
-        $pages = new Pages($this->get('router'), $itemsOnPage, $itemsCount, $page, 'users', array("page" => $page));
-        $pagesStr = $pages->draw();
+        $pagesStr = $this->get('rl_main.paginator')->draw(
+            $itemsOnPage,
+            $itemsCount,
+            $page,
+            'users',
+            array("page" => $page)
+        );
 
         return $this->render($this->theme->getPath('users.html.twig'), array('users' => $users, 'pagesStr' => $pagesStr));
     }
