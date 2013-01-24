@@ -174,7 +174,7 @@ class ProfileController extends AbstractController
         }
 
         return $this->render(
-            $this->theme->getPath('profileEdit.html.twig'),
+            'RLMainBundle:Profile:profileEdit.html.twig',
             array(
                 'userInfo' => $userInProfile,
                 'personalInformation' => $personalInformation->createView(),
@@ -200,7 +200,7 @@ class ProfileController extends AbstractController
         $userComments = $userRepository->getUserCommentsInformation($userInProfile);
 
         return $this->render(
-            $this->theme->getPath('profile.html.twig'),
+            'RLMainBundle:Profile:profile.html.twig',
             array('userInfo' => $userInProfile, 'commentsInfo' => $userComments,)
         );
     }

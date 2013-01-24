@@ -84,7 +84,7 @@ class OpenIDController extends AbstractController
                         $form = $this->createForm(new RegisterType(), $newUser);
 
                         return $this->render(
-                            $this->theme->getPath('openIDRegistration.html.twig'), array('openid' => $identity, 'password' => '', 'email' => $email, 'form' => $form->createView())
+                            'RLMainBundle:OpenID:openIDRegistration.html.twig', array('openid' => $identity, 'password' => '', 'email' => $email, 'form' => $form->createView())
                         );
                     }
                 } else {

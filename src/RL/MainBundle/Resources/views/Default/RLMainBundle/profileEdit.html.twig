@@ -1,4 +1,4 @@
-{%extends theme.path('layout.html.twig')%}
+{%extends theme.path('RLMainBundle::layout.html.twig')%}
 
 {%block title%}
 {{parent()}} - {%trans%}Edif profile of user{%endtrans%} {{userInfo.username}}
@@ -7,17 +7,17 @@
 {%block content%}
 	<h1>{%trans%}User profile{%endtrans%}</h1>
 	{%if userInfo.anonymous == false%}
-		{%include theme.path('profilePasswordEdit.html.twig')%}
-		{%include theme.path('profilePersonalDataEdit.html.twig')%}
+		{%include theme.path('RLMainBundle:Profile:profilePasswordEdit.html.twig')%}
+		{%include theme.path('RLMainBundle:Profile:profilePersonalDataEdit.html.twig')%}
 	{%endif%}
-	{%include theme.path('profileSettingsEdit.html.twig')%}
-	{%include theme.path('profileFiltersSettingsEdit.html.twig')%}
+	{%include theme.path('RLMainBundle:Profile:profileSettingsEdit.html.twig')%}
+	{%include theme.path('RLMainBundle:Profile:profileFiltersSettingsEdit.html.twig')%}
 	{%if is_granted('ROLE_MODER')%}
-		{%include theme.path('profileModeratorSettingsEdit.html.twig')%}
+		{%include theme.path('RLMainBundle:Profile:profileModeratorSettingsEdit.html.twig')%}
 	{%endif%}
 	{%if is_granted('ROLE_ADMIN')%}
-		{%include theme.path('profileAdministratorSettingsEdit.html.twig')%}
+		{%include theme.path('RLMainBundle:Profile:profileAdministratorSettingsEdit.html.twig')%}
 	{%endif%}
-    {%include theme.path('profileMainPageSettingsEdit.html.twig')%}
+    {%include theme.path('RLMainBundle:Profile:profileMainPageSettingsEdit.html.twig')%}
 
 {%endblock content%}

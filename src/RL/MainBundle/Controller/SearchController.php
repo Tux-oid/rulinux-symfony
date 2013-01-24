@@ -60,13 +60,13 @@ class SearchController extends AbstractController
                     $messages = $messageRepository->search($searchForm->toArray());
 
                     return $this->render(
-                        $this->theme->getPath('search.html.twig'),
+                        'RLMainBundle:Search:search.html.twig',
                         array('form' => $form->createView(), 'messages' => $messages)
                     );
                 }
             }
         }
 
-        return $this->render($this->theme->getPath('search.html.twig'), array('form' => $form->createView()));
+        return $this->render('RLMainBundle:Search:search.html.twig', array('form' => $form->createView()));
     }
 }

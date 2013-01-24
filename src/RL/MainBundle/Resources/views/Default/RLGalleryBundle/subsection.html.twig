@@ -1,4 +1,4 @@
-{% extends theme.path('subsection.html.twig') %}
+{% extends theme.path('RLMainBundle:Forum:subsection.html.twig') %}
 
 {%block content%}
 <br>
@@ -9,7 +9,7 @@
 <br/>
 <div class=forum>
 {% for thread in threads %}
-{%include theme.path('unconfirmedItem.html.twig', 'RLGalleryBundle')%}
+{%include theme.path('RLGalleryBundle:Forum:unconfirmedItem.html.twig')%}
 {%endfor%}
 <p style="text-align: center">
 	{{pages|raw}}

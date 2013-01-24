@@ -113,8 +113,12 @@ class ThemeProvider
      * @return string
      * @throws \Exception
      */
-    public function getPath($templateName, $bundleName = 'RLMainBundle')
+    public function getPath($name)
     {
+        preg_match("#(.*?:)(.*?:)(.*)#suim", $name, $arr);
+        $bundleName = substr($arr[1], 0, strlen($arr[1]) - 1);
+        $controllerName = substr($arr[2], 0, strlen($arr[2]) - 1);
+        $templateName = $arr[3];
         /** @var $theme \RL\MainBundle\Entity\Theme */
         $theme = $this->getTheme();
         /** @var $defaultTheme \RL\MainBundle\Entity\Theme */

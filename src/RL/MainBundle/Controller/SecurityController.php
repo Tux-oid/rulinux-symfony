@@ -78,7 +78,7 @@ class SecurityController extends AbstractController
         }
 
         return $this->render(
-            $this->theme->getPath('login.html.twig'), array('last_username' => $session->get(SecurityContext::LAST_USERNAME), 'error' => $error,)
+            'RLMainBundle:Security:login.html.twig', array('last_username' => $session->get(SecurityContext::LAST_USERNAME), 'error' => $error,)
         );
     }
 
@@ -91,7 +91,7 @@ class SecurityController extends AbstractController
         $form = $this->createForm(new RegistrationFirstType(), $newUser);
 
         return $this->render(
-            $this->theme->getPath('registrationFirstPage.html.twig'), array('form' => $form->createView())
+            'RLMainBundle:Security:registrationFirstPage.html.twig', array('form' => $form->createView())
         );
     }
 
@@ -112,7 +112,7 @@ class SecurityController extends AbstractController
                 $user = $newUser->getName();
                 $site = $request->getHttpHost();
                 $message = \Swift_Message::newInstance()->setSubject('Registration letter')->setFrom('noemail@rulinux.net') //FIXME:load email from settings
-                    ->setTo($newUser->getEmail())->setContentType('text/html')->setBody($this->renderView($this->theme->getPath('registrationLetter.html.twig'), array('link' => $link, 'user' => $user, 'site' => $site)));
+                    ->setTo($newUser->getEmail())->setContentType('text/html')->setBody($this->renderView('RLMainBundle:Security:registrationLetter.html.twig', array('link' => $link, 'user' => $user, 'site' => $site)));
                 $mailer->send($message);
                 return $this->renderMessage('Registration mail was sent.', 'Registration mail was sent. Please check your email.');
             } else {
@@ -134,7 +134,7 @@ class SecurityController extends AbstractController
             $form = $this->createForm(new RegisterType(), $newUser);
 
             return $this->render(
-                $this->theme->getPath('registrationSecondPage.html.twig'), array('username' => $username, 'password' => $password, 'email' => $email, 'form' => $form->createView())
+                'RLMainBundle:Security:registrationSecondPage.html.twig', array('username' => $username, 'password' => $password, 'email' => $email, 'form' => $form->createView())
             );
         } else {
             throw new \Exception('Hash is invalid');
@@ -196,7 +196,7 @@ class SecurityController extends AbstractController
         $form = $this->createForm(new PasswordRestoringType(), $resForm);
 
         return $this->render(
-            $this->theme->getPath('passwordRestoringForm.html.twig'), array('form' => $form->createView())
+            'RLMainBundle:Security:passwordRestoringForm.html.twig', array('form' => $form->createView())
         );
     }
 
@@ -239,7 +239,7 @@ class SecurityController extends AbstractController
                 $em->flush();
                 $mailer = $this->get('mailer');
                 $message = \Swift_Message::newInstance()->setSubject('Password restoring')->setFrom('noemail@rulinux.net') //FIXME:load email from settings
-                    ->setTo($resForm->getEmail())->setContentType('text/html')->setBody($this->renderView($this->theme->getPath('RLMainBundle', 'passwordRestoringLetter.html.twig'), array('username' => $username, 'password' => $password)));
+                    ->setTo($resForm->getEmail())->setContentType('text/html')->setBody($this->renderView('RLMainBundle:Security:passwordRestoringLetter.html.twig', array('username' => $username, 'password' => $password)));
                 $mailer->send($message);
                 return $this->renderMessage('Mail with your new password was sent.', 'Mail with your new password was sent. Please check your email.');
             } else {
@@ -271,7 +271,7 @@ class SecurityController extends AbstractController
             array("page" => $page)
         );
 
-        return $this->render($this->theme->getPath('users.html.twig'), array('users' => $users, 'pagesStr' => $pagesStr));
+        return $this->render('RLMainBundle:Security:users.html.twig', array('users' => $users, 'pagesStr' => $pagesStr));
     }
 
 }

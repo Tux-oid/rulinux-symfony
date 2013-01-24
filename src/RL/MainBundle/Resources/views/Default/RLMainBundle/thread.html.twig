@@ -1,4 +1,4 @@
-{% extends theme.path('layout.html.twig') %}
+{% extends theme.path('RLMainBundle::layout.html.twig') %}
 
 {%block title%}
 {{parent()}} - {{section.name}} - {{startMessage.thread.subsection.name}} - {{startMessage.thread.messages[0].subject}}
@@ -20,7 +20,7 @@
 {%endblock navigation %}
 
 {%block content%}
-{%include theme.path('topicStartMessage.html.twig', section.bundle)%}
+{%include theme.path(section.bundle~':Forum:topicStartMessage.html.twig')%}
 {%block pagesTop%}
 <table class=nav>
     <tr>
@@ -59,7 +59,7 @@
 </table>
 {%endblock pagesTop%}
 {%for message in messages %}
-	{%include theme.path('message.html.twig')%}
+	{%include theme.path('RLMainBundle:Forum:message.html.twig')%}
 {%endfor%}
 {%block pagesBottom%}
 <table class=nav>

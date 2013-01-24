@@ -1,11 +1,11 @@
-{% extends theme.path('layout.html.twig')%}
+{% extends theme.path('RLMainBundle::layout.html.twig')%}
 
 {%block title%}
 {{parent()}} - {%trans%}Add comment{%endtrans%}
 {%endblock title%}
 
 {%block content%}
-{% include theme.path('preview.html.twig')%}
+{% include theme.path('RLMainBundle:Forum:preview.html.twig')%}
 <br>
 <form action="" method="post" {{form_enctype(form)}}>
 {{form_errors(form)}}

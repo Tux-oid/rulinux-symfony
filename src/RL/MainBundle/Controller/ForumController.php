@@ -94,7 +94,7 @@ class ForumController extends AbstractController
         $form = $this->createForm(new $typeCls(), $newThread);
 
         return $this->render(
-            $this->theme->getPath('newThread.html.twig', $section->getBundle()),
+            $section->getBundle() . ':Forum:newThread.html.twig',
             array(
                 'form' => $form->createView(),
                 'subsection' => $subsectionRewrite,
@@ -140,7 +140,7 @@ class ForumController extends AbstractController
         $neighborThreads = $threadRepository->getNeighborThreadsById($id);
 
         return $this->render(
-            $this->theme->getPath('thread.html.twig'),
+            'RLMainBundle:Forum:thread.html.twig',
             array(
                 'startMessage' => $startMessage,
                 'messages' => $threadComments,
@@ -207,7 +207,7 @@ class ForumController extends AbstractController
         $form = $this->createForm(new AddCommentType(), $newComment);
 
         return $this->render(
-            $this->theme->getPath('addComment.html.twig'),
+            'RLMainBundle:Forum:addComment.html.twig',
             array(
                 'preview' => $preview,
                 'form' => $form->createView(),
@@ -264,7 +264,7 @@ class ForumController extends AbstractController
         $form = $this->createForm(new EditCommentType(), $comment);
 
         return $this->render(
-            $this->theme->getPath('editComment.html.twig'),
+            'RLMainBundle:Forum:editComment.html.twig',
             array(
                 'message' => $message,
                 'form' => $form->createView(),
@@ -308,7 +308,7 @@ class ForumController extends AbstractController
         );
 
         return $this->render(
-            $this->theme->getPath('subsection.html.twig', $section->getBundle()),
+            $section->getBundle() . ':Forum:subsection.html.twig',
             array(
                 'subsection' => $subsection,
                 'subsections' => $section->getSubsections(),
@@ -333,7 +333,7 @@ class ForumController extends AbstractController
         $threadsCount = $doctrine->getRepository($section->getBundle() . ':Thread')->getThreadsCount($section);
 
         return $this->render(
-            $this->theme->getPath('forum.html.twig', $section->getBundle()),
+            $section->getBundle() . ':Forum:forum.html.twig',
             array(
                 'subsections' => $subsections,
                 'threadsCount' => $threadsCount,
@@ -380,7 +380,7 @@ class ForumController extends AbstractController
 
 
         return $this->render(
-            $this->theme->getPath('userComments.html.twig'),
+            'RLMainBundle:Forum:userComments.html.twig',
             array(
                 'pageUser' => $pageUser,
                 'messages' => $messages,
@@ -424,7 +424,7 @@ class ForumController extends AbstractController
 
 
         return $this->render(
-            $this->theme->getPath('userResponses.html.twig'),
+            'RLMainBundle:Forum:userResponses.html.twig',
             array(
                 'pageUser' => $pageUser,
                 'messages' => $messages,

@@ -1,4 +1,4 @@
-{% extends theme.path('layout.html.twig') %}
+{% extends theme.path('RLMainBundle::layout.html.twig') %}
 
 {% block middle %}
     <table class="content">
@@ -19,7 +19,7 @@
             <td class="content">
                 {% block content %}
                         {%for thread in threads%}
-                        {%include theme.path('news.html.twig')%}
+                        {%include theme.path('RLMainBundle:Forum:news.html.twig')%}
                         {%endfor%}
                         {{pages|raw}}
                 {% endblock %}

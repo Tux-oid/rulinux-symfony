@@ -28,6 +28,7 @@
 
 namespace RL\MainBundle\Controller;
 
+use Symfony\Component\HttpFoundation\Response;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller as BaseController;
 
 /**
@@ -51,11 +52,34 @@ abstract class AbstractController extends BaseController
     public function renderMessage($title, $message)
     {
         return $this->render(
-            $this->theme->getPath('fieldset.html.twig'),
+            'RLMainBundle:Abstract:fieldset.html.twig',
             array(
                 'title' => $title,
                 'text' => $message,
             )
         );
     }
+
+    /**
+     * @param string $view
+     * @param array $parameters
+     * @return string
+     */
+    public function renderView($view, array $parameters = array())
+    {
+        return parent::renderView($this->theme->getPath($view), $parameters);
+    }
+
+    /**
+     * @param string $view
+     * @param array $parameters
+     * @param \Symfony\Component\HttpFoundation\Response $response
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
+    public function render($view, array $parameters = array(), Response $response = null)
+    {
+        return parent::render($this->theme->getPath($view), $parameters, $response);
+    }
+
+
 }

@@ -36,7 +36,7 @@ use JMS\DiExtraBundle\Annotation\InjectParams;
 /**
  * RL\MainBundle\Helper\Pages
  *
- * Service("rl_main.paginator")
+ * @Service("rl_main.paginator")
  *
  * @author Peter Vasilevsky <tuxoiduser@gmail.com> a.k.a. Tux-oid
  * @license BSDL

@@ -49,6 +49,6 @@ class BlockController extends AbstractController
         }
         $ret = $block->render($services);
 
-        return $this->render($this->theme->getPath($ret['templateFile']), array_merge(array('block'=>$block), $ret['parameters']));
+        return $this->render("RLMainBundle:Block:" . $ret['templateFile'], array_merge(array('block'=>$block), $ret['parameters']));
     }
 }

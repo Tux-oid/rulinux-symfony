@@ -53,7 +53,7 @@ class MainController extends AbstractController
         $unconfirmedThreads = $threadRepository->getUnconfirmed();
 
         return $this->render(
-            $this->theme->getPath('unconfirmed.html.twig'), array('threads' => $unconfirmedThreads,)
+            'RLMainBundle:Main:unconfirmed.html.twig', array('threads' => $unconfirmedThreads,)
         );
     }
 
@@ -75,7 +75,7 @@ class MainController extends AbstractController
         $form = $this->createForm(new TrackerType(), new TrackerForm($hours));
 
         return $this->render(
-            $this->theme->getPath('tracker.html.twig'), array('form'=>$form->createView(), 'messages'=>$messages, 'hours' => $hours )
+            'RLMainBundle:Main:tracker.html.twig', array('form'=>$form->createView(), 'messages'=>$messages, 'hours' => $hours )
         );
     }
 
@@ -90,7 +90,7 @@ class MainController extends AbstractController
         $rulesText = $settingsRepository->findOneByName('rulesText')->getValue();
 
         return $this->render(
-            $this->theme->getPath('page.html.twig'), array('title' => $rulesTitle, 'text' => $rulesText,)
+            'RLMainBundle:Main:page.html.twig', array('title' => $rulesTitle, 'text' => $rulesText,)
         );
     }
 
@@ -112,7 +112,7 @@ class MainController extends AbstractController
         $text = $text . '</ul>';
 
         return $this->render(
-            $this->theme->getPath('page.html.twig'), array('title' => $title, 'text' => $text,)
+            'RLMainBundle:Main:page.html.twig', array('title' => $title, 'text' => $text,)
         );
     }
 
@@ -131,7 +131,7 @@ class MainController extends AbstractController
             $mark = $markRepository->findOneById($id);
         }
 
-        return $this->render($this->theme->getPath('mark.html.twig'), array('mark' => $mark));
+        return $this->render('RLMainBundle:Main:mark.html.twig', array('mark' => $mark));
     }
 
     /**
@@ -154,7 +154,7 @@ class MainController extends AbstractController
         $pagesStr = $this->get('rl_main.paginator')->draw($itemsOnPage, $itemsCount, $page, 'index', array("page" => $page));
 
         return $this->render(
-            $this->theme->getPath('index.html.twig'), array('threads' => $threads, 'pages' => $pagesStr, 'section' => $section,)
+            'RLMainBundle:Main:index.html.twig', array('threads' => $threads, 'pages' => $pagesStr, 'section' => $section,)
         );
     }
 

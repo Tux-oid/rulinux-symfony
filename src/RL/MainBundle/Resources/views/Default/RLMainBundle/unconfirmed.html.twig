@@ -1,4 +1,4 @@
-{%extends theme.path('layout.html.twig')%}
+{%extends theme.path('RLMainBundle::layout.html.twig')%}
 
 
 {%block title%}
@@ -11,6 +11,6 @@
 	{%for thread in threads%}
 		{%set section = thread.subsection.section %}
 		{%set subsection = thread.subsection %}
-		{%include theme.path('unconfirmedItem.html.twig', thread.subsection.section.bundle)%}
+		{%include theme.path(thread.subsection.section.bundle~':Forum:unconfirmedItem.html.twig')%}
 	{%endfor%}
 {%endblock content%}
