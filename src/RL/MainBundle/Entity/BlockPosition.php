@@ -24,55 +24,86 @@
  * ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-*/
+ */
 
 namespace RL\MainBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\ArrayCollection;
+use RL\MainBundle\Security\User\RLUserInterface;
 
 /**
- * RL\MainBundle\Entity\Block
+ * RL\MainBundle\Entity\BlockSet
  *
  * @ORM\Entity
- * @ORM\Table(name="blocks")
- * @ORM\InheritanceType("SINGLE_TABLE")
- * @ORM\DiscriminatorColumn(name="content_type", type="string", length=20)
- * @ORM\DiscriminatorMap({"block"="Block"})
+ * @ORM\Table(name="block_sets")
  *
  * @author Peter Vasilevsky <tuxoiduser@gmail.com> a.k.a. Tux-oid
  * @license BSDL
  */
-abstract class Block
+class BlockPosition
 {
     /**
-     * @ORM\Id
+     * Block position. Left
+     */
+    const POSITION_LEFT = 0;
+
+    /**
+     * Block position. Right
+     */
+    const POSITION_RIGHT = 1;
+
+    /**
+     * @ORM\Id()
      * @ORM\Column(name="id", type="integer")
      * @ORM\GeneratedValue(strategy="AUTO")
+     *
+     * @var integer
      */
     protected $id;
 
     /**
-     * @ORM\Column(name="name", type="string", length=256)
-     */
-    protected $name;
-
-    /**
-     * @ORM\Column(name="description", type="string", length=512, unique=true, nullable=true)
-     */
-    protected $description;
-
-    /**
-     * @ORM\OneToMany(targetEntity="BlockPosition", mappedBy="block", cascade={"all"})
+     * @ORM\ManyToOne(targetEntity="Block", inversedBy="positions", cascade={"all"})
      *
-     * @var \Doctrine\Common\Collections\ArrayCollection
+     * @var \RL\MainBundle\Entity\Block
      */
-    protected $positions;
+    protected $block;
+
+    /**
+     * @ORM\ManyToOne(targetEntity="User", inversedBy="positions", cascade={"all"})
+     *
+     * @var \RL\MainBundle\Security\User\RLUserInterface
+     */
+    protected $user;
+
+    /**
+     * @ORM\Column(type="integer")
+     *
+     * @var integer
+     */
+    protected $weight;
+
+    /**
+     * @ORM\Column(type="integer")
+     *
+     * @var integer
+     */
+    protected $position;
+
+    /**
+     * Set id
+     *
+     * @param int $id
+     */
+    public function setId($id)
+    {
+        $this->id = $id;
+    }
 
     /**
      * Get id
      *
-     * @return integer
+     * @return int
      */
     public function getId()
     {
@@ -80,89 +111,87 @@ abstract class Block
     }
 
     /**
-     * Set name
+     * Set position
      *
-     * @param string $name
+     * @param int $position
      */
-    public function setName($name)
+    public function setPosition($position)
     {
-        $this->name = $name;
+        if($position === BlockPosition::POSITION_LEFT || $position === BlockPosition::POSITION_RIGHT) {
+            $this->position = $position;
+        } else {
+            $this->position = BlockPosition::POSITION_LEFT;
+        }
     }
 
     /**
-     * Get name
+     * Get position
      *
-     * @return string
+     * @return int
      */
-    public function getName()
+    public function getPosition()
     {
-        return $this->name;
+        return $this->position;
     }
 
     /**
-     * Set description
+     * Set user
      *
-     * @param string $description
+     * @param \RL\MainBundle\Security\User\RLUserInterface $user
      */
-    public function setDescription($description)
+    public function setUser(RLUserInterface $user)
     {
-        $this->description = $description;
+        $this->user = $user;
     }
 
     /**
-     * Get description
+     * Get user
      *
-     * @return string
+     * @return \RL\MainBundle\Security\User\RLUserInterface
      */
-    public function getDescription()
+    public function getUser()
     {
-        return $this->description;
+        return $this->user;
     }
 
     /**
-     * Add position
+     * Set weight
      *
-     * @param \RL\MainBundle\Entity\BlockPosition $position
+     * @param int $weight
      */
-    public function addPosition($position)
+    public function setWeight($weight)
     {
-        $this->positions->add($position);
+        $this->weight = $weight;
     }
 
     /**
-     * Remove position
+     * Get weight
      *
-     * @param \RL\MainBundle\Entity\BlockPosition $position
+     * @return int
      */
-    public function removePosition($position)
+    public function getWeight()
     {
-        $this->positions->remove($position);
+        return $this->weight;
     }
 
     /**
-     * Get positions
+     * Set block
      *
-     * @return \Doctrine\Common\Collections\ArrayCollection
+     * @param \RL\MainBundle\Entity\Block $block
      */
-    public function getPositions()
+    public function setBlock($block)
     {
-        return $this->positions;
+        $this->block = $block;
     }
 
     /**
-     * Get list of services which needed to block
+     * Get block
      *
-     * @return array
+     * @return \RL\MainBundle\Entity\Block
      */
-    abstract public function getNeededServicesList();
-
-    /**
-     * Render block
-     * Returns array('templateFile'=> 'fileName.html.twig', 'parameters'=>array())
-     *
-     * @param array $services
-     * @return array
-     */
-    abstract public function render(array $services);
+    public function getBlock()
+    {
+        return $this->block;
+    }
 
 }

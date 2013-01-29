@@ -227,57 +227,6 @@ class AnonymousUser implements RLUserInterface, EquatableInterface
     }
 
     /**
-     * @return mixed
-     */
-    public function getLeftBlocks()
-    {
-        return array_key_exists(
-            'leftBlocks',
-            $this->attributes
-        ) ? $this->attributes['leftBlocks'] : $this->dbAnon->getLeftBlocks();
-    }
-
-    /**
-     * @param $value
-     */
-    public function addLeftBlock($value)
-    {
-        $attributes = $this->getAttributes();
-        $attributes['leftBlocks'][] = $value;
-    }
-
-    /**
-     * @param $value
-     */
-    public function removeLeftBlock($value)
-    {
-        $key = array_search($value,$this->attributes['leftBlocks']);
-        if($key!==false){
-            unset($this->attributes['leftBlocks'][$key]);
-        }
-    }
-
-    /**
-     * @param $value
-     */
-    public function addRightBlock($value)
-    {
-        $attributes = $this->getAttributes();
-        $attributes['rightBlocks'][] = $value;
-    }
-
-    /**
-     * @param $value
-     */
-    public function removeRightBlock($value)
-    {
-        $key = array_search($value,$this->attributes['rightBlocks']);
-        if($key!==false){
-            unset($this->attributes['rightBlocks'][$key]);
-        }
-    }
-
-    /**
      * @param \RL\MainBundle\Entity\Group $group
      */
     public function setGroup(Group $group)
@@ -887,49 +836,6 @@ class AnonymousUser implements RLUserInterface, EquatableInterface
         if($key!==false){
             unset($this->attributes['editedComments'][$key]);
         }
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getRightBlocks()
-    {
-        return array_key_exists(
-            'rightBlocks',
-            $this->attributes
-        ) ? $this->attributes['rightBlocks'] : $this->dbAnon->getRightBlocks();
-    }
-
-    /**
-     * @param $leftBlocksWeights
-     */
-    public function setLeftBlocksWeights($leftBlocksWeights)
-    {
-        $this->attributes['leftBlocksWeights'] = $leftBlocksWeights;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getLeftBlocksWeights()
-    {
-        return array_key_exists('leftBlocksWeights', $this->attributes) ? $this->attributes['leftBlocksWeights'] : $this->dbAnon->getLeftBlocksWeights();
-    }
-
-    /**
-     * @param $rightBlocksWeights
-     */
-    public function setRightBlocksWeights($rightBlocksWeights)
-    {
-        $this->attributes['rightBlocksWeights'] = $rightBlocksWeights;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getRightBlocksWeights()
-    {
-        return array_key_exists('rightBlocksWeights', $this->attributes) ? $this->attributes['rightBlocksWeights'] : $this->dbAnon->getRightBlocksWeights();
     }
 
     /**

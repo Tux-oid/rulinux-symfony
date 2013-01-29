@@ -159,41 +159,6 @@ class User implements RLUserInterface, EquatableInterface
      * @Assert\Language
      */
     protected $language;
-    /**
-     * @ORM\ManyToMany(targetEntity="RL\MainBundle\Entity\Block", cascade={"all"})
-     * @ORM\JoinTable(name="left_blocks_users",
-     *      joinColumns={@ORM\JoinColumn(name="user_id", referencedColumnName="id")},
-     *      inverseJoinColumns={@ORM\JoinColumn(name="block_id", referencedColumnName="id")}
-     *      )
-     *
-     * @var \Doctrine\Common\Collections\ArrayCollection
-     */
-    protected $leftBlocks;
-
-    /**
-     * @ORM\Column(name="left_blocks_weights", type="array", nullable=true)
-     *
-     * @var array
-     */
-    protected $leftBlocksWeights;
-
-    /**
-     * @ORM\ManyToMany(targetEntity="RL\MainBundle\Entity\Block", cascade={"all"})
-     * @ORM\JoinTable(name="right_blocks_users",
-     *      joinColumns={@ORM\JoinColumn(name="user_id", referencedColumnName="id")},
-     *      inverseJoinColumns={@ORM\JoinColumn(name="block_id", referencedColumnName="id")}
-     *      )
-     *
-     * @var \Doctrine\Common\Collections\ArrayCollection
-     */
-    protected $rightBlocks;
-
-    /**
-     * @ORM\Column(name="right_blocks_weights", type="array", nullable=true)
-     *
-     * @var array
-     */
-    protected $rightBlocksWeights;
 
     /**
      * @ORM\ManyToOne(targetEntity="RL\MainBundle\Entity\Theme")
@@ -253,11 +218,16 @@ class User implements RLUserInterface, EquatableInterface
      * @ORM\OneToMany(targetEntity="RL\MainBundle\Entity\Message", mappedBy="user", cascade={"all"})
      */
     protected $messages;
-
     /**
      * @ORM\ManyToMany(targetEntity="RL\MainBundle\Entity\Message", inversedBy="changedBy", cascade={"all"})
      */
     protected $editedComments;
+    /**
+     * @ORM\OneToMany(targetEntity="RL\MainBundle\Entity\BlockPosition", mappedBy="user", cascade={"all"})
+     *
+     * @var \Doctrine\Common\Collections\ArrayCollection
+     */
+    protected $positions;
 
     /**
      * Constructor
@@ -662,37 +632,7 @@ class User implements RLUserInterface, EquatableInterface
     {
         return $this->openid;
     }
-    /**
-     * Add left blocks
-     *
-     * @param \RL\MainBundle\Entity\Block $block
-     */
-    public function addLeftBlock($block)
-    {
-        $this->leftBlocks[] = $block;
-        $block->addLeftBlocksUser($this);
-    }
 
-    /**
-     * Remove left blocks
-     *
-     * @param \RL\MainBundle\Entity\Block $block
-     */
-    public function removeLeftBlock($block)
-    {
-        $this->leftBlocks->remove($block);
-        $block->removeLeftBlocksUser($this);
-    }
-
-    /**
-     * Get blocks
-     *
-     * @return array
-     */
-    public function getLeftBlocks()
-    {
-        return $this->leftBlocks;
-    }
     /**
      * Set theme
      *
@@ -1158,60 +1098,34 @@ class User implements RLUserInterface, EquatableInterface
     }
 
     /**
-     * @param \RL\MainBundle\Entity\Block $rightBlock
+     * Add position
+     *
+     * @param \RL\MainBundle\Entity\BlockPosition $position
      */
-    public function addRightBlock($rightBlock)
+    public function setPositions(BlockPosition $position)
     {
-        $this->rightBlocks[] = $rightBlock;
-        $rightBlock->addRightBlocksUser($this);
+        $this->positions->add($position);
     }
 
     /**
-     * @param \RL\MainBundle\Entity\Block $rightBlock
+     * Remove position
+     *
+     * @param \RL\MainBundle\Entity\BlockPosition $position
      */
-    public function removeRightBlock($rightBlock)
+    public function removePositions(BlockPosition $position)
     {
-        $this->rightBlocks->remove($rightBlock);
-        $rightBlock->removeRightBlocksUser($this);
+        $this->positions->remove($position);
     }
 
     /**
-     * @return mixed
+     * Get positions
+     *
+     * @return \Doctrine\Common\Collections\ArrayCollection
      */
-    public function getRightBlocks()
+    public function getPositions()
     {
-        return $this->rightBlocks;
+        return $this->positions;
     }
 
-    /**
-     * @param array $rightBlocksWeights
-     */
-    public function setRightBlocksWeights($rightBlocksWeights)
-    {
-        $this->rightBlocksWeights = $rightBlocksWeights;
-    }
 
-    /**
-     * @return array
-     */
-    public function getRightBlocksWeights()
-    {
-        return $this->rightBlocksWeights;
-    }
-
-    /**
-     * @param array $leftBlocksWeights
-     */
-    public function setLeftBlocksWeights($leftBlocksWeights)
-    {
-        $this->leftBlocksWeights = $leftBlocksWeights;
-    }
-
-    /**
-     * @return array
-     */
-    public function getLeftBlocksWeights()
-    {
-        return $this->leftBlocksWeights;
-    }
 }

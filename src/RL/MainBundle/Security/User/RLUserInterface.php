@@ -82,16 +82,6 @@ interface RLUserInterface extends AdvancedUserInterface
     public function getCaptchaLevel();
     public function setOpenid($openid);
     public function getOpenid();
-    public function addLeftBlock($block);
-    public function removeLeftBlock($block);
-    public function getLeftBlocks();
-    public function setLeftBlocksWeights($leftBlocksWeights);
-    public function getLeftBlocksWeights();
-    public function addRightBlock($block);
-    public function removeRightBlock($block);
-    public function getRightBlocks();
-    public function setRightBlocksWeights($rightBlocksWeights);
-    public function getRightBlocksWeights();
     public function setTheme($theme);
     public function getTheme();
     public function setGmt($gmt);
