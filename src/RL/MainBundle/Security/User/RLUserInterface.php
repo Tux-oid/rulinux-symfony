@@ -33,6 +33,7 @@ use RL\MainBundle\Entity\Message;
 use RL\MainBundle\Entity\BlockPosition;
 use RL\MainBundle\Entity\Mark;
 use RL\MainBundle\Entity\Group;
+use RL\MainBundle\Entity\UsersFilter;
 
 /**
  * RL\MainBundle\Security\User\RLUserInterface
@@ -90,8 +91,8 @@ interface RLUserInterface extends AdvancedUserInterface
     public function getTheme();
     public function setGmt($gmt);
     public function getGmt();
-    public function addFilter($filter);
-    public function removeFilter($filter);
+    public function addFilter(UsersFilter $filter);
+    public function removeFilter(UsersFilter $filter);
     public function getFilters();
     public function setSortingType($sortingType);
     public function getSortingType();

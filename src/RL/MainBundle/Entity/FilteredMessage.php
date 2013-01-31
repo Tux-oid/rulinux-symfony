@@ -29,34 +29,19 @@
 namespace RL\MainBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
-use RL\MainBundle\Security\User\RLUserInterface;
+use RL\MainBundle\Entity\Filter;
 
 /**
- * RL\MainBundle\Entity\BlockSet
+ * RL\MainBundle\Entity\UsersFilter
  *
- * @ORM\Entity(repositoryClass="RL\MainBundle\Entity\Repository\BlockPositionRepository")
- * @ORM\Table(name="block_sets")
+ * @ORM\Entity()
+ * @ORM\Table(name="filtered_message")
  *
  * @author Peter Vasilevsky <tuxoiduser@gmail.com> a.k.a. Tux-oid
  * @license BSDL
  */
-class BlockPosition
+class FilteredMessage
 {
-    /**
-     * Block position. Left
-     */
-    const POSITION_UNUSED = 0;
-
-    /**
-     * Block position. Left
-     */
-    const POSITION_LEFT = 1;
-
-    /**
-     * Block position. Right
-     */
-    const POSITION_RIGHT = 2;
-
     /**
      * @ORM\Id()
      * @ORM\Column(name="id", type="integer")
@@ -67,18 +52,18 @@ class BlockPosition
     protected $id;
 
     /**
-     * @ORM\ManyToOne(targetEntity="Block", inversedBy="positions", cascade={"all"})
+     * @ORM\ManyToOne(targetEntity="Message", inversedBy="filters", cascade={"all"})
      *
-     * @var \RL\MainBundle\Entity\Block
+     * @var \RL\MainBundle\Entity\Message
      */
-    protected $block;
+    protected $message;
 
     /**
-     * @ORM\ManyToOne(targetEntity="User", inversedBy="positions", cascade={"all"})
+     * @ORM\ManyToOne(targetEntity="Filter", inversedBy="users", cascade={"all"})
      *
-     * @var \RL\MainBundle\Security\User\RLUserInterface
+     * @var \RL\MainBundle\Entity\Filter
      */
-    protected $user;
+    protected $filter;
 
     /**
      * @ORM\Column(type="integer")
@@ -88,34 +73,23 @@ class BlockPosition
     protected $weight;
 
     /**
-     * @ORM\Column(type="integer")
+     * Set filter
      *
-     * @var integer
+     * @param \RL\MainBundle\Entity\Filter $filter
      */
-    protected $position;
+    public function setFilter(Filter $filter)
+    {
+        $this->filter = $filter;
+    }
 
     /**
-     * Constructor
+     * Get filter
      *
-     * @param \RL\MainBundle\Security\User\RLUserInterface $user
-     * @param \RL\MainBundle\Entity\Block $block
-     * @param int $position
-     * @param int $weight
+     * @return \RL\MainBundle\Entity\Filter
      */
-    public function __construct(
-        RLUserInterface $user = null,
-        Block $block = null,
-        $position = BlockPosition::POSITION_LEFT,
-        $weight = 1
-    ) {
-        if (null !== $user) {
-            $this->user = $user;
-        }
-        if (null !== $block) {
-            $this->block = $block;
-        }
-        $this->position = $position;
-        $this->weight = $weight;
+    public function getFilter()
+    {
+        return $this->filter;
     }
 
     /**
@@ -139,50 +113,6 @@ class BlockPosition
     }
 
     /**
-     * Set position
-     *
-     * @param int $position
-     */
-    public function setPosition($position)
-    {
-        if ($position === BlockPosition::POSITION_LEFT || $position === BlockPosition::POSITION_RIGHT) {
-            $this->position = $position;
-        } else {
-            $this->position = BlockPosition::POSITION_LEFT;
-        }
-    }
-
-    /**
-     * Get position
-     *
-     * @return int
-     */
-    public function getPosition()
-    {
-        return $this->position;
-    }
-
-    /**
-     * Set user
-     *
-     * @param \RL\MainBundle\Security\User\RLUserInterface $user
-     */
-    public function setUser(RLUserInterface $user)
-    {
-        $this->user = $user;
-    }
-
-    /**
-     * Get user
-     *
-     * @return \RL\MainBundle\Security\User\RLUserInterface
-     */
-    public function getUser()
-    {
-        return $this->user;
-    }
-
-    /**
      * Set weight
      *
      * @param int $weight
@@ -203,23 +133,23 @@ class BlockPosition
     }
 
     /**
-     * Set block
+     * Set message
      *
-     * @param \RL\MainBundle\Entity\Block $block
+     * @param \RL\MainBundle\Entity\Message $message
      */
-    public function setBlock($block)
+    public function setMessage(Message $message)
     {
-        $this->block = $block;
+        $this->message = $message;
     }
 
     /**
-     * Get block
+     * Get message
      *
-     * @return \RL\MainBundle\Entity\Block
+     * @return \RL\MainBundle\Entity\Message
      */
-    public function getBlock()
+    public function getMessage()
     {
-        return $this->block;
+        return $this->message;
     }
 
 }

@@ -29,34 +29,21 @@
 namespace RL\MainBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use Doctrine\Common\Collections\ArrayCollection;
 use RL\MainBundle\Security\User\RLUserInterface;
+use RL\MainBundle\Entity\Filter;
 
 /**
- * RL\MainBundle\Entity\BlockSet
+ * RL\MainBundle\Entity\UsersFilter
  *
- * @ORM\Entity(repositoryClass="RL\MainBundle\Entity\Repository\BlockPositionRepository")
- * @ORM\Table(name="block_sets")
+ * @ORM\Entity()
+ * @ORM\Table(name="users_filters")
  *
  * @author Peter Vasilevsky <tuxoiduser@gmail.com> a.k.a. Tux-oid
  * @license BSDL
  */
-class BlockPosition
+class UsersFilter
 {
-    /**
-     * Block position. Left
-     */
-    const POSITION_UNUSED = 0;
-
-    /**
-     * Block position. Left
-     */
-    const POSITION_LEFT = 1;
-
-    /**
-     * Block position. Right
-     */
-    const POSITION_RIGHT = 2;
-
     /**
      * @ORM\Id()
      * @ORM\Column(name="id", type="integer")
@@ -67,18 +54,18 @@ class BlockPosition
     protected $id;
 
     /**
-     * @ORM\ManyToOne(targetEntity="Block", inversedBy="positions", cascade={"all"})
-     *
-     * @var \RL\MainBundle\Entity\Block
-     */
-    protected $block;
-
-    /**
-     * @ORM\ManyToOne(targetEntity="User", inversedBy="positions", cascade={"all"})
+     * @ORM\ManyToOne(targetEntity="User", inversedBy="filters", cascade={"all"})
      *
      * @var \RL\MainBundle\Security\User\RLUserInterface
      */
     protected $user;
+
+    /**
+     * @ORM\ManyToOne(targetEntity="Filter", inversedBy="users", cascade={"all"})
+     *
+     * @var \RL\MainBundle\Entity\Filter
+     */
+    protected $filter;
 
     /**
      * @ORM\Column(type="integer")
@@ -88,34 +75,23 @@ class BlockPosition
     protected $weight;
 
     /**
-     * @ORM\Column(type="integer")
+     * Set filter
      *
-     * @var integer
+     * @param \RL\MainBundle\Entity\Filter $filter
      */
-    protected $position;
+    public function setFilter($filter)
+    {
+        $this->filter = $filter;
+    }
 
     /**
-     * Constructor
+     * Get filter
      *
-     * @param \RL\MainBundle\Security\User\RLUserInterface $user
-     * @param \RL\MainBundle\Entity\Block $block
-     * @param int $position
-     * @param int $weight
+     * @return \RL\MainBundle\Entity\Filter
      */
-    public function __construct(
-        RLUserInterface $user = null,
-        Block $block = null,
-        $position = BlockPosition::POSITION_LEFT,
-        $weight = 1
-    ) {
-        if (null !== $user) {
-            $this->user = $user;
-        }
-        if (null !== $block) {
-            $this->block = $block;
-        }
-        $this->position = $position;
-        $this->weight = $weight;
+    public function getFilter()
+    {
+        return $this->filter;
     }
 
     /**
@@ -139,35 +115,11 @@ class BlockPosition
     }
 
     /**
-     * Set position
-     *
-     * @param int $position
-     */
-    public function setPosition($position)
-    {
-        if ($position === BlockPosition::POSITION_LEFT || $position === BlockPosition::POSITION_RIGHT) {
-            $this->position = $position;
-        } else {
-            $this->position = BlockPosition::POSITION_LEFT;
-        }
-    }
-
-    /**
-     * Get position
-     *
-     * @return int
-     */
-    public function getPosition()
-    {
-        return $this->position;
-    }
-
-    /**
      * Set user
      *
      * @param \RL\MainBundle\Security\User\RLUserInterface $user
      */
-    public function setUser(RLUserInterface $user)
+    public function setUser($user)
     {
         $this->user = $user;
     }
@@ -200,26 +152,6 @@ class BlockPosition
     public function getWeight()
     {
         return $this->weight;
-    }
-
-    /**
-     * Set block
-     *
-     * @param \RL\MainBundle\Entity\Block $block
-     */
-    public function setBlock($block)
-    {
-        $this->block = $block;
-    }
-
-    /**
-     * Get block
-     *
-     * @return \RL\MainBundle\Entity\Block
-     */
-    public function getBlock()
-    {
-        return $this->block;
     }
 
 }

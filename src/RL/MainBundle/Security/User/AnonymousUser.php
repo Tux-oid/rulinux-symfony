@@ -33,6 +33,7 @@ use Symfony\Component\Security\Core\User\EquatableInterface;
 use RL\MainBundle\Entity\Group;
 use RL\MainBundle\Entity\Mark;
 use RL\MainBundle\Entity\BlockPosition;
+use RL\MainBundle\Entity\UsersFilter;
 
 /**
  * RL\MainBundle\Security\User\AnonymousUser

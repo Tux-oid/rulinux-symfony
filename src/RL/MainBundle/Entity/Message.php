@@ -32,6 +32,7 @@ use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\ArrayCollection;
 use RL\MainBundle\Entity\User;
 use RL\MainBundle\Entity\Thread;
+use RL\MainBundle\Entity\FilteredMessage;
 
 /**
  * RL\MainBundle\Entity\Message
@@ -102,12 +103,6 @@ class Message
      */
     protected $changedFor;
     /**
-     * @ORM\ManyToMany(targetEntity="RL\MainBundle\Entity\Filter", mappedBy="messages")
-     *
-     * @var \Doctrine\Common\Collections\ArrayCollection
-     */
-    protected $filters;
-    /**
      * @ORM\Column(type="boolean", name="show_ua")
      */
     protected $showUa = true;
@@ -115,7 +110,16 @@ class Message
      * @ORM\Column(type="string", length=128, name="session_id", nullable=true)
      */
     protected $sessionId;
+    /**
+     * @ORM\OneToMany(targetEntity="RL\MainBundle\Entity\FilteredMessage", mappedBy="message", cascade={"all"})
+     *
+     * @var \Doctrine\Common\Collections\ArrayCollection
+     */
+    protected $filters;
 
+    /**
+     * Constructor
+     */
     public function __construct()
     {
         $this->postingTime = $this->changingTime = new \DateTime('now');
@@ -432,9 +436,9 @@ class Message
     /**
      * Add filter
      *
-     * @param \RL\MainBundle\Entity\Filter $filter
+     * @param \RL\MainBundle\Entity\FilteredMessage $filter
      */
-    public function addFilter($filter)
+    public function addFilter(FilteredMessage $filter)
     {
         $this->filters[] = $filter;
     }
@@ -442,9 +446,9 @@ class Message
     /**
      * Remove filter
      *
-     * @param \RL\MainBundle\Entity\Filter $filter
+     * @param \RL\MainBundle\Entity\FilteredMessage $filter
      */
-    public function removeFilter($filter)
+    public function removeFilter(FilteredMessage $filter)
     {
         $this->filters->remove($filter);
     }

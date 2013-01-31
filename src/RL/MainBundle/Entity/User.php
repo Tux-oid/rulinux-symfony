@@ -29,6 +29,7 @@
 namespace RL\MainBundle\Entity;
 
 use RL\MainBundle\Security\User\RLUserInterface;
+use RL\MainBundle\Entity\Message;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Security\Core\User\EquatableInterface;
 use Symfony\Component\Validator\Constraints as Assert;
@@ -169,7 +170,7 @@ class User implements RLUserInterface, EquatableInterface
      */
     protected $gmt;
     /**
-     * @ORM\ManyToMany(targetEntity="RL\MainBundle\Entity\Filter", mappedBy="users", cascade={"all"})
+     * @ORM\OneToMany(targetEntity="RL\MainBundle\Entity\UsersFilter", mappedBy="user", cascade={"all"})
      *
      * @var \Doctrine\Common\Collections\ArrayCollection
      */
@@ -327,6 +328,52 @@ class User implements RLUserInterface, EquatableInterface
             return false;
         }
     }
+
+    /**
+     * @return array
+     */
+    public function getAttributes()
+    {
+        return array('id' => $this->id,
+            'username' => $this->username,
+            'groups' => $this->groups,
+            'salt' => $this->salt,
+            'password' => $this->password,
+            'name' => $this->name,
+            'lastname' => $this->lastname,
+            'country' => $this->country,
+            'city' => $this->city,
+            'photo' => $this->photo,
+            'birthday' => $this->birthday,
+            'gender' => $this->gender,
+            'additional' => $this->additional,
+            'additionalRaw' => $this->additionalRaw,
+            'email' => $this->email,
+            'im' => $this->im,
+            'registrationDate' => $this->registrationDate,
+            'lastVisitDate' => $this->lastVisitDate,
+            'active' => $this->active,
+            'captchaLevel' => $this->captchaLevel,
+            'openid' => $this->openid,
+            'question' => $this->question,
+            'answer' => $this->answer,
+            'language' => $this->language,
+            'positions' => $this->positions,
+            'theme' => $this->theme,
+            'gmt' => $this->gmt,
+            'filters' => $this->filters,
+            'mark' => $this->mark,
+            'sortingType' => $this->sortingType,
+            'newsOnPage' => $this->newsOnPage,
+            'commentsOnPage' => $this->commentsOnPage,
+            'threadsOnPage' => $this->threadsOnPage,
+            'showEmail' => $this->showEmail,
+            'showIm' => $this->showIm,
+            'showAvatars' => $this->showAvatars,
+            'showUa' => $this->showUa,
+            'showResp' => $this->showResp);
+    }
+
     /**
      * Get id
      *
@@ -674,9 +721,9 @@ class User implements RLUserInterface, EquatableInterface
     /**
      * Add filter
      *
-     * @param array $filter
+     * @param \RL\MainBundle\Entity\UsersFilter $filter
      */
-    public function addFilter($filter)
+    public function addFilter(UsersFilter $filter)
     {
         $this->filters[] = $filter;
     }
@@ -684,9 +731,9 @@ class User implements RLUserInterface, EquatableInterface
     /**
      * Remove filter
      *
-     * @param array $filter
+     * @param \RL\MainBundle\Entity\UsersFilter $filter
      */
-    public function removeFilter($filter)
+    public function removeFilter(UsersFilter $filter)
     {
         $this->filters->remove($filter);
     }
@@ -868,7 +915,7 @@ class User implements RLUserInterface, EquatableInterface
      *
      * @param \RL\MainBundle\Entity\Mark $mark
      */
-    public function setMark(\RL\MainBundle\Entity\Mark $mark)
+    public function setMark(Mark $mark)
     {
         $this->mark = $mark;
     }
@@ -955,52 +1002,6 @@ class User implements RLUserInterface, EquatableInterface
     }
 
     /**
-     * @return array
-     */
-    public function getAttributes()
-    {
-        return array('id' => $this->id,
-            'username' => $this->username,
-            'groups' => $this->groups,
-            'salt' => $this->salt,
-            'password' => $this->password,
-            'name' => $this->name,
-            'lastname' => $this->lastname,
-            'country' => $this->country,
-            'city' => $this->city,
-            'photo' => $this->photo,
-            'birthday' => $this->birthday,
-            'gender' => $this->gender,
-            'additional' => $this->additional,
-            'additionalRaw' => $this->additionalRaw,
-            'email' => $this->email,
-            'im' => $this->im,
-            'registrationDate' => $this->registrationDate,
-            'lastVisitDate' => $this->lastVisitDate,
-            'active' => $this->active,
-            'captchaLevel' => $this->captchaLevel,
-            'openid' => $this->openid,
-            'question' => $this->question,
-            'answer' => $this->answer,
-            'language' => $this->language,
-            'leftBlocks' => $this->leftBlocks,
-            'rightBlocks' => $this->rightBlocks,
-            'theme' => $this->theme,
-            'gmt' => $this->gmt,
-            'filters' => $this->filters,
-            'mark' => $this->mark,
-            'sortingType' => $this->sortingType,
-            'newsOnPage' => $this->newsOnPage,
-            'commentsOnPage' => $this->commentsOnPage,
-            'threadsOnPage' => $this->threadsOnPage,
-            'showEmail' => $this->showEmail,
-            'showIm' => $this->showIm,
-            'showAvatars' => $this->showAvatars,
-            'showUa' => $this->showUa,
-            'showResp' => $this->showResp);
-    }
-
-    /**
      * @return string
      */
     public function getIdentity()
@@ -1029,7 +1030,7 @@ class User implements RLUserInterface, EquatableInterface
      *
      * @param \RL\MainBundle\Entity\Message $message
      */
-    public function addMessage(\RL\MainBundle\Entity\Message $message)
+    public function addMessage(Message $message)
     {
         $this->messages[] = $message;
     }
@@ -1039,7 +1040,7 @@ class User implements RLUserInterface, EquatableInterface
      *
      * @param \RL\MainBundle\Entity\Message $message
      */
-    public function removeMessage(\RL\MainBundle\Entity\Message $message)
+    public function removeMessage(Message $message)
     {
         $this->messages->remove($message);
     }
@@ -1059,7 +1060,7 @@ class User implements RLUserInterface, EquatableInterface
      *
      * @param \RL\MainBundle\Entity\Group $group
      */
-    public function setGroup(\RL\MainBundle\Entity\Group $group)
+    public function setGroup(Group $group)
     {
         $this->group = $group;
     }

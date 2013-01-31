@@ -29,6 +29,9 @@
 namespace RL\MainBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use RL\MainBundle\Entity\FilteredMessage;
+use RL\MainBundle\Entity\Word;
+use RL\MainBundle\Security\User\RLUserInterface;
 
 /**
  * RL\MainBundle\Entity\Filter
@@ -63,14 +66,14 @@ final class Filter
     protected $words;
 
     /**
-     * @ORM\ManyToMany(targetEntity="RL\MainBundle\Entity\User", inversedBy="filters")
+     * @ORM\OneToMany(targetEntity="RL\MainBundle\Entity\UsersFilter", mappedBy="filters")
      *
      * @var \Doctrine\Common\Collections\ArrayCollection
      */
     protected $users;
 
     /**
-     * @ORM\ManyToMany(targetEntity="RL\MainBundle\Entity\Message", inversedBy="filters")
+     * @ORM\OneToMany(targetEntity="RL\MainBundle\Entity\FilteredMessage", mappedBy="filters")
      *
      * @var \Doctrine\Common\Collections\ArrayCollection
      */
@@ -119,20 +122,26 @@ final class Filter
     /**
      * Add user
      *
-     * @param \RL\MainBundle\Entity\User $user
+     * @param \RL\MainBundle\Security\User\RLUserInterface $user
      */
-    public function addUser($user)
+    public function addUser(RLUserInterface$user)
     {
+        if($user->isAnonymous()) {
+            $user = $user->getDbAnonymous();
+        }
         $this->users[] = $user;
     }
 
     /**
      * Remove user
      *
-     * @param \RL\MainBundle\Entity\User $user
+     * @param \RL\MainBundle\Security\User\RLUserInterface $user
      */
-    public function removeUser($user)
+    public function removeUser(RLUserInterface $user)
     {
+        if($user->isAnonymous()) {
+            $user = $user->getDbAnonymous();
+        }
         $this->users->remove($user);
     }
 
@@ -149,9 +158,9 @@ final class Filter
     /**
      * Add word
      *
-     * @param \Doctrine\Common\Collections\ArrayCollection $word
+     * @param \RL\MainBundle\Entity\Word $word
      */
-    public function addWord($word)
+    public function addWord(Word $word)
     {
         $this->words[] = $word;
     }
@@ -159,9 +168,9 @@ final class Filter
     /**
      * Remove word
      *
-     * @param \Doctrine\Common\Collections\ArrayCollection $word
+     * @param \RL\MainBundle\Entity\Word $word
      */
-    public function removeWord($word)
+    public function removeWord(Word $word)
     {
         $this->words->remove($word);
     }
@@ -176,5 +185,38 @@ final class Filter
         return $this->words;
     }
 
+    /**
+     * Add message
+     *
+     * @param \RL\MainBundle\Entity\FilteredMessage $message
+     */
+    public function addMessage(FilteredMessage $message)
+    {
+        $this->words[] = $message;
+    }
 
+    /**
+     * Remove message
+     *
+     * @param \RL\MainBundle\Entity\FilteredMessage $message
+     */
+    public function removeMessage(FilteredMessage $message)
+    {
+        $this->words->remove($message);
+    }
+
+    /**
+     * Get messages
+     *
+     * @return \Doctrine\Common\Collections\ArrayCollection
+     */
+    public function getMessages()
+    {
+        return $this->words;
+    }
+
+    public function filter($message)
+    {
+
+    }
 }
