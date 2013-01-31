@@ -29,6 +29,10 @@
 namespace RL\MainBundle\Security\User;
 
 use Symfony\Component\Security\Core\User\AdvancedUserInterface;
+use RL\MainBundle\Entity\Message;
+use RL\MainBundle\Entity\BlockPosition;
+use RL\MainBundle\Entity\Mark;
+use RL\MainBundle\Entity\Group;
 
 /**
  * RL\MainBundle\Security\User\RLUserInterface
@@ -107,9 +111,9 @@ interface RLUserInterface extends AdvancedUserInterface
     public function getShowUa();
     public function setShowResp($showResp);
     public function getShowResp();
-    public function setMark(\RL\MainBundle\Entity\Mark $mark);
+    public function setMark(Mark $mark);
     public function getMark();
-    public function setGroup(\RL\MainBundle\Entity\Group $group);
+    public function setGroup(Group $group);
     public function getGroup();
     public function setLanguage($language);
     public function getLanguage();
@@ -122,7 +126,10 @@ interface RLUserInterface extends AdvancedUserInterface
     public function addEditedComment($editedComment);
     public function removeEditedComment($editedComment);
     public function getEditedComments();
-    public function addMessage(\RL\MainBundle\Entity\Message $message);
-    public function removeMessage(\RL\MainBundle\Entity\Message $message);
+    public function addMessage(Message $message);
+    public function removeMessage(Message $message);
     public function getMessages();
+    public function addPosition(BlockPosition $position);
+    public function removePosition(BlockPosition $position);
+    public function getPositions();
 }

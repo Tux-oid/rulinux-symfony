@@ -31,6 +31,7 @@ namespace RL\MainBundle\Controller;
 use RL\MainBundle\Controller\AbstractController;
 use RL\MainBundle\Form\Model\TrackerForm;
 use RL\MainBundle\Form\Type\TrackerType;
+use RL\MainBundle\Entity\BlockPosition;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 
 /**
@@ -146,6 +147,8 @@ class MainController extends AbstractController
         $section = $sectionRepository->findOneByRewrite('news');
         /** @var $threadRepository \RL\NewsBundle\Entity\Repository\ThreadRepository */
         $threadRepository = $doctrine->getRepository('RLNewsBundle:Thread');
+        /** @var $blockPositionRepository \RL\MainBundle\Entity\Repository\BlockPositionRepository */
+        $blockPositionRepository = $doctrine->getRepository('RLMainBundle:BlockPosition');
         $itemsCount = $threadRepository->getNewsCount();
         $itemsOnPage = $user->getNewsOnPage();
         $pagesCount = ceil(($itemsCount) / $itemsOnPage);
@@ -154,7 +157,14 @@ class MainController extends AbstractController
         $pagesStr = $this->get('rl_main.paginator')->draw($itemsOnPage, $itemsCount, $page, 'index', array("page" => $page));
 
         return $this->render(
-            'RLMainBundle:Main:index.html.twig', array('threads' => $threads, 'pages' => $pagesStr, 'section' => $section,)
+            'RLMainBundle:Main:index.html.twig',
+            array(
+                'threads' => $threads,
+                'pages' => $pagesStr,
+                'section' => $section,
+                'leftBlocks' =>$blockPositionRepository->getUserBlocksByPosition($user, BlockPosition::POSITION_LEFT),
+                'rightBlocks' =>$blockPositionRepository->getUserBlocksByPosition($user, BlockPosition::POSITION_RIGHT)
+            )
         );
     }
 

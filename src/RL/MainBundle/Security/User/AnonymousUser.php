@@ -32,6 +32,7 @@ use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Security\Core\User\EquatableInterface;
 use RL\MainBundle\Entity\Group;
 use RL\MainBundle\Entity\Mark;
+use RL\MainBundle\Entity\BlockPosition;
 
 /**
  * RL\MainBundle\Security\User\AnonymousUser
@@ -816,7 +817,10 @@ class AnonymousUser implements RLUserInterface, EquatableInterface
      */
     public function getEditedComments()
     {
-        return $this->attributes['editedComments'];
+        return array_key_exists(
+            'editedComments',
+            $this->attributes
+        ) ? $this->attributes['editedComments'] : $this->dbAnon->getEditedComments();
     }
 
     /**
@@ -860,5 +864,26 @@ class AnonymousUser implements RLUserInterface, EquatableInterface
     public function getMessages()
     {
         return $this->dbAnon->getMessages();
+    }
+
+    public function addPosition(BlockPosition $position)
+    {
+        $this->attributes['block_position'][] = $position;
+    }
+
+    public function removePosition(BlockPosition $position)
+    {
+        $key = array_search($position,$this->attributes['editedComments']);
+        if($key!==false){
+            unset($this->attributes['block_position'][$key]);
+        }
+    }
+
+    public function getPositions()
+    {
+        return array_key_exists(
+            'block_position',
+            $this->attributes
+        ) ? $this->attributes['block_position'] : $this->dbAnon->getPositions();
     }
 }

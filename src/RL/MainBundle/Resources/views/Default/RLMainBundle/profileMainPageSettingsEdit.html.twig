@@ -1,0 +1,26 @@
+<form action="{{path('user_edit', {'name':userInfo.username})}}" method="post" {{form_enctype(mainPageSettings)}}>
+    <fieldset>
+        <legend>{%trans%}Main Page settings{%endtrans%}</legend>
+        <table class="main_page_settings">
+            <thead>
+            <tr>
+                <th>{% trans %}Block name{% endtrans %}</th>
+                <th>{% trans %}Block position{% endtrans %}</th>
+                <th>{% trans %}Block weight{% endtrans %}</th>
+            </tr>
+            </thead>
+            {% for position in mainPageSettings.positions %}
+                <tr>
+                    <td>{{ position.vars.value.block.name|capitalize }}:</td>
+                    <td>{{form_widget(position.position)}}
+                        {{form_errors(position.position)}}</td>
+                    <td>{{form_widget(position.weight)}}
+                        {{form_errors(position.weight)}}</td>
+                </tr>
+            {% endfor %}
+        </table>
+        {{form_rest(mainPageSettings)}}
+    </fieldset>
+    <input type="hidden" name="action" value="mainPageSettings">
+    <input type="submit" name="sbm" value="{%trans%}Save settings{%endtrans%}">
+</form>

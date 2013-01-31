@@ -41,6 +41,7 @@ use RL\MainBundle\Form\Type\AdministratorSettingsType;
 use RL\MainBundle\Form\Type\ModeratorSettingsType;
 use RL\MainBundle\Form\Type\FiltersSettingsType;
 use RL\MainBundle\Form\Model\FiltersSettingsForm;
+use RL\MainBundle\Form\Type\MainPageSettingsType;
 use LightOpenID;
 use Gregwar\ImageBundle\Image;
 
@@ -84,13 +85,13 @@ class ProfileController extends AbstractController
         $personalInformation = $this->createForm(new PersonalInformationType(), $userInProfile);
         $moderatorSettings = $this->createForm(new ModeratorSettingsType(), $userInProfile);
         $administratorSettings = $this->createForm(new AdministratorSettingsType(), $userInProfile);
+        $mainPageSettings = $this->createForm(new MainPageSettingsType(), $userInProfile);
         //save settings in database
         $request = $this->getRequest();
         $sbm = $request->request->get('sbm');
         if (isset($sbm)) {
             $method = $request->getMethod();
             if ($method == 'POST') {
-                //save password
                 if ($request->request->get('action') == 'passwordChanging') {
                     $passwordChanging->bind($request);
                     if ($passwordChanging->isValid()) {
@@ -114,8 +115,7 @@ class ProfileController extends AbstractController
                     } else {
                         throw new \Exception('Form is invalid');
                     }
-                } //save personal information
-                elseif ($request->request->get('action') == 'personalInformation') {
+                } elseif ($request->request->get('action') == 'personalInformation') {
                     $personalInformation->bind($request);
                     if ($personalInformation->isValid()) {
                         $photo = $userInProfile->getPhoto();
@@ -143,8 +143,7 @@ class ProfileController extends AbstractController
                     } else {
                         throw new \Exception('Form is invalid');
                     }
-                } //save personal settings
-                elseif ($request->request->get('action') == 'personalSettings') {
+                } elseif ($request->request->get('action') == 'personalSettings') {
                     $personalSettings->bind($request);
                     if ($personalSettings->isValid()) {
                         $this->get('session')->set('_locale', $userInProfile->getLanguage());
@@ -152,8 +151,7 @@ class ProfileController extends AbstractController
                     } else {
                         throw new \Exception('Form is invalid');
                     }
-                } //save moderator settings
-                elseif ($request->request->get('action') == 'moderatorSettings') {
+                } elseif ($request->request->get('action') == 'moderatorSettings') {
                     $moderatorSettings->bind($request);
                     if ($moderatorSettings->isValid()) {
                         //TODO: when inactive send message to user
@@ -161,10 +159,16 @@ class ProfileController extends AbstractController
                     } else {
                         throw new \Exception('Form is invalid');
                     }
-                } //save administrator settings
-                elseif ($request->request->get('action') == 'administratorSettings') {
+                } elseif ($request->request->get('action') == 'administratorSettings') {
                     $administratorSettings->bind($request);
                     if ($administratorSettings->isValid()) {
+                        $this->getDoctrine()->getManager()->flush();
+                    } else {
+                        throw new \Exception('Form is invalid');
+                    }
+                } elseif ($request->request->get('action') == 'mainPageSettings') {
+                    $mainPageSettings->bind($request);
+                    if ($mainPageSettings->isValid()) {
                         $this->getDoctrine()->getManager()->flush();
                     } else {
                         throw new \Exception('Form is invalid');
@@ -182,7 +186,8 @@ class ProfileController extends AbstractController
                 'passwordChanging' => $passwordChanging->createView(),
                 'moderatorSettings' => $moderatorSettings->createView(),
                 'administratorSettings' => $administratorSettings->createView(),
-                'filtersSettings' => $filtersSettings->createView()
+                'filtersSettings' => $filtersSettings->createView(),
+                'mainPageSettings' => $mainPageSettings->createView()
             )
         );
     }

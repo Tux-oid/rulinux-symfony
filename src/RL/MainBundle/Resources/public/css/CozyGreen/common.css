@@ -140,3 +140,13 @@ pre
 {
     margin-right: 245px;
 }
+
+.main_page_settings
+{
+    width: 100%;
+}
+
+.main_page_settings td
+{
+    text-align: center;
+}

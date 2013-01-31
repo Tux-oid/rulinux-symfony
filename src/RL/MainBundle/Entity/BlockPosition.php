@@ -35,7 +35,7 @@ use RL\MainBundle\Security\User\RLUserInterface;
 /**
  * RL\MainBundle\Entity\BlockSet
  *
- * @ORM\Entity
+ * @ORM\Entity(repositoryClass="RL\MainBundle\Entity\Repository\BlockPositionRepository")
  * @ORM\Table(name="block_sets")
  *
  * @author Peter Vasilevsky <tuxoiduser@gmail.com> a.k.a. Tux-oid
@@ -46,12 +46,17 @@ class BlockPosition
     /**
      * Block position. Left
      */
-    const POSITION_LEFT = 0;
+    const POSITION_UNUSED = 0;
+
+    /**
+     * Block position. Left
+     */
+    const POSITION_LEFT = 1;
 
     /**
      * Block position. Right
      */
-    const POSITION_RIGHT = 1;
+    const POSITION_RIGHT = 2;
 
     /**
      * @ORM\Id()
@@ -91,6 +96,30 @@ class BlockPosition
     protected $position;
 
     /**
+     * Constructor
+     *
+     * @param \RL\MainBundle\Security\User\RLUserInterface $user
+     * @param \RL\MainBundle\Entity\Block $block
+     * @param int $position
+     * @param int $weight
+     */
+    public function __construct(
+        RLUserInterface $user = null,
+        Block $block = null,
+        $position = BlockPosition::POSITION_LEFT,
+        $weight = 1
+    ) {
+        if (null !== $user) {
+            $this->user = $user;
+        }
+        if (null !== $block) {
+            $this->block = $block;
+        }
+        $this->position = $position;
+        $this->weight = $weight;
+    }
+
+    /**
      * Set id
      *
      * @param int $id
@@ -117,7 +146,7 @@ class BlockPosition
      */
     public function setPosition($position)
     {
-        if($position === BlockPosition::POSITION_LEFT || $position === BlockPosition::POSITION_RIGHT) {
+        if ($position === BlockPosition::POSITION_LEFT || $position === BlockPosition::POSITION_RIGHT) {
             $this->position = $position;
         } else {
             $this->position = BlockPosition::POSITION_LEFT;

@@ -195,3 +195,13 @@ pre
 	border-color: #446347;
 	border-style: solid;
 }
+
+.main_page_settings
+{
+    width: 100%;
+}
+
+.main_page_settings td
+{
+    text-align: center;
+}

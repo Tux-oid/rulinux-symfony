@@ -237,6 +237,7 @@ class User implements RLUserInterface, EquatableInterface
         $this->active = true;
         $this->salt = md5(uniqid(null, true));
         $this->groups = new ArrayCollection();
+        $this->positions = new ArrayCollection();
     }
 
     /**
@@ -1102,7 +1103,7 @@ class User implements RLUserInterface, EquatableInterface
      *
      * @param \RL\MainBundle\Entity\BlockPosition $position
      */
-    public function setPositions(BlockPosition $position)
+    public function addPosition(BlockPosition $position)
     {
         $this->positions->add($position);
     }
@@ -1112,7 +1113,7 @@ class User implements RLUserInterface, EquatableInterface
      *
      * @param \RL\MainBundle\Entity\BlockPosition $position
      */
-    public function removePositions(BlockPosition $position)
+    public function removePosition(BlockPosition $position)
     {
         $this->positions->remove($position);
     }

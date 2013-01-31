@@ -46,6 +46,7 @@ use RL\MainBundle\Entity\AuthenticationBlock;
 use RL\MainBundle\Entity\TrackerBlock;
 use RL\MainBundle\Entity\LinksBlock;
 use RL\MainBundle\Entity\GalleryBlock;
+use RL\MainBundle\Entity\BlockPosition;
 
 /**
  * RL\MainBundle\DataFixtures\ORM\FixtureLoader
@@ -453,14 +454,10 @@ class FixtureLoader implements FixtureInterface
         $anonymous->setGender(1);
         $anonymous->setRegistrationDate(new \DateTime('2009-02-12 14:42:51'));
         $anonymous->setLastVisitDate(new \DateTime('now'));
-        $anonymous->addLeftBlock($authenticationBlock);
-        $anonymous->addLeftBlock($trackerBlock);
-        $anonymous->addLeftBlock($galleryBlock);
-        $anonymous->setLeftBlocksWeights(
-            array($authenticationBlock->getName() => 9, $galleryBlock->getName() => 5, $trackerBlock->getName() => 1)
-        );
-        $anonymous->addRightBlock($linksBlock);
-        $anonymous->setRightBlocksWeights(array($linksBlock->getName()=>1));
+        $anonymous->addPosition(new BlockPosition($anonymous, $authenticationBlock));
+        $anonymous->addPosition(new BlockPosition($anonymous, $trackerBlock));
+        $anonymous->addPosition(new BlockPosition($anonymous, $galleryBlock));
+        $anonymous->addPosition(new BlockPosition($anonymous, $linksBlock, BlockPosition::POSITION_RIGHT));
         $anonymous->setCaptchaLevel($captchaLevel);
         $anonymous->setTheme($ubertechnoTheme);
         $anonymous->setMark($texMark);
@@ -495,14 +492,10 @@ class FixtureLoader implements FixtureInterface
         $admin->setGender(1);
         $admin->setRegistrationDate(new \DateTime('now'));
         $admin->setLastVisitDate(new \DateTime('now'));
-        $admin->addLeftBlock($authenticationBlock);
-        $admin->addLeftBlock($trackerBlock);
-        $admin->addLeftBlock($linksBlock);
-        $admin->setLeftBlocksWeights(
-            array($authenticationBlock->getName() => 9, $linksBlock->getName() => 5, $trackerBlock->getName() => 1)
-        );
-        $admin->addRightBlock($galleryBlock);
-        $admin->setRightBlocksWeights(array($galleryBlock->getName()=>1));
+        $admin->addPosition(new BlockPosition($admin, $authenticationBlock));
+        $admin->addPosition(new BlockPosition($admin, $trackerBlock));
+        $admin->addPosition(new BlockPosition($admin, $linksBlock));
+        $admin->addPosition(new BlockPosition($admin, $galleryBlock, BlockPosition::POSITION_RIGHT));
         $admin->setCaptchaLevel($captchaLevel);
         $admin->setTheme($ubertechnoTheme);
         $admin->setMark($texMark);

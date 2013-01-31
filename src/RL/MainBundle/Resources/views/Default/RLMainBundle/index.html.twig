@@ -3,15 +3,11 @@
 {% block middle %}
     <table class="content">
         <tr>
-            {% if app.user.leftBlocks|length > 0 %}
+            {% if leftBlocks|length > 0 %}
                 <td class="left-sidebar">
                     {% block lblocks %}
-                        {% for blockName, weight in app.user.leftBlocksWeights %}
-                            {%for block in app.user.leftBlocks%}
-                                {% if block.name == blockName %}
-                                    {% render "RLMainBundle:Block:renderBlock" with { 'block': block } %}
-                                {% endif %}
-                            {%endfor%}
+                        {%for block in leftBlocks%}
+                            {% render "RLMainBundle:Block:renderBlock" with { 'block': block } %}
                         {% endfor %}
                     {% endblock lblocks%}
                 </td>
@@ -24,15 +20,11 @@
                         {{pages|raw}}
                 {% endblock %}
             </td>
-            {% if app.user.rightBlocks|length > 0 %}
+            {% if rightBlocks|length > 0 %}
                 <td class="right-sidebar">
                     {% block rblocks %}
-                        {% for blockName, weight in app.user.rightBlocksWeights %}
-                            {%for block in app.user.rightBlocks%}
-                                {% if block.name == blockName %}
-                                    {% render "RLMainBundle:Block:renderBlock" with { 'block': block } %}
-                                {% endif %}
-                            {%endfor%}
+                        {%for block in rightBlocks%}
+                            {% render "RLMainBundle:Block:renderBlock" with { 'block': block } %}
                         {%endfor%}
                     {% endblock rblocks%}
                 </td>
