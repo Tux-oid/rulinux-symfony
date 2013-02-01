@@ -47,6 +47,9 @@ use RL\MainBundle\Entity\TrackerBlock;
 use RL\MainBundle\Entity\LinksBlock;
 use RL\MainBundle\Entity\GalleryBlock;
 use RL\MainBundle\Entity\BlockPosition;
+use RL\MainBundle\Entity\Filter;
+use RL\MainBundle\Entity\Word;
+use RL\MainBundle\Helper\CSVParser;
 
 /**
  * RL\MainBundle\DataFixtures\ORM\FixtureLoader
@@ -568,6 +571,34 @@ class FixtureLoader implements FixtureInterface
         $lolksLink->setLink('http://lolks.ru');
         $manager->persist($lolksLink);
 
+        /*****************************************Filters**************************************************************/
+        $filthyLangFilter = new Filter();
+        foreach (CSVParser::parse(__DIR__ . '/../../Resources/dictionaries/FilthyLanguage.ru.csv', true) as $line) {
+            $filthyLangFilter->addWord(new Word($line['word'], $line['weight']));
+        }
+        $filthyLangFilter->setName('Filthy Language');
+        $manager->persist($filthyLangFilter);
+
+        $politicFilter = new Filter();
+        foreach (CSVParser::parse(__DIR__ . '/../../Resources/dictionaries/Politic.ru.csv', true) as $line) {
+            $politicFilter->addWord(new Word($line['word'], $line['weight']));
+        }
+        $politicFilter->setName('Politic');
+        $manager->persist($politicFilter);
+
+        $spamFilter = new Filter();
+        $spamFilter->setName('Spam');
+        $manager->persist($spamFilter);
+
+        $imagesFilter = new Filter();
+        $imagesFilter->setName('Images');
+        $manager->persist($imagesFilter);
+
+        $moderatorsFilter = new Filter();
+        $moderatorsFilter->setName('Moderators filter');
+        $manager->persist($moderatorsFilter);
+
         $manager->flush();
     }
+
 }

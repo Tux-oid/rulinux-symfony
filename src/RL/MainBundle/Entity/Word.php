@@ -71,6 +71,20 @@ final class Word
     protected $filter;
 
     /**
+     * Constructor
+     *
+     * @param string $word
+     * @param int $weight
+     */
+    public function __construct($word = '', $weight = 0)
+    {
+        $this->weight = $weight;
+        if(!empty($word)) {
+            $this->word = $word;
+        }
+    }
+
+    /**
      * Set id
      *
      * @param int $id

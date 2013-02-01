@@ -794,17 +794,17 @@ class AnonymousUser implements RLUserInterface, EquatableInterface
     }
 
     /**
-     * @param $filter
+     * @param \RL\MainBundle\Entity\UsersFilter $filter
      */
-    public function addFilter($filter)
+    public function addFilter(UsersFilter $filter)
     {
         $this->attributes['filters'][] = $filter;
     }
 
     /**
-     * @param $filter
+     * @param \RL\MainBundle\Entity\UsersFilter $filter
      */
-    public function removeFilter($filter)
+    public function removeFilter(UsersFilter $filter)
     {
         $key = array_search($filter,$this->attributes['filters']);
         if($key!==false){

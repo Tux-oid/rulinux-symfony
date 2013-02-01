@@ -59,14 +59,14 @@ final class Filter
      */
     protected $name;
     /**
-     * @ORM\OneToMany(targetEntity="RL\MainBundle\Entity\Word", mappedBy="filter")
+     * @ORM\OneToMany(targetEntity="RL\MainBundle\Entity\Word", mappedBy="filter", cascade={"all"})
      *
      * @var \Doctrine\Common\Collections\ArrayCollection
      */
     protected $words;
 
     /**
-     * @ORM\OneToMany(targetEntity="RL\MainBundle\Entity\UsersFilter", mappedBy="filters")
+     * @ORM\OneToMany(targetEntity="RL\MainBundle\Entity\UsersFilter", mappedBy="filters", cascade={"all"})
      *
      * @var \Doctrine\Common\Collections\ArrayCollection
      */
@@ -163,6 +163,7 @@ final class Filter
     public function addWord(Word $word)
     {
         $this->words[] = $word;
+        $word->setFilter($this);
     }
 
     /**
