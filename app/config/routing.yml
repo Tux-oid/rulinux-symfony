@@ -1,18 +1,3 @@
-RLGalleryBundle:
-    resource: "@RLGalleryBundle/Controller/"
-    type:     annotation
-    prefix:   /
-
-RLNewsBundle:
-    resource: "@RLNewsBundle/Controller/"
-    type:     annotation
-    prefix:   /
-
-RLArticlesBundle:
-    resource: "@RLArticlesBundle/Controller/"
-    type:     annotation
-    prefix:   /
-
 RLMainBundle:
     resource: "@RLMainBundle/Controller/"
     type:     annotation

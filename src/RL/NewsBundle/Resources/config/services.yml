@@ -1,7 +1,0 @@
-parameters:
-#    rl_news.example.class: RL\NewsBundle\Example
-
-services:
-#    rl_news.example:
-#        class: %rl_news.example.class%
-#        arguments: [@service_id, "plain_value", %parameter%]
