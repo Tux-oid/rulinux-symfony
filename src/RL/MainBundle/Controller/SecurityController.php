@@ -106,14 +106,38 @@ class SecurityController extends AbstractController
             $form = $this->createForm(new RegistrationFirstType(), $newUser);
             $form->bind($request);
             if ($form->isValid()) {
-                $mailer = $this->get('mailer');
-                $secret = $this->container->getParameter('secret');
-                $link = $this->generateUrl('register_confirm', array('username' => $newUser->getName(), 'password' => $newUser->getPassword(), 'email' => $newUser->getEmail(), 'hash' => md5(md5($newUser->getName() . $newUser->getPassword() . $newUser->getEmail() . $secret))), true);
-                $user = $newUser->getName();
-                $site = $request->getHttpHost();
-                $message = \Swift_Message::newInstance()->setSubject('Registration letter')->setFrom('noemail@rulinux.net') //FIXME:load email from settings
-                    ->setTo($newUser->getEmail())->setContentType('text/html')->setBody($this->renderView('RLMainBundle:Security:registrationLetter.html.twig', array('link' => $link, 'user' => $user, 'site' => $site)));
-                $mailer->send($message);
+                /** @var $mailer \RL\MainBundle\Helper\Mailer */
+                $mailer = $this->get('rl_main.mailer');
+                $mailer->send(
+                    $newUser->getEmail(),
+                    $this->getDoctrine()->getRepository('RLMainBundle:Settings')->findOneByName('site_email')->getValue(),
+                    'Registration letter',
+                    $this->renderView(
+                        'RLMainBundle:Security:registrationLetter.html.twig',
+                        array(
+                            'link' => $this->generateUrl(
+                                'register_confirm',
+                                array(
+                                    'username' => $newUser->getName(),
+                                    'password' => $newUser->getPassword(),
+                                    'email' => $newUser->getEmail(),
+                                    'hash' => md5(
+                                        md5(
+                                            $newUser->getName() .
+                                            $newUser->getPassword() .
+                                            $newUser->getEmail() .
+                                            $this->container->getParameter('secret')
+                                        )
+                                    )
+                                ),
+                                true
+                            ),
+                            'user' => $newUser->getName(),
+                            'site' => $request->getHttpHost()
+                        )
+                    )
+                );
+
                 return $this->renderMessage('Registration mail was sent.', 'Registration mail was sent. Please check your email.');
             } else {
                 throw new \Exception('Registration form is invalid.');
@@ -220,27 +244,37 @@ class SecurityController extends AbstractController
                     throw new \Exception($e->getMessage());
                 }
                 if ($user->getEmail() != $resForm->getEmail()) {
-                    throw new \Exception('Email is wrong');
+                    return $this->renderMessage(
+                        'Email is wrong',
+                        'Please make sure that you entered correct address in email field'
+                    );
                 }
                 if ($user->getQuestion() != $resForm->getQuestion()) {
-                    throw new \Exception('Question is wrong');
+                    return $this->renderMessage('Question is wrong', 'Please make sure that you entered correct question');
                 }
                 if ($user->getAnswer() != $resForm->getAnswer()) {
-                    throw new \Exception('Answer is wrong');
+                    return $this->renderMessage('Answer is wrong', 'Please make sure that you entered correct answer');
                 }
                 $password = md5(uniqid(rand(), true));
                 $password = substr($password, 1, 9);
                 $encoder = new MessageDigestPasswordEncoder('md5', false, 1);
                 $encodedPassword = $encoder->encodePassword($password, $user->getSalt());
                 $user->setPassword($encodedPassword);
-                $username = $user->getUsername();
                 $em = $this->getDoctrine()->getManager();
                 $em->persist($user);
                 $em->flush();
-                $mailer = $this->get('mailer');
-                $message = \Swift_Message::newInstance()->setSubject('Password restoring')->setFrom('noemail@rulinux.net') //FIXME:load email from settings
-                    ->setTo($resForm->getEmail())->setContentType('text/html')->setBody($this->renderView('RLMainBundle:Security:passwordRestoringLetter.html.twig', array('username' => $username, 'password' => $password)));
-                $mailer->send($message);
+                /** @var $mailer \RL\MainBundle\Helper\Mailer */
+                $mailer = $this->get('rl_main.mailer');
+                $mailer->send(
+                    $resForm->getEmail(),
+                    $this->getDoctrine()->getRepository('RLMainBundle:Settings')->findOneByName('site_email')->getValue(),
+                    'Password restoring',
+                    $this->renderView(
+                        'RLMainBundle:Security:passwordRestoringLetter.html.twig',
+                        array('username' => $user->getUsername(), 'password' => $password)
+                    )
+                );
+
                 return $this->renderMessage('Mail with your new password was sent.', 'Mail with your new password was sent. Please check your email.');
             } else {
                 throw new \Exception('Password restoring form is invalid');

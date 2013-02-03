@@ -32,6 +32,7 @@ use Doctrine\ORM\Mapping as ORM;
 use RL\MainBundle\Entity\FilteredMessage;
 use RL\MainBundle\Entity\Word;
 use RL\MainBundle\Security\User\RLUserInterface;
+use RL\MainBundle\Entity\Message;
 
 /**
  * RL\MainBundle\Entity\Filter
@@ -78,6 +79,23 @@ final class Filter
      * @var \Doctrine\Common\Collections\ArrayCollection
      */
     protected $messages;
+
+    /**
+     * @ORM\Column(type="boolean")
+     *
+     * @var boolean
+     */
+    protected $filterByTags;
+
+    /**
+     * Constructor
+     *
+     * @param boolean $filterByTags
+     */
+    public function  __construct($filterByTags = false)
+    {
+        $this->filterByTags = $filterByTags;
+    }
 
     /**
      * Set id
@@ -216,8 +234,39 @@ final class Filter
         return $this->words;
     }
 
-    public function filter($message)
+    /**
+     * Set filter by tags
+     *
+     * @param boolean $filterByTags
+     */
+    public function setFilterByTags($filterByTags)
     {
+        $this->filterByTags = $filterByTags;
+    }
 
+    /**
+     * Is filter by tags
+     *
+     * @return boolean
+     */
+    public function isFilterByTags()
+    {
+        return $this->filterByTags;
+    }
+
+    /**
+     * Filter message
+     *
+     * @param \RL\MainBundle\Entity\Message $message
+     */
+    public function filter(Message $message)
+    {
+        if($this->isFilterByTags()) {
+            $comment = $message->getRawComment();
+        } else {
+            $comment = $message->getComment();
+        }
+        $wordsArray = preg_split("#[ \.,\?\\\(\)\[\]{}<\"';:\!\=\+\-\#\$\%\^\&\*>\\r\\n\\t]#suim", $comment);
+        //TODO:implement behavior
     }
 }

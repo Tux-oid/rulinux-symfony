@@ -38,6 +38,7 @@ use RL\MainBundle\Event\AnonymousLoginEvent;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\DependencyInjection\Container;
 use Doctrine\Bundle\DoctrineBundle\Registry;
+use Symfony\Component\HttpFoundation\Session\Session;
 use JMS\DiExtraBundle\Annotation\Service;
 use JMS\DiExtraBundle\Annotation\Inject;
 use JMS\DiExtraBundle\Annotation\InjectParams;
@@ -77,6 +78,11 @@ class AnonymousUserProvider implements UserProviderInterface
     protected $request;
 
     /**
+     * @var \Symfony\Component\HttpFoundation\Session\Session
+     */
+    protected $session;
+
+    /**
      * Constructor
      *
      * @InjectParams({
@@ -100,6 +106,7 @@ class AnonymousUserProvider implements UserProviderInterface
         $this->doctrine = $doctrine;
         $this->eventDispatcher = $eventDispatcher;
         $this->request = $container->get('request');
+        $this->session = $container->get('session');
     }
 
     /**
@@ -138,7 +145,7 @@ class AnonymousUserProvider implements UserProviderInterface
     public function loadUserByUsername($username)
     {
         if ($username == 'anonymous') {
-            return new $this->userClass(\session_id(), $this->defaults, $this->doctrine);//FIXME: fix this shit
+            return new $this->userClass($this->session->getId(), $this->defaults, $this->doctrine);
         }
         throw new UsernameNotFoundException(sprintf('Username "%s" does not exist.', $username));
     }

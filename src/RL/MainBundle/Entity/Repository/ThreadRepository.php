@@ -140,8 +140,4 @@ class ThreadRepository extends EntityRepository
 
         return $ret;
     }
-    public function getClassName()
-    {
-
-    }
 }

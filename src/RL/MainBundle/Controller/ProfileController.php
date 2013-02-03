@@ -154,7 +154,19 @@ class ProfileController extends AbstractController
                 } elseif ($request->request->get('action') == 'moderatorSettings') {
                     $moderatorSettings->bind($request);
                     if ($moderatorSettings->isValid()) {
-                        //TODO: when inactive send message to user
+                        if(!$userInProfile->isActive()) {
+                            /** @var $mailer \RL\MainBundle\Helper\Mailer */
+                            $mailer = $this->get('rl_main.mailer');
+                            $mailer->send(
+                                $userInProfile->getEmail(),
+                                $this->getDoctrine()->getRepository('RLMainBundle:Settings')->findOneByName('site_email')->getValue(),
+                                'Account block',
+                                $this->renderView(
+                                    'RLMainBundle:Security:accountBlockingLetter.html.twig',
+                                    array('username' => $user->getUsername())
+                                )
+                            );
+                        }
                         $this->getDoctrine()->getManager()->flush();
                     } else {
                         throw new \Exception('Form is invalid');

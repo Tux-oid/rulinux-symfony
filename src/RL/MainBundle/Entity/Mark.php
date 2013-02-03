@@ -31,7 +31,6 @@ namespace RL\MainBundle\Entity;
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\ORM\EntityManager;
 use RL\GeSHiBundle\GeSHi;
-use RL\phpMathPublisher\PhpMathPublisher;
 
 /**
  * RL\MainBundle\Entity\Mark

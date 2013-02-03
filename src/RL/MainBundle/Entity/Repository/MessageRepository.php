@@ -47,12 +47,13 @@ class MessageRepository extends EntityRepository
         $lastTime = new \DateTime('-'.$lastTime.' hours');
         $q = $this->_em->createQuery('SELECT m FROM RL\MainBundle\Entity\Message AS m WHERE m.postingTime > :lastTime ORDER BY m.postingTime DESC')
             ->setParameter('lastTime', $lastTime);
-        $subsection = $q->getResult();
 
-        return $subsection;
+        return $q->getResult();
     }
 
     /**
+     * Search
+     *
      * @param array $params
      * @return array
      */
@@ -101,6 +102,18 @@ class MessageRepository extends EntityRepository
         }
 
         return $qb->getQuery()->getResult();
+    }
+
+    /**
+     * Get unfiltered messages
+     *
+     * @return array
+     */
+    public function getUnfilteredMessages()
+    {
+        $q = $this->_em->createQuery('SELECT m FROM RL\MainBundle\Entity\Message AS m');//TODO: filter this messages
+
+        return $q->getResult();
     }
 
 }

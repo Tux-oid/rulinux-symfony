@@ -308,6 +308,11 @@ class FixtureLoader implements FixtureInterface
         $gmtSetting->setValue($gmt);
         $manager->persist($gmtSetting);
 
+        $emailSetting = new Settings();
+        $emailSetting->setName('site_email');
+        $emailSetting->setValue('service@rulinux.net');
+        $manager->persist($emailSetting);
+
         /*****************************************Marks****************************************************************/
         $texMark = new TexMark();
         $texMark->setName('Tex-Mark');
@@ -590,7 +595,7 @@ class FixtureLoader implements FixtureInterface
         $spamFilter->setName('Spam');
         $manager->persist($spamFilter);
 
-        $imagesFilter = new Filter();
+        $imagesFilter = new Filter(true);
         $imagesFilter->setName('Images');
         $manager->persist($imagesFilter);
 

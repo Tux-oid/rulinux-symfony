@@ -334,44 +334,13 @@ class User implements RLUserInterface, EquatableInterface
      */
     public function getAttributes()
     {
-        return array('id' => $this->id,
-            'username' => $this->username,
-            'groups' => $this->groups,
-            'salt' => $this->salt,
-            'password' => $this->password,
-            'name' => $this->name,
-            'lastname' => $this->lastname,
-            'country' => $this->country,
-            'city' => $this->city,
-            'photo' => $this->photo,
-            'birthday' => $this->birthday,
-            'gender' => $this->gender,
-            'additional' => $this->additional,
-            'additionalRaw' => $this->additionalRaw,
-            'email' => $this->email,
-            'im' => $this->im,
-            'registrationDate' => $this->registrationDate,
-            'lastVisitDate' => $this->lastVisitDate,
-            'active' => $this->active,
-            'captchaLevel' => $this->captchaLevel,
-            'openid' => $this->openid,
-            'question' => $this->question,
-            'answer' => $this->answer,
-            'language' => $this->language,
-            'positions' => $this->positions,
-            'theme' => $this->theme,
-            'gmt' => $this->gmt,
-            'filters' => $this->filters,
-            'mark' => $this->mark,
-            'sortingType' => $this->sortingType,
-            'newsOnPage' => $this->newsOnPage,
-            'commentsOnPage' => $this->commentsOnPage,
-            'threadsOnPage' => $this->threadsOnPage,
-            'showEmail' => $this->showEmail,
-            'showIm' => $this->showIm,
-            'showAvatars' => $this->showAvatars,
-            'showUa' => $this->showUa,
-            'showResp' => $this->showResp);
+        $ret = array();
+        $vars = get_class_vars(get_class($this));
+        foreach($vars as $key => $var)
+        {
+            $ret[$key] = $this->$key;
+        }
+        return $ret;
     }
 
     /**
