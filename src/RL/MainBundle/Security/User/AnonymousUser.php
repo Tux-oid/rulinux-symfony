@@ -34,6 +34,7 @@ use RL\MainBundle\Entity\Group;
 use RL\MainBundle\Entity\Mark;
 use RL\MainBundle\Entity\BlockPosition;
 use RL\MainBundle\Entity\UsersFilter;
+use RL\MainBundle\Entity\Reader;
 
 /**
  * RL\MainBundle\Security\User\AnonymousUser
@@ -867,24 +868,63 @@ class AnonymousUser implements RLUserInterface, EquatableInterface
         return $this->dbAnon->getMessages();
     }
 
+    /**
+     * @param \RL\MainBundle\Entity\BlockPosition $position
+     */
     public function addPosition(BlockPosition $position)
     {
         $this->attributes['block_position'][] = $position;
     }
 
+    /**
+     * @param \RL\MainBundle\Entity\BlockPosition $position
+     */
     public function removePosition(BlockPosition $position)
     {
-        $key = array_search($position,$this->attributes['editedComments']);
+        $key = array_search($position,$this->attributes['block_position']);
         if($key!==false){
             unset($this->attributes['block_position'][$key]);
         }
     }
 
+    /**
+     * @return mixed
+     */
     public function getPositions()
     {
         return array_key_exists(
             'block_position',
             $this->attributes
         ) ? $this->attributes['block_position'] : $this->dbAnon->getPositions();
+    }
+
+    /**
+     * Add reader
+     *
+     * @param \RL\MainBundle\Entity\Reader $reader
+     */
+    public function addReadThread(Reader $reader)
+    {
+        $this->dbAnon->addReadThread($reader);
+    }
+
+    /**
+     * Remove reader
+     *
+     * @param \RL\MainBundle\Entity\Reader $reader
+     */
+    public function removeReadThread(Reader $reader)
+    {
+        $this->dbAnon->removeReadThread($reader);
+    }
+
+    /**
+     * Get readers
+     *
+     * @return \Doctrine\Common\Collections\Collection
+     */
+    public function getReadThreads()
+    {
+        $this->dbAnon->getReadThreads();
     }
 }

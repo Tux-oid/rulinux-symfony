@@ -94,11 +94,19 @@ class Thread
     protected $changingTime;
 
     /**
+     * @ORM\OneToMany(targetEntity="Reader", mappedBy="thread", cascade={"all"})
+     *
+     * @var \Doctrine\Common\Collections\ArrayCollection
+     */
+    protected $readers;
+
+    /**
      * Constructor
      */
     public function __construct()
     {
         $this->messages = new ArrayCollection();
+        $this->readers = new ArrayCollection();
     }
 
     /**
@@ -225,6 +233,36 @@ class Thread
     public function getPostingTime()
     {
         return $this->postingTime;
+    }
+
+    /**
+     * Add reader
+     *
+     * @param \RL\MainBundle\Entity\Reader $reader
+     */
+    public function addReader(Reader $reader)
+    {
+        $this->readers[] = $reader;
+    }
+
+    /**
+     * Remove reader
+     *
+     * @param \RL\MainBundle\Entity\Reader $reader
+     */
+    public function removeReader(Reader $reader)
+    {
+        $this->readers[] = $reader;
+    }
+
+    /**
+     * Get readers
+     *
+     * @return \Doctrine\Common\Collections\Collection
+     */
+    public function getReaders()
+    {
+        return $this->readers;
     }
 
 }

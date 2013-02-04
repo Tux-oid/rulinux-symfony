@@ -550,6 +550,18 @@
                 <source>Query</source>
                 <target>Запрос</target>
             </trans-unit>
+            <trans-unit id="138">
+                <source>{0} This thread is read by %readersCount% users|{1} This thread is read by %readersCount% user| ]1,Inf] This thread is read by %readersCount% users</source>
+                <target>{0} Этот тред читает %readersCount% пользователей|{1} Этот тред читает %readersCount% пользователь| [2,4] Этот тред читают %readersCount% пользователя| [5,Inf] Этот тред читают %readersCount% пользователей</target>
+            </trans-unit>
+            <trans-unit id="139">
+                <source>Anonymouses</source>
+                <target>Анонимных</target>
+            </trans-unit>
+            <trans-unit id="140">
+                <source>Registered users</source>
+                <target>Зарегистрированных</target>
+            </trans-unit>
         </body>
     </file>
 </xliff>

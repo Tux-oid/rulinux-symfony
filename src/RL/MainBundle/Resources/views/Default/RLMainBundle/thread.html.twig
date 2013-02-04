@@ -1,101 +1,132 @@
 {% extends theme.path('RLMainBundle::layout.html.twig') %}
 
-{%block title%}
-{{parent()}} - {{section.name}} - {{startMessage.thread.subsection.name}} - {{startMessage.thread.messages[0].subject}}
-{%endblock title%}
+{% block title %}
+    {{ parent() }} - {{ section.name }} - {{ startMessage.thread.subsection.name }} - {{ startMessage.thread.messages[0].subject }}
+{% endblock title %}
 
 {% block navigation %}
-<form name="navForm" action="/">
-    <table class=nav>
-        <tr>
-            <td align=left valign=middle>
-                <a href="{{path('section', {'sectionRewrite':section.rewrite})}}">{{section.name}}</a> - <b><a href="{{path('subsection', {'sectionRewrite':section.rewrite, 'subsectionRewrite': startMessage.thread.subsection.rewrite})}}">{{startMessage.thread.subsection.name}}</a></b>
-            </td>
-            <td align=right valign=middle>
-                [RSS]
-            </td>
-        </tr>
-    </table>
-</form>
-{%endblock navigation %}
+    <form name="navForm" action="/">
+        <table class=nav>
+            <tr>
+                <td align=left valign=middle>
+                    <a href="{{ path('section', {'sectionRewrite':section.rewrite}) }}">{{ section.name }}</a> - <b><a
+                        href="{{ path('subsection', {'sectionRewrite':section.rewrite, 'subsectionRewrite': startMessage.thread.subsection.rewrite}) }}">{{ startMessage.thread.subsection.name }}</a></b>
+                </td>
+                <td align=right valign=middle>
+                    [RSS]
+                </td>
+            </tr>
+        </table>
+    </form>
+{% endblock navigation %}
 
-{%block content%}
-{%include theme.path(section.bundle~':Forum:topicStartMessage.html.twig')%}
-{%block pagesTop%}
-<table class=nav>
-    <tr>
-        <td align=left valign=middle width="35%">
-            <table>
-                <tr valign=middle>
-                    <td align=left valign=top>
-			{%if neighborThreads['previous'] is defined %}
-				<a href="{{path('thread', {'id':neighborThreads['previous'].thread.id})}}" rel=prev rev=next>{{neighborThreads['previous'].subject}}</a>
-			{%endif%}
-                    </td>
-                </tr>
-            </table>
-        </td>
-        <td>
-            <table width="100%">
-                <tr valign=middle align=center>
-                    <td>
-                        {{pages|raw}}
-                    </td>
-                </tr>
-            </table>
-        </td>
-        <td align=left valign=middle width="35%">
-            <table width="100%">
-                <tr valign=middle align=right>
-                    <td>
-			{%if neighborThreads['next'] is defined %}
-				<a href="{{path('thread', {'id':neighborThreads['next'].thread.id})}}" rel=prev rev=next>{{neighborThreads['next'].subject}}</a>
-			{%endif%}
-                    </td>
-                </tr>
-            </table>
-        </td>
-    </tr>
-</table>
-{%endblock pagesTop%}
-{%for message in messages %}
-	{%include theme.path('RLMainBundle:Forum:message.html.twig')%}
-{%endfor%}
-{%block pagesBottom%}
-<table class=nav>
-    <tr>
-        <td align=left valign=middle width="35%">
-            <table>
-                <tr valign=middle>
-                    <td align=left valign=top>
-			{%if neighborThreads['previous'] is defined %}
-				<a href="{{path('thread', {'id':neighborThreads['previous'].thread.id})}}" rel=prev rev=next>{{neighborThreads['previous'].subject}}</a>
-			{%endif%}
-                    </td>
-                </tr>
-            </table>
-        </td>
-        <td>
-            <table width="100%">
-                <tr valign=middle align=center>
-                    <td>
-                        {{pages|raw}}
-                    </td>
-                </tr>
-            </table>
-        </td>
-        <td align=left valign=middle width="35%">
-            <table width="100%">
-                <tr valign=middle align=right>
-                    <td>
-			{%if neighborThreads['next'] is defined %}
-				<a href="{{path('thread', {'id':neighborThreads['next'].thread.id})}}" rel=prev rev=next>{{neighborThreads['next'].subject}}</a>
-			{%endif%}
-                    </td>
-                </tr>
-            </table>
-        </td>
-    </tr>
-</table>
-{%endblock pagesBottom%}
-{%endblock content%}
+{% block content %}
+    {% include theme.path(section.bundle~':Forum:topicStartMessage.html.twig') %}
+    {% block pagesTop %}
+        <table class=nav>
+            <tr>
+                <td align=left valign=middle width="35%">
+                    <table>
+                        <tr valign=middle>
+                            <td align=left valign=top>
+                                {% if neighborThreads['previous'] is defined %}
+                                    <a href="{{ path('thread', {'id':neighborThreads['previous'].thread.id}) }}"
+                                       rel=prev rev=next>{{ neighborThreads['previous'].subject }}</a>
+                                {% endif %}
+                            </td>
+                        </tr>
+                    </table>
+                </td>
+                <td>
+                    <table width="100%">
+                        <tr valign=middle align=center>
+                            <td>
+                                {{ pages|raw }}
+                            </td>
+                        </tr>
+                    </table>
+                </td>
+                <td align=left valign=middle width="35%">
+                    <table width="100%">
+                        <tr valign=middle align=right>
+                            <td>
+                                {% if neighborThreads['next'] is defined %}
+                                    <a href="{{ path('thread', {'id':neighborThreads['next'].thread.id}) }}" rel=prev
+                                       rev=next>{{ neighborThreads['next'].subject }}</a>
+                                {% endif %}
+                            </td>
+                        </tr>
+                    </table>
+                </td>
+            </tr>
+        </table>
+    {% endblock pagesTop %}
+    {% for message in messages %}
+        {% include theme.path('RLMainBundle:Forum:message.html.twig') %}
+    {% endfor %}
+    {% block pagesBottom %}
+        <table class=nav>
+            <tr>
+                <td align=left valign=middle width="35%">
+                    <table>
+                        <tr valign=middle>
+                            <td align=left valign=top>
+                                {% if neighborThreads['previous'] is defined %}
+                                    <a href="{{ path('thread', {'id':neighborThreads['previous'].thread.id}) }}"
+                                       rel=prev rev=next>{{ neighborThreads['previous'].subject }}</a>
+                                {% endif %}
+                            </td>
+                        </tr>
+                    </table>
+                </td>
+                <td>
+                    <table width="100%">
+                        <tr valign=middle align=center>
+                            <td>
+                                {{ pages|raw }}
+                            </td>
+                        </tr>
+                    </table>
+                </td>
+                <td align=left valign=middle width="35%">
+                    <table width="100%">
+                        <tr valign=middle align=right>
+                            <td>
+                                {% if neighborThreads['next'] is defined %}
+                                    <a href="{{ path('thread', {'id':neighborThreads['next'].thread.id}) }}" rel=prev
+                                       rev=next>{{ neighborThreads['next'].subject }}</a>
+                                {% endif %}
+                            </td>
+                        </tr>
+                    </table>
+                </td>
+            </tr>
+        </table>
+    {% endblock pagesBottom %}
+    {% block readers %}
+        {% set readersStr = '' %}
+        {% set registeredReadersCount = 0 %}
+        {% set readersCount = readers|length %}
+        {% for reader in readers if reader.user.username != 'anonymous' %}
+            {% set readersStr = readersStr~'<br>'~reader.user.username %}
+            {% set registeredReadersCount = registeredReadersCount + 1 %}
+        {% endfor %}
+        <table class=readers>
+            <thead>
+            <tr>
+                <td>
+                    {% transchoice readersCount %}{0} This thread is read by %readersCount% users|{1} This thread is read by %readersCount% user| ]1,Inf] This thread is read by %readersCount% users{% endtranschoice %}
+                </td>
+            </tr>
+            </thead>
+            <tbody>
+            <tr>
+                <td>{% trans %}Anonymouses{% endtrans %}: {{ readersCount - registeredReadersCount }}<br>
+                    {% trans %}Registered users{% endtrans %}: {{ registeredReadersCount }}
+                    {{ readersStr|raw }}
+                </td>
+            </tr>
+            </tbody>
+        </table>
+    {% endblock readers %}
+{% endblock content %}

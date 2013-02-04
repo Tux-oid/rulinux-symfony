@@ -34,6 +34,7 @@ use RL\MainBundle\Entity\BlockPosition;
 use RL\MainBundle\Entity\Mark;
 use RL\MainBundle\Entity\Group;
 use RL\MainBundle\Entity\UsersFilter;
+use RL\MainBundle\Entity\Reader;
 
 /**
  * RL\MainBundle\Security\User\RLUserInterface
@@ -133,4 +134,8 @@ interface RLUserInterface extends AdvancedUserInterface
     public function addPosition(BlockPosition $position);
     public function removePosition(BlockPosition $position);
     public function getPositions();
+    public function addReadThread(Reader $reader);
+    public function removeReadThread(Reader $reader);
+    public function getReadThreads();
+
 }

@@ -52,12 +52,12 @@ class MainPageSettingsType extends AbstractType
         );
     }
 
-    public function setDefaultOptions(OptionsResolverInterface $resolver)
+    public function getDefaultOptions(array $options)
     {
-        $resolver->setDefaults(
-            array(
-                'data_class' => 'RL\MainBundle\Entity\User'
-            )
+        return array(
+            'csrf_protection' => true,
+            'csrf_field_name' => '_csrf_token',
+            'intention' => 'authenticate'
         );
     }
 

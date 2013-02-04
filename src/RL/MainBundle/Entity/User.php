@@ -355,6 +355,13 @@ class User implements RLUserInterface, EquatableInterface
     protected $positions;
 
     /**
+     * @ORM\OneToMany(targetEntity="Reader", mappedBy="user", cascade={"all"})
+     *
+     * @var \Doctrine\Common\Collections\ArrayCollection
+     */
+    protected $readThreads;
+
+    /**
      * Constructor
      */
     public function __construct()
@@ -1294,5 +1301,33 @@ class User implements RLUserInterface, EquatableInterface
         return $this->positions;
     }
 
+    /**
+     * Add reader
+     *
+     * @param \RL\MainBundle\Entity\Reader $reader
+     */
+    public function addReadThread(Reader $reader)
+    {
+        $this->readThreads[] = $reader;
+    }
 
+    /**
+     * Remove reader
+     *
+     * @param \RL\MainBundle\Entity\Reader $reader
+     */
+    public function removeReadThread(Reader $reader)
+    {
+        $this->readThreads[] = $reader;
+    }
+
+    /**
+     * Get readers
+     *
+     * @return \Doctrine\Common\Collections\Collection
+     */
+    public function getReadThreads()
+    {
+        return $this->readThreads;
+    }
 }

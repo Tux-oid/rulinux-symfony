@@ -29,6 +29,7 @@
 namespace RL\MainBundle\Controller;
 
 use Symfony\Component\Security\Core\SecurityContext;
+use RL\MainBundle\Entity\Reader;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use RL\MainBundle\Controller\AbstractController;
 use RL\MainBundle\Form\Type\AddCommentType;
@@ -113,12 +114,16 @@ class ForumController extends AbstractController
     {
         /** @var $user \RL\MainBundle\Security\User\RLUserInterface */
         $user = $this->get('security.context')->getToken()->getUser();
+        /** @var $doctrine \Doctrine\Bundle\DoctrineBundle\Registry */
         $doctrine = $this->get('doctrine');
+        /** @var $threadRepository \RL\MainBundle\Entity\Repository\ThreadRepository */
         $threadRepository = $doctrine->getRepository('RLMainBundle:Thread');
         /** @var $section \RL\MainBundle\Entity\Section */
         $section = $threadRepository->findOneById($id)->getSubsection()->getSection();
         $itemsCount = count($threadRepository->findOneById($id)->getMessages());
         $threadRepository = $doctrine->getRepository($section->getBundle() . ':Thread');
+        /** @var $thread \RL\MainBundle\Entity\Thread */
+        $thread = $threadRepository->findOneById($id);
         $itemsOnPage = $user->getCommentsOnPage();
         $pagesCount = ceil(($itemsCount - 1) / $itemsOnPage);
         $pagesCount > 1 ? $offset = $itemsOnPage * ($page - 1) : $offset = 0;
@@ -138,6 +143,18 @@ class ForumController extends AbstractController
             )
         );
         $neighborThreads = $threadRepository->getNeighborThreadsById($id);
+        /** @var $readersRepository \RL\MainBundle\Entity\Repository\ReaderRepository */
+        $readersRepository = $doctrine->getRepository('RLMainBundle:Reader');
+        $readers = $readersRepository->getExpiredReaders($thread, $user, $this->get('session')->getId());
+        /** @var $reader \RL\MainBundle\Entity\Reader */
+        foreach($readers as $reader) {
+            $reader->getThread()->removeReader($reader);
+            $reader->getUser()->removeReadThread($reader);
+            $doctrine->getManager()->remove($reader);
+        }
+        $thread->addReader(new Reader($user, $thread, $this->get('session')->getId()));
+        $doctrine->getManager()->flush();
+        $readers = $readersRepository->getReaders($thread);
 
         return $this->render(
             'RLMainBundle:Forum:thread.html.twig',
@@ -147,6 +164,7 @@ class ForumController extends AbstractController
                 'pages' => $pagesStr,
                 'neighborThreads' => $neighborThreads,
                 'section' => $section,
+                'readers' => $readers
             )
         );
     }
