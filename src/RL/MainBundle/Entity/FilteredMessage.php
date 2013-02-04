@@ -73,6 +73,18 @@ class FilteredMessage
     protected $weight;
 
     /**
+     * Constructor
+     *
+     * @param |RL\MainBundle\Entity\Filter $filter
+     * @param int $weight
+     */
+    public function __construct(Filter $filter = null, $weight = 0)
+    {
+        $this->filter = $filter;
+        $this->weight = $weight;
+    }
+
+    /**
      * Set filter
      *
      * @param \RL\MainBundle\Entity\Filter $filter

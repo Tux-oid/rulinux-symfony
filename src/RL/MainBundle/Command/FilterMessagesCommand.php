@@ -32,6 +32,10 @@ use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Input\InputOption;
+use RL\MainBundle\Entity\Filter;
+use RL\MainBundle\Entity\Word;
+use RL\MainBundle\Entity\Message;
+use RL\MainBundle\Entity\FilteredMessage;
 
 /**
  * RL\MainBundle\Command\FilterMessagesCommand
@@ -59,16 +63,39 @@ class FilterMessagesCommand extends ContainerAwareCommand
      */
     protected function execute(InputInterface $input, OutputInterface $output)
     {
+        /** @var $doctrine \Doctrine\Bundle\DoctrineBundle\Registry */
+        $doctrine = $this->getContainer()->get('doctrine');
         /** @var $messagesRepository \RL\MainBundle\Entity\Repository\MessageRepository */
-        $messagesRepository = $this->getContainer()->get('doctrine')->getRepository('RLMainBundle:Message');
-        $filters = $this->getContainer()->get('doctrine')->getRepository('RLMainBundle:Filter')->findAll();
+        $messagesRepository = $doctrine->getRepository('RLMainBundle:Message');
+        /** @var $wordsRepository \Doctrine\ORM\EntityRepository */
+        $wordsRepository = $doctrine->getRepository('RLMainBundle:Word');
+        $filters = $doctrine->getRepository('RLMainBundle:Filter')->findAll();
         /** @var $message \RL\MainBundle\Entity\Message */
         foreach ($messagesRepository->getUnfilteredMessages() as $message) {
             /** @var $filter \RL\MainBundle\Entity\Filter */
             foreach ($filters as $filter) {
-                $filter->filter($message);
+                if($filter->isFilterByTags()) {
+                    $comment = strip_tags($message->getComment());
+                } else {
+                    $comment = $message->getComment();
+                }
+                $weight = 0;
+                $wordsCount = 0;
+                foreach(preg_split("#[ \.,\?\\\(\)\[\]{}\"';:\!\=\+\-\#\$\%\^\&\*\\r\\n\\t]#suim", $comment) as $word) {
+                    /** @var $word \RL\MainBundle\Entity\Word */
+                    $word = $wordsRepository->findOneBy(array("word" => $word, "filter" => $filter));
+                    if(null !== $word) {
+                        $weight += $word->getWeight();
+                        $wordsCount++;
+                    }
+                }
+                if($wordsCount != 0) {
+                    $weight = $weight/$wordsCount;
+                }
+                $message->addFilter(new FilteredMessage($filter, $weight));
             }
         }
+        $doctrine->getManager()->flush();
         $output->writeln('Done.');
     }
 }

@@ -40,9 +40,6 @@ use Doctrine\Common\Collections\ArrayCollection;
  *
  * @ORM\Entity()
  * @ORM\Table(name="filters")
- * @ORM\InheritanceType("JOINED")
- * @ORM\DiscriminatorColumn(name="content_type", type="string", length=20)
- * @ORM\DiscriminatorMap({"filter" = "Filter"})
  *
  * @author Peter Vasilevsky <tuxoiduser@gmail.com> a.k.a. Tux-oid
  * @license BSDL
@@ -258,21 +255,5 @@ final class Filter
     public function isFilterByTags()
     {
         return $this->filterByTags;
-    }
-
-    /**
-     * Filter message
-     *
-     * @param \RL\MainBundle\Entity\Message $message
-     */
-    public function filter(Message $message)
-    {
-        if($this->isFilterByTags()) {
-            $comment = $message->getRawComment();
-        } else {
-            $comment = $message->getComment();
-        }
-        $wordsArray = preg_split("#[ \.,\?\\\(\)\[\]{}<\"';:\!\=\+\-\#\$\%\^\&\*>\\r\\n\\t]#suim", $comment);
-        //TODO:implement behavior
     }
 }

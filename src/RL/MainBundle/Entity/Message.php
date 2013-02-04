@@ -514,6 +514,7 @@ class Message
     public function addFilter(FilteredMessage $filter)
     {
         $this->filters[] = $filter;
+        $filter->setMessage($this);
     }
 
     /**
