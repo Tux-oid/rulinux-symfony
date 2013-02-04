@@ -70,6 +70,14 @@ abstract class Block
     protected $positions;
 
     /**
+     * Constructor
+     */
+    public function __construct()
+    {
+        $this->positions = new ArrayCollection();
+    }
+
+    /**
      * Get id
      *
      * @return integer

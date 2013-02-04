@@ -32,6 +32,7 @@ use Symfony\Component\Security\Core\Role\RoleInterface;
 use Symfony\Component\Validator\Constraints as Assert;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
+use RL\MainBundle\Entity\User;
 
 /**
  * RL\MainBundle\Entity\Group
@@ -48,19 +49,27 @@ class Group implements RoleInterface, \Serializable
      * @ORM\Id()
      * @ORM\Column(name="id", type="integer")
      * @ORM\GeneratedValue(strategy="AUTO")
+     *
+     * @var integer
      */
     protected $id;
     /**
      * @ORM\Column(name="name", type="string", length=255)
      * @Assert\NotBlank()
+     *
+     * @var string
      */
     protected $name;
     /**
      * @ORM\Column(name="description", type="string", length=512, unique=true, nullable=false)
+     *
+     * @var string
      */
     protected $description;
     /**
      * @ORM\OneToMany(targetEntity="User", mappedBy="group")
+     *
+     * @var \Doctrine\Common\Collections\ArrayCollection
      */
     protected $users;
 
@@ -69,7 +78,7 @@ class Group implements RoleInterface, \Serializable
      */
     public function __construct()
     {
-        $this->users = new \Doctrine\Common\Collections\ArrayCollection();
+        $this->users = new ArrayCollection();
     }
     /**
      * @see RoleInterface
@@ -128,7 +137,7 @@ class Group implements RoleInterface, \Serializable
      *
      * @param \RL\MainBundle\Entity\User $users
      */
-    public function addUser(\RL\MainBundle\Entity\User $users)
+    public function addUser(User $users)
     {
         $this->users[] = $users;
     }

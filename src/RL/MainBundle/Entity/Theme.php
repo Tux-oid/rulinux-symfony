@@ -24,7 +24,7 @@
  * ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-*/
+ */
 
 namespace RL\MainBundle\Entity;
 
@@ -46,20 +46,32 @@ class Theme
      * @ORM\Id
      * @ORM\Column(type="integer", name="id")
      * @ORM\GeneratedValue(strategy="AUTO")
+     *
+     * @var integer
      */
     protected $id;
+
     /**
      * @ORM\Column(type="string", length=64)
+     *
+     * @var string
      */
     protected $name;
+
     /**
      * @ORM\Column(type="string", length=255)
+     *
+     * @var string
      */
     protected $description;
+
     /**
      * @ORM\Column(type="string", length=255)
+     *
+     * @var string
      */
     protected $directory;
+
     /**
      * @param $description
      */

@@ -24,7 +24,7 @@
  * ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-*/
+ */
 
 namespace RL\MainBundle\Entity;
 
@@ -45,34 +45,51 @@ use RL\MainBundle\Entity\Subsection;
  *
  * @author Peter Vasilevsky <tuxoiduser@gmail.com> a.k.a. Tux-oid
  * @license BSDL
-*/
+ */
 class Thread
 {
     /**
      * @ORM\Id
      * @ORM\Column(type="integer", name="id")
      * @ORM\GeneratedValue(strategy="AUTO")
+     *
+     * @var integer
      */
     protected $id;
+
     /**
      * @ORM\OneToMany(targetEntity="RL\MainBundle\Entity\Message", mappedBy="thread")
      * @ORM\OrderBy({"id" = "ASC"})
+     *
+     * @var \Doctrine\Common\Collections\ArrayCollection
      */
     protected $messages;
+
     /**
      * @ORM\ManyToOne(targetEntity="RL\MainBundle\Entity\Subsection", inversedBy="threads")
+     *
+     * @var \RL\MainBundle\Entity\Subsection
      */
     protected $subsection;
+
     /**
      * @ORM\Column(type="boolean")
+     *
+     * @var boolean
      */
     protected $attached = false;
+
     /**
      * @ORM\Column(type="datetime", name="timest")
+     *
+     * @var \DateTime
      */
     protected $postingTime;
+
     /**
      * @ORM\Column(type="datetime", name="changing_timest")
+     *
+     * Var \DateTime
      */
     protected $changingTime;
 
@@ -81,8 +98,9 @@ class Thread
      */
     public function __construct()
     {
-        $this->messages = new \Doctrine\Common\Collections\ArrayCollection();
+        $this->messages = new ArrayCollection();
     }
+
     /**
      * @ORM\PrePersist
      */
@@ -90,6 +108,7 @@ class Thread
     {
         $this->postingTime = $this->changingTime = new \DateTime('now');
     }
+
     /**
      * @ORM\PreUpdate
      */
@@ -97,6 +116,7 @@ class Thread
     {
         $this->changingTime = new \DateTime('now');
     }
+
     /**
      * Get id
      *
@@ -106,6 +126,7 @@ class Thread
     {
         return $this->id;
     }
+
     /**
      * Set attached
      *
@@ -115,6 +136,7 @@ class Thread
     {
         $this->attached = $attached;
     }
+
     /**
      * Get attached
      *
@@ -124,6 +146,7 @@ class Thread
     {
         return $this->attached;
     }
+
     /**
      * Set changingTime
      *
@@ -133,6 +156,7 @@ class Thread
     {
         $this->changingTime = $changingTime;
     }
+
     /**
      * Get changingTime
      *
@@ -142,15 +166,17 @@ class Thread
     {
         return $this->changingTime;
     }
+
     /**
      * Add messages
      *
      * @param \RL\MainBundle\Entity\Message $messages
      */
-    public function addMessage(\RL\MainBundle\Entity\Message $messages)
+    public function addMessage(Message $messages)
     {
         $this->messages[] = $messages;
     }
+
     /**
      * Get messages
      *
@@ -160,15 +186,17 @@ class Thread
     {
         return $this->messages;
     }
+
     /**
      * Set subsection
      *
      * @param \RL\MainBundle\Entity\Subsection $subsection
      */
-    public function setSubsection(\RL\MainBundle\Entity\Subsection $subsection)
+    public function setSubsection(Subsection $subsection)
     {
         $this->subsection = $subsection;
     }
+
     /**
      * Get subsection
      *

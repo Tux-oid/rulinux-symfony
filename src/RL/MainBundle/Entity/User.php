@@ -24,7 +24,7 @@
  * ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-*/
+ */
 
 namespace RL\MainBundle\Entity;
 
@@ -53,176 +53,300 @@ class User implements RLUserInterface, EquatableInterface
      * @ORM\Id()
      * @ORM\Column(name="id", type="integer")
      * @ORM\GeneratedValue(strategy="AUTO")
+     *
+     * @var integer
      */
     protected $id;
+
     /**
      * @ORM\ManyToOne(targetEntity="Group", inversedBy="users", cascade={"all"})
+     *
+     * @var \RL\MainBundle\Entity\Group
      */
     protected $group;
+
     /**
      * @ORM\Column(name="nick", type="string", length=100, unique=true, nullable=false)
+     *
      * @Assert\NotBlank()
      * @Assert\Regex("#([a-zA-Z0-9\_\-\/\.]{2,})$#")
+     *
+     * @var string
      */
     protected $username;
+
     /**
      * @ORM\Column(type="string", length=32)
+     *
+     * @var string
      */
-    protected  $salt;
+    protected $salt;
+
     /**
      * @ORM\Column(name="password", type="string", length=255)
+     *
      * @Assert\NotBlank()
+     *
+     * @var string
      */
     protected $password;
+
     /**
      * @ORM\Column(name="name", type="string", length=255, nullable=true)
+     *
+     * @var string
      */
     protected $name;
+
     /**
      * @ORM\Column(name="lastname", type="string", length=255, nullable=true)
+     *
+     * @var string
      */
     protected $lastname;
+
     /**
      * @ORM\Column(name="country", type="string", length=512, nullable=true)
+     *
      * @Assert\Country
+     *
+     * @var string
      */
     protected $country;
+
     /**
      * @ORM\Column(name="city", type="string", length=512, nullable=true)
+     *
+     * @var string
      */
     protected $city;
+
     /**
      * @ORM\Column(name="photo", type="string", length=512, nullable=true)
+     *
      * @Assert\Image
+     *
+     * @var string
      */
     protected $photo;
+
     /**
      * @ORM\Column(name="birthday", type="datetime", nullable=true)
+     *
      * @Assert\DateTime
+     *
+     * @var \DateTime
      */
     protected $birthday;
+
     /**
      * @ORM\Column(name="gender", type="boolean")
+     *
+     * @var boolean
      */
     protected $gender;
+
     /**
      * @ORM\Column(name="additional", type="text", nullable=true)
+     *
+     * @var string
      */
     protected $additional;
+
     /**
      * @ORM\Column(name="raw_additional", type="text", nullable=true)
+     *
+     * @var string
      */
     protected $additionalRaw;
+
     /**
      * @ORM\Column(name="email", type="string", length=512, unique=true, nullable=false)
+     *
      * @Assert\Email
+     *
+     * @var string
      */
     protected $email;
+
     /**
      * @ORM\Column(name="im", type="string", length=512, nullable=true)
+     *
      * @Assert\Email
+     *
+     * @var string
      */
     protected $im;
+
     /**
      * @ORM\Column(name="register_date", type="datetime")
+     *
      * @Assert\DateTime
+     *
+     * @var \DateTime
      */
     protected $registrationDate;
+
     /**
      * @ORM\Column(name="last_visit", type="datetime")
+     *
      * @Assert\DateTime
+     *
+     * @var \DateTime
      */
     protected $lastVisitDate;
+
     /**
      * @ORM\Column(name="active", type="boolean")
+     *
+     * @var boolean
      */
     protected $active;
+
     /**
      * @ORM\Column(name="captcha", type="integer")
+     *
+     * @var integer
      */
     protected $captchaLevel;
+
     /**
      * @ORM\Column(name="openid", type="string", length=1024, nullable=true)
+     *
+     * @var string
      */
     protected $openid;
+
     /**
      * @ORM\Column(name="question", type="string", length=1024, nullable=false)
+     *
+     * @var string
      */
     protected $question;
+
     /**
      * @ORM\Column(name="answer", type="string", length=1024, nullable=false)
+     *
+     * @var string
      */
     protected $answer;
+
     //Settings
     /**
      * @ORM\Column(name="language", type="text")
+     *
      * @Assert\NotBlank()
      * @Assert\Language
+     *
+     * @var string
      */
     protected $language;
 
     /**
      * @ORM\ManyToOne(targetEntity="RL\MainBundle\Entity\Theme")
+     *
+     * @var \RL\MainBundle\Entity\Theme
      */
     protected $theme;
+
     /**
      * @ORM\Column(name="gmt", type="string", length=64)
+     *
+     * @var string
      */
     protected $gmt;
+
     /**
      * @ORM\OneToMany(targetEntity="RL\MainBundle\Entity\UsersFilter", mappedBy="user", cascade={"all"})
      *
      * @var \Doctrine\Common\Collections\ArrayCollection
      */
     protected $filters;
+
     /**
      * @ORM\ManyToOne(targetEntity="RL\MainBundle\Entity\Mark", inversedBy="users", cascade={"all"})
+     *
+     * \RL\MainBundle\Entity\Mark
      */
     protected $mark;
+
     /**
      * @ORM\Column(name="sort_to", type="string", length=512)
+     *
+     * @var string
      */
     protected $sortingType;
+
     /**
      * @ORM\Column(name="news_on_page", type="integer")
+     *
+     * @var integer
      */
     protected $newsOnPage;
+
     /**
      * @ORM\Column(name="comments_on_page", type="integer")
+     *
+     * @var integer
      */
     protected $commentsOnPage;
+
     /**
      * @ORM\Column(name="threads_on_page", type="integer")
+     *
+     * @var integer
      */
     protected $threadsOnPage;
+
     /**
      * @ORM\Column(name="show_email", type="boolean")
+     *
+     * @var boolean
      */
     protected $showEmail;
+
     /**
      * @ORM\Column(name="show_im", type="boolean")
+     *
+     * @var boolean
      */
     protected $showIm;
+
     /**
      * @ORM\Column(name="show_avatars", type="boolean")
+     *
+     * @var boolean
      */
     protected $showAvatars;
+
     /**
      * @ORM\Column(name="show_ua", type="boolean")
+     *
+     * @var boolean
      */
     protected $showUa;
+
     /**
      * @ORM\Column(name="show_resp", type="boolean")
+     *
+     * @var boolean
      */
     protected $showResp;
+
     /**
      * @ORM\OneToMany(targetEntity="RL\MainBundle\Entity\Message", mappedBy="user", cascade={"all"})
+     *
+     * @var \Doctrine\Common\Collections\ArrayCollection
      */
     protected $messages;
+
     /**
      * @ORM\ManyToMany(targetEntity="RL\MainBundle\Entity\Message", inversedBy="changedBy", cascade={"all"})
+     *
+     * @var \Doctrine\Common\Collections\ArrayCollection
      */
     protected $editedComments;
+
     /**
      * @ORM\OneToMany(targetEntity="RL\MainBundle\Entity\BlockPosition", mappedBy="user", cascade={"all"})
      *
@@ -239,6 +363,9 @@ class User implements RLUserInterface, EquatableInterface
         $this->salt = md5(uniqid(null, true));
         $this->groups = new ArrayCollection();
         $this->positions = new ArrayCollection();
+        $this->filters = new ArrayCollection();
+        $this->messages = new ArrayCollection();
+        $this->editedComments = new ArrayCollection();
     }
 
     /**
@@ -272,6 +399,7 @@ class User implements RLUserInterface, EquatableInterface
     {
         return $this->active;
     }
+
     /**
      * @inheritDoc
      */
@@ -279,6 +407,7 @@ class User implements RLUserInterface, EquatableInterface
     {
         return $this->username;
     }
+
     /**
      * @inheritDoc
      */
@@ -286,6 +415,7 @@ class User implements RLUserInterface, EquatableInterface
     {
         return $this->salt;
     }
+
     /**
      * @inheritDoc
      */
@@ -293,14 +423,16 @@ class User implements RLUserInterface, EquatableInterface
     {
         return $this->password;
     }
+
     /**
      * @inheritDoc
      */
     public function getRoles()
     {
-//		return $this->group->toArray();
+        //		return $this->group->toArray();
         return array($this->group);
     }
+
     /**
      * @inheritDoc
      */
@@ -308,6 +440,7 @@ class User implements RLUserInterface, EquatableInterface
     {
 
     }
+
     /**
      * @inheritDoc
      */
@@ -336,10 +469,10 @@ class User implements RLUserInterface, EquatableInterface
     {
         $ret = array();
         $vars = get_class_vars(get_class($this));
-        foreach($vars as $key => $var)
-        {
+        foreach ($vars as $key => $var) {
             $ret[$key] = $this->$key;
         }
+
         return $ret;
     }
 
@@ -352,6 +485,7 @@ class User implements RLUserInterface, EquatableInterface
     {
         return $this->id;
     }
+
     /**
      * Set username
      *
@@ -361,6 +495,7 @@ class User implements RLUserInterface, EquatableInterface
     {
         $this->username = $username;
     }
+
     /**
      * Set salt
      *
@@ -370,6 +505,7 @@ class User implements RLUserInterface, EquatableInterface
     {
         $this->salt = $salt;
     }
+
     /**
      * Set password
      *
@@ -379,6 +515,7 @@ class User implements RLUserInterface, EquatableInterface
     {
         $this->password = $password;
     }
+
     /**
      * Set name
      *
@@ -388,6 +525,7 @@ class User implements RLUserInterface, EquatableInterface
     {
         $this->name = $name;
     }
+
     /**
      * Get name
      *
@@ -397,6 +535,7 @@ class User implements RLUserInterface, EquatableInterface
     {
         return $this->name;
     }
+
     /**
      * Set lastname
      *
@@ -406,6 +545,7 @@ class User implements RLUserInterface, EquatableInterface
     {
         $this->lastname = $lastname;
     }
+
     /**
      * Get lastname
      *
@@ -415,6 +555,7 @@ class User implements RLUserInterface, EquatableInterface
     {
         return $this->lastname;
     }
+
     /**
      * Set country
      *
@@ -424,6 +565,7 @@ class User implements RLUserInterface, EquatableInterface
     {
         $this->country = $country;
     }
+
     /**
      * Get country
      *
@@ -433,6 +575,7 @@ class User implements RLUserInterface, EquatableInterface
     {
         return $this->country;
     }
+
     /**
      * Set city
      *
@@ -442,6 +585,7 @@ class User implements RLUserInterface, EquatableInterface
     {
         $this->city = $city;
     }
+
     /**
      * Get city
      *
@@ -451,6 +595,7 @@ class User implements RLUserInterface, EquatableInterface
     {
         return $this->city;
     }
+
     /**
      * Set photo
      *
@@ -460,6 +605,7 @@ class User implements RLUserInterface, EquatableInterface
     {
         $this->photo = $photo;
     }
+
     /**
      * Get photo
      *
@@ -469,6 +615,7 @@ class User implements RLUserInterface, EquatableInterface
     {
         return $this->photo;
     }
+
     /**
      * Set birthday
      *
@@ -478,6 +625,7 @@ class User implements RLUserInterface, EquatableInterface
     {
         $this->birthday = $birthday;
     }
+
     /**
      * Get birthday
      *
@@ -487,6 +635,7 @@ class User implements RLUserInterface, EquatableInterface
     {
         return $this->birthday;
     }
+
     /**
      * Set gender
      *
@@ -496,6 +645,7 @@ class User implements RLUserInterface, EquatableInterface
     {
         $this->gender = $gender;
     }
+
     /**
      * Get gender
      *
@@ -505,6 +655,7 @@ class User implements RLUserInterface, EquatableInterface
     {
         return $this->gender;
     }
+
     /**
      * Set additional
      *
@@ -514,6 +665,7 @@ class User implements RLUserInterface, EquatableInterface
     {
         $this->additional = $additional;
     }
+
     /**
      * Get additional
      *
@@ -523,6 +675,7 @@ class User implements RLUserInterface, EquatableInterface
     {
         return $this->additional;
     }
+
     /**
      * Set additionalRaw
      *
@@ -532,6 +685,7 @@ class User implements RLUserInterface, EquatableInterface
     {
         $this->additionalRaw = $additionalRaw;
     }
+
     /**
      * Get additionalRaw
      *
@@ -541,6 +695,7 @@ class User implements RLUserInterface, EquatableInterface
     {
         return $this->additionalRaw;
     }
+
     /**
      * Set email
      *
@@ -550,6 +705,7 @@ class User implements RLUserInterface, EquatableInterface
     {
         $this->email = $email;
     }
+
     /**
      * Get email
      *
@@ -559,6 +715,7 @@ class User implements RLUserInterface, EquatableInterface
     {
         return $this->email;
     }
+
     /**
      * Set im
      *
@@ -568,6 +725,7 @@ class User implements RLUserInterface, EquatableInterface
     {
         $this->im = $im;
     }
+
     /**
      * Get im
      *
@@ -577,6 +735,7 @@ class User implements RLUserInterface, EquatableInterface
     {
         return $this->im;
     }
+
     /**
      * Set registrationDate
      *
@@ -586,6 +745,7 @@ class User implements RLUserInterface, EquatableInterface
     {
         $this->registrationDate = $registrationDate;
     }
+
     /**
      * Get registrationDate
      *
@@ -595,6 +755,7 @@ class User implements RLUserInterface, EquatableInterface
     {
         return $this->registrationDate;
     }
+
     /**
      * Set lastVisitDate
      *
@@ -604,6 +765,7 @@ class User implements RLUserInterface, EquatableInterface
     {
         $this->lastVisitDate = $lastVisitDate;
     }
+
     /**
      * Get lastVisitDate
      *
@@ -613,6 +775,7 @@ class User implements RLUserInterface, EquatableInterface
     {
         return $this->lastVisitDate;
     }
+
     /**
      * Set captchaLevel
      *
@@ -622,6 +785,7 @@ class User implements RLUserInterface, EquatableInterface
     {
         $this->captchaLevel = $captchaLevel;
     }
+
     /**
      * Get captchaLevel
      *
@@ -631,6 +795,7 @@ class User implements RLUserInterface, EquatableInterface
     {
         return $this->captchaLevel;
     }
+
     /**
      * Set openid
      *
@@ -640,6 +805,7 @@ class User implements RLUserInterface, EquatableInterface
     {
         $this->openid = $openid;
     }
+
     /**
      * Get openid
      *
@@ -659,6 +825,7 @@ class User implements RLUserInterface, EquatableInterface
     {
         $this->theme = $theme;
     }
+
     /**
      * Get theme
      *
@@ -668,6 +835,7 @@ class User implements RLUserInterface, EquatableInterface
     {
         return $this->theme;
     }
+
     /**
      * Set gmt
      *
@@ -677,6 +845,7 @@ class User implements RLUserInterface, EquatableInterface
     {
         $this->gmt = $gmt;
     }
+
     /**
      * Get gmt
      *
@@ -726,6 +895,7 @@ class User implements RLUserInterface, EquatableInterface
     {
         $this->sortingType = $sortingType;
     }
+
     /**
      * Get sortingType
      *
@@ -735,6 +905,7 @@ class User implements RLUserInterface, EquatableInterface
     {
         return $this->sortingType;
     }
+
     /**
      * Set newsOnPage
      *
@@ -744,6 +915,7 @@ class User implements RLUserInterface, EquatableInterface
     {
         $this->newsOnPage = $newsOnPage;
     }
+
     /**
      * Get newsOnPage
      *
@@ -753,6 +925,7 @@ class User implements RLUserInterface, EquatableInterface
     {
         return $this->newsOnPage;
     }
+
     /**
      * Set commentsOnPage
      *
@@ -762,6 +935,7 @@ class User implements RLUserInterface, EquatableInterface
     {
         $this->commentsOnPage = $commentsOnPage;
     }
+
     /**
      * Get commentsOnPage
      *
@@ -771,6 +945,7 @@ class User implements RLUserInterface, EquatableInterface
     {
         return $this->commentsOnPage;
     }
+
     /**
      * Set threadsOnPage
      *
@@ -780,6 +955,7 @@ class User implements RLUserInterface, EquatableInterface
     {
         $this->threadsOnPage = $threadsOnPage;
     }
+
     /**
      * Get threadsOnPage
      *
@@ -789,6 +965,7 @@ class User implements RLUserInterface, EquatableInterface
     {
         return $this->threadsOnPage;
     }
+
     /**
      * Set showEmail
      *
@@ -798,6 +975,7 @@ class User implements RLUserInterface, EquatableInterface
     {
         $this->showEmail = $showEmail;
     }
+
     /**
      * Get showEmail
      *
@@ -807,6 +985,7 @@ class User implements RLUserInterface, EquatableInterface
     {
         return $this->showEmail;
     }
+
     /**
      * Set showIm
      *
@@ -816,6 +995,7 @@ class User implements RLUserInterface, EquatableInterface
     {
         $this->showIm = $showIm;
     }
+
     /**
      * Get showIm
      *
@@ -825,6 +1005,7 @@ class User implements RLUserInterface, EquatableInterface
     {
         return $this->showIm;
     }
+
     /**
      * Set showAvatars
      *
@@ -834,6 +1015,7 @@ class User implements RLUserInterface, EquatableInterface
     {
         $this->showAvatars = $showAvatars;
     }
+
     /**
      * Get showAvatars
      *
@@ -843,6 +1025,7 @@ class User implements RLUserInterface, EquatableInterface
     {
         return $this->showAvatars;
     }
+
     /**
      * Set showUa
      *
@@ -852,6 +1035,7 @@ class User implements RLUserInterface, EquatableInterface
     {
         $this->showUa = $showUa;
     }
+
     /**
      * Get showUa
      *
@@ -861,6 +1045,7 @@ class User implements RLUserInterface, EquatableInterface
     {
         return $this->showUa;
     }
+
     /**
      * Set showResp
      *
@@ -870,6 +1055,7 @@ class User implements RLUserInterface, EquatableInterface
     {
         $this->showResp = $showResp;
     }
+
     /**
      * Get showResp
      *
@@ -879,6 +1065,7 @@ class User implements RLUserInterface, EquatableInterface
     {
         return $this->showResp;
     }
+
     /**
      * Set mark
      *
@@ -888,6 +1075,7 @@ class User implements RLUserInterface, EquatableInterface
     {
         $this->mark = $mark;
     }
+
     /**
      * Get mark
      *
@@ -897,6 +1085,7 @@ class User implements RLUserInterface, EquatableInterface
     {
         return $this->mark;
     }
+
     /**
      * Set language
      *
@@ -906,6 +1095,7 @@ class User implements RLUserInterface, EquatableInterface
     {
         $this->language = $language;
     }
+
     /**
      * Get language
      *
@@ -915,6 +1105,7 @@ class User implements RLUserInterface, EquatableInterface
     {
         return $this->language;
     }
+
     /**
      * Set active
      *
@@ -924,6 +1115,7 @@ class User implements RLUserInterface, EquatableInterface
     {
         $this->active = $active;
     }
+
     /**
      * Get active
      *
@@ -933,6 +1125,7 @@ class User implements RLUserInterface, EquatableInterface
     {
         return $this->active;
     }
+
     /**
      * Set question
      *
@@ -942,6 +1135,7 @@ class User implements RLUserInterface, EquatableInterface
     {
         $this->question = $question;
     }
+
     /**
      * Get question
      *
@@ -951,6 +1145,7 @@ class User implements RLUserInterface, EquatableInterface
     {
         return $this->question;
     }
+
     /**
      * Set answer
      *
@@ -960,6 +1155,7 @@ class User implements RLUserInterface, EquatableInterface
     {
         $this->answer = $answer;
     }
+
     /**
      * Get answer
      *

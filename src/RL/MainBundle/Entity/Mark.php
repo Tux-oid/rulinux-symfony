@@ -30,7 +30,9 @@ namespace RL\MainBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\ORM\EntityManager;
+use Doctrine\Common\Collections\ArrayCollection;
 use RL\GeSHiBundle\GeSHi;
+use RL\MainBundle\Entity\User;
 
 /**
  * RL\MainBundle\Entity\Mark
@@ -50,18 +52,28 @@ abstract class Mark
      * @ORM\Id
      * @ORM\Column(name="id", type="integer")
      * @ORM\GeneratedValue(strategy="AUTO")
+     *
+     * @var integer
      */
     protected $id;
+
     /**
      * @ORM\Column(name="name", type="string", length=256)
+     *
+     * @var string
      */
     protected $name;
+
     /**
      * @ORM\Column(name="description", type="text", unique=true, nullable=false)
+     *
+     * @var string
      */
     protected $description;
     /**
      * @ORM\OneToMany(targetEntity="RL\MainBundle\Entity\User", mappedBy="mark")
+     *
+     * @var \Doctrine\Common\Collections\ArrayCollection
      */
     protected $users;
 
@@ -90,7 +102,7 @@ abstract class Mark
      */
     public function __construct()
     {
-        $this->users = new \Doctrine\Common\Collections\ArrayCollection();
+        $this->users = new ArrayCollection();
     }
 
     /**
@@ -148,7 +160,7 @@ abstract class Mark
      *
      * @param \RL\MainBundle\Entity\User $users
      */
-    public function addUser(\RL\MainBundle\Entity\User $users)
+    public function addUser(User $users)
     {
         $this->users[] = $users;
     }

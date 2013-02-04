@@ -45,17 +45,20 @@ class Link
      * @ORM\Id
      * @ORM\Column(type="integer", name="id")
      * @ORM\GeneratedValue(strategy="AUTO")
-     * @var
+     *
+     * @var integer
      */
     protected $id;
     /**
      * @ORM\Column(type="string", length=512)
-     * @var
+     *
+     * @var string
      */
     protected $name;
     /**
      * @ORM\Column(type="string", length=512)
-     * @var
+     *
+     * @var string
      */
     protected $link;
 

@@ -50,66 +50,109 @@ class Message
      * @ORM\Id
      * @ORM\Column(name="id", type="integer")
      * @ORM\GeneratedValue(strategy="AUTO")
+     *
+     * @var integer
      */
     protected $id;
+
     /**
      * @ORM\ManyToOne(targetEntity="RL\MainBundle\Entity\Thread", inversedBy="messages")
+     *
+     * @var \RL\MainBundle\Entity\Thread
      */
     protected $thread;
+
     /**
      * @ORM\ManyToOne(targetEntity="RL\MainBundle\Entity\User", inversedBy="messages")
+     *
+     * @var \RL\MainBundle\Entity\User
      */
     protected $user;
+
     /**
      * @ORM\ManyToOne(targetEntity="RL\MainBundle\Entity\Message", inversedBy="responses")
+     *
+     * @var \RL\MainBundle\Entity\Message
      */
     protected $referer;
+
     /**
      * @ORM\OneToMany(targetEntity="RL\MainBundle\Entity\Message", mappedBy="referer")
      *
      * @var \Doctrine\Common\Collections\ArrayCollection
      */
     protected $responses;
+
     /**
      * @ORM\Column(type="datetime")
+     *
+     * @var \DateTime
      */
     protected $postingTime;
+
     /**
      * @ORM\Column(type="text")
+     *
+     * @var string
      */
     protected $subject;
+
     /**
      * @ORM\Column(type="text")
+     *
+     * @var string
      */
     protected $comment;
+
     /**
      * @ORM\Column(type="text", name="raw_comment")
+     *
+     * @var string
      */
     protected $rawComment;
+
     /**
      * @ORM\Column(type="string", length=512, nullable=true)
+     *
+     * @var string
      */
     protected $useragent;
+
     /**
      * @ORM\Column(type="datetime", name="changing_timest")
+     *
+     * @var \DateTime
      */
     protected $changingTime;
+
     /**
      * @ORM\ManyToMany(targetEntity="RL\MainBundle\Entity\User", mappedBy="editedComments")
+     *
+     * @var \RL\MainBundle\Entity\User
      */
     protected $changedBy;
+
     /**
      * @ORM\Column(type="string", length=512, name="changed_for", nullable=true)
+     *
+     * @var string
      */
     protected $changedFor;
+
     /**
      * @ORM\Column(type="boolean", name="show_ua")
+     *
+     * @var boolean
      */
     protected $showUa = true;
+
     /**
      * @ORM\Column(type="string", length=128, name="session_id", nullable=true)
+     *
+     * @var string
      */
     protected $sessionId;
+
     /**
      * @ORM\OneToMany(targetEntity="RL\MainBundle\Entity\FilteredMessage", mappedBy="message", cascade={"all"})
      *

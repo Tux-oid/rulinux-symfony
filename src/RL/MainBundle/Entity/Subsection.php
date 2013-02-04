@@ -24,13 +24,14 @@
  * ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-*/
+ */
 
 namespace RL\MainBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\ArrayCollection;
 use RL\MainBundle\Entity\Section;
+use RL\MainBundle\Entity\Thread;
 
 /**
  * RL\MainBundle\Entity\Subsection
@@ -43,44 +44,69 @@ use RL\MainBundle\Entity\Section;
  *
  * @author Peter Vasilevsky <tuxoiduser@gmail.com> a.k.a. Tux-oid
  * @license BSDL
-*/
+ */
 class Subsection
 {
     /**
      * @ORM\Id
      * @ORM\Column(type="integer", name="id")
      * @ORM\GeneratedValue(strategy="AUTO")
+     *
+     * @var integer
      */
     protected $id;
+
     /**
      * @ORM\Column(type="string", length=255)
+     *
+     * @var string
      */
     protected $name;
+
     /**
      * @ORM\Column(type="string", length=512)
+     *
+     * @var string
      */
     protected $description;
+
     /**
      * @ORM\Column(type="text")
+     *
+     * @var string
      */
     protected $shortfaq;
+
     /**
      * @ORM\Column(type="string", length=512, nullable=true)
+     *
+     * @var string
      */
     protected $rewrite;
+
     /**
      * @ORM\OneToMany(targetEntity="Thread", mappedBy="subsection")
+     *
+     * @var \Doctrine\Common\Collections\ArrayCollection
      */
     protected $threads;
+
     /**
      * @ORM\ManyToOne(targetEntity="RL\MainBundle\Entity\Section", inversedBy="subsections")
      * @ORM\OrderBy({"id" = "ASC"})
+     *
+     * @var \RL\MainBundle\Entity\Section
      */
     protected $section;
+
+    /**
+     * Constructor
+     */
     public function __construct()
     {
-        $this->threads = new \Doctrine\Common\Collections\ArrayCollection();
+        $this->threads = new ArrayCollection();
     }
+
     /**
      * Get id
      *
@@ -90,6 +116,7 @@ class Subsection
     {
         return $this->id;
     }
+
     /**
      * Set name
      *
@@ -99,6 +126,7 @@ class Subsection
     {
         $this->name = $name;
     }
+
     /**
      * Get name
      *
@@ -108,6 +136,7 @@ class Subsection
     {
         return $this->name;
     }
+
     /**
      * Set description
      *
@@ -117,6 +146,7 @@ class Subsection
     {
         $this->description = $description;
     }
+
     /**
      * Get description
      *
@@ -126,24 +156,27 @@ class Subsection
     {
         return $this->description;
     }
+
     /**
      * Set shortfaq
      *
-     * @param text $shortfaq
+     * @param string $shortfaq
      */
     public function setShortfaq($shortfaq)
     {
         $this->shortfaq = $shortfaq;
     }
+
     /**
      * Get shortfaq
      *
-     * @return text
+     * @return string
      */
     public function getShortfaq()
     {
         return $this->shortfaq;
     }
+
     /**
      * Set rewrite
      *
@@ -153,6 +186,7 @@ class Subsection
     {
         $this->rewrite = $rewrite;
     }
+
     /**
      * Get rewrite
      *
@@ -162,28 +196,32 @@ class Subsection
     {
         return $this->rewrite;
     }
+
     /**
      * Add threads
      *
-     * @param RL\MainBundle\Entity\Thread $threads
+     * @param \RL\MainBundle\Entity\Thread $threads
      */
-    public function addThread(\RL\MainBundle\Entity\Thread $threads)
+    public function addThread(Thread $threads)
     {
         $this->threads[] = $threads;
     }
+
     /**
      * Get threads
      *
-     * @return Doctrine\Common\Collections\Collection
+     * @return \Doctrine\Common\Collections\Collection
      */
     public function getThreads()
     {
         return $this->threads;
     }
+
     public function getSection()
     {
         return $this->section;
     }
+
     public function setSection($section)
     {
         $this->section = $section;

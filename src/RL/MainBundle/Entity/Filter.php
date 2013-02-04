@@ -33,12 +33,16 @@ use RL\MainBundle\Entity\FilteredMessage;
 use RL\MainBundle\Entity\Word;
 use RL\MainBundle\Security\User\RLUserInterface;
 use RL\MainBundle\Entity\Message;
+use Doctrine\Common\Collections\ArrayCollection;
 
 /**
  * RL\MainBundle\Entity\Filter
  *
  * @ORM\Entity()
  * @ORM\Table(name="filters")
+ * @ORM\InheritanceType("JOINED")
+ * @ORM\DiscriminatorColumn(name="content_type", type="string", length=20)
+ * @ORM\DiscriminatorMap({"filter" = "Filter"})
  *
  * @author Peter Vasilevsky <tuxoiduser@gmail.com> a.k.a. Tux-oid
  * @license BSDL
@@ -95,6 +99,8 @@ final class Filter
     public function  __construct($filterByTags = false)
     {
         $this->filterByTags = $filterByTags;
+        $this->messages = new ArrayCollection();
+        $this->words = new ArrayCollection();
     }
 
     /**

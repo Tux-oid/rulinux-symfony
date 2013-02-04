@@ -45,16 +45,25 @@ class Settings
      * @ORM\Id
      * @ORM\Column(type="integer")
      * @ORM\GeneratedValue(strategy="AUTO")
+     *
+     * @var integer
      */
     protected $id;
+
     /**
      * @ORM\Column(type="text")
+     *
+     * @var string
      */
     protected $name;
+
     /**
      * @ORM\Column(type="text")
+     *
+     * @var string
      */
     protected $value;
+
     /**
      * Get id
      *

@@ -47,36 +47,56 @@ class Section
      * @ORM\Id
      * @ORM\Column(name="id", type="integer")
      * @ORM\GeneratedValue(strategy="AUTO")
+     *
+     * @var integer
      */
     protected $id;
+
     /**
      * @ORM\Column(type="string", length=512)
+     *
+     * @var string
      */
     protected $name;
+
     /**
      * @ORM\Column(type="string", length=1024, nullable=true)
+     *
+     * @var string
      */
     protected $description;
+
     /**
      * @ORM\Column(type="string", length=256, nullable=false)
+     *
+     * @var string
      */
     protected $rewrite;
+
     /**
      * @ORM\Column(type="string", length=1024, nullable=false)
+     *
+     * @var string
      */
     protected $bundle;
+
     /**
      * @ORM\Column(type="string", length=1024, nullable=false)
+     *
+     * @var string
      */
     protected $bundleNamespace;
+
     /**
      * @ORM\OneToMany(targetEntity="RL\MainBundle\Entity\Subsection", mappedBy="section")
      * @ORM\OrderBy({"id" = "ASC"})
+     *
+     * @var \Doctrine\Common\Collections\ArrayCollection
      */
     protected $subsections;
 
     /**
-     *
+     * Constructor
      */
     public function __construct()
     {
