@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) 2008 - 2013, Peter Vasilevsky
+ * Copyright (c) 2009 - 2013, Peter Vasilevsky
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without

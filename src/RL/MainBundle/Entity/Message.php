@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) 2008 - 2012, Peter Vasilevsky
+ * Copyright (c) 2009 - 2012, Peter Vasilevsky
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -24,7 +24,7 @@
  * ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-*/
+ */
 
 namespace RL\MainBundle\Entity;
 
@@ -43,7 +43,7 @@ use RL\MainBundle\Entity\FilteredMessage;
  *
  * @author Peter Vasilevsky <tuxoiduser@gmail.com> a.k.a. Tux-oid
  * @license BSDL
-*/
+ */
 class Message
 {
     /**
@@ -124,7 +124,9 @@ class Message
     {
         $this->postingTime = $this->changingTime = new \DateTime('now');
         $this->responses = new ArrayCollection();
+        $this->filters = new ArrayCollection();
     }
+
     /**
      * @ORM\PrePersist
      */
@@ -133,12 +135,14 @@ class Message
         $this->postingTime = $this->changingTime = new \DateTime('now');
         $this->sessionId = \session_id();
         $this->useragent = $_SERVER['HTTP_USER_AGENT'];
-        if($this->user->getShowUA())
+        if ($this->user->getShowUA()) {
             $this->showUa = true;
-        else
+        } else {
             $this->showUa = false;
+        }
 
     }
+
     /**
      * @ORM\PreUpdate
      */
@@ -147,6 +151,7 @@ class Message
         $this->changingTime = new \DateTime('now');
         $this->getThread()->setChangingTime($this->changingTime);
     }
+
     /**
      * Get id
      *
@@ -156,6 +161,7 @@ class Message
     {
         return $this->id;
     }
+
     /**
      * Set referer
      *
@@ -166,6 +172,7 @@ class Message
         $this->referer = $referer;
         $referer->addResponse($this);
     }
+
     /**
      * Get referer
      *
@@ -175,6 +182,7 @@ class Message
     {
         return $this->referer;
     }
+
     /**
      * Set postingTime
      *
@@ -184,6 +192,7 @@ class Message
     {
         $this->postingTime = $postingTime;
     }
+
     /**
      * Get postingTime
      *
@@ -193,60 +202,67 @@ class Message
     {
         return $this->postingTime;
     }
+
     /**
      * Set subject
      *
-     * @param text $subject
+     * @param string $subject
      */
     public function setSubject($subject)
     {
         $this->subject = $subject;
     }
+
     /**
      * Get subject
      *
-     * @return text
+     * @return string
      */
     public function getSubject()
     {
         return $this->subject;
     }
+
     /**
      * Set comment
      *
-     * @param text $comment
+     * @param string $comment
      */
     public function setComment($comment)
     {
         $this->comment = $comment;
     }
+
     /**
      * Get comment
      *
-     * @return text
+     * @return string
      */
     public function getComment()
     {
         return $this->comment;
     }
+
     /**
      * Set rawComment
      *
-     * @param text $rawComment
+     * @param string $rawComment
      */
     public function setRawComment($rawComment)
     {
         $this->rawComment = $rawComment;
     }
+
     /**
      * Get rawComment
      *
-     * @return text
+     * @return string
      */
     public function getRawComment()
     {
         return $this->rawComment;
     }
+
     /**
      * Set useragent
      *
@@ -256,6 +272,7 @@ class Message
     {
         $this->useragent = $useragent;
     }
+
     /**
      * Get useragent
      *
@@ -265,6 +282,7 @@ class Message
     {
         return $this->useragent;
     }
+
     /**
      * Set changingTime
      *
@@ -274,6 +292,7 @@ class Message
     {
         $this->changingTime = $changingTime;
     }
+
     /**
      * Get changingTime
      *
@@ -283,6 +302,7 @@ class Message
     {
         return $this->changingTime;
     }
+
     /**
      * Set changedFor
      *
@@ -292,6 +312,7 @@ class Message
     {
         $this->changedFor = $changedFor;
     }
+
     /**
      * Get changedFor
      *
@@ -301,6 +322,7 @@ class Message
     {
         return $this->changedFor;
     }
+
     /**
      * Set showUa
      *
@@ -310,6 +332,7 @@ class Message
     {
         $this->showUa = $showUa;
     }
+
     /**
      * Get showUa
      *
@@ -319,6 +342,7 @@ class Message
     {
         return $this->showUa;
     }
+
     /**
      * Add changedBy
      *
@@ -348,6 +372,7 @@ class Message
     {
         return $this->changedBy;
     }
+
     /**
      * Set user
      *
@@ -357,6 +382,7 @@ class Message
     {
         $this->user = $user;
     }
+
     /**
      * Get user
      *
@@ -366,6 +392,7 @@ class Message
     {
         return $this->user;
     }
+
     /**
      * Set sessionId
      *
@@ -375,6 +402,7 @@ class Message
     {
         $this->sessionId = $sessionId;
     }
+
     /**
      * Get sessionId
      *
@@ -384,6 +412,7 @@ class Message
     {
         return $this->sessionId;
     }
+
     /**
      * Set thread
      *
@@ -393,6 +422,7 @@ class Message
     {
         $this->thread = $thread;
     }
+
     /**
      * Get thread
      *
