@@ -40,7 +40,7 @@ use RL\MainBundle\Entity\Thread;
  * @ORM\Table(name="subsections")
  * @ORM\InheritanceType("JOINED")
  * @ORM\DiscriminatorColumn(name="content_type", type="string", length=20)
- * @ORM\DiscriminatorMap({"subsection" = "Subsection"})
+ * @ORM\DiscriminatorMap({"forum" = "RL\MainBundle\Entity\Subsection", "articles" = "RL\ArticlesBundle\Entity\Subsection", "news" = "RL\NewsBundle\Entity\Subsection", "gallery" = "RL\GalleryBundle\Entity\Subsection"})
  *
  * @author Peter Vasilevsky <tuxoiduser@gmail.com> a.k.a. Tux-oid
  * @license BSDL

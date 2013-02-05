@@ -68,37 +68,6 @@ jms_di_extra:
         bundles: [RLMainBundle]
         directories: ["%kernel.root_dir%/../src"]
 
-netpositive_discriminator_map:
-    discriminator_map:
-        thread:
-            entity: RL\MainBundle\Entity\Thread
-            children:
-                article: RL\ArticlesBundle\Entity\Thread
-                news: RL\NewsBundle\Entity\Thread
-                gallery: RL\GalleryBundle\Entity\Thread
-
-        section:
-            entity: RL\MainBundle\Entity\Subsection
-            children:
-                articles: RL\ArticlesBundle\Entity\Subsection
-                news: RL\NewsBundle\Entity\Subsection
-                gallery: RL\GalleryBundle\Entity\Subsection
-        mark:
-            entity: RL\MainBundle\Entity\Mark
-            children:
-                texMark: RL\MainBundle\Entity\TexMark
-                bbcode: RL\MainBundle\Entity\BbCode
-                wakabaMark: RL\MainBundle\Entity\WakabaMark
-                baseHtml: RL\MainBundle\Entity\BaseHtml
-        block:
-            entity: RL\MainBundle\Entity\Block
-            children:
-                authentication: RL\MainBundle\Entity\AuthenticationBlock
-                tracker: RL\MainBundle\Entity\TrackerBlock
-                links: RL\MainBundle\Entity\LinksBlock
-                gallery: RL\MainBundle\Entity\GalleryBlock
-
-
 rl_main:
     anonymous:
         class: RL\MainBundle\Security\User\AnonymousUser

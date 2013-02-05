@@ -41,7 +41,7 @@ use RL\MainBundle\Entity\User;
  * @ORM\Table(name="marks")
  * @ORM\InheritanceType("SINGLE_TABLE")
  * @ORM\DiscriminatorColumn(name="content_type", type="string", length=20)
- * @ORM\DiscriminatorMap({"mark"="Mark"})
+ * @ORM\DiscriminatorMap({"mark"="RL\MainBundle\Entity\Mark", "texMark" = "RL\MainBundle\Entity\TexMark", "bbcode" = "RL\MainBundle\Entity\BbCode", "wakabaMark" = "RL\MainBundle\Entity\WakabaMark", "baseHtml" = "RL\MainBundle\Entity\BaseHtml"})
  *
  * @author Peter Vasilevsky <tuxoiduser@gmail.com> a.k.a. Tux-oid
  * @license BSDL

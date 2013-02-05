@@ -38,7 +38,7 @@ use Doctrine\Common\Collections\ArrayCollection;
  * @ORM\Table(name="blocks")
  * @ORM\InheritanceType("SINGLE_TABLE")
  * @ORM\DiscriminatorColumn(name="content_type", type="string", length=20)
- * @ORM\DiscriminatorMap({"block"="Block"})
+ * @ORM\DiscriminatorMap({"block"="RL\MainBundle\Entity\Block", "authentication" = "RL\MainBundle\Entity\AuthenticationBlock", "tracker" = "RL\MainBundle\Entity\TrackerBlock", "links" = "RL\MainBundle\Entity\LinksBlock", "gallery" = "RL\MainBundle\Entity\GalleryBlock"})
  *
  * @author Peter Vasilevsky <tuxoiduser@gmail.com> a.k.a. Tux-oid
  * @license BSDL
