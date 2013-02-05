@@ -170,7 +170,7 @@ class ForumController extends AbstractController
     }
 
     /**
-     * @Route("/comment_into_{threadId}_on_{commentId}", name="comment")
+     * @Route("/comment/{threadId}/{commentId}", name="comment")
      */
     public function commentAction($threadId, $commentId)
     {
@@ -291,7 +291,7 @@ class ForumController extends AbstractController
     }
 
     /**
-     * @Route("/section_{sectionRewrite}_subsection_{subsectionRewrite}/{page}", name="subsection", defaults={"page" = 1}, requirements = {"subsectionRewrite"=".*"})
+     * @Route("/view/{sectionRewrite}/{subsectionRewrite}/{page}", name="subsection", defaults={"page" = 1}, requirements = {"subsectionRewrite"=".*"})
      */
     public function subsectionAction($sectionRewrite, $subsectionRewrite, $page)
     {
@@ -339,7 +339,7 @@ class ForumController extends AbstractController
     }
 
     /**
-     * @Route("/section_{sectionRewrite}", name="section")
+     * @Route("/view/{sectionRewrite}", name="section")
      */
     public function sectionAction($sectionRewrite)
     {
