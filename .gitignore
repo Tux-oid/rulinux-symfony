@@ -11,3 +11,5 @@ src/RL/MainBundle/Resources/public/images/avatars/*
 src/RL/GalleryBundle/Resources/public/images/gallery/*
 composer.phar
 composer.lock
+web/css*
+web/js/*

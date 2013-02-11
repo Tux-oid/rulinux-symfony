@@ -2,7 +2,7 @@ BODY {
     font-family: serif;
     background: #ffffff;
     color: #000000;
-    background-image: url(/web/bundles/rlmain/images/CozyGreen/bg.gif);
+    background-image: url(/bundles/rlmain/images/CozyGreen/bg.gif);
     width:100%;
     height:100%;
 }
@@ -61,7 +61,7 @@ H2 { color: #000000; }
     padding-bottom: 5px;
     font-weight: bold;
     margin-top: 0px;
-    background-image: url(/web/bundles/rlmain/images/CozyGreen/tile_cat.gif);
+    background-image: url(/bundles/rlmain/images/CozyGreen/tile_cat.gif);
 }
 DIV.boxlet H3
 {
@@ -128,15 +128,15 @@ TR.color2
 .message-table {
     background: #84ac60;
     border-spacing: 1px;
-    background-image: url(/web/bundles/rlmain/images/CozyGreen/tile_cat.gif);
+    background-image: url(/bundles/rlmain/images/CozyGreen/tile_cat.gif);
 }
 TR.headClsTop
 {
-    background-image: url(/web/bundles/rlmain/images/CozyGreen/tile_back.gif);
+    background-image: url(/bundles/rlmain/images/CozyGreen/tile_back.gif);
 }
 TR.headClsBottom
 {
-    background-image: url(/web/bundles/rlmain/images/CozyGreen/tile_sub-lite.gif);
+    background-image: url(/bundles/rlmain/images/CozyGreen/tile_sub-lite.gif);
 }
 .message-table td {
     padding: 0;
@@ -147,12 +147,12 @@ TR.headClsBottom
 div.messages, div.title
 {
     background-color: #84ac60;
-    background-image: url(/web/bundles/rlmain/images/CozyGreen/tile_cat.gif);
+    background-image: url(/bundles/rlmain/images/CozyGreen/tile_cat.gif);
 }
 .messages .comment .title
 {
     background: #84ac60;
-    background-image: url(/web/bundles/rlmain/images/CozyGreen/tile_cat.gif);
+    background-image: url(/bundles/rlmain/images/CozyGreen/tile_cat.gif);
 }
 div.messages, div.msg
 {

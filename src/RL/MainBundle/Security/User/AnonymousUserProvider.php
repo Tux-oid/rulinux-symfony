@@ -42,6 +42,7 @@ use Symfony\Component\HttpFoundation\Session\Session;
 use JMS\DiExtraBundle\Annotation\Service;
 use JMS\DiExtraBundle\Annotation\Inject;
 use JMS\DiExtraBundle\Annotation\InjectParams;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
  * RL\MainBundle\Security\User\AnonymousUserProvider
@@ -73,9 +74,9 @@ class AnonymousUserProvider implements UserProviderInterface
     protected $eventDispatcher;
 
     /**
-     * @var Symfony\Component\HttpFoundation\Request;
+     * @var \Symfony\Component\DependencyInjection\Container;
      */
-    protected $request;
+    protected $container;
 
     /**
      * @var \Symfony\Component\HttpFoundation\Session\Session
@@ -105,7 +106,7 @@ class AnonymousUserProvider implements UserProviderInterface
         $this->userClass = $userClass;
         $this->doctrine = $doctrine;
         $this->eventDispatcher = $eventDispatcher;
-        $this->request = $container->get('request');
+        $this->container = $container;
         $this->session = $container->get('session');
     }
 
@@ -126,7 +127,7 @@ class AnonymousUserProvider implements UserProviderInterface
             }
         }
         $user = new $this->userClass($identity, $attributes, $this->doctrine);
-        $this->eventDispatcher->dispatch(AuthenticationEvents::onAnonymousLogin, new AnonymousLoginEvent($user, $this->request));
+        $this->eventDispatcher->dispatch(AuthenticationEvents::onAnonymousLogin, new AnonymousLoginEvent($user, $this->container->get('request', ContainerInterface::NULL_ON_INVALID_REFERENCE)));
 
         return $user;
     }

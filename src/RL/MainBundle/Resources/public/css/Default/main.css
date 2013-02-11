@@ -3,7 +3,7 @@
 @font-face
 {
 	font-family: 'TerminusRe33';
-	src: url('/web/bundles/rlmain/fonts/Default/TerminusRe33-Bold.ttf') format('truetype')
+	src: url('/bundles/rlmain/fonts/Default/TerminusRe33-Bold.ttf') format('truetype')
 }
 
 BODY
@@ -237,14 +237,14 @@ TR.color2
 div.messages
 {
 	background: #446347;
-	background-image: url(/web/bundles/rlmain/images/Default/green_lines.jpg);
+	background-image: url(/bundles/rlmain/images/Default/green_lines.jpg);
 
 }
 
 div.title
 {
 	background: #446347;
-	background-image: url(/web/bundles/rlmain/images/Default/green_lines.jpg);
+	background-image: url(/bundles/rlmain/images/Default/green_lines.jpg);
 	padding: 0;
 	border: 1px;
 	border-color: #446347;
@@ -255,7 +255,7 @@ div.title
 .messages .comment .title
 {
 	background: #446347;
-	background-image: url(/web/bundles/rlmain/images/Default/green_lines.jpg);
+	background-image: url(/bundles/rlmain/images/Default/green_lines.jpg);
 	margin: 0;
 }
 
@@ -378,7 +378,7 @@ DIV.notes
 	padding: 0;
 	margin: 0;
 	border: 0;
-	background-image: url(/web/bundles/rlmain/images/Default/green_lines.jpg);
+	background-image: url(/bundles/rlmain/images/Default/green_lines.jpg);
 	height: 25px;
 }
 
@@ -393,7 +393,7 @@ DIV.notes
 	border: 1px;
 	border-color: #446347;
 	margin-top: 0px;
-	background-image: url(/web/bundles/rlmain/images/Default/green_lines.jpg);
+	background-image: url(/bundles/rlmain/images/Default/green_lines.jpg);
 	height: 25px;
 }
 
@@ -411,14 +411,14 @@ DIV.notes
 .msg_table_title_tr
 {
 	background: #446347;
-	background-image: url(/web/bundles/rlmain/images/Default/green_lines.jpg);
+	background-image: url(/bundles/rlmain/images/Default/green_lines.jpg);
 	padding: 0px;
 }
 
 .tracker_title_tr
 {
 	background: #446347;
-	background-image: url(/web/bundles/rlmain/images/Default/green_lines.jpg);
+	background-image: url(/bundles/rlmain/images/Default/green_lines.jpg);
 }
 
 .tracker_title

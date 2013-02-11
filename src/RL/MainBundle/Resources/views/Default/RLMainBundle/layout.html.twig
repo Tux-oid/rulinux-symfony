@@ -8,13 +8,13 @@
     '@RLMainBundle/Resources/public/css/Default/hover.css' %}
     <link href="{{ asset_url }}" rel="stylesheet" media="screen"/>
     {% endstylesheets %}
-    {% block javascripts %}
-        <script src="{{ asset('/web/bundles/rlmain/js/jquery.js') }}" type="text/javascript"></script>
-        <script src="{{ asset('/web/bundles/rlmain/js/common.js') }}" type="text/javascript"></script>
-    {% endblock javascripts %}
+    {% javascripts   '@RLMainBundle/Resources/public/js/jquery.js'
+    '@RLMainBundle/Resources/public/js/common.js' %}
+    <script src="{{ asset_url }}" type="text/javascript"></script>
+    {% endjavascripts %}
     <title>
         {% block title %}
-            TITLE_BLOCK
+            {{ app.request.host }}
         {% endblock %}
     </title>
 </head>

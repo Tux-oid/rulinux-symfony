@@ -45,7 +45,9 @@ class BlockController extends AbstractController
     {
         $services = array();
         foreach ($block->getNeededServicesList() as $serviceName) {
-            $services[$serviceName] = $this->get($serviceName);
+            if($this->has($serviceName)) {
+                $services[$serviceName] = $this->get($serviceName);
+            }
         }
         $ret = $block->render($services);
 

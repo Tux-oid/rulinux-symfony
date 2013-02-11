@@ -18,7 +18,7 @@
         {% for registeredUser in users  %}
         <tr>
             <td>
-                <img src="/web/bundles/rlmain/images/empty.gif" height="100" align="right" border="2" vspace="3" hspace="3" alt="user avatar">
+                <img src="{{ asset('/bundles/rlmain/images/empty.gif') }}" height="100" align="right" border="2" vspace="3" hspace="3" alt="user avatar">
                 <b>{% trans %}Nick{% endtrans %}:</b> {{ registeredUser.username }}<br>
                 <b>{% trans %}Group{% endtrans %}:</b> {{ registeredUser.group.description }}<br>
                 <b>{% trans %}Name{% endtrans %}:</b> {{ registeredUser.name }} <br>

@@ -30,6 +30,7 @@ namespace RL\MainBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Security\Core\SecurityContext;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
  * RL\MainBundle\Entity\AuthenticationBlock
@@ -52,7 +53,7 @@ class AuthenticationBlock extends Block
             return array('templateFile'=> 'authenticationBlock.html.twig', 'parameters'=>array('authenticated' => true));
         } else {
             /** @var $request \Symfony\Component\HttpFoundation\Request */
-            $request = $services['request'];
+            $request = $services['service_container']->get('request', ContainerInterface::IGNORE_ON_INVALID_REFERENCE);
             $session = $request->getSession();
             if ($request->attributes->has(SecurityContext::AUTHENTICATION_ERROR)) {
                 $error = $request->attributes->get(SecurityContext::AUTHENTICATION_ERROR);
@@ -70,6 +71,6 @@ class AuthenticationBlock extends Block
      */
     public function getNeededServicesList()
     {
-        return array('security.context', 'request');
+        return array('security.context', 'service_container');
     }
 }

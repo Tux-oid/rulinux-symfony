@@ -92,11 +92,11 @@
             <tr>
                 {% if is_granted('ROLE_MODER') %}
                     <td align=center>
-                        <img src="{{ '/web/bundles/rlmain/images/'~app.user.theme.directory~'/move.png' }}">
+                        <img src="{{ asset('/bundles/rlmain/images/'~app.user.theme.directory~'/move.png') }}">
                         {% if thread.attached == false %}
-                            <img src="{{ '/web/bundles/rlmain/images/'~app.user.theme.directory~'/attach.png' }}">
+                            <img src="{{ asset('/bundles/rlmain/images/'~app.user.theme.directory~'/attach.png') }}">
                         {% else %}
-                            <img src="{{ '/web/bundles/rlmain/images/'~app.user.theme.directory~'/detach.png' }}">
+                            <img src="{{ asset('/bundles/rlmain/images/'~app.user.theme.directory~'/detach.png') }}">
                         {% endif %}
                     </td>
                 {% endif %}
