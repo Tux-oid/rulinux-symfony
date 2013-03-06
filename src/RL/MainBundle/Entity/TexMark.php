@@ -161,39 +161,20 @@ final class TexMark extends Mark
         $img_re = '#(\\\\img)(\\[?) ?(left|right|middle|top|bottom)? ?(\\])?{(.*?[^}]?)(})#sim';
         $vt = preg_match_all($img_re, $string, $match);
         for ($i = 0; $i < $vt; $i++) {
-            $imageInfo = getimagesize($match[5][$i]);
-            if ($imageInfo[0] > 1024) {
-                if (!empty($match[3][$i])) {
-                    $string = preg_replace(
-                        $img_re,
-                        "<img src=\"\$5\" align=\"$3\" width=\"1024\" alt=\"[incorrect path to image]\" />",
-                        $string,
-                        1
+            if (!empty($match[3][$i])) {
+                $string = preg_replace(
+                    $img_re,
+                    "<img src=\"\$5\" align=\"$3\" style=\"max-width: 1024px;\" alt=\"[incorrect path to image]\" />",
+                    $string,
+                    1
                     );
-                } else {
-                    $string = preg_replace(
-                        $img_re,
-                        "<img src=\"\$5\" width=\"1024\" alt=\"[incorrect path to image]\" />",
-                        $string,
-                        1
-                    );
-                }
             } else {
-                if (!empty($match[3][$i])) {
-                    $string = preg_replace(
-                        $img_re,
-                        "<img src=\"\$5\" align=\"$3\" alt=\"[incorrect path to image]\" />",
-                        $string,
-                        1
+                $string = preg_replace(
+                    $img_re,
+                    "<img src=\"\$5\" style=\"max-width: 1024px;\" alt=\"[incorrect path to image]\" />",
+                    $string,
+                    1
                     );
-                } else {
-                    $string = preg_replace(
-                        $img_re,
-                        "<img src=\"\$5\" alt=\"[incorrect path to image]\" />",
-                        $string,
-                        1
-                    );
-                }
             }
         }
         $string = '<p>' . $string . '</p>';

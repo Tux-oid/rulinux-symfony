@@ -118,39 +118,20 @@ final class BaseHtml extends Mark
         $imgRegExp = '#(&lt;img) ?(align=&quot;)?(left|right|middle|top|bottom)?(&quot;)?(src=&quot;)((?!&quot;).*?)(&quot;&gt;)#suim';
         $vt = preg_match_all($imgRegExp, $string, $match);
         for ($i = 0; $i < $vt; $i++) {
-            $imageInfo = getimagesize($match[6][$i]);
-            if ($imageInfo[0] > 1024) {
-                if (!empty($match[3][$i])) {
-                    $string = preg_replace(
-                        $imgRegExp,
-                        "<img src=\"\$6\" align=\"$3\" width=\"1024\" alt=\"[incorrect path to image]\" />",
-                        $string,
-                        1
+            if (!empty($match[3][$i])) {
+                $string = preg_replace(
+                    $imgRegExp,
+                    "<img src=\"\$6\" align=\"$3\" style=\"max-width: 1024px;\" alt=\"[incorrect path to image]\" />",
+                    $string,
+                    1
                     );
-                } else {
-                    $string = preg_replace(
-                        $imgRegExp,
-                        "<img src=\"\$6\" width=\"1024\" alt=\"[incorrect path to image]\" />",
-                        $string,
-                        1
-                    );
-                }
             } else {
-                if (empty($match[3][$i])) {
-                    $string = preg_replace(
-                        $imgRegExp,
-                        "<img src=\"\$6\" align=\"$3\" alt=\"[incorrect path to image]\" />",
-                        $string,
-                        1
+                $string = preg_replace(
+                    $imgRegExp,
+                    "<img src=\"\$6\" style=\"max-width: 1024px;\" alt=\"[incorrect path to image]\" />",
+                    $string,
+                    1
                     );
-                } else {
-                    $string = preg_replace(
-                        $imgRegExp,
-                        "<img src=\"\$6\" alt=\"[incorrect path to image]\" />",
-                        $string,
-                        1
-                    );
-                }
             }
         }
         $userRegExp = "#(&lt;span class=&quot;user&quot;&gt;)((?!&lt;/span&gt;).*?)(&lt;/span&gt;)#suim";

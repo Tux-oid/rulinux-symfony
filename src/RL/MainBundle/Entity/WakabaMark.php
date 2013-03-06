@@ -155,39 +155,20 @@ final class WakabaMark extends Mark
         $img_re = '#(~~)((@)(left|right|middle|top|bottom)(@))?(.*?[^~]{2}?)(~~)#sim';
         $vt = preg_match_all($img_re, $string, $match);
         for ($i = 0; $i < $vt; $i++) {
-            $imageInfo = getimagesize($match[5][$i]);
-            if ($imageInfo[0] > 1024) {
-                if (!empty($match[3][$i])) {
-                    $string = preg_replace(
-                        $img_re,
-                        "<img src=\"\$6\" align=\"$4\" width=\"1024\" alt=\"[incorrect path to image]\" />",
-                        $string,
-                        1
+            if (!empty($match[3][$i])) {
+                $string = preg_replace(
+                    $img_re,
+                    "<img src=\"\$6\" align=\"$4\" style=\"max-width: 1024px;\" alt=\"[incorrect path to image]\" />",
+                    $string,
+                    1
                     );
-                } else {
-                    $string = preg_replace(
-                        $img_re,
-                        "<img src=\"\$6\" width=\"1024\" alt=\"[incorrect path to image]\" />",
-                        $string,
-                        1
-                    );
-                }
             } else {
-                if (!empty($match[4][$i])) {
-                    $string = preg_replace(
-                        $img_re,
-                        "<img src=\"\$6\" align=\"$4\" alt=\"[incorrect path to image]\" />",
-                        $string,
-                        1
+                $string = preg_replace(
+                    $img_re,
+                    "<img src=\"\$6\" style=\"max-width: 1024px;\" alt=\"[incorrect path to image]\" />",
+                    $string,
+                    1
                     );
-                } else {
-                    $string = preg_replace(
-                        $img_re,
-                        "<img src=\"\$6\" alt=\"[incorrect path to image]\" />",
-                        $string,
-                        1
-                    );
-                }
             }
         }
         $string = preg_replace("#(\r\n|<p>|^)(>|&gt;)(.*?[^\n]?)(\n|$)#sim", "\$1<i>>\$3</i><br>", $string);
