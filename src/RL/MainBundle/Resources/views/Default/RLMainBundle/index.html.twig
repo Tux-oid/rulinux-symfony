@@ -7,7 +7,7 @@
                 <td class="left-sidebar">
                     {% block lblocks %}
                         {%for block in leftBlocks%}
-                            {% render "RLMainBundle:Block:renderBlock" with { 'block': block } %}
+                            {% render controller("RLMainBundle:Block:renderBlock", { 'block': block }) %}
                         {% endfor %}
                     {% endblock lblocks%}
                 </td>
@@ -24,7 +24,7 @@
                 <td class="right-sidebar">
                     {% block rblocks %}
                         {%for block in rightBlocks%}
-                            {% render "RLMainBundle:Block:renderBlock" with { 'block': block } %}
+                            {% render controller("RLMainBundle:Block:renderBlock", { 'block': block }) %}
                         {%endfor%}
                     {% endblock rblocks%}
                 </td>
