@@ -4,12 +4,13 @@ app/cache/*
 app/logs/*
 vendor/
 app/config/parameters.yml
-app/SymfonyRequirements.php
 *~
 src/RL/MainBundle/Resources/public/images/formulas/*
 src/RL/MainBundle/Resources/public/images/avatars/*
 src/RL/GalleryBundle/Resources/public/images/gallery/*
 composer.phar
-composer.lock
 web/css*
 web/js/*
+.idea
+access.log
+error.log

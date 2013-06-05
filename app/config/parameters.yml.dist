@@ -1,0 +1,13 @@
+parameters:
+    locale: en
+    secret: ahg98sw3hgf9q374hf79qw345hg8
+    database_driver:   pdo_pgsql
+    database_host:     localhost
+    database_port:     5432
+    database_name:     rulinux-symfony
+    database_user:     rluser
+    database_password: changeme
+    mailer.transport:  gmail
+    mailer.host:       ~
+    mailer.user:       symfony.rulinux
+    mailer.password:   symfony.rulinux
