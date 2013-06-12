@@ -20,3 +20,6 @@ Run:
 * php app/console assets:install web --symlink
 * php app/console assetic:dump
 
+Add to crontab the following line
+
+    * * * * * php app/console rl_main:messages:filter >> /dev/null

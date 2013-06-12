@@ -111,7 +111,7 @@ class MessageRepository extends EntityRepository
      */
     public function getUnfilteredMessages()
     {
-        $q = $this->_em->createQuery('SELECT m FROM RL\MainBundle\Entity\Message AS m');//TODO: filter this messages
+        $q = $this->_em->createQuery('SELECT m FROM RLMainBundle:Message AS m LEFT JOIN m.filters AS f GROUP BY m HAVING count(f) = 0');
 
         return $q->getResult();
     }

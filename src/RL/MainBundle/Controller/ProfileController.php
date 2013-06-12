@@ -93,7 +93,7 @@ class ProfileController extends AbstractController
             $method = $request->getMethod();
             if ($method == 'POST') {
                 if ($request->request->get('action') == 'passwordChanging') {
-                    $passwordChanging->bind($request);
+                    $passwordChanging->submit($request);
                     if ($passwordChanging->isValid()) {
                         $encoder = new MessageDigestPasswordEncoder('md5', false, 1);
                         $oldPassword = $encoder->encodePassword(
@@ -116,7 +116,7 @@ class ProfileController extends AbstractController
                         throw new \Exception('Form is invalid');
                     }
                 } elseif ($request->request->get('action') == 'personalInformation') {
-                    $personalInformation->bind($request);
+                    $personalInformation->submit($request);
                     if ($personalInformation->isValid()) {
                         $photo = $userInProfile->getPhoto();
                         if (!empty($photo)) {
@@ -144,7 +144,7 @@ class ProfileController extends AbstractController
                         throw new \Exception('Form is invalid');
                     }
                 } elseif ($request->request->get('action') == 'personalSettings') {
-                    $personalSettings->bind($request);
+                    $personalSettings->submit($request);
                     if ($personalSettings->isValid()) {
                         $this->get('session')->set('_locale', $userInProfile->getLanguage());
                         $this->getDoctrine()->getManager()->flush();
@@ -152,7 +152,7 @@ class ProfileController extends AbstractController
                         throw new \Exception('Form is invalid');
                     }
                 } elseif ($request->request->get('action') == 'moderatorSettings') {
-                    $moderatorSettings->bind($request);
+                    $moderatorSettings->submit($request);
                     if ($moderatorSettings->isValid()) {
                         if(!$userInProfile->isActive()) {
                             /** @var $mailer \RL\MainBundle\Helper\Mailer */
@@ -172,14 +172,14 @@ class ProfileController extends AbstractController
                         throw new \Exception('Form is invalid');
                     }
                 } elseif ($request->request->get('action') == 'administratorSettings') {
-                    $administratorSettings->bind($request);
+                    $administratorSettings->submit($request);
                     if ($administratorSettings->isValid()) {
                         $this->getDoctrine()->getManager()->flush();
                     } else {
                         throw new \Exception('Form is invalid');
                     }
                 } elseif ($request->request->get('action') == 'mainPageSettings') {
-                    $mainPageSettings->bind($request);
+                    $mainPageSettings->submit($request);
                     if ($mainPageSettings->isValid()) {
                         $this->getDoctrine()->getManager()->flush();
                     } else {

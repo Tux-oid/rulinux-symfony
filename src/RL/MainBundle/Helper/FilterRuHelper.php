@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) 2009 - 2012, Peter Vasilevsky
+ * Copyright (c) 2008 - 2013, Peter Vasilevsky
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -26,39 +26,114 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-namespace RL\MainBundle\Form\Type;
-
-use Symfony\Component\Form\AbstractType;
-use JMS\DiExtraBundle\Annotation\Service;
-use JMS\DiExtraBundle\Annotation\Tag;
+namespace RL\MainBundle\Helper;
 
 /**
- * RL\MainBundle\Form\RangeType
- *
- * @Service("rl_main.form.type.range")
- * @Tag("form.type", attributes = {"alias" = "range"})
+ * RL\MainBundle\Helper\FilterRuHelper
  *
  * @author Peter Vasilevsky <tuxoiduser@gmail.com> a.k.a. Tux-oid
+ * @license BSDL
  */
-class RangeType extends AbstractType
+class FilterRuHelper
 {
     /**
-     * Get parent
-     *
-     * @return string
+     * @var array
      */
-    public function getParent()
-    {
-        return 'integer';
-    }
+    private static $src = array(
+        'A',
+        '6',
+        'B',
+        '8',
+        '9',
+        'E',
+        'Ё',
+        '3',
+        'Й',
+        'K',
+        'M',
+        'H',
+        'O',
+        '0',
+        'P',
+        'C',
+        'T',
+        'Y',
+        'X',
+        '4',
+        'a',
+        '6',
+        'b',
+        '8',
+        '9',
+        'e',
+        'ё',
+        '3',
+        'й',
+        'k',
+        'm',
+        'h',
+        'o',
+        '0',
+        'p',
+        'c',
+        't',
+        'y',
+        'x',
+        '4'
+    );
 
     /**
-     * Get name
-     *
-     * @return string
+     * @var array
      */
-    public function getName()
+    private static $trgt = array(
+        'А',
+        'Б',
+        'В',
+        'В',
+        'Д',
+        'Е',
+        'Е',
+        'З',
+        'И',
+        'К',
+        'М',
+        'Н',
+        'О',
+        'О',
+        'Р',
+        'С',
+        'Т',
+        'У',
+        'Х',
+        'Ч',
+        'а',
+        'б',
+        'в',
+        'в',
+        'д',
+        'е',
+        'е',
+        'з',
+        'и',
+        'к',
+        'м',
+        'н',
+        'о',
+        'о',
+        'р',
+        'с',
+        'т',
+        'у',
+        'х',
+        'ч'
+    );
+
+    /**
+     * @param $message
+     * @return mixed
+     */
+    public static function prepare($message)
     {
-        return 'range';
+        return str_replace(self::$src, self::$trgt, $message);
     }
 }

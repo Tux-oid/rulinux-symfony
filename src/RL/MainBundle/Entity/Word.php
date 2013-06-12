@@ -33,7 +33,7 @@ use Doctrine\ORM\Mapping as ORM;
 /**
  * RL\MainBundle\Entity\Word
  *
- * @ORM\Entity()
+ * @ORM\Entity(repositoryClass="RL\MainBundle\Entity\Repository\WordRepository")
  * @ORM\Table(name="words")
  *
  * @author Peter Vasilevsky <tuxoiduser@gmail.com> a.k.a. Tux-oid

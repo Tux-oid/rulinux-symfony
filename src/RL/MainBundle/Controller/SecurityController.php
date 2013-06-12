@@ -104,13 +104,13 @@ class SecurityController extends AbstractController
         if ($method == 'POST') {
             $newUser = new RegistrationFirstForm;
             $form = $this->createForm(new RegistrationFirstType(), $newUser);
-            $form->bind($request);
+            $form->submit($request);
             if ($form->isValid()) {
                 /** @var $mailer \RL\MainBundle\Helper\Mailer */
                 $mailer = $this->get('rl_main.mailer');
                 $mailer->send(
                     $newUser->getEmail(),
-                    $this->getDoctrine()->getRepository('RLMainBundle:Settings')->findOneByName('site_email')->getValue(),
+                    $this->getDoctrine()->getRepository('RLMainBundle:Settings')->findOneBy(array('name' => 'site_email'))->getValue(),
                     'Registration letter',
                     $this->renderView(
                         'RLMainBundle:Security:registrationLetter.html.twig',
@@ -174,31 +174,32 @@ class SecurityController extends AbstractController
         if ($method == 'POST') {
             $newUser = new User;
             $form = $this->createForm(new RegisterType(), $newUser);
-            $form->bind($request);
+            $form->submit($request);
             if ($form->isValid()) {
                 $settingsRepository = $this->getDoctrine()->getRepository('RLMainBundle:Settings');
                 $groupsRepository = $this->getDoctrine()->getRepository('RLMainBundle:Group');
-                $userRole = $groupsRepository->findOneByName('ROLE_USER');
+                /** @var $userRole \RL\MainBundle\Entity\Group */
+                $userRole = $groupsRepository->findOneBy(array('name' => 'ROLE_USER'));
                 //TODO: set additional marked
                 //TODO: save image file
                 $newUser->setAdditionalRaw($newUser->getAdditional());
                 $newUser->setRegistrationDate(new \DateTime('now'));
                 $newUser->setLastVisitDate(new \DateTime('now'));
-                $newUser->setCaptchaLevel($settingsRepository->findOneByName('captchaLevel')->getValue());
-                $newUser->setTheme($settingsRepository->findOneByName('theme')->getValue());
-                $newUser->setSortingType($settingsRepository->findOneByName('sortingType')->getValue());
-                $newUser->setNewsOnPage($settingsRepository->findOneByName('newsOnPage')->getValue());
-                $newUser->setThreadsOnPage($settingsRepository->findOneByName('threadsOnPage')->getValue());
-                $newUser->setCommentsOnPage($settingsRepository->findOneByName('commentsOnPage')->getValue());
-                $newUser->setShowEmail($settingsRepository->findOneByName('showEmail')->getValue());
-                $newUser->setShowIm($settingsRepository->findOneByName('showIm')->getValue());
-                $newUser->setShowAvatars($settingsRepository->findOneByName('showAvatars')->getValue());
-                $newUser->setShowUa($settingsRepository->findOneByName('showUa')->getValue());
-                $newUser->setShowResp($settingsRepository->findOneByName('showResp')->getValue());
+                $newUser->setCaptchaLevel($settingsRepository->findOneBy(array('name' => 'captchaLevel'))->getValue());
+                $newUser->setTheme($settingsRepository->findOneBy(array('name' => 'theme'))->getValue());
+                $newUser->setSortingType($settingsRepository->findOneBy(array('name' => 'sortingType'))->getValue());
+                $newUser->setNewsOnPage($settingsRepository->findOneBy(array('name' => 'newsOnPage'))->getValue());
+                $newUser->setThreadsOnPage($settingsRepository->findOneBy(array('name' => 'threadsOnPage'))->getValue());
+                $newUser->setCommentsOnPage($settingsRepository->findOneBy(array('name' => 'commentsOnPage'))->getValue());
+                $newUser->setShowEmail($settingsRepository->findOneBy(array('name' => 'showEmail'))->getValue());
+                $newUser->setShowIm($settingsRepository->findOneBy(array('name' => 'showIm'))->getValue());
+                $newUser->setShowAvatars($settingsRepository->findOneBy(array('name' => 'showAvatars'))->getValue());
+                $newUser->setShowUa($settingsRepository->findOneBy(array('name' => 'showUa'))->getValue());
+                $newUser->setShowResp($settingsRepository->findOneBy(array('name' => 'showResp'))->getValue());
                 $encoder = new MessageDigestPasswordEncoder('md5', false, 1);
                 $password = $encoder->encodePassword($newUser->getPassword(), $newUser->getSalt());
                 $newUser->setPassword($password);
-                $newUser->getGroups()->add($userRole);
+                $newUser->setGroup($userRole);
                 $em = $this->getDoctrine()->getManager();
                 $em->persist($newUser);
                 $em->flush();
@@ -233,13 +234,13 @@ class SecurityController extends AbstractController
         if ($method == 'POST') {
             $resForm = new PasswordRestoringForm;
             $form = $this->createForm(new PasswordRestoringType(), $resForm);
-            $form->bind($request);
+            $form->submit($request);
             if ($form->isValid()) {
                 /** @var $userRepository \Doctrine\ORM\EntityRepository */
                 $userRepository = $this->getDoctrine()->getRepository('RLMainBundle:User');
                 /** @var $user \RL\MainBundle\Security\User\RLUserInterface */
                 try {
-                    $user = $userRepository->findOneByUsername($resForm->getUsername());
+                    $user = $userRepository->findOneBy(array('username' => $resForm->getUsername()));
                 } catch (\ErrorException $e) {
                     throw new \Exception($e->getMessage());
                 }
@@ -267,7 +268,7 @@ class SecurityController extends AbstractController
                 $mailer = $this->get('rl_main.mailer');
                 $mailer->send(
                     $resForm->getEmail(),
-                    $this->getDoctrine()->getRepository('RLMainBundle:Settings')->findOneByName('site_email')->getValue(),
+                    $this->getDoctrine()->getRepository('RLMainBundle:Settings')->findOneBy(array('name' => 'site_email'))->getValue(),
                     'Password restoring',
                     $this->renderView(
                         'RLMainBundle:Security:passwordRestoringLetter.html.twig',
@@ -289,9 +290,9 @@ class SecurityController extends AbstractController
      */
     public function usersAction($page)
     {
+        /** @var $user \RL\MainBundle\Security\User\RLUserInterface */
         $user = $this->get('security.context')->getToken()->getUser();
         $userRepository = $this->getDoctrine()->getRepository('RLMainBundle:User');
-
         $itemsCount = count($userRepository->findAll());
         $itemsOnPage = $user->getCommentsOnPage();
         $pagesCount = ceil(($itemsCount) / $itemsOnPage);

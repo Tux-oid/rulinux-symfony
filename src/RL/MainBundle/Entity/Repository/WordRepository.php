@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) 2009 - 2012, Peter Vasilevsky
+ * Copyright (c) 2008 - 2013, Peter Vasilevsky
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -26,39 +26,17 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-namespace RL\MainBundle\Form\Type;
+namespace RL\MainBundle\Entity\Repository;
 
-use Symfony\Component\Form\AbstractType;
-use JMS\DiExtraBundle\Annotation\Service;
-use JMS\DiExtraBundle\Annotation\Tag;
+use Doctrine\ORM\EntityRepository;
 
 /**
- * RL\MainBundle\Form\RangeType
- *
- * @Service("rl_main.form.type.range")
- * @Tag("form.type", attributes = {"alias" = "range"})
+ * RL\MainBundle\Entity\BlockPositionRepository
  *
  * @author Peter Vasilevsky <tuxoiduser@gmail.com> a.k.a. Tux-oid
+ * @license BSDL
  */
-class RangeType extends AbstractType
+class WordRepository extends EntityRepository
 {
-    /**
-     * Get parent
-     *
-     * @return string
-     */
-    public function getParent()
-    {
-        return 'integer';
-    }
 
-    /**
-     * Get name
-     *
-     * @return string
-     */
-    public function getName()
-    {
-        return 'range';
-    }
 }

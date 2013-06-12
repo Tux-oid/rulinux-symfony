@@ -86,16 +86,16 @@ final class Filter
      *
      * @var boolean
      */
-    protected $filterByTags;
+    protected $filterByHtmlTags;
 
     /**
      * Constructor
      *
-     * @param boolean $filterByTags
+     * @param boolean $filterByHtmlTags
      */
-    public function  __construct($filterByTags = false)
+    public function  __construct($filterByHtmlTags = false)
     {
-        $this->filterByTags = $filterByTags;
+        $this->filterByHtmlTags = $filterByHtmlTags;
         $this->messages = new ArrayCollection();
         $this->words = new ArrayCollection();
     }
@@ -240,11 +240,11 @@ final class Filter
     /**
      * Set filter by tags
      *
-     * @param boolean $filterByTags
+     * @param boolean $filterByHtmlTags
      */
-    public function setFilterByTags($filterByTags)
+    public function setFilterByHtmlTags($filterByHtmlTags)
     {
-        $this->filterByTags = $filterByTags;
+        $this->filterByHtmlTags = $filterByHtmlTags;
     }
 
     /**
@@ -252,8 +252,8 @@ final class Filter
      *
      * @return boolean
      */
-    public function isFilterByTags()
+    public function isFilterByHtmlTags()
     {
-        return $this->filterByTags;
+        return $this->filterByHtmlTags;
     }
 }

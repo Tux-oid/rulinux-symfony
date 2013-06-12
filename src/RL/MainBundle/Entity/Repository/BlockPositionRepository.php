@@ -41,7 +41,9 @@ use RL\MainBundle\Security\User\RLUserInterface;
  */
 class BlockPositionRepository extends EntityRepository
 {
+
     /**
+     * @param RLUserInterface $user
      * @param int $position
      * @return array
      */

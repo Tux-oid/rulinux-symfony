@@ -36,6 +36,7 @@ use RL\MainBundle\Entity\Filter;
 use RL\MainBundle\Entity\Word;
 use RL\MainBundle\Entity\Message;
 use RL\MainBundle\Entity\FilteredMessage;
+use RL\MainBundle\Helper\FilterRuHelper;
 
 /**
  * RL\MainBundle\Command\FilterMessagesCommand
@@ -70,11 +71,12 @@ class FilterMessagesCommand extends ContainerAwareCommand
         /** @var $wordsRepository \Doctrine\ORM\EntityRepository */
         $wordsRepository = $doctrine->getRepository('RLMainBundle:Word');
         $filters = $doctrine->getRepository('RLMainBundle:Filter')->findAll();
+        $messages = $messagesRepository->getUnfilteredMessages();
         /** @var $message \RL\MainBundle\Entity\Message */
-        foreach ($messagesRepository->getUnfilteredMessages() as $message) {
+        foreach ($messages as $message) {
             /** @var $filter \RL\MainBundle\Entity\Filter */
             foreach ($filters as $filter) {
-                if($filter->isFilterByTags()) {
+                if(!$filter->isFilterByHtmlTags()) {
                     $comment = strip_tags($message->getComment());
                 } else {
                     $comment = $message->getComment();
@@ -83,7 +85,7 @@ class FilterMessagesCommand extends ContainerAwareCommand
                 $wordsCount = 0;
                 foreach(preg_split("#[ \.,\?\\\(\)\[\]{}\"';:\!\=\+\-\#\$\%\^\&\*\\r\\n\\t]#suim", $comment) as $word) {
                     /** @var $word \RL\MainBundle\Entity\Word */
-                    $word = $wordsRepository->findOneBy(array("word" => $word, "filter" => $filter));
+                    $word = $wordsRepository->findOneBy(array("word" => FilterRuHelper::prepare($word), "filter" => $filter));
                     if(null !== $word) {
                         $weight += $word->getWeight();
                         $wordsCount++;

@@ -53,7 +53,7 @@ class SearchController extends AbstractController
         if (isset($sbm)) {
             $method = $request->getMethod();
             if ($method == 'POST') {
-                $form->bind($request);
+                $form->submit($request);
                 if ($form->isValid()) {
                     /** @var $messageRepository \RL\MainBundle\Entity\Repository\MessageRepository */
                     $messageRepository = $this->getDoctrine()->getRepository('RLMainBundle:Message');
