@@ -53,6 +53,7 @@ class Group implements RoleInterface, \Serializable
      * @var integer
      */
     protected $id;
+
     /**
      * @ORM\Column(name="name", type="string", length=255)
      * @Assert\NotBlank()
@@ -60,12 +61,14 @@ class Group implements RoleInterface, \Serializable
      * @var string
      */
     protected $name;
+
     /**
      * @ORM\Column(name="description", type="string", length=512, unique=true, nullable=false)
      *
      * @var string
      */
     protected $description;
+
     /**
      * @ORM\OneToMany(targetEntity="User", mappedBy="group")
      *
@@ -80,6 +83,23 @@ class Group implements RoleInterface, \Serializable
     {
         $this->users = new ArrayCollection();
     }
+
+    /**
+     * @param int $id
+     */
+    public function setId($id)
+    {
+        $this->id = $id;
+    }
+
+    /**
+     * @param \Doctrine\Common\Collections\ArrayCollection $users
+     */
+    public function setUsers($users)
+    {
+        $this->users = $users;
+    }
+
     /**
      * @see RoleInterface
      */
@@ -87,6 +107,7 @@ class Group implements RoleInterface, \Serializable
     {
         return $this->getName();
     }
+
     /**
      * Get id
      *
@@ -96,6 +117,7 @@ class Group implements RoleInterface, \Serializable
     {
         return $this->id;
     }
+
     /**
      * Set name
      *
@@ -105,6 +127,7 @@ class Group implements RoleInterface, \Serializable
     {
         $this->name = $name;
     }
+
     /**
      * Get name
      *
@@ -114,6 +137,7 @@ class Group implements RoleInterface, \Serializable
     {
         return $this->name;
     }
+
     /**
      * Set description
      *
@@ -123,6 +147,7 @@ class Group implements RoleInterface, \Serializable
     {
         $this->description = $description;
     }
+
     /**
      * Get description
      *
@@ -132,6 +157,7 @@ class Group implements RoleInterface, \Serializable
     {
         return $this->description;
     }
+
     /**
      * Add users
      *
@@ -141,6 +167,7 @@ class Group implements RoleInterface, \Serializable
     {
         $this->users[] = $users;
     }
+
     /**
      * Get users
      *
@@ -150,23 +177,30 @@ class Group implements RoleInterface, \Serializable
     {
         return $this->users;
     }
+
+    /**
+     * (PHP 5 &gt;= 5.1.0)<br/>
+     * String representation of object
+     * @link http://php.net/manual/en/serializable.serialize.php
+     * @return string the string representation of the object or null
+     */
     public function serialize()
     {
-        return serialize(
-                array(
-                    'id' => $this->id,
-                    'name' => $this->name,
-                    'description' => $this->description,
-                    'users' => $this->users
-                )
-        );
+        return json_encode(array('id' => $this->getId()));
     }
+
+    /**
+     * (PHP 5 &gt;= 5.1.0)<br/>
+     * Constructs the object
+     * @link http://php.net/manual/en/serializable.unserialize.php
+     * @param string $serialized <p>
+     * The string representation of the object.
+     * </p>
+     * @return void
+     */
     public function unserialize($serialized)
     {
-        $unserializedData = unserialize($serialized);
-        $this->id = isset($unserializedData['id']) ? $unserializedData['id'] : null;
-        $this->name = isset($unserializedData['name']) ? $unserializedData['name'] : null;
-        $this->description = isset($unserializedData['description']) ? $unserializedData['description'] : null;
-        $this->users = isset($unserializedData['users']) ? $unserializedData['users'] : null;
+        $unserializedData = json_decode($serialized, true);
+        $this->setId($unserializedData['id']);
     }
 }

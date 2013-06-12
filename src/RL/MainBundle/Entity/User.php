@@ -37,6 +37,8 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 use \RL\MainBundle\Entity\Group;
 use RL\MainBundle\Entity\Mark;
+use ReflectionClass;
+use Symfony\Component\PropertyAccess\PropertyAccess;
 
 /**
  * RL\MainBundle\Entity\User
@@ -47,7 +49,7 @@ use RL\MainBundle\Entity\Mark;
  * @author Peter Vasilevsky <tuxoiduser@gmail.com> a.k.a. Tux-oid
  * @license BSDL
  */
-class User implements RLUserInterface, EquatableInterface
+class User implements RLUserInterface, EquatableInterface, \Serializable
 {
     /**
      * @ORM\Id()
@@ -368,7 +370,6 @@ class User implements RLUserInterface, EquatableInterface
     {
         $this->active = true;
         $this->salt = md5(uniqid(null, true));
-        $this->groups = new ArrayCollection();
         $this->positions = new ArrayCollection();
         $this->filters = new ArrayCollection();
         $this->messages = new ArrayCollection();
@@ -436,7 +437,6 @@ class User implements RLUserInterface, EquatableInterface
      */
     public function getRoles()
     {
-        //		return $this->group->toArray();
         return array($this->group);
     }
 
@@ -491,6 +491,66 @@ class User implements RLUserInterface, EquatableInterface
     public function getId()
     {
         return $this->id;
+    }
+
+    /**
+     * Set id
+     *
+     * @param int $id
+     */
+    public function setId($id)
+    {
+        $this->id = $id;
+    }
+
+    /**
+     * Set messages
+     *
+     * @param \Doctrine\Common\Collections\ArrayCollection $messages
+     */
+    public function setMessages($messages)
+    {
+        $this->messages = $messages;
+    }
+
+    /**
+     * Set positions
+     *
+     * @param \Doctrine\Common\Collections\ArrayCollection $positions
+     */
+    public function setPositions($positions)
+    {
+        $this->positions = $positions;
+    }
+
+    /**
+     * Set read threads
+     *
+     * @param \Doctrine\Common\Collections\ArrayCollection $readThreads
+     */
+    public function setReadThreads($readThreads)
+    {
+        $this->readThreads = $readThreads;
+    }
+
+    /**
+     * Set filters
+     *
+     * @param \Doctrine\Common\Collections\ArrayCollection $filters
+     */
+    public function setFilters($filters)
+    {
+        $this->filters = $filters;
+    }
+
+    /**
+     * Set edited comments
+     *
+     * @param \Doctrine\Common\Collections\ArrayCollection $editedComments
+     */
+    public function setEditedComments($editedComments)
+    {
+        $this->editedComments = $editedComments;
     }
 
     /**
@@ -1329,5 +1389,31 @@ class User implements RLUserInterface, EquatableInterface
     public function getReadThreads()
     {
         return $this->readThreads;
+    }
+
+    /**
+     * (PHP 5 &gt;= 5.1.0)<br/>
+     * String representation of object
+     * @link http://php.net/manual/en/serializable.serialize.php
+     * @return string the string representation of the object or null
+     */
+    public function serialize()
+    {
+        return json_encode(array('id' => $this->getId()));
+    }
+
+    /**
+     * (PHP 5 &gt;= 5.1.0)<br/>
+     * Constructs the object
+     * @link http://php.net/manual/en/serializable.unserialize.php
+     * @param string $serialized <p>
+     * The string representation of the object.
+     * </p>
+     * @return void
+     */
+    public function unserialize($serialized)
+    {
+        $unserializedData = json_decode($serialized, true);
+        $this->setId($unserializedData['id']);
     }
 }
