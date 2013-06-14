@@ -181,7 +181,7 @@ class ForumController extends AbstractController
         //save comment in database
         $sbm = $request->request->get('submit');
         if (isset($sbm)) {
-            $em = $doctrine->getEntityManager();
+            $em = $doctrine->getManager();
             $thr = $request->request->get('addComment');
             $threadRepository = $doctrine->getRepository('RLMainBundle:Thread');
             $thread = $threadRepository->findOneById($threadId);
@@ -259,7 +259,7 @@ class ForumController extends AbstractController
         $sbm = $request->request->get('submit');
         if (isset($sbm)) {
             /** @var $em \Doctrine\ORM\EntityManager */
-            $em = $doctrine->getEntityManager();
+            $em = $doctrine->getManager();
             $cmnt = $request->request->get('editComment');
             $message->setSubject($cmnt['subject']);
             $message->setComment($user->getMark()->render($cmnt['comment']));
@@ -353,7 +353,6 @@ class ForumController extends AbstractController
         return $this->render(
             $section->getBundle() . ':Forum:forum.html.twig',
             array(
-                'subsections' => $subsections,
                 'threadsCount' => $threadsCount,
                 'section' => $section,
             )

@@ -19,8 +19,9 @@ Run:
 * php app/console doctrine:fixtures:load
 * php app/console assets:install web --symlink
 * php app/console assetic:dump
+* php app/console clear:cache
 
-Add to crontab the following line
+Add to crontab the following lines
 
     * * * * * php app/console rl_main:messages:filter >> /dev/null
-    * * * * * php app/console rl.main.users_filters_generator >> /dev/null
+    * * * * * php app/console rl_main:generate:users:filters >> /dev/null

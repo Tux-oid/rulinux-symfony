@@ -1,17 +1,17 @@
-<form action="{{path('user_edit', {'name':userInfo.username})}}" method="post" {{form_enctype(mainPageSettings)}}>
-	<fieldset>
-		<legend>{%trans%}Filters settings{%endtrans%}</legend>
+<form action="{{ path('user_edit', {'name':userInfo.username}) }}" method="post" {{ form_enctype(mainPageSettings) }}>
+    <fieldset>
+        <legend>{% trans %}Filters settings{% endtrans %}</legend>
         <table>
             {% for filter in filtersSettings.filters %}
                 <tr>
-                    <td>{{ filter.vars.value.filter.name|capitalize }}: </td>
+                    <td>{{ filter.vars.value.filter.name|capitalize }}:</td>
                     <td>{{ form_widget(filter.weight) }}</td>
                     <td>{{ form_errors(filter.weight) }}</td>
                 </tr>
             {% endfor %}
         </table>
         {{ form_rest(filtersSettings) }}
-	</fieldset>
+    </fieldset>
     <input type="hidden" name="action" value="filtersSettings">
-	<input type="submit" name="sbm" value="{%trans%}Save settings{%endtrans%}">
+    <input type="submit" name="sbm" value="{% trans %}Save settings{% endtrans %}">
 </form>
