@@ -23,3 +23,4 @@ Run:
 Add to crontab the following line
 
     * * * * * php app/console rl_main:messages:filter >> /dev/null
+    * * * * * php app/console rl.main.users_filters_generator >> /dev/null

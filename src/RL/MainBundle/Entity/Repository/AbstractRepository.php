@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) 2008 - 2013, Peter Vasilevsky
+ * Copyright (c) 2009 - 2012, Peter Vasilevsky
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -28,13 +28,54 @@
 
 namespace RL\MainBundle\Entity\Repository;
 
+use Doctrine\ORM\EntityRepository;
+
 /**
- * RL\MainBundle\Entity\BlockPositionRepository
+ * RL\MainBundle\Entity\Repository\AbstractRepository
  *
  * @author Peter Vasilevsky <tuxoiduser@gmail.com> a.k.a. Tux-oid
  * @license BSDL
  */
-class WordRepository extends AbstractRepository
+abstract class AbstractRepository extends EntityRepository
 {
+    /**
+     * @return mixed
+     */
+    public function createDefaultEntity()
+    {
+        $className  = $this->getClassName();
+        return new $className();
+    }
 
+    /**
+     * @param $entity
+     * @param bool $andFlush
+     */
+    public function update($entity, $andFlush = false)
+    {
+        $this->_em->persist($entity);
+        if($andFlush){
+            $this->_em->flush();
+        }
+    }
+
+    /**
+     * @param $entity
+     * @param bool $andFlush
+     */
+    public function remove($entity, $andFlush = true)
+    {
+        $this->_em->remove($entity);
+        if($andFlush){
+            $this->_em->flush();
+        }
+    }
+
+    /**
+     * @param null $entity
+     */
+    public function flush($entity = null)
+    {
+        $this->_em->flush($entity);
+    }
 }

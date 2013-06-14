@@ -28,15 +28,13 @@
 
 namespace RL\MainBundle\Entity\Repository;
 
-use Doctrine\ORM\EntityRepository;
-
 /**
  * RL\MainBundle\Entity\MessageRepository
  *
  * @author Peter Vasilevsky <tuxoiduser@gmail.com> a.k.a. Tux-oid
  * @license BSDL
  */
-class MessageRepository extends EntityRepository
+class MessageRepository extends AbstractRepository
 {
     /**
      * @param int $lastTime

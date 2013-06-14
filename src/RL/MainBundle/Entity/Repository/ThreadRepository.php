@@ -28,7 +28,6 @@
 
 namespace RL\MainBundle\Entity\Repository;
 
-use Doctrine\ORM\EntityRepository;
 use RL\MainBundle\Entity\Thread;
 use RL\MainBundle\Entity\Message;
 
@@ -38,7 +37,7 @@ use RL\MainBundle\Entity\Message;
  * @author Peter Vasilevsky <tuxoiduser@gmail.com> a.k.a. Tux-oid
  * @license BSDL
  */
-class ThreadRepository extends EntityRepository
+class ThreadRepository extends AbstractRepository
 {
     public function getThreads($subsection, $limit, $offset)
     {

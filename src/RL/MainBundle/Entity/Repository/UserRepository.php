@@ -28,7 +28,6 @@
 
 namespace RL\MainBundle\Entity\Repository;
 
-use Doctrine\ORM\EntityRepository;
 use RL\MainBundle\Security\User\RLUserInterface;
 
 /**
@@ -37,7 +36,7 @@ use RL\MainBundle\Security\User\RLUserInterface;
  * @author Peter Vasilevsky <tuxoiduser@gmail.com> a.k.a. Tux-oid
  * @license BSDL
  */
-class UserRepository extends EntityRepository
+class UserRepository extends AbstractRepository
 {
     /**
      * @param $user

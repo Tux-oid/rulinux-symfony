@@ -38,7 +38,7 @@ use Doctrine\Common\Collections\ArrayCollection;
 /**
  * RL\MainBundle\Entity\Filter
  *
- * @ORM\Entity()
+ * @ORM\Entity(repositoryClass="RL\MainBundle\Entity\Repository\FilterRepository")
  * @ORM\Table(name="filters")
  *
  * @author Peter Vasilevsky <tuxoiduser@gmail.com> a.k.a. Tux-oid
@@ -98,6 +98,7 @@ final class Filter
         $this->filterByHtmlTags = $filterByHtmlTags;
         $this->messages = new ArrayCollection();
         $this->words = new ArrayCollection();
+        $this->users = new ArrayCollection();
     }
 
     /**
@@ -143,26 +144,20 @@ final class Filter
     /**
      * Add user
      *
-     * @param \RL\MainBundle\Security\User\RLUserInterface $user
+     * @param \RL\MainBundle\Entity\UsersFilter $user
      */
-    public function addUser(RLUserInterface$user)
+    public function addUser(UsersFilter $user)
     {
-        if($user->isAnonymous()) {
-            $user = $user->getDbAnonymous();
-        }
         $this->users[] = $user;
     }
 
     /**
      * Remove user
      *
-     * @param \RL\MainBundle\Security\User\RLUserInterface $user
+     * @param \RL\MainBundle\Entity\UsersFilter $user
      */
-    public function removeUser(RLUserInterface $user)
+    public function removeUser(UsersFilter $user)
     {
-        if($user->isAnonymous()) {
-            $user = $user->getDbAnonymous();
-        }
         $this->users->remove($user);
     }
 

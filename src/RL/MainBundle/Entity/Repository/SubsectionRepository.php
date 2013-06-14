@@ -28,15 +28,13 @@
 
 namespace RL\MainBundle\Entity\Repository;
 
-use Doctrine\ORM\EntityRepository;
-
 /**
  * RL\MainBundle\Entity\SubsectionRepository
  *
  * @author Peter Vasilevsky <tuxoiduser@gmail.com> a.k.a. Tux-oid
  * @license BSDL
  */
-class SubsectionRepository extends EntityRepository
+class SubsectionRepository extends AbstractRepository
 {
     public function getSubsectionByRewrite($rewrite, $section)
     {

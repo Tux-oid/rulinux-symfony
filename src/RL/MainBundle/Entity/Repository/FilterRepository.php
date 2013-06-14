@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) 2008 - 2013, Peter Vasilevsky
+ * Copyright (c) 2009 - 2012, Peter Vasilevsky
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -29,12 +29,12 @@
 namespace RL\MainBundle\Entity\Repository;
 
 /**
- * RL\MainBundle\Entity\BlockPositionRepository
+ * RL\MainBundle\Entity\Repository\FilterRepository
  *
  * @author Peter Vasilevsky <tuxoiduser@gmail.com> a.k.a. Tux-oid
  * @license BSDL
  */
-class WordRepository extends AbstractRepository
+class FilterRepository extends AbstractRepository
 {
 
 }

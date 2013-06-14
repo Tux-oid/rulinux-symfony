@@ -28,7 +28,6 @@
 
 namespace RL\MainBundle\Entity\Repository;
 
-use Doctrine\ORM\EntityRepository;
 use RL\MainBundle\Entity\Thread;
 use RL\MainBundle\Security\User\RLUserInterface;
 
@@ -38,14 +37,16 @@ use RL\MainBundle\Security\User\RLUserInterface;
  * @author Peter Vasilevsky <tuxoiduser@gmail.com> a.k.a. Tux-oid
  * @license BSDL
  */
-class ReaderRepository extends EntityRepository
+class ReaderRepository extends AbstractRepository
 {
+
     /**
      * Get expired readers
      *
-     * @param \RL\MainBundle\Entity\Thread $thread
-     * @param \RL\MainBundle\Security\User\RLUserInterface $user
-     * @param string $sessionId
+     * @param Thread $thread
+     * @param RLUserInterface $user
+     * @param $sessionId
+     * @return array
      */
     public function getExpiredReaders(Thread $thread, RLUserInterface $user, $sessionId)
     {
@@ -76,7 +77,8 @@ class ReaderRepository extends EntityRepository
     /**
      * Get readers
      *
-     * @param \RL\MainBundle\Entity\Thread $thread
+     * @param Thread $thread
+     * @return array
      */
     public function getReaders(Thread $thread)
     {

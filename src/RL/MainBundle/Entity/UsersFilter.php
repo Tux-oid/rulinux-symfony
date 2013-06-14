@@ -36,7 +36,7 @@ use RL\MainBundle\Entity\Filter;
 /**
  * RL\MainBundle\Entity\UsersFilter
  *
- * @ORM\Entity()
+ * @ORM\Entity(repositoryClass="RL\MainBundle\Entity\Repository\UsersFilterRepository")
  * @ORM\Table(name="users_filters")
  *
  * @author Peter Vasilevsky <tuxoiduser@gmail.com> a.k.a. Tux-oid

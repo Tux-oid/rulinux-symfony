@@ -28,7 +28,6 @@
 
 namespace RL\MainBundle\Entity\Repository;
 
-use Doctrine\ORM\EntityRepository;
 use RL\MainBundle\Entity\BlockPosition;
 use RL\MainBundle\Entity\Block;
 use RL\MainBundle\Security\User\RLUserInterface;
@@ -39,7 +38,7 @@ use RL\MainBundle\Security\User\RLUserInterface;
  * @author Peter Vasilevsky <tuxoiduser@gmail.com> a.k.a. Tux-oid
  * @license BSDL
  */
-class BlockPositionRepository extends EntityRepository
+class BlockPositionRepository extends AbstractRepository
 {
 
     /**
