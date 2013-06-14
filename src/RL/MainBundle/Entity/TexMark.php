@@ -39,7 +39,7 @@ use RL\MainBundle\Entity\Mark;
  * @author Peter Vasilevsky <tuxoiduser@gmail.com> a.k.a. Tux-oid
  * @license BSDL
  */
-final class TexMark extends Mark
+class TexMark extends Mark
 {
 
     /**

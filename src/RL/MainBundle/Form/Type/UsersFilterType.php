@@ -26,35 +26,56 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-namespace RL\MainBundle\Form\Model;
+namespace RL\MainBundle\Form\Type;
+
+use Symfony\Component\Form\FormBuilderInterface;
+use Symfony\Component\Form\AbstractType;
+use Symfony\Component\OptionsResolver\OptionsResolverInterface;
 
 /**
- * RL\MainBundle\Form\FiltersSettingsForm
+ * RL\MainBundle\Form\Type\UsersFilterType
  *
  * @author Peter Vasilevsky <tuxoiduser@gmail.com> a.k.a. Tux-oid
  * @license BSDL
  */
-class FiltersSettingsForm
+class UsersFilterType extends AbstractType
 {
     /**
-     * @var int
+     * {@inheritdoc}
      */
-    protected $filthyLanguage;
-
-    /**
-     * @param int $filthyLanguage
-     */
-    public function setFilthyLanguage($filthyLanguage)
+    public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        $this->filthyLanguage = $filthyLanguage;
+        $builder->add('weight', 'range');
     }
 
     /**
-     * @return int
+     * {@inheritdoc}
      */
-    public function getFilthyLanguage()
+    public function getName()
     {
-        return $this->filthyLanguage;
+        return 'usersFilter';
     }
 
+    /**
+     * {@inheritdoc}
+     */
+    public function getDefaultOptions(array $options)
+    {
+        return array(
+            'csrf_protection' => true,
+            'csrf_field_name' => '_csrf_token',
+            'intention' => 'authenticate'
+        );
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function setDefaultOptions(OptionsResolverInterface $resolver)
+    {
+        $resolver->setDefaults(array(
+                'data_class' => 'RL\MainBundle\Entity\UsersFilter',
+                'csrf_protection' => false,
+            ));
+    }
 }

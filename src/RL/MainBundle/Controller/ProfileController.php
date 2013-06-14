@@ -40,7 +40,6 @@ use RL\MainBundle\Form\Type\PersonalSettingsType;
 use RL\MainBundle\Form\Type\AdministratorSettingsType;
 use RL\MainBundle\Form\Type\ModeratorSettingsType;
 use RL\MainBundle\Form\Type\FiltersSettingsType;
-use RL\MainBundle\Form\Model\FiltersSettingsForm;
 use RL\MainBundle\Form\Type\MainPageSettingsType;
 use LightOpenID;
 use Gregwar\ImageBundle\Image;
@@ -80,7 +79,7 @@ class ProfileController extends AbstractController
         //show info
         $passwordChangingForm = new PasswordChangingForm();
         $passwordChanging = $this->createForm(new PasswordChangingType(), $passwordChangingForm);
-        $filtersSettings = $this->createForm(new FiltersSettingsType(), new FiltersSettingsForm());
+        $filtersSettings = $this->createForm(new FiltersSettingsType(), $userInProfile);
         $personalSettings = $this->createForm(new PersonalSettingsType(), $userInProfile);
         $personalInformation = $this->createForm(new PersonalInformationType(), $userInProfile);
         $moderatorSettings = $this->createForm(new ModeratorSettingsType(), $userInProfile);
@@ -151,15 +150,24 @@ class ProfileController extends AbstractController
                     } else {
                         throw new \Exception('Form is invalid');
                     }
+                } elseif ($request->request->get('action') == 'filtersSettings') {
+                    $filtersSettings->submit($request);
+                    if ($filtersSettings->isValid()) {
+                        $this->getDoctrine()->getManager()->flush();
+                    } else {
+                        throw new \Exception('Form is invalid');
+                    }
                 } elseif ($request->request->get('action') == 'moderatorSettings') {
                     $moderatorSettings->submit($request);
                     if ($moderatorSettings->isValid()) {
-                        if(!$userInProfile->isActive()) {
+                        if (!$userInProfile->isActive()) {
                             /** @var $mailer \RL\MainBundle\Helper\Mailer */
                             $mailer = $this->get('rl_main.mailer');
                             $mailer->send(
                                 $userInProfile->getEmail(),
-                                $this->getDoctrine()->getRepository('RLMainBundle:Settings')->findOneByName('site_email')->getValue(),
+                                $this->getDoctrine()->getRepository('RLMainBundle:Settings')->findOneByName(
+                                    'site_email'
+                                )->getValue(),
                                 'Account block',
                                 $this->renderView(
                                     'RLMainBundle:Security:accountBlockingLetter.html.twig',

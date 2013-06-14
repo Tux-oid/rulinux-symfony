@@ -39,7 +39,7 @@ use Doctrine\ORM\Mapping as ORM;
  * @author Peter Vasilevsky <tuxoiduser@gmail.com> a.k.a. Tux-oid
  * @license BSDL
  */
-final class Word
+class Word
 {
     /**
      * @ORM\Id

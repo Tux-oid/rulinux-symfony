@@ -44,7 +44,7 @@ use Doctrine\Common\Collections\ArrayCollection;
  * @author Peter Vasilevsky <tuxoiduser@gmail.com> a.k.a. Tux-oid
  * @license BSDL
  */
-final class Filter
+class Filter
 {
     /**
      * @ORM\Id
@@ -68,14 +68,14 @@ final class Filter
     protected $words;
 
     /**
-     * @ORM\OneToMany(targetEntity="RL\MainBundle\Entity\UsersFilter", mappedBy="filters", cascade={"all"})
+     * @ORM\OneToMany(targetEntity="RL\MainBundle\Entity\UsersFilter", mappedBy="filter", cascade={"all"})
      *
      * @var \Doctrine\Common\Collections\ArrayCollection
      */
     protected $users;
 
     /**
-     * @ORM\OneToMany(targetEntity="RL\MainBundle\Entity\FilteredMessage", mappedBy="filters")
+     * @ORM\OneToMany(targetEntity="RL\MainBundle\Entity\FilteredMessage", mappedBy="filter")
      *
      * @var \Doctrine\Common\Collections\ArrayCollection
      */

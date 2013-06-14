@@ -30,6 +30,7 @@ namespace RL\MainBundle\Form\Type;
 
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\OptionsResolver\OptionsResolverInterface;
 
 /**
  * RL\MainBundle\Form\FiltersSettingsType
@@ -39,14 +40,25 @@ use Symfony\Component\Form\AbstractType;
  */
 class FiltersSettingsType extends AbstractType
 {
+    /**
+     * {@inheritdoc}
+     */
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        $builder->add('filthyLanguage', 'range');
+        $builder->add('filters', 'collection', array('type' => new UsersFilterType()));
     }
+
+    /**
+     * {@inheritdoc}
+     */
     public function getName()
     {
         return 'filtersSettings';
     }
+
+    /**
+     * {@inheritdoc}
+     */
     public function getDefaultOptions(array $options)
     {
         return array(
@@ -54,5 +66,16 @@ class FiltersSettingsType extends AbstractType
             'csrf_field_name' => '_csrf_token',
             'intention' => 'authenticate'
         );
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function setDefaultOptions(OptionsResolverInterface $resolver)
+    {
+        $resolver->setDefaults(array(
+                'data_class' => 'RL\MainBundle\Entity\User',
+                'csrf_protection' => false,
+            ));
     }
 }

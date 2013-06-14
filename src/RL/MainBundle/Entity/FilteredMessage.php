@@ -59,7 +59,7 @@ class FilteredMessage
     protected $message;
 
     /**
-     * @ORM\ManyToOne(targetEntity="Filter", inversedBy="users", cascade={"all"})
+     * @ORM\ManyToOne(targetEntity="Filter", inversedBy="messages", cascade={"all"})
      *
      * @var \RL\MainBundle\Entity\Filter
      */

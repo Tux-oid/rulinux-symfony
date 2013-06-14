@@ -60,7 +60,7 @@ class Reader
     protected $user;
 
     /**
-     * @ORM\ManyToOne(targetEntity="Thread", inversedBy="resders")
+     * @ORM\ManyToOne(targetEntity="Thread", inversedBy="readers")
      *
      * @var \RL\MainBundle\Entity\Thread
      */

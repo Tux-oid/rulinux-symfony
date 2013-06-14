@@ -930,7 +930,7 @@ class User implements RLUserInterface, EquatableInterface, \Serializable
      */
     public function addFilter(UsersFilter $filter)
     {
-        $this->filters[] = $filter;
+        $this->filters->add($filter);
     }
 
     /**
@@ -946,7 +946,7 @@ class User implements RLUserInterface, EquatableInterface, \Serializable
     /**
      * Get filters
      *
-     * @return array
+     * @return ArrayCollection
      */
     public function getFilters()
     {
