@@ -30,19 +30,45 @@ namespace RL\MainBundle\Form\Type;
 
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
+use JMS\DiExtraBundle\Annotation\Service;
+use JMS\DiExtraBundle\Annotation\InjectParams;
+use JMS\DiExtraBundle\Annotation\Inject;
+use RL\MainBundle\Service\UcaptchaDecoratorService;
 
 /**
  * RL\MainBundle\Form\ModeratorSettingsType
+ *
+ * @Service("rl_main.form.moderator_settings")
  *
  * @author Peter Vasilevsky <tuxoiduser@gmail.com> a.k.a. Tux-oid
  * @license BSDL
  */
 class ModeratorSettingsType extends AbstractType
 {
+    /**
+     * @var UcaptchaDecoratorService
+     */
+    protected $ucaptcha;
+
+    /**
+     * Constrictor
+     *
+     * @InjectParams({
+     * "ucaptcha" = @Inject("rl_main.ucaptcha")
+     * })
+     *
+     * @param UcaptchaDecoratorService $ucaptcha
+     */
+    public function __construct(UcaptchaDecoratorService $ucaptcha)
+    {
+        $this->ucaptcha = $ucaptcha;
+    }
+
+
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder->add('active', 'checkbox', array('required' => false))
-        ->add('captchaLevel', 'text', array('required' => true));//TODO:set choice type
+        ->add('captchaLevel', 'choice', array('required' => true, 'choices' => $this->ucaptcha->getPluginsLevels()));
     }
     /**
      * Returns the name of this type.

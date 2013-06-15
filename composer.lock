@@ -1276,7 +1276,7 @@
             "source": {
                 "type": "git",
                 "url": "git://gitorious.org/rulinux-engine/ucaptcha.git",
-                "reference": "c2c8818009eb121c2f00a9fc95d1b4d5ad947f0e"
+                "reference": "7d9fe7c167856d91d7554253b60c7a3fb4b93501"
             },
             "require": {
                 "php": ">=5.3.3"
@@ -1304,7 +1304,7 @@
                 "robots",
                 "ucaptcha"
             ],
-            "time": "2013-01-22 14:51:43"
+            "time": "2013-06-15 08:31:54"
         },
         {
             "name": "sensio/distribution-bundle",

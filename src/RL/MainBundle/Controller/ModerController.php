@@ -24,7 +24,7 @@
  * ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-*/
+ */
 
 namespace RL\MainBundle\Controller;
 
@@ -51,7 +51,7 @@ class ModerController extends AbstractController
         }
         $doctrine = $this->get('doctrine');
         /** @var $em \Doctrine\ORM\EntityManager */
-        $em = $doctrine->getEntityManager();
+        $em = $doctrine->getManager();
         /** @var $thread \RL\MainBundle\Entity\Thread */
         $thread = $doctrine->getRepository('RLMainBundle:Thread')->findOneById($id);
         if (null === $thread) {
@@ -76,9 +76,9 @@ class ModerController extends AbstractController
         }
         $doctrine = $this->get('doctrine');
         /** @var $em \Doctrine\ORM\EntityManager */
-        $em = $doctrine->getEntityManager();
+        $em = $doctrine->getManager();
         /** @var $thread \RL\MainBundle\Entity\Thread */
-        $thread = $doctrine->getRepository('RLMainBundle:Thread')->findOneById($id);
+        $thread = $doctrine->getRepository('RLMainBundle:Thread')->findOneBy(array("id" => $id));
         if (null === $thread) {
             return $this->renderMessage('Thread not found', 'Thread with specified id was not found');
         }
@@ -89,7 +89,15 @@ class ModerController extends AbstractController
         }
         $em->flush();
 
-        return $this->redirect($this->generateUrl("subsection", array('sectionRewrite'=>$thread->getSubsection()->getSection()->getRewrite(), 'subsectionRewrite'=>$thread->getSubsection()->getRewrite())));
+        return $this->redirect(
+            $this->generateUrl(
+                "subsection",
+                array(
+                    'sectionRewrite' => $thread->getSubsection()->getSection()->getRewrite(),
+                    'subsectionRewrite' => $thread->getSubsection()->getRewrite()
+                )
+            )
+        );
     }
 
 }

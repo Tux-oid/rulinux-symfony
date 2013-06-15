@@ -82,7 +82,7 @@ class ProfileController extends AbstractController
         $filtersSettings = $this->createForm(new FiltersSettingsType(), $userInProfile);
         $personalSettings = $this->createForm(new PersonalSettingsType(), $userInProfile);
         $personalInformation = $this->createForm(new PersonalInformationType(), $userInProfile);
-        $moderatorSettings = $this->createForm(new ModeratorSettingsType(), $userInProfile);
+        $moderatorSettings = $this->createForm($this->get("rl_main.form.moderator_settings"), $userInProfile);
         $administratorSettings = $this->createForm(new AdministratorSettingsType(), $userInProfile);
         $mainPageSettings = $this->createForm(new MainPageSettingsType(), $userInProfile);
         //save settings in database
@@ -165,8 +165,8 @@ class ProfileController extends AbstractController
                             $mailer = $this->get('rl_main.mailer');
                             $mailer->send(
                                 $userInProfile->getEmail(),
-                                $this->getDoctrine()->getRepository('RLMainBundle:Settings')->findOneByName(
-                                    'site_email'
+                                $this->getDoctrine()->getRepository('RLMainBundle:Settings')->findOneBy(
+                                    array("name" => 'site_email')
                                 )->getValue(),
                                 'Account block',
                                 $this->renderView(

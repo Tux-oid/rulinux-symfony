@@ -19,6 +19,7 @@ Run:
 * php app/console doctrine:fixtures:load
 * php app/console assets:install web --symlink
 * php app/console assetic:dump
+* php app/console rl_main:generate:users:filters
 * php app/console clear:cache
 
 Add to crontab the following lines
