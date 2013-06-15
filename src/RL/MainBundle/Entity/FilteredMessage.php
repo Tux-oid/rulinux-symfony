@@ -52,14 +52,14 @@ class FilteredMessage
     protected $id;
 
     /**
-     * @ORM\ManyToOne(targetEntity="Message", inversedBy="filters", cascade={"all"})
+     * @ORM\ManyToOne(targetEntity="Message", inversedBy="filters")
      *
      * @var \RL\MainBundle\Entity\Message
      */
     protected $message;
 
     /**
-     * @ORM\ManyToOne(targetEntity="Filter", inversedBy="messages", cascade={"all"})
+     * @ORM\ManyToOne(targetEntity="Filter", inversedBy="messages")
      *
      * @var \RL\MainBundle\Entity\Filter
      */

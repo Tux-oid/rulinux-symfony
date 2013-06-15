@@ -26,7 +26,7 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-namespace RL\MainBundle\Helper;
+namespace RL\MainBundle\Service;
 
 use Swift_Message;
 use JMS\DiExtraBundle\Annotation\Service;
@@ -35,14 +35,14 @@ use JMS\DiExtraBundle\Annotation\InjectParams;
 use Symfony\Component\HttpKernel\Log\LoggerInterface;
 
 /**
- * RL\MainBundle\Helper\Pages
+ * RL\MainBundle\Service\MailerService
  *
  * @Service("rl_main.mailer")
  *
  * @author Peter Vasilevsky <tuxoiduser@gmail.com> a.k.a. Tux-oid
  * @license BSDL
  */
-class Mailer
+class MailerService
 {
     /**
      * @var

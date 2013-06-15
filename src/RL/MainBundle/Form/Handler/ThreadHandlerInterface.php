@@ -34,6 +34,7 @@ use RL\MainBundle\Entity\Subsection;
 use RL\MainBundle\Entity\Section;
 use Symfony\Component\HttpFoundation\Request;
 use Doctrine\Bundle\DoctrineBundle\Registry;
+use RL\MainBundle\Service\MessageFilterCheckerService;
 
 /**
  * RL\MainBundle\Form\Handler\ThreadHandlerInterface
@@ -51,9 +52,17 @@ interface ThreadHandlerInterface
      * @param \RL\MainBundle\Entity\Section $section
      * @param \RL\MainBundle\Entity\Subsection $subsection
      * @param \RL\MainBundle\Security\User\RLUserInterface $user
+     * @param \RL\MainBundle\Service\MessageFilterCheckerService $messageFilterChecker
      * @return mixed
      */
-    public function saveThread(Registry &$doctrine, Request &$request, Section $section, Subsection $subsection, RLUserInterface $user);
+    public function saveThread(
+        Registry &$doctrine,
+        Request &$request,
+        Section $section,
+        Subsection $subsection,
+        RLUserInterface $user,
+        MessageFilterCheckerService $messageFilterChecker
+    );
 
     /**
      * Preview thread

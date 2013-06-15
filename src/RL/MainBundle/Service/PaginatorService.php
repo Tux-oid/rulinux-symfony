@@ -26,7 +26,7 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-namespace RL\MainBundle\Helper;
+namespace RL\MainBundle\Service;
 
 use Symfony\Bundle\FrameworkBundle\Routing\Router;
 use JMS\DiExtraBundle\Annotation\Service;
@@ -34,14 +34,14 @@ use JMS\DiExtraBundle\Annotation\Inject;
 use JMS\DiExtraBundle\Annotation\InjectParams;
 
 /**
- * RL\MainBundle\Helper\Pages
+ * RL\MainBundle\Service\PaginatorService
  *
  * @Service("rl_main.paginator")
  *
  * @author Peter Vasilevsky <tuxoiduser@gmail.com> a.k.a. Tux-oid
  * @license BSDL
  */
-class Pages
+class PaginatorService
 {
     /**
      * @var \Symfony\Bundle\FrameworkBundle\Routing\Router
@@ -63,6 +63,11 @@ class Pages
     }
 
     /**
+     * @param $itemsOnPage
+     * @param $itemsCount
+     * @param $page
+     * @param $routeName
+     * @param array $routeParameters
      * @return string
      */
     public function draw($itemsOnPage, $itemsCount, $page, $routeName, array $routeParameters)

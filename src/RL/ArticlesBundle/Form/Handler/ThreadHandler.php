@@ -36,6 +36,7 @@ use RL\MainBundle\Security\User\RLUserInterface;
 use RL\MainBundle\Entity\Message;
 use Symfony\Component\HttpFoundation\Request;
 use Doctrine\Bundle\DoctrineBundle\Registry;
+use RL\MainBundle\Service\MessageFilterCheckerService;
 
 /**
  * RL\ArticlesBundle\Form\Handler\ThreadHandler
@@ -51,13 +52,16 @@ class ThreadHandler implements ThreadHandlerInterface
      * @param \RL\MainBundle\Entity\Section $section
      * @param \RL\MainBundle\Entity\Subsection $subsection
      * @param \RL\MainBundle\Security\User\RLUserInterface $user
+     * @param MessageFilterCheckerService $messageFilterChecker
+     * @return mixed|void
      */
     public function saveThread(
         Registry &$doctrine,
         Request &$request,
         Section $section,
         Subsection $subsection,
-        RLUserInterface $user
+        RLUserInterface $user,
+        MessageFilterCheckerService $messageFilterChecker
     ) {
         $em = $doctrine->getManager();
         $thr = $request->request->get('addThread');
@@ -74,6 +78,7 @@ class ThreadHandler implements ThreadHandlerInterface
         $message->setRawComment($thr['comment']);
         $message->setThread($thread);
         $em->persist($message);
+        $messageFilterChecker->filter($message);
         $em->flush();
     }
 

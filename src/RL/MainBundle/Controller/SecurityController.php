@@ -24,7 +24,7 @@
  * ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-*/
+ */
 
 namespace RL\MainBundle\Controller;
 
@@ -49,7 +49,7 @@ use Gregwar\ImageBundle\Image;
  * @author Ax-xa-xa
  * @author Peter Vasilevsky <tuxoiduser@gmail.com> a.k.a. Tux-oid
  * @license BSDL
-*/
+ */
 class SecurityController extends AbstractController
 {
     /**
@@ -78,7 +78,8 @@ class SecurityController extends AbstractController
         }
 
         return $this->render(
-            'RLMainBundle:Security:login.html.twig', array('last_username' => $session->get(SecurityContext::LAST_USERNAME), 'error' => $error,)
+            'RLMainBundle:Security:login.html.twig',
+            array('last_username' => $session->get(SecurityContext::LAST_USERNAME), 'error' => $error,)
         );
     }
 
@@ -91,7 +92,8 @@ class SecurityController extends AbstractController
         $form = $this->createForm(new RegistrationFirstType(), $newUser);
 
         return $this->render(
-            'RLMainBundle:Security:registrationFirstPage.html.twig', array('form' => $form->createView())
+            'RLMainBundle:Security:registrationFirstPage.html.twig',
+            array('form' => $form->createView())
         );
     }
 
@@ -106,11 +108,12 @@ class SecurityController extends AbstractController
             $form = $this->createForm(new RegistrationFirstType(), $newUser);
             $form->submit($request);
             if ($form->isValid()) {
-                /** @var $mailer \RL\MainBundle\Helper\Mailer */
-                $mailer = $this->get('rl_main.mailer');
+                $mailer = $this->getMailer();
                 $mailer->send(
                     $newUser->getEmail(),
-                    $this->getDoctrine()->getRepository('RLMainBundle:Settings')->findOneBy(array('name' => 'site_email'))->getValue(),
+                    $this->getDoctrine()->getRepository('RLMainBundle:Settings')->findOneBy(
+                        array('name' => 'site_email')
+                    )->getValue(),
                     'Registration letter',
                     $this->renderView(
                         'RLMainBundle:Security:registrationLetter.html.twig',
@@ -123,10 +126,8 @@ class SecurityController extends AbstractController
                                     'email' => $newUser->getEmail(),
                                     'hash' => md5(
                                         md5(
-                                            $newUser->getName() .
-                                            $newUser->getPassword() .
-                                            $newUser->getEmail() .
-                                            $this->container->getParameter('secret')
+                                            $newUser->getName() . $newUser->getPassword() . $newUser->getEmail(
+                                            ) . $this->container->getParameter('secret')
                                         )
                                     )
                                 ),
@@ -138,7 +139,10 @@ class SecurityController extends AbstractController
                     )
                 );
 
-                return $this->renderMessage('Registration mail was sent.', 'Registration mail was sent. Please check your email.');
+                return $this->renderMessage(
+                    'Registration mail was sent.',
+                    'Registration mail was sent. Please check your email.'
+                );
             } else {
                 throw new \Exception('Registration form is invalid.');
             }
@@ -158,7 +162,13 @@ class SecurityController extends AbstractController
             $form = $this->createForm(new RegisterType(), $newUser);
 
             return $this->render(
-                'RLMainBundle:Security:registrationSecondPage.html.twig', array('username' => $username, 'password' => $password, 'email' => $email, 'form' => $form->createView())
+                'RLMainBundle:Security:registrationSecondPage.html.twig',
+                array(
+                    'username' => $username,
+                    'password' => $password,
+                    'email' => $email,
+                    'form' => $form->createView()
+                )
             );
         } else {
             throw new \Exception('Hash is invalid');
@@ -189,8 +199,12 @@ class SecurityController extends AbstractController
                 $newUser->setTheme($settingsRepository->findOneBy(array('name' => 'theme'))->getValue());
                 $newUser->setSortingType($settingsRepository->findOneBy(array('name' => 'sortingType'))->getValue());
                 $newUser->setNewsOnPage($settingsRepository->findOneBy(array('name' => 'newsOnPage'))->getValue());
-                $newUser->setThreadsOnPage($settingsRepository->findOneBy(array('name' => 'threadsOnPage'))->getValue());
-                $newUser->setCommentsOnPage($settingsRepository->findOneBy(array('name' => 'commentsOnPage'))->getValue());
+                $newUser->setThreadsOnPage(
+                    $settingsRepository->findOneBy(array('name' => 'threadsOnPage'))->getValue()
+                );
+                $newUser->setCommentsOnPage(
+                    $settingsRepository->findOneBy(array('name' => 'commentsOnPage'))->getValue()
+                );
                 $newUser->setShowEmail($settingsRepository->findOneBy(array('name' => 'showEmail'))->getValue());
                 $newUser->setShowIm($settingsRepository->findOneBy(array('name' => 'showIm'))->getValue());
                 $newUser->setShowAvatars($settingsRepository->findOneBy(array('name' => 'showAvatars'))->getValue());
@@ -203,7 +217,13 @@ class SecurityController extends AbstractController
                 $em = $this->getDoctrine()->getManager();
                 $em->persist($newUser);
                 $em->flush();
-                return $this->renderMessage('Registration complete.', 'Registration complete. Now you can <a href="' . $this->generateUrl('login') . '">login</a> on this site.');
+
+                return $this->renderMessage(
+                    'Registration complete.',
+                        'Registration complete. Now you can <a href="' . $this->generateUrl(
+                            'login'
+                        ) . '">login</a> on this site.'
+                );
             } else {
                 throw new \Exception('Registration form is invalid.');
             }
@@ -221,7 +241,8 @@ class SecurityController extends AbstractController
         $form = $this->createForm(new PasswordRestoringType(), $resForm);
 
         return $this->render(
-            'RLMainBundle:Security:passwordRestoringForm.html.twig', array('form' => $form->createView())
+            'RLMainBundle:Security:passwordRestoringForm.html.twig',
+            array('form' => $form->createView())
         );
     }
 
@@ -241,7 +262,7 @@ class SecurityController extends AbstractController
                 /** @var $user \RL\MainBundle\Security\User\RLUserInterface */
                 try {
                     $user = $userRepository->findOneBy(array('username' => $resForm->getUsername()));
-                } catch (\ErrorException $e) {
+                } catch(\ErrorException $e) {
                     throw new \Exception($e->getMessage());
                 }
                 if ($user->getEmail() != $resForm->getEmail()) {
@@ -251,7 +272,10 @@ class SecurityController extends AbstractController
                     );
                 }
                 if ($user->getQuestion() != $resForm->getQuestion()) {
-                    return $this->renderMessage('Question is wrong', 'Please make sure that you entered correct question');
+                    return $this->renderMessage(
+                        'Question is wrong',
+                        'Please make sure that you entered correct question'
+                    );
                 }
                 if ($user->getAnswer() != $resForm->getAnswer()) {
                     return $this->renderMessage('Answer is wrong', 'Please make sure that you entered correct answer');
@@ -264,11 +288,12 @@ class SecurityController extends AbstractController
                 $em = $this->getDoctrine()->getManager();
                 $em->persist($user);
                 $em->flush();
-                /** @var $mailer \RL\MainBundle\Helper\Mailer */
-                $mailer = $this->get('rl_main.mailer');
+                $mailer = $this->getMailer();
                 $mailer->send(
                     $resForm->getEmail(),
-                    $this->getDoctrine()->getRepository('RLMainBundle:Settings')->findOneBy(array('name' => 'site_email'))->getValue(),
+                    $this->getDoctrine()->getRepository('RLMainBundle:Settings')->findOneBy(
+                        array('name' => 'site_email')
+                    )->getValue(),
                     'Password restoring',
                     $this->renderView(
                         'RLMainBundle:Security:passwordRestoringLetter.html.twig',
@@ -276,7 +301,10 @@ class SecurityController extends AbstractController
                     )
                 );
 
-                return $this->renderMessage('Mail with your new password was sent.', 'Mail with your new password was sent. Please check your email.');
+                return $this->renderMessage(
+                    'Mail with your new password was sent.',
+                    'Mail with your new password was sent. Please check your email.'
+                );
             } else {
                 throw new \Exception('Password restoring form is invalid');
             }
@@ -290,15 +318,14 @@ class SecurityController extends AbstractController
      */
     public function usersAction($page)
     {
-        /** @var $user \RL\MainBundle\Security\User\RLUserInterface */
-        $user = $this->get('security.context')->getToken()->getUser();
+        $user = $this->getCurrentUser();
         $userRepository = $this->getDoctrine()->getRepository('RLMainBundle:User');
         $itemsCount = count($userRepository->findAll());
         $itemsOnPage = $user->getCommentsOnPage();
         $pagesCount = ceil(($itemsCount) / $itemsOnPage);
         $pagesCount > 1 ? $offset = $itemsOnPage * ($page - 1) : $offset = 0;
         $users = $userRepository->findBy(array(), null, $user->getCommentsOnPage(), $offset);
-        $pagesStr = $this->get('rl_main.paginator')->draw(
+        $pagesStr = $this->getPaginator()->draw(
             $itemsOnPage,
             $itemsCount,
             $page,
@@ -306,7 +333,10 @@ class SecurityController extends AbstractController
             array("page" => $page)
         );
 
-        return $this->render('RLMainBundle:Security:users.html.twig', array('users' => $users, 'pagesStr' => $pagesStr));
+        return $this->render(
+            'RLMainBundle:Security:users.html.twig',
+            array('users' => $users, 'pagesStr' => $pagesStr)
+        );
     }
 
 }

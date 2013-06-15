@@ -59,16 +59,15 @@ class ProfileController extends AbstractController
      */
     public function editUserAction($name)
     {
-        /** @var $user \RL\MainBundle\Security\User\RLUserInterface */
-        $user = $this->get('security.context')->getToken()->getUser();
+        $user = $this->getCurrentUser();
         /** @var $userInProfile \RL\MainBundle\Security\User\RLUserInterface */
         if ($name == 'anonymous' && $user->isAnonymous()) {
-            $userInProfile = $this->get('security.context')->getToken()->getUser();
+            $userInProfile = $this->getCurrentUser();
         } else {
             $userRepository = $this->getDoctrine()->getRepository('RLMainBundle:User');
-            $userInProfile = $userRepository->findOneByUsername($name);
+            $userInProfile = $userRepository->findOneBy(array("username" => $name));
         }
-        if (!$this->get('security.context')->isGranted('ROLE_MODER')) {
+        if (!$this->getSecurityContext()->isGranted('ROLE_MODER')) {
             if ($userInProfile->getUsername() != $user->getUsername()) {
                 throw new \Exception('You can\'t edit profile of user ' . $name);
             }
@@ -218,7 +217,7 @@ class ProfileController extends AbstractController
     public function userAction($name)
     {
         $userRepository = $this->getDoctrine()->getRepository('RLMainBundle:User');
-        $userInProfile = $userRepository->findOneByUsername($name);
+        $userInProfile = $userRepository->findOneBy(array("username" => $name));
         if (empty($userInProfile)) {
             throw new \Exception('user ' . $name . ' not found');
         }

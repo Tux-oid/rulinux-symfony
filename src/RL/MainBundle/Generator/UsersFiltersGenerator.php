@@ -96,7 +96,7 @@ class UsersFiltersGenerator
                     $user->addFilter($newUserFilter);
                     $newUserFilter->setFilter($filter);
                     $filter->addUser($newUserFilter);
-                    $newUserFilter->setWeight(0);
+                    $newUserFilter->setWeight(100);
                 }
             }
         }

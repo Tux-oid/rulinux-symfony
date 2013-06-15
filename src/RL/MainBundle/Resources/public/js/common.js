@@ -39,4 +39,34 @@ function parseHash()
 
 setInterval(parseHash, 1000);
 
+(function (h) { h.className = h.className + ' js'; })(document.documentElement);
+(function ($) {
+	$(function () {
+// Filter list
+		$('a.filter-link').click(function (e) {
+			e.preventDefault();
+			$($(this).data('fblock')).toggle();
+			if ($(this).hasClass('opened'))
+				$(this).removeClass('opened');
+			else
+				$(this).addClass('opened');
+		});
+// Toggle filtered message
+		$('a.toggle-hidden').click(function (e) {
+			e.preventDefault();
+			$($(this).data('hidden')).toggle();
+		});
+	});
+})(jQuery);
 
+jQuery(document).ready(function () {
+	jQuery('.show_filtered').click(function(e) {
+		var parent = $(this).parent().parent();
+		parent.find('.filtered').attr('style', 'display: inherit');
+		parent.find('.filtered_message').attr('style', 'display: none');
+		e.preventDefault();
+		e.stopPropagation();
+		return false;
+	});
+
+})

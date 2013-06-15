@@ -64,40 +64,7 @@ class FilterMessagesCommand extends ContainerAwareCommand
      */
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        /** @var $doctrine \Doctrine\Bundle\DoctrineBundle\Registry */
-        $doctrine = $this->getContainer()->get('doctrine');
-        /** @var $messagesRepository \RL\MainBundle\Entity\Repository\MessageRepository */
-        $messagesRepository = $doctrine->getRepository('RLMainBundle:Message');
-        /** @var $wordsRepository \Doctrine\ORM\EntityRepository */
-        $wordsRepository = $doctrine->getRepository('RLMainBundle:Word');
-        $filters = $doctrine->getRepository('RLMainBundle:Filter')->findAll();
-        $messages = $messagesRepository->getUnfilteredMessages();
-        /** @var $message \RL\MainBundle\Entity\Message */
-        foreach ($messages as $message) {
-            /** @var $filter \RL\MainBundle\Entity\Filter */
-            foreach ($filters as $filter) {
-                if(!$filter->isFilterByHtmlTags()) {
-                    $comment = strip_tags($message->getComment());
-                } else {
-                    $comment = $message->getComment();
-                }
-                $weight = 0;
-                $wordsCount = 0;
-                foreach(preg_split("#[ \.,\?\\\(\)\[\]{}\"';:\!\=\+\-\#\$\%\^\&\*\\r\\n\\t]#suim", $comment) as $word) {
-                    /** @var $word \RL\MainBundle\Entity\Word */
-                    $word = $wordsRepository->findOneBy(array("word" => FilterRuHelper::prepare($word), "filter" => $filter));
-                    if(null !== $word) {
-                        $weight += $word->getWeight();
-                        $wordsCount++;
-                    }
-                }
-                if($wordsCount != 0) {
-                    $weight = $weight/$wordsCount;
-                }
-                $message->addFilter(new FilteredMessage($filter, $weight));
-            }
-        }
-        $doctrine->getManager()->flush();
+        $this->getContainer()->get('rl_main.message_filter_checker')->filter();
         $output->writeln('Done.');
     }
 }

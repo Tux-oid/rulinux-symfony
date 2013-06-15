@@ -24,7 +24,7 @@
  * ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-*/
+ */
 
 namespace RL\MainBundle\Controller;
 
@@ -43,7 +43,7 @@ use Gregwar\ImageBundle\Image;
  *
  * @author Peter Vasilevsky <tuxoiduser@gmail.com> a.k.a. Tux-oid
  * @license BSDL
-*/
+ */
 class OpenIDController extends AbstractController
 {
     /**
@@ -73,7 +73,7 @@ class OpenIDController extends AbstractController
                     $identity = preg_replace('#^http://(.*)#sim', '$1', $identity);
                     $identity = preg_replace('#^https://(.*)#sim', '$1', $identity);
                     $identity = preg_replace('#(.*)\/$#sim', '$1', $identity);
-                    $user = $userRepository->findOneByOpenid($identity);
+                    $user = $userRepository->findOneBy(array("openid" => $identity));
                     if (isset($user)) {
                         //FIXME: login user by openid
                         return $this->renderMessage('login user', 'login user');
@@ -84,14 +84,20 @@ class OpenIDController extends AbstractController
                         $form = $this->createForm(new RegisterType(), $newUser);
 
                         return $this->render(
-                            'RLMainBundle:OpenID:openIDRegistration.html.twig', array('openid' => $identity, 'password' => '', 'email' => $email, 'form' => $form->createView())
+                            'RLMainBundle:OpenID:openIDRegistration.html.twig',
+                            array(
+                                'openid' => $identity,
+                                'password' => '',
+                                'email' => $email,
+                                'form' => $form->createView()
+                            )
                         );
                     }
                 } else {
                     throw new \Exception('OpenID is invalid');
                 }
             }
-        } catch (\ErrorException $e) {
+        } catch(\ErrorException $e) {
             throw new \Exception($e->getMessage());
         }
     }

@@ -178,7 +178,7 @@ class Message
         $this->postingTime = $this->changingTime = new \DateTime('now');
         $this->sessionId = \session_id();
         $this->useragent = $_SERVER['HTTP_USER_AGENT'];
-        if ($this->user->getShowUA()) {
+        if ($this->user->isShowUa()) {
             $this->showUa = true;
         } else {
             $this->showUa = false;

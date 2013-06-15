@@ -1048,7 +1048,7 @@ class User implements RLUserInterface, EquatableInterface, \Serializable
      *
      * @return boolean
      */
-    public function getShowEmail()
+    public function isShowEmail()
     {
         return $this->showEmail;
     }
@@ -1068,7 +1068,7 @@ class User implements RLUserInterface, EquatableInterface, \Serializable
      *
      * @return boolean
      */
-    public function getShowIm()
+    public function isShowIm()
     {
         return $this->showIm;
     }
@@ -1088,7 +1088,7 @@ class User implements RLUserInterface, EquatableInterface, \Serializable
      *
      * @return boolean
      */
-    public function getShowAvatars()
+    public function isShowAvatars()
     {
         return $this->showAvatars;
     }
@@ -1108,7 +1108,7 @@ class User implements RLUserInterface, EquatableInterface, \Serializable
      *
      * @return boolean
      */
-    public function getShowUa()
+    public function isShowUa()
     {
         return $this->showUa;
     }
@@ -1128,7 +1128,7 @@ class User implements RLUserInterface, EquatableInterface, \Serializable
      *
      * @return boolean
      */
-    public function getShowResp()
+    public function isShowResp()
     {
         return $this->showResp;
     }
@@ -1181,16 +1181,6 @@ class User implements RLUserInterface, EquatableInterface, \Serializable
     public function setActive($active)
     {
         $this->active = $active;
-    }
-
-    /**
-     * Get active
-     *
-     * @return boolean
-     */
-    public function getActive()
-    {
-        return $this->active;
     }
 
     /**
@@ -1308,17 +1298,17 @@ class User implements RLUserInterface, EquatableInterface, \Serializable
     }
 
     /**
-     * @param $editedComment
+     * @param \RL\MainBundle\Entity\Message $editedComment
      */
-    public function addEditedComment($editedComment)
+    public function addEditedComment(Message $editedComment)
     {
         $this->editedComments[] = $editedComment;
     }
 
     /**
-     * @param $editedComment
+     * @param \RL\MainBundle\Entity\Message $editedComment
      */
-    public function removeEditedComment($editedComment)
+    public function removeEditedComment(Message $editedComment)
     {
         $this->editedComments->remove($editedComment);
     }

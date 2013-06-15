@@ -30,6 +30,7 @@ namespace RL\MainBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\ArrayCollection;
+use Symfony\Component\Validator\Constraints as Assert;
 use RL\MainBundle\Security\User\RLUserInterface;
 use RL\MainBundle\Entity\Filter;
 
@@ -54,14 +55,14 @@ class UsersFilter
     protected $id;
 
     /**
-     * @ORM\ManyToOne(targetEntity="User", inversedBy="filters", cascade={"all"})
+     * @ORM\ManyToOne(targetEntity="User", inversedBy="filters")
      *
      * @var \RL\MainBundle\Security\User\RLUserInterface
      */
     protected $user;
 
     /**
-     * @ORM\ManyToOne(targetEntity="Filter", inversedBy="users", cascade={"all"})
+     * @ORM\ManyToOne(targetEntity="Filter", inversedBy="users")
      *
      * @var \RL\MainBundle\Entity\Filter
      */
@@ -69,6 +70,9 @@ class UsersFilter
 
     /**
      * @ORM\Column(type="integer")
+     *
+     * @Assert\LessThan(value = 100)
+     * @Assert\GreaterThan(value = 0)
      *
      * @var integer
      */

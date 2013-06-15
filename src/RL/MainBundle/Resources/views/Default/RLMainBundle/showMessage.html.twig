@@ -1,0 +1,9 @@
+{% extends theme.path('RLMainBundle::layout.html.twig')%}
+
+{%block title%}
+    {{parent()}} - {%trans%}Show message{%endtrans%}
+{%endblock title%}
+
+{%block content%}
+    {% include theme.path('RLMainBundle:Forum:preview.html.twig')%}
+{%endblock content%}

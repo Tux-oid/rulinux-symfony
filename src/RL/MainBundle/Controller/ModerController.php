@@ -44,8 +44,8 @@ class ModerController extends AbstractController
      */
     public function approveThreadAction($id)
     {
-        $securityContext = $this->get('security.context');
-        $user = $securityContext->getToken()->getUser();
+        $securityContext = $this->getSecurityContext();
+        $user = $this->getCurrentUser();
         if (!$securityContext->isGranted('ROLE_MODER')) {
             return $this->renderMessage('Access denied', 'You haven\'t privileges to edit this message');
         }
@@ -53,7 +53,7 @@ class ModerController extends AbstractController
         /** @var $em \Doctrine\ORM\EntityManager */
         $em = $doctrine->getManager();
         /** @var $thread \RL\MainBundle\Entity\Thread */
-        $thread = $doctrine->getRepository('RLMainBundle:Thread')->findOneById($id);
+        $thread = $doctrine->getRepository('RLMainBundle:Thread')->findOneBy(array("id" => $id));
         if (null === $thread) {
             return $this->renderMessage('Thread not found', 'Thread with specified id was not found');
         }
@@ -70,11 +70,11 @@ class ModerController extends AbstractController
      */
     public function attachThreadAction($id, $state)
     {
-        $securityContext = $this->get('security.context');
+        $securityContext = $this->getSecurityContext();
         if (!$securityContext->isGranted('ROLE_MODER')) {
             return $this->renderMessage('Access denied', 'You haven\'t privileges to edit this message');
         }
-        $doctrine = $this->get('doctrine');
+        $doctrine = $this->getDoctrine();
         /** @var $em \Doctrine\ORM\EntityManager */
         $em = $doctrine->getManager();
         /** @var $thread \RL\MainBundle\Entity\Thread */

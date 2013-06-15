@@ -32,11 +32,8 @@ use RL\Ucaptcha\UcaptchaInterface;
 use RL\Ucaptcha\Ucaptcha;
 use JMS\DiExtraBundle\Annotation\Service;
 
-//require __DIR__ . '/../../../../vendor/rl/ucaptcha/RL/Ucaptcha/Ucaptcha.php';
-//require __DIR__ . '/../../../../vendor/rl/ucaptcha/RL/Ucaptcha/UcaptchaInterface.php';
-
 /**
- * RL\MainBundle\Service\UcaptchaService
+ * RL\MainBundle\Service\UcaptchaDecoratorService
  *
  * @Service("rl_main.ucaptcha")
  *

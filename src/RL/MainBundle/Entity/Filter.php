@@ -75,7 +75,7 @@ class Filter
     protected $users;
 
     /**
-     * @ORM\OneToMany(targetEntity="RL\MainBundle\Entity\FilteredMessage", mappedBy="filter")
+     * @ORM\OneToMany(targetEntity="RL\MainBundle\Entity\FilteredMessage", mappedBy="filter", cascade={"all"})
      *
      * @var \Doctrine\Common\Collections\ArrayCollection
      */
@@ -205,21 +205,21 @@ class Filter
     /**
      * Add message
      *
-     * @param \RL\MainBundle\Entity\FilteredMessage $message
+     * @param FilteredMessage $message
      */
     public function addMessage(FilteredMessage $message)
     {
-        $this->words[] = $message;
+        $this->messages->add($message);
     }
 
     /**
      * Remove message
      *
-     * @param \RL\MainBundle\Entity\FilteredMessage $message
+     * @param FilteredMessage $message
      */
     public function removeMessage(FilteredMessage $message)
     {
-        $this->words->remove($message);
+        $this->messages->remove($message);
     }
 
     /**
@@ -229,7 +229,7 @@ class Filter
      */
     public function getMessages()
     {
-        return $this->words;
+        return $this->messages;
     }
 
     /**

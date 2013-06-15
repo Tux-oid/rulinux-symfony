@@ -36,9 +36,10 @@ tr.footer
 
 td.left-sidebar
 {
-	width:240px;
+	width: 240px;
 	text-align: center;
 }
+
 td.content
 {
 	width: 100%;
@@ -47,7 +48,7 @@ td.content
 
 td.right-sidebar
 {
-	width:240px;
+	width: 240px;
 	float: right;
 	text-align: center;
 }
@@ -475,4 +476,51 @@ p.error
 {
 	color: red;
 	font-weight: bold;
+}
+
+.filtered
+{
+	display: none;
+}
+
+a.filter-link
+{
+	float: right;
+	margin-right: 20px;
+	text-decoration: none;
+	border-bottom: 1px dashed;
+	outline: 0;
+}
+
+.js a.filter-link:before
+{
+	content: "↓ ";
+}
+
+.js a.filter-link.opened:before
+{
+	content: "↑ ";
+}
+
+div.filters
+{
+	float: right;
+	overflow: hidden;
+}
+
+.js div.filters
+{
+	display: none;
+}
+
+div.filters ul
+{
+	border-width: 1px;
+	border-color: lightgray;
+	border-style: solid;
+	border-radius: 4px;
+	float: right;
+	margin: 0px auto;
+	padding: 5px 5px 5px 20px;
+	list-style-type: square; /* It's fun */
 }

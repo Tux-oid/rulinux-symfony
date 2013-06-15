@@ -35,6 +35,8 @@ use RL\MainBundle\Entity\Mark;
 use RL\MainBundle\Entity\Group;
 use RL\MainBundle\Entity\UsersFilter;
 use RL\MainBundle\Entity\Reader;
+use Symfony\Component\Security\Core\User\UserInterface;
+use Doctrine\Common\Collections\ArrayCollection;
 
 /**
  * RL\MainBundle\Security\User\RLUserInterface
@@ -45,97 +47,660 @@ use RL\MainBundle\Entity\Reader;
  */
 interface RLUserInterface extends AdvancedUserInterface
 {
+
     /**
-     * Returns string what unique identity user.
+     * @return bool
      */
-    public function getIdentity();
+    public function isAccountNonExpired();
+
     /**
-     * Returns anonymous or not.
+     * @return bool
      */
-    public function isAnonymous();
+    public function isAccountNonLocked();
+
     /**
-     * Returns attributes.
+     * @return bool
+     */
+    public function isCredentialsNonExpired();
+
+    /**
+     * @return bool
+     */
+    public function isEnabled();
+
+    /**
+     * {@inheritDoc}
+     */
+    public function getUsername();
+
+    /**
+     * {@inheritDoc}
+     */
+    public function getSalt();
+
+    /**
+     * {@inheritDoc}
+     */
+    public function getPassword();
+
+    /**
+     * {@inheritDoc}
+     */
+    public function getRoles();
+
+    /**
+     * {@inheritDoc}
+     */
+    public function eraseCredentials();
+
+    /**
+     * {@inheritDoc}
+     */
+    public function isEqualTo(UserInterface $user);
+
+    /**
+     * @return array
      */
     public function getAttributes();
+
+    /**
+     * Get id
+     *
+     * @return integer
+     */
     public function getId();
+
+
+    /**
+     * Set messages
+     *
+     * @param ArrayCollection|array $messages
+     */
+    public function setMessages($messages);
+
+    /**
+     * Set positions
+     *
+     * @param ArrayCollection|array $positions
+     */
+    public function setPositions($positions);
+
+    /**
+     * Set read threads
+     *
+     * @param ArrayCollection|array $readThreads
+     */
+    public function setReadThreads($readThreads);
+
+    /**
+     * Set filters
+     *
+     * @param ArrayCollection|array $filters
+     */
+    public function setFilters($filters);
+
+    /**
+     * Set edited comments
+     *
+     * @param ArrayCollection|array $editedComments
+     */
+    public function setEditedComments($editedComments);
+
+    /**
+     * Set name
+     *
+     * @param string $name
+     */
     public function setName($name);
+
+    /**
+     * Get name
+     *
+     * @return string
+     */
     public function getName();
+
+    /**
+     * Set lastname
+     *
+     * @param string $lastname
+     */
     public function setLastname($lastname);
+
+    /**
+     * Get lastname
+     *
+     * @return string
+     */
     public function getLastname();
+
+    /**
+     * Set country
+     *
+     * @param string $country
+     */
     public function setCountry($country);
+
+    /**
+     * Get country
+     *
+     * @return string
+     */
     public function getCountry();
+
+    /**
+     * Set city
+     *
+     * @param string $city
+     */
     public function setCity($city);
+
+    /**
+     * Get city
+     *
+     * @return string
+     */
     public function getCity();
+
+    /**
+     * Set photo
+     *
+     * @param string $photo
+     */
     public function setPhoto($photo);
+
+    /**
+     * Get photo
+     *
+     * @return string
+     */
     public function getPhoto();
+
+    /**
+     * Set birthday
+     *
+     * @param \Datetime $birthday
+     */
     public function setBirthday($birthday);
+
+    /**
+     * Get birthday
+     *
+     * @return \Datetime
+     */
     public function getBirthday();
+
+    /**
+     * Set gender
+     *
+     * @param boolean $gender
+     */
     public function setGender($gender);
+
+    /**
+     * Get gender
+     *
+     * @return boolean
+     */
     public function getGender();
+
+    /**
+     * Set additional
+     *
+     * @param string $additional
+     */
     public function setAdditional($additional);
+
+    /**
+     * Get additional
+     *
+     * @return string
+     */
     public function getAdditional();
+
+    /**
+     * Set additionalRaw
+     *
+     * @param string $additionalRaw
+     */
     public function setAdditionalRaw($additionalRaw);
+
+    /**
+     * Get additionalRaw
+     *
+     * @return string
+     */
     public function getAdditionalRaw();
+
+    /**
+     * Set email
+     *
+     * @param string $email
+     */
     public function setEmail($email);
+
+    /**
+     * Get email
+     *
+     * @return string
+     */
     public function getEmail();
+
+    /**
+     * Set im
+     *
+     * @param string $im
+     */
     public function setIm($im);
+
+    /**
+     * Get im
+     *
+     * @return string
+     */
     public function getIm();
+
+    /**
+     * Set registrationDate
+     *
+     * @param \Datetime $registrationDate
+     */
     public function setRegistrationDate($registrationDate);
+
+    /**
+     * Get registrationDate
+     *
+     * @return \Datetime
+     */
     public function getRegistrationDate();
+
+    /**
+     * Set lastVisitDate
+     *
+     * @param \Datetime $lastVisitDate
+     */
     public function setLastVisitDate($lastVisitDate);
+
+    /**
+     * Get lastVisitDate
+     *
+     * @return \Datetime
+     */
     public function getLastVisitDate();
+
+    /**
+     * Set captchaLevel
+     *
+     * @param integer $captchaLevel
+     */
     public function setCaptchaLevel($captchaLevel);
+
+    /**
+     * Get captchaLevel
+     *
+     * @return integer
+     */
     public function getCaptchaLevel();
+
+    /**
+     * Set openid
+     *
+     * @param string $openid
+     */
     public function setOpenid($openid);
+
+    /**
+     * Get openid
+     *
+     * @return string
+     */
     public function getOpenid();
+
+    /**
+     * Set theme
+     *
+     * @param string $theme
+     */
     public function setTheme($theme);
+
+    /**
+     * Get theme
+     *
+     * @return string
+     */
     public function getTheme();
+
+    /**
+     * Set gmt
+     *
+     * @param string $gmt
+     */
     public function setGmt($gmt);
+
+    /**
+     * Get gmt
+     *
+     * @return string
+     */
     public function getGmt();
+
+    /**
+     * Add filter
+     *
+     * @param UsersFilter $filter
+     */
     public function addFilter(UsersFilter $filter);
+
+    /**
+     * Remove filter
+     *
+     * @param UsersFilter $filter
+     */
     public function removeFilter(UsersFilter $filter);
+
+    /**
+     * Get filters
+     *
+     * @return ArrayCollection|array
+     */
     public function getFilters();
+
+    /**
+     * Set sortingType
+     *
+     * @param string $sortingType
+     */
     public function setSortingType($sortingType);
+
+    /**
+     * Get sortingType
+     *
+     * @return string
+     */
     public function getSortingType();
+
+    /**
+     * Set newsOnPage
+     *
+     * @param integer $newsOnPage
+     */
     public function setNewsOnPage($newsOnPage);
+
+    /**
+     * Get newsOnPage
+     *
+     * @return integer
+     */
     public function getNewsOnPage();
+
+    /**
+     * Set commentsOnPage
+     *
+     * @param integer $commentsOnPage
+     */
     public function setCommentsOnPage($commentsOnPage);
+
+    /**
+     * Get commentsOnPage
+     *
+     * @return integer
+     */
     public function getCommentsOnPage();
+
+    /**
+     * Set threadsOnPage
+     *
+     * @param integer $threadsOnPage
+     */
     public function setThreadsOnPage($threadsOnPage);
+
+    /**
+     * Get threadsOnPage
+     *
+     * @return integer
+     */
     public function getThreadsOnPage();
+
+    /**
+     * Set showEmail
+     *
+     * @param boolean $showEmail
+     */
     public function setShowEmail($showEmail);
-    public function getShowEmail();
+
+    /**
+     * Get showEmail
+     *
+     * @return boolean
+     */
+    public function isShowEmail();
+
+    /**
+     * Set showIm
+     *
+     * @param boolean $showIm
+     */
     public function setShowIm($showIm);
-    public function getShowIm();
+
+    /**
+     * Get showIm
+     *
+     * @return boolean
+     */
+    public function isShowIm();
+
+    /**
+     * Set showAvatars
+     *
+     * @param boolean $showAvatars
+     */
     public function setShowAvatars($showAvatars);
-    public function getShowAvatars();
+
+    /**
+     * Get showAvatars
+     *
+     * @return boolean
+     */
+    public function isShowAvatars();
+
+    /**
+     * Set showUa
+     *
+     * @param boolean $showUa
+     */
     public function setShowUa($showUa);
-    public function getShowUa();
+
+    /**
+     * Get showUa
+     *
+     * @return boolean
+     */
+    public function isShowUa();
+
+    /**
+     * Set showResp
+     *
+     * @param boolean $showResp
+     */
     public function setShowResp($showResp);
-    public function getShowResp();
+
+    /**
+     * Get showResp
+     *
+     * @return boolean
+     */
+    public function isShowResp();
+
+    /**
+     * Set mark
+     *
+     * @param \RL\MainBundle\Entity\Mark $mark
+     */
     public function setMark(Mark $mark);
+
+    /**
+     * Get mark
+     *
+     * @return Mark
+     */
     public function getMark();
-    public function setGroup(Group $group);
-    public function getGroup();
+
+    /**
+     * Set language
+     *
+     * @param string $language
+     */
     public function setLanguage($language);
+
+    /**
+     * Get language
+     *
+     * @return string
+     */
     public function getLanguage();
+
+    /**
+     * Set active
+     *
+     * @param boolean $active
+     */
     public function setActive($active);
-    public function isActive();
+
+    /**
+     * Set question
+     *
+     * @param string $question
+     */
     public function setQuestion($question);
+
+    /**
+     * Get question
+     *
+     * @return string
+     */
     public function getQuestion();
+
+    /**
+     * Set answer
+     *
+     * @param string $answer
+     */
     public function setAnswer($answer);
+
+    /**
+     * Get answer
+     *
+     * @return string
+     */
     public function getAnswer();
-    public function addEditedComment($editedComment);
-    public function removeEditedComment($editedComment);
-    public function getEditedComments();
+
+    /**
+     * @return string
+     */
+    public function getIdentity();
+
+    /**
+     * @return bool
+     */
+    public function isAnonymous();
+
+    /**
+     * @return bool
+     */
+    public function isActive();
+
+    /**
+     * Add comment
+     *
+     * @param Message $message
+     */
     public function addMessage(Message $message);
+
+    /**
+     * Remove comment
+     *
+     * @param Message $message
+     */
     public function removeMessage(Message $message);
+
+    /**
+     * Get comments
+     *
+     * @return ArrayCollection
+     */
     public function getMessages();
+
+    /**
+     * Set group
+     *
+     * @param Group $group
+     */
+    public function setGroup(Group $group);
+
+    /**
+     * Get group
+     *
+     * @return Group
+     */
+    public function getGroup();
+
+    /**
+     * @param Message $editedComment
+     * @return mixed
+     */
+    public function addEditedComment(Message $editedComment);
+
+    /**
+     * @param Message $editedComment
+     * @return mixed
+     */
+    public function removeEditedComment(Message $editedComment);
+
+    /**
+     * @return mixed
+     */
+    public function getEditedComments();
+
+    /**
+     * Add position
+     *
+     * @param BlockPosition $position
+     */
     public function addPosition(BlockPosition $position);
+
+    /**
+     * Remove position
+     *
+     * @param BlockPosition $position
+     */
     public function removePosition(BlockPosition $position);
+
+    /**
+     * Get positions
+     *
+     * @return ArrayCollection|array
+     */
     public function getPositions();
+
+    /**
+     * Add reader
+     *
+     * @param Reader $reader
+     */
     public function addReadThread(Reader $reader);
+
+    /**
+     * Remove reader
+     *
+     * @param Reader $reader
+     */
     public function removeReadThread(Reader $reader);
+
+    /**
+     * Get readers
+     *
+     * @return ArrayCollection|array
+     */
     public function getReadThreads();
 
 }

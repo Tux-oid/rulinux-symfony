@@ -3,27 +3,54 @@
 <table border=0 width=100%>
 <tr>
 <td width="120">
-<a href="#{{'msg'~startMessage.id}}"><img border="0" src="{{ asset('/bundles/rlmain/images/'~app.user.theme.directory~'/id.png') }}" alt="[#]"></a>
-{%if is_granted('ROLE_MODER')%}
-	<a href="move_thread_37329"><img border="0" src="{{ asset('/bundles/rlmain/images/'~app.user.theme.directory~'/move.png' )}}" alt="{%trans%}Move{%endtrans%}"></a>
-	{%if startMessage.thread.attached == false%}
-		<a href="attach_thread_37329"><img border="0" src="{{ asset('/bundles/rlmain/images/'~app.user.theme.directory~'/attach.png') }}" alt="{%trans%}Attach{%endtrans%}"></a>
-	{%else%}
-		<a href="detach_thread_37329"><img border="0" src="{{ asset('/bundles/rlmain/images/'~app.user.theme.directory~'/detach.png') }}" alt="{%trans%}Detach{%endtrans%}"></a>
-	{%endif%}
-{%endif%}
-{%if is_granted('ROLE_MODER') or startMessage.user == app.user%}
-	<a href="set_filter_142891"><img border="0" src="{{ asset( '/bundles/rlmain/images/'~app.user.theme.directory~'/filter.png') }}" alt="{%trans%}Add filter{%endtrans%}"></a>
-	<a href="{{path('editMessage', {'messageId':startMessage.id})}}"><img border="0" src="{{ asset('/bundles/rlmain/images/'~app.user.theme.directory~'/edit.png') }}" alt="{%trans%}Edit{%endtrans%}"></a>
-{%endif%}</td>
+    <a href="#{{'msg'~startMessage.id}}"><img border="0" src="{{ asset('/bundles/rlmain/images/'~app.user.theme.directory~'/id.png') }}" alt="[#]"></a>
+    {%if is_granted('ROLE_MODER')%}
+        <a href="move_thread_37329"><img border="0" src="{{ asset('/bundles/rlmain/images/'~app.user.theme.directory~'/move.png' )}}" alt="{%trans%}Move{%endtrans%}"></a>
+        {%if startMessage.thread.attached == false%}
+            <a href="{{ path('attach_thread', {'id': startMessage.thread.id, 'state' : 'true'}) }}"><img border="0" src="{{ asset('/bundles/rlmain/images/'~app.user.theme.directory~'/attach.png') }}" alt="{%trans%}Attach{%endtrans%}"></a>
+        {%else%}
+            <a href="{{ path('attach_thread', {'id': startMessage.thread.id, 'state' : 'false'}) }}"><img border="0" src="{{ asset('/bundles/rlmain/images/'~app.user.theme.directory~'/detach.png') }}" alt="{%trans%}Detach{%endtrans%}"></a>
+        {%endif%}
+    {%endif%}
+    {%if is_granted('ROLE_MODER') or startMessage.user == app.user%}
+        <a href="set_filter_142891"><img border="0" src="{{ asset( '/bundles/rlmain/images/'~app.user.theme.directory~'/filter.png') }}" alt="{%trans%}Add filter{%endtrans%}"></a>
+        <a href="{{path('editMessage', {'messageId':startMessage.id})}}"><img border="0" src="{{ asset('/bundles/rlmain/images/'~app.user.theme.directory~'/edit.png') }}" alt="{%trans%}Edit{%endtrans%}"></a>
+    {%endif%}
+    <a class="filter-link opened" data-fblock="#filters-{{ startMessage.id }}" href="#">{% trans %}Filters{% endtrans %}</a>
+</td>
 <td>
 <h2 class="nt">{{startMessage.subject}}</h2>
 </td>
 </tr>
 </table>
 </div>
-<div class="msg" id="{{'msg'~startMessage.id}}">
-{{startMessage.comment|raw}}
+    {% set hidden = false %}
+    {% for messageFilter in startMessage.filters %}
+        {% for userFilter in app.user.filters %}
+            {% if userFilter.filter.name == messageFilter.filter.name %}
+                {% if messageFilter.weight > userFilter.weight %}
+                    {% set hidden = true %}
+                {% endif %}
+            {% endif %}
+        {% endfor %}
+    {% endfor %}
+    {% if hidden == true %}
+        <div class="filtered_message">
+            {% trans %}This message was filtered automatically seeing on your filters settings. You can change them in your profile{% endtrans %}
+            <a href="{{ path('showMessage', {'id' : startMessage.id}) }}" class="show_filtered">{% trans %}Show message{% endtrans %}</a>
+        </div>
+        <div class="msg filtered" id="{{'msg'~startMessage.id}}">
+    {% else %}
+        <div class="msg" id="{{'msg'~startMessage.id}}">
+    {% endif %}
+            <div id="filters-{{ startMessage.id }}" class="filters">
+                <ul>
+                    {% for messageFilter in startMessage.filters %}
+                        <li>{{ messageFilter.filter.name }} - {{ messageFilter.weight }}</li>
+                    {% endfor %}
+                </ul>
+            </div>
+            <div class="msg-content">{{startMessage.comment|raw}}
 <p>
 <i>{{startMessage.user.username}}(<a href="{{path('user', {'name': startMessage.user.username})}}">*</a>) ({{startMessage.postingTime.date}})
 <br>
@@ -44,5 +71,6 @@
 {%endif%}
 </p>
 [<a href="{{path('comment', {'threadId': startMessage.thread.id, 'commentId': startMessage.id})}}">{%trans%}Reply to this article{%endtrans%}</a>]<br>
+</div>
 </div>
 </div>

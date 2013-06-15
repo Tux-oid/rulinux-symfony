@@ -30,6 +30,12 @@ namespace RL\MainBundle\Controller;
 
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller as BaseController;
+use RL\MainBundle\Security\User\RLUserInterface;
+use \Symfony\Component\Security\Core\SecurityContext;
+use RL\MainBundle\Service\PaginatorService;
+use Symfony\Component\HttpFoundation\Session\Session;
+use RL\MainBundle\Service\MailerService;
+use RL\MainBundle\Service\MessageFilterCheckerService;
 
 /**
  * RL\MainBundle\Controller\Controller
@@ -81,5 +87,51 @@ abstract class AbstractController extends BaseController
         return parent::render($this->theme->getPath($view), $parameters, $response);
     }
 
+    /**
+     * @return RLUserInterface
+     */
+    public function getCurrentUser()
+    {
+        return $this->getSecurityContext()->getToken()->getUser();
+    }
 
+    /**
+     * @return SecurityContext
+     */
+    public function getSecurityContext()
+    {
+        return $this->get('security.context');
+    }
+
+    /**
+     * @return PaginatorService
+     */
+    public function getPaginator()
+    {
+        return $this->get('rl_main.paginator');
+    }
+
+    /**
+     * @return Session
+     */
+    public function getSession()
+    {
+        return $this->get('session');
+    }
+
+    /**
+     * @return MailerService
+     */
+    public function getMailer()
+    {
+        return $this->get('rl_main.mailer');
+    }
+
+    /**
+     * @return MessageFilterCheckerService
+     */
+    public function  getMessageFilterChecker()
+    {
+        return $this->get('rl_main.message_filter_checker');
+    }
 }

@@ -53,11 +53,12 @@ class ForumController extends AbstractController
     public function newThreadAction($sectionRewrite, $subsectionRewrite)
     {
         //FIXME: add subsection selection in form
-        $user = $this->get('security.context')->getToken()->getUser();
-        $doctrine = $this->get('doctrine');
+        $user = $this->getCurrentUser();
+        $doctrine = $this->getDoctrine();
         $request = $this->getRequest();
         /** @var $section \RL\MainBundle\Entity\Section */
-        $section = $doctrine->getRepository('RLMainBundle:Section')->findOneByRewrite($sectionRewrite);
+        $section = $doctrine->getRepository('RLMainBundle:Section')->findOneBy(array("rewrite" => $sectionRewrite));
+        /** @var $subsectionRepository \RL\MainBundle\Entity\Repository\SubsectionRepository */
         $subsectionRepository = $doctrine->getRepository($section->getBundle() . ':Subsection');
         $subsection = $subsectionRepository->getSubsectionByRewrite($subsectionRewrite, $section);
         //save thread in database
@@ -66,7 +67,7 @@ class ForumController extends AbstractController
         /** @var $helper \RL\MainBundle\Form\Handler\ThreadHandlerInterface */
         $helper = new $hlpCls();
         if (isset($sbm)) {
-            $helper->saveThread($doctrine, $request, $section, $subsection, $user);
+            $helper->saveThread($doctrine, $request, $section, $subsection, $user, $this->getMessageFilterChecker());
 
             return $this->redirect(
                 $this->generateUrl(
@@ -112,18 +113,16 @@ class ForumController extends AbstractController
      */
     public function threadAction($id, $page)
     {
-        /** @var $user \RL\MainBundle\Security\User\RLUserInterface */
-        $user = $this->get('security.context')->getToken()->getUser();
-        /** @var $doctrine \Doctrine\Bundle\DoctrineBundle\Registry */
-        $doctrine = $this->get('doctrine');
+        $user = $this->getCurrentUser();
+        $doctrine = $this->getDoctrine();
         /** @var $threadRepository \RL\MainBundle\Entity\Repository\ThreadRepository */
         $threadRepository = $doctrine->getRepository('RLMainBundle:Thread');
         /** @var $section \RL\MainBundle\Entity\Section */
-        $section = $threadRepository->findOneById($id)->getSubsection()->getSection();
-        $itemsCount = count($threadRepository->findOneById($id)->getMessages());
+        $section = $threadRepository->findOneBy(array("id" => $id))->getSubsection()->getSection();
+        $itemsCount = count($threadRepository->findOneBy(array("id" => $id))->getMessages());
         $threadRepository = $doctrine->getRepository($section->getBundle() . ':Thread');
         /** @var $thread \RL\MainBundle\Entity\Thread */
-        $thread = $threadRepository->findOneById($id);
+        $thread = $threadRepository->findOneBy(array("id" => $id));
         $itemsOnPage = $user->getCommentsOnPage();
         $pagesCount = ceil(($itemsCount - 1) / $itemsOnPage);
         $pagesCount > 1 ? $offset = $itemsOnPage * ($page - 1) : $offset = 0;
@@ -145,14 +144,14 @@ class ForumController extends AbstractController
         $neighborThreads = $threadRepository->getNeighborThreadsById($id);
         /** @var $readersRepository \RL\MainBundle\Entity\Repository\ReaderRepository */
         $readersRepository = $doctrine->getRepository('RLMainBundle:Reader');
-        $readers = $readersRepository->getExpiredReaders($thread, $user, $this->get('session')->getId());
+        $readers = $readersRepository->getExpiredReaders($thread, $user, $this->getSession()->getId());
         /** @var $reader \RL\MainBundle\Entity\Reader */
         foreach($readers as $reader) {
             $reader->getThread()->removeReader($reader);
             $reader->getUser()->removeReadThread($reader);
             $doctrine->getManager()->remove($reader);
         }
-        $thread->addReader(new Reader($user, $thread, $this->get('session')->getId()));
+        $thread->addReader(new Reader($user, $thread, $this->getSession()->getId()));
         $doctrine->getManager()->flush();
         $readers = $readersRepository->getReaders($thread);
 
@@ -174,9 +173,8 @@ class ForumController extends AbstractController
      */
     public function commentAction($threadId, $commentId)
     {
-        /** @var $user \RL\MainBundle\Security\User\RLUserInterface */
-        $user = $this->get('security.context')->getToken()->getUser();
-        $doctrine = $this->get('doctrine');
+        $user = $this->getCurrentUser();
+        $doctrine = $this->getDoctrine();
         $request = $this->getRequest();
         //save comment in database
         $sbm = $request->request->get('submit');
@@ -184,7 +182,7 @@ class ForumController extends AbstractController
             $em = $doctrine->getManager();
             $thr = $request->request->get('addComment');
             $threadRepository = $doctrine->getRepository('RLMainBundle:Thread');
-            $thread = $threadRepository->findOneById($threadId);
+            $thread = $threadRepository->findOneBy(array("id" => $threadId));
             $message = new Message();
             if ($user->isAnonymous()) {
                 $user = $user->getDbAnonymous();
@@ -194,8 +192,9 @@ class ForumController extends AbstractController
             $message->setComment($user->getMark()->render($thr['comment']));
             $message->setRawComment($thr['comment']);
             $message->setThread($thread);
-            $message->setReferer($doctrine->getRepository('RLMainBundle:Message')->findOneById($commentId));
+            $message->setReferer($doctrine->getRepository('RLMainBundle:Message')->findOneBy(array("id" => $commentId)));
             $em->persist($message);
+            $this->getMessageFilterChecker()->filter($message);
             $em->flush();
 
             return $this->redirect(
@@ -215,7 +214,7 @@ class ForumController extends AbstractController
             $preview->setComment($user->getMark()->render($previewThread['comment']));
         } else {
             $messageRepository = $doctrine->getRepository('RLMainBundle:Message');
-            $preview = $messageRepository->findOneById($commentId);
+            $preview = $messageRepository->findOneBy(array("id" => $commentId));
             $re = '';
             if (substr($preview->getSubject(), 0, 3) != 'Re:') {
                 $re = 'Re:';
@@ -238,13 +237,12 @@ class ForumController extends AbstractController
      */
     public function editMessage($messageId)
     {
-        /** @var $securityContext \Symfony\Component\Security\Core\SecurityContext */
-        $securityContext = $this->get('security.context');
-        $user = $securityContext->getToken()->getUser();
-        $doctrine = $this->get('doctrine');
+        $securityContext = $this->getSecurityContext();
+        $user = $this->getCurrentUser();
+        $doctrine = $this->getDoctrine();
         $messageRepository = $doctrine->getRepository('RLMainBundle:Message');
         /** @var $message \RL\MainBundle\Entity\Message */
-        $message = $messageRepository->findOneById($messageId);
+        $message = $messageRepository->findOneBy(array("id" => $messageId));
         //check access
         if ($message->getUser() != $user && !$securityContext->isGranted('ROLE_MODER')) {
             return $this->renderMessage('Access denied', 'You haven\'t privileges to edit this message');
@@ -269,6 +267,7 @@ class ForumController extends AbstractController
             }
             $message->addChangedBy($user);
             $message->setChangedFor($cmnt['editionReason']);
+            $this->getMessageFilterChecker()->filter($message);
             $em->flush();
 
             return $this->redirect(
@@ -291,29 +290,46 @@ class ForumController extends AbstractController
     }
 
     /**
+     * @Route("/message/{id}", name="showMessage")
+     */
+    public function showMessage($id)
+    {
+        $doctrine = $this->getDoctrine();
+        $messageRepository = $doctrine->getRepository('RLMainBundle:Message');
+        /** @var $message \RL\MainBundle\Entity\Message */
+        $message = $messageRepository->findOneBy(array("id" => $id));
+        return $this->render(
+            'RLMainBundle:Forum:showMessage.html.twig',
+            array(
+                'preview' => $message,
+            ));
+    }
+
+    /**
      * @Route("/view/{sectionRewrite}/{subsectionRewrite}/{page}", name="subsection", defaults={"page" = 1}, requirements = {"subsectionRewrite"=".*"})
      */
     public function subsectionAction($sectionRewrite, $subsectionRewrite, $page)
     {
-        /** @var $user \RL\MainBundle\Security\User\RLUserInterface */
-        $user = $this->get('security.context')->getToken()->getUser();
-        $subsectionRepository = $this->get('doctrine')->getRepository('RLMainBundle:Subsection');
-        $sectionRepository = $this->get('doctrine')->getRepository('RLMainBundle:Section');
+        $user = $this->getCurrentUser();
+        /** @var $subsectionRepository \RL\MainBundle\Entity\Repository\SubsectionRepository */
+        $subsectionRepository = $this->getDoctrine()->getRepository('RLMainBundle:Subsection');
+        $sectionRepository = $this->getDoctrine()->getRepository('RLMainBundle:Section');
         /** @var $section \RL\MainBundle\Entity\Section */
-        $section = $sectionRepository->findOneByRewrite($sectionRewrite);
+        $section = $sectionRepository->findOneBy(array("rewrite" => $sectionRewrite));
         /** @var $subsection \RL\MainBundle\Entity\Subsection */
         $subsection = $subsectionRepository->getSubsectionByRewrite($subsectionRewrite, $section);
         if (empty($subsection)) {
             return $this->renderMessage('unknown subsection', 'subsection ' . $subsectionRewrite . ' not found');
         }
-        $threadRepository = $this->get('doctrine')->getRepository($section->getBundle() . ':Thread');
+        /** @var $threadRepository \RL\MainBundle\Entity\Repository\ThreadRepository */
+        $threadRepository = $this->getDoctrine()->getRepository($section->getBundle() . ':Thread');
         $itemsCount = count($subsection->getThreads());
         $itemsOnPage = $user->getThreadsOnPage();
         $pagesCount = ceil(($itemsCount) / $itemsOnPage);
         $pagesCount > 1 ? $offset = $itemsOnPage * ($page - 1) : $offset = 0;
         $threads = $threadRepository->getThreads($subsection, $user->getThreadsOnPage(), $offset);
         $commentsCount = $threadRepository->getCommentsCount($subsection, $user->getThreadsOnPage(), $offset);
-        $pagesStr = $this->get('rl_main.paginator')->draw(
+        $pagesStr = $this->getPaginator()->draw(
             $itemsOnPage,
             $itemsCount,
             $page,
@@ -343,11 +359,9 @@ class ForumController extends AbstractController
      */
     public function sectionAction($sectionRewrite)
     {
-        $doctrine = $this->get('doctrine');
+        $doctrine = $this->getDoctrine();
         $sectionRepository = $doctrine->getRepository('RLMainBundle:Section');
-        /** @var $section \RL\MainBundle\Entity\Section */
-        $section = $sectionRepository->findOneByRewrite($sectionRewrite);
-        $subsections = $section->getSubsections();
+        $section = $sectionRepository->findOneBy(array("rewrite" => $sectionRewrite));
         $threadsCount = $doctrine->getRepository($section->getBundle() . ':Thread')->getThreadsCount($section);
 
         return $this->render(
@@ -364,16 +378,14 @@ class ForumController extends AbstractController
      */
     public function commentsAction($pageUserName, $page)
     {
-        /** @var $user \RL\MainBundle\Security\User\RLUserInterface */
-        $user = $this->get('security.context')->getToken()->getUser();
-        /** @var $doctrine \Doctrine\Bundle\DoctrineBundle\Registry */
-        $doctrine = $this->get('doctrine');
+        $user = $this->getCurrentUser();
+        $doctrine = $this->getDoctrine();
         /** @var $userRepository \RL\MainBundle\Entity\Repository\UserRepository */
         $userRepository = $doctrine->getRepository("RLMainBundle:User");
         if ($pageUserName === "") {
             $pageUser = $user;
         } else {
-            $pageUser = $userRepository->findOneByUsername($pageUserName);
+            $pageUser = $userRepository->findOneBy(array("username" => $pageUserName));
             if (null === $pageUser) {
                 return $this->renderMessage('unknown user', 'user ' . $pageUserName . ' not found');
             }
@@ -383,7 +395,7 @@ class ForumController extends AbstractController
         $pagesCount = ceil(($itemsCount) / $itemsOnPage);
         $pagesCount > 1 ? $offset = $itemsOnPage * ($page - 1) : $offset = 0;
         $messages = $userRepository->getLastMessages($pageUser, $itemsOnPage, $offset);
-        $pagesStr = $this->get('rl_main.paginator')
+        $pagesStr = $this->getPaginator()
             ->draw(
             $itemsOnPage,
             $itemsCount,
@@ -411,14 +423,13 @@ class ForumController extends AbstractController
      */
     public function responsesAction($pageUserName, $page)
     {
-        /** @var $user \RL\MainBundle\Security\User\RLUserInterface */
-        $user = $this->get('security.context')->getToken()->getUser();
+        $user = $this->getCurrentUser();
         /** @var $userRepository \RL\MainBundle\Entity\Repository\UserRepository */
-        $userRepository = $this->get('doctrine')->getRepository("RLMainBundle:User");
+        $userRepository = $this->getDoctrine()->getRepository("RLMainBundle:User");
         if ($pageUserName === "") {
             $pageUser = $user;
         } else {
-            $pageUser = $userRepository->findOneByUsername($pageUserName);
+            $pageUser = $userRepository->findOneBy(array("username" => $pageUserName));
             if (null === $pageUser) {
                 return $this->renderMessage('unknown user', 'user ' . $pageUserName . ' not found');
             }
@@ -428,7 +439,7 @@ class ForumController extends AbstractController
         $pagesCount = ceil(($itemsCount) / $itemsOnPage);
         $pagesCount > 1 ? $offset = $itemsOnPage * ($page - 1) : $offset = 0;
         $messages = $userRepository->getLastResponses($pageUser, $itemsOnPage, $offset);
-        $pagesStr = $this->get('rl_main.paginator')->draw(
+        $pagesStr = $this->getPaginator()->draw(
             $itemsOnPage,
             $itemsCount,
             $page,

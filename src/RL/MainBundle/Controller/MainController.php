@@ -48,7 +48,7 @@ class MainController extends AbstractController
      */
     public function unconfirmedAction()
     {
-        $doctrine = $this->get('doctrine');
+        $doctrine = $this->getDoctrine();
         /** @var $threadRepository \RL\ArticlesBundle\Entity\Repository\ThreadRepository */
         $threadRepository = $doctrine->getRepository('RLNewsBundle:Thread');
         $unconfirmedThreads = $threadRepository->getUnconfirmed();
@@ -63,7 +63,7 @@ class MainController extends AbstractController
      */
     public function trackerAction($hours)
     {
-        $doctrine = $this->get('doctrine');
+        $doctrine = $this->getDoctrine();
         $request = $this->getRequest();
         $sbm = $request->request->get('submit');
         if (isset($sbm)) {
@@ -85,10 +85,10 @@ class MainController extends AbstractController
      */
     public function rulesAction()
     {
-        $doctrine = $this->get('doctrine');
+        $doctrine = $this->getDoctrine();
         $settingsRepository = $doctrine->getRepository('RLMainBundle:Settings');
-        $rulesTitle = $settingsRepository->findOneByName('rulesTitle')->getValue();
-        $rulesText = $settingsRepository->findOneByName('rulesText')->getValue();
+        $rulesTitle = $settingsRepository->findOneBy(array("name" => 'rulesTitle'))->getValue();
+        $rulesText = $settingsRepository->findOneBy(array("name" => 'rulesText'))->getValue();
 
         return $this->render(
             'RLMainBundle:Main:page.html.twig', array('title' => $rulesTitle, 'text' => $rulesText,)
@@ -100,7 +100,7 @@ class MainController extends AbstractController
      */
     public function linksAction()
     {
-        $doctrine = $this->get('doctrine');
+        $doctrine = $this->getDoctrine();
         /** @var $linksRepository \Doctrine\Orm\EntityRepository */
         $linksRepository = $doctrine->getRepository('RLMainBundle:Link');
         $links = $linksRepository->findAll();
@@ -122,14 +122,13 @@ class MainController extends AbstractController
      */
     public function markAction($id)
     {
-        /** @var $user \RL\MainBundle\Security\User\RLUserInterface */
-        $user = $this->get('security.context')->getToken()->getUser();
+        $user = $this->getCurrentUser();
         /** @var $markRepository \Doctrine\Orm\EntityRepository */
         $markRepository = $this->getDoctrine()->getRepository('RLMainBundle:Mark');
         if (null === $id) {
             $mark = $user->getMark();
         } else {
-            $mark = $markRepository->findOneById($id);
+            $mark = $markRepository->findOneBy(array("id" => $id));
         }
 
         return $this->render('RLMainBundle:Main:mark.html.twig', array('mark' => $mark));
@@ -140,11 +139,10 @@ class MainController extends AbstractController
      */
     public function homepageAction($page)
     {
-        /** @var $user \RL\MainBundle\Security\User\RLUserInterface */
-        $user = $this->get('security.context')->getToken()->getUser();
+        $user = $this->getCurrentUser();
         $doctrine = $this->get('doctrine');
         $sectionRepository = $doctrine->getRepository('RLMainBundle:Section');
-        $section = $sectionRepository->findOneByRewrite('news');
+        $section = $sectionRepository->findOneBy(array("rewrite" => 'news'));
         /** @var $threadRepository \RL\NewsBundle\Entity\Repository\ThreadRepository */
         $threadRepository = $doctrine->getRepository('RLNewsBundle:Thread');
         /** @var $blockPositionRepository \RL\MainBundle\Entity\Repository\BlockPositionRepository */
@@ -154,7 +152,7 @@ class MainController extends AbstractController
         $pagesCount = ceil(($itemsCount) / $itemsOnPage);
         $pagesCount > 1 ? $offset = $itemsOnPage * ($page - 1) : $offset = 0;
         $threads = $threadRepository->getNews($itemsOnPage, $offset);
-        $pagesStr = $this->get('rl_main.paginator')->draw($itemsOnPage, $itemsCount, $page, 'index', array("page" => $page));
+        $pagesStr = $this->getPaginator()->draw($itemsOnPage, $itemsCount, $page, 'index', array("page" => $page));
 
         return $this->render(
             'RLMainBundle:Main:index.html.twig',

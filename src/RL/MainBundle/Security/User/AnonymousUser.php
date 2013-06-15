@@ -24,7 +24,7 @@
  * ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-*/
+ */
 
 namespace RL\MainBundle\Security\User;
 
@@ -35,6 +35,9 @@ use RL\MainBundle\Entity\Mark;
 use RL\MainBundle\Entity\BlockPosition;
 use RL\MainBundle\Entity\UsersFilter;
 use RL\MainBundle\Entity\Reader;
+use \RL\MainBundle\Entity\User;
+use Doctrine\Bundle\DoctrineBundle\Registry;
+use RL\MainBundle\Entity\Message;
 
 /**
  * RL\MainBundle\Security\User\AnonymousUser
@@ -54,31 +57,27 @@ class AnonymousUser implements RLUserInterface, EquatableInterface
      */
     protected $identity;
     /**
-     * @var \RL\MainBundle\Entity\User
+     * @var User
      */
     protected $dbAnon;
     /**
-     * @var \Doctrine\Bundle\DoctrineBundle\Registry
+     * @var Registry
      */
     protected $doctrine;
 
     /**
      * @param $identity
      * @param array $attributes
-     * @param \Doctrine\Bundle\DoctrineBundle\Registry $doctrine
+     * @param Registry $doctrine
      * @param null $logger
      */
-    public function __construct(
-        $identity,
-        array $attributes = array(),
-        \Doctrine\Bundle\DoctrineBundle\Registry &$doctrine,
-        $logger = null
-    ) {
+    public function __construct($identity, array $attributes = array(), Registry &$doctrine, $logger = null)
+    {
         $this->identity = $identity;
         $this->attributes = $attributes;
         $this->doctrine = & $doctrine;
         $userRepository = $doctrine->getRepository('RLMainBundle:User');
-        $this->dbAnon = $userRepository->findOneByUsername('anonymous');
+        $this->dbAnon = $userRepository->findOneBy(array("username" => 'anonymous'));
         $this->dbAnon->setLastVisitDate(new \DateTime('now'));
     }
 
@@ -90,10 +89,8 @@ class AnonymousUser implements RLUserInterface, EquatableInterface
         return 'anon.';
     }
 
-    // RLUserInterface
-
     /**
-     * @return mixed
+     * {@inheritdoc}
      */
     public function getIdentity()
     {
@@ -101,7 +98,7 @@ class AnonymousUser implements RLUserInterface, EquatableInterface
     }
 
     /**
-     * @return bool
+     * {@inheritdoc}
      */
     public function isAnonymous()
     {
@@ -109,7 +106,7 @@ class AnonymousUser implements RLUserInterface, EquatableInterface
     }
 
     /**
-     * @return array
+     * {@inheritdoc}
      */
     public function getAttributes()
     {
@@ -117,27 +114,25 @@ class AnonymousUser implements RLUserInterface, EquatableInterface
     }
 
     /**
-     * @return mixed
+     * {@inheritdoc}
      */
     public function getTheme()
     {
         return array_key_exists('theme', $this->attributes) ? $this->doctrine->getManager()->getRepository(
             'RLMainBundle:Theme'
-        )->findOneByName($this->attributes['theme']) : $this->dbAnon->getTheme();
+        )->findOneBy(array("name" => $this->attributes['theme'])) : $this->dbAnon->getTheme();
     }
 
     /**
-     * @param \RL\MainBundle\Entity\Theme $value
+     * {@inheritdoc}
      */
     public function setTheme($value)
     {
         $this->attributes['theme'] = $value->getName();
     }
 
-    // AdvancedUserInterface
-
     /**
-     * @return bool
+     * {@inheritdoc}
      */
     public function isAccountNonExpired()
     {
@@ -145,7 +140,7 @@ class AnonymousUser implements RLUserInterface, EquatableInterface
     }
 
     /**
-     * @return bool
+     * {@inheritdoc}
      */
     public function isAccountNonLocked()
     {
@@ -153,7 +148,7 @@ class AnonymousUser implements RLUserInterface, EquatableInterface
     }
 
     /**
-     * @return bool
+     * {@inheritdoc}
      */
     public function isCredentialsNonExpired()
     {
@@ -161,17 +156,15 @@ class AnonymousUser implements RLUserInterface, EquatableInterface
     }
 
     /**
-     * @return bool
+     * {@inheritdoc}
      */
     public function isEnabled()
     {
         return true;
     }
 
-    // UserInterface
-
     /**
-     * @return mixed
+     * {@inheritdoc}
      */
     public function getRoles()
     {
@@ -181,7 +174,7 @@ class AnonymousUser implements RLUserInterface, EquatableInterface
     }
 
     /**
-     * @return null
+     * {@inheritdoc}
      */
     public function getPassword()
     {
@@ -189,7 +182,7 @@ class AnonymousUser implements RLUserInterface, EquatableInterface
     }
 
     /**
-     * @return null
+     * {@inheritdoc}
      */
     public function getSalt()
     {
@@ -197,7 +190,7 @@ class AnonymousUser implements RLUserInterface, EquatableInterface
     }
 
     /**
-     * @return mixed
+     * {@inheritdoc}
      */
     public function getUsername()
     {
@@ -205,7 +198,7 @@ class AnonymousUser implements RLUserInterface, EquatableInterface
     }
 
     /**
-     *
+     * {@inheritdoc}
      */
     public function eraseCredentials()
     {
@@ -213,8 +206,7 @@ class AnonymousUser implements RLUserInterface, EquatableInterface
     }
 
     /**
-     * @param \Symfony\Component\Security\Core\User\UserInterface $user
-     * @return bool
+     * {@inheritdoc}
      */
     public function isEqualTo(UserInterface $user)
     {
@@ -230,14 +222,14 @@ class AnonymousUser implements RLUserInterface, EquatableInterface
     }
 
     /**
-     * @param \RL\MainBundle\Entity\Group $group
+     * {@inheritdoc}
      */
     public function setGroup(Group $group)
     {
     }
 
     /**
-     * @return bool
+     * {@inheritdoc}
      */
     public function isActive()
     {
@@ -245,7 +237,7 @@ class AnonymousUser implements RLUserInterface, EquatableInterface
     }
 
     /**
-     * @return mixed
+     * {@inheritdoc}
      */
     public function getCaptchaLevel()
     {
@@ -256,7 +248,7 @@ class AnonymousUser implements RLUserInterface, EquatableInterface
     }
 
     /**
-     * @return mixed
+     * {@inheritdoc}
      */
     public function getCommentsOnPage()
     {
@@ -267,7 +259,7 @@ class AnonymousUser implements RLUserInterface, EquatableInterface
     }
 
     /**
-     * @return mixed
+     * {@inheritdoc}
      */
     public function getFilters()
     {
@@ -278,7 +270,7 @@ class AnonymousUser implements RLUserInterface, EquatableInterface
     }
 
     /**
-     * @return mixed
+     * {@inheritdoc}
      */
     public function getGmt()
     {
@@ -286,7 +278,7 @@ class AnonymousUser implements RLUserInterface, EquatableInterface
     }
 
     /**
-     * @return mixed
+     * {@inheritdoc}
      */
     public function getGroup()
     {
@@ -294,7 +286,7 @@ class AnonymousUser implements RLUserInterface, EquatableInterface
     }
 
     /**
-     * @return mixed
+     * {@inheritdoc}
      */
     public function getId()
     {
@@ -302,7 +294,7 @@ class AnonymousUser implements RLUserInterface, EquatableInterface
     }
 
     /**
-     * @return mixed
+     * {@inheritdoc}
      */
     public function getLanguage()
     {
@@ -313,7 +305,7 @@ class AnonymousUser implements RLUserInterface, EquatableInterface
     }
 
     /**
-     * @return mixed
+     * {@inheritdoc}
      */
     public function getLastVisitDate()
     {
@@ -321,17 +313,17 @@ class AnonymousUser implements RLUserInterface, EquatableInterface
     }
 
     /**
-     * @return mixed
+     * {@inheritdoc}
      */
     public function getMark()
     {
         return array_key_exists('mark', $this->attributes) ? $this->doctrine->getManager()->getRepository(
             'RLMainBundle:Mark'
-        )->findOneByName($this->attributes['mark']) : $this->dbAnon->getMark();
+        )->findOneBy(array("name" => $this->attributes['mark'])) : $this->dbAnon->getMark();
     }
 
     /**
-     * @return mixed
+     * {@inheritdoc}
      */
     public function getNewsOnPage()
     {
@@ -342,7 +334,7 @@ class AnonymousUser implements RLUserInterface, EquatableInterface
     }
 
     /**
-     * @return mixed
+     * {@inheritdoc}
      */
     public function getRegistrationDate()
     {
@@ -350,37 +342,37 @@ class AnonymousUser implements RLUserInterface, EquatableInterface
     }
 
     /**
-     * @return mixed
+     * {@inheritdoc}
      */
-    public function getShowAvatars()
+    public function isShowAvatars()
     {
         return array_key_exists(
             'showAvatars',
             $this->attributes
-        ) ? $this->attributes['showAvatars'] : $this->dbAnon->getShowAvatars();
+        ) ? $this->attributes['showAvatars'] : $this->dbAnon->isShowAvatars();
     }
 
     /**
-     * @return mixed
+     * {@inheritdoc}
      */
-    public function getShowResp()
+    public function isShowResp()
     {
         return array_key_exists(
             'showResp',
             $this->attributes
-        ) ? $this->attributes['showResp'] : $this->dbAnon->getShowResp();
+        ) ? $this->attributes['showResp'] : $this->dbAnon->isShowResp();
     }
 
     /**
-     * @return mixed
+     * {@inheritdoc}
      */
-    public function getShowUa()
+    public function isShowUa()
     {
-        return array_key_exists('showUa', $this->attributes) ? $this->attributes['showUa'] : $this->dbAnon->getShowUa();
+        return array_key_exists('showUa', $this->attributes) ? $this->attributes['showUa'] : $this->dbAnon->isShowUa();
     }
 
     /**
-     * @return mixed
+     * {@inheritdoc}
      */
     public function getSortingType()
     {
@@ -391,7 +383,7 @@ class AnonymousUser implements RLUserInterface, EquatableInterface
     }
 
     /**
-     * @return mixed
+     * {@inheritdoc}
      */
     public function getThreadsOnPage()
     {
@@ -402,7 +394,7 @@ class AnonymousUser implements RLUserInterface, EquatableInterface
     }
 
     /**
-     * @param $captchaLevel
+     * {@inheritdoc}
      */
     public function setCaptchaLevel($captchaLevel)
     {
@@ -410,7 +402,7 @@ class AnonymousUser implements RLUserInterface, EquatableInterface
     }
 
     /**
-     * @param $commentsOnPage
+     * {@inheritdoc}
      */
     public function setCommentsOnPage($commentsOnPage)
     {
@@ -418,7 +410,7 @@ class AnonymousUser implements RLUserInterface, EquatableInterface
     }
 
     /**
-     * @param $gmt
+     * {@inheritdoc}
      */
     public function setGmt($gmt)
     {
@@ -426,7 +418,7 @@ class AnonymousUser implements RLUserInterface, EquatableInterface
     }
 
     /**
-     * @param $language
+     * {@inheritdoc}
      */
     public function setLanguage($language)
     {
@@ -434,7 +426,7 @@ class AnonymousUser implements RLUserInterface, EquatableInterface
     }
 
     /**
-     * @param $lastVisitDate
+     * {@inheritdoc}
      */
     public function setLastVisitDate($lastVisitDate)
     {
@@ -442,7 +434,7 @@ class AnonymousUser implements RLUserInterface, EquatableInterface
     }
 
     /**
-     * @param \RL\MainBundle\Entity\Mark $mark
+     * {@inheritdoc}
      */
     public function setMark(\RL\MainBundle\Entity\Mark $mark)
     {
@@ -450,7 +442,7 @@ class AnonymousUser implements RLUserInterface, EquatableInterface
     }
 
     /**
-     * @param $newsOnPage
+     * {@inheritdoc}
      */
     public function setNewsOnPage($newsOnPage)
     {
@@ -458,7 +450,7 @@ class AnonymousUser implements RLUserInterface, EquatableInterface
     }
 
     /**
-     * @param $registrationDate
+     * {@inheritdoc}
      */
     public function setRegistrationDate($registrationDate)
     {
@@ -466,7 +458,7 @@ class AnonymousUser implements RLUserInterface, EquatableInterface
     }
 
     /**
-     * @param $showAvatars
+     * {@inheritdoc}
      */
     public function setShowAvatars($showAvatars)
     {
@@ -474,7 +466,7 @@ class AnonymousUser implements RLUserInterface, EquatableInterface
     }
 
     /**
-     * @param $showResp
+     * {@inheritdoc}
      */
     public function setShowResp($showResp)
     {
@@ -482,7 +474,7 @@ class AnonymousUser implements RLUserInterface, EquatableInterface
     }
 
     /**
-     * @param $showUa
+     * {@inheritdoc}
      */
     public function setShowUa($showUa)
     {
@@ -490,7 +482,7 @@ class AnonymousUser implements RLUserInterface, EquatableInterface
     }
 
     /**
-     * @param $sortingType
+     * {@inheritdoc}
      */
     public function setSortingType($sortingType)
     {
@@ -498,7 +490,7 @@ class AnonymousUser implements RLUserInterface, EquatableInterface
     }
 
     /**
-     * @param $threadsOnPage
+     * {@inheritdoc}
      */
     public function setThreadsOnPage($threadsOnPage)
     {
@@ -506,8 +498,7 @@ class AnonymousUser implements RLUserInterface, EquatableInterface
     }
 
     /**
-     * @param $name
-     * @return mixed
+     * {@inheritdoc}
      */
     public function setName($name)
     {
@@ -515,7 +506,7 @@ class AnonymousUser implements RLUserInterface, EquatableInterface
     }
 
     /**
-     * @return mixed
+     * {@inheritdoc}
      */
     public function getName()
     {
@@ -523,8 +514,7 @@ class AnonymousUser implements RLUserInterface, EquatableInterface
     }
 
     /**
-     * @param $lastname
-     * @return mixed
+     * {@inheritdoc}
      */
     public function setLastname($lastname)
     {
@@ -532,7 +522,7 @@ class AnonymousUser implements RLUserInterface, EquatableInterface
     }
 
     /**
-     * @return mixed
+     * {@inheritdoc}
      */
     public function getLastname()
     {
@@ -540,8 +530,7 @@ class AnonymousUser implements RLUserInterface, EquatableInterface
     }
 
     /**
-     * @param $country
-     * @return mixed
+     * {@inheritdoc}
      */
     public function setCountry($country)
     {
@@ -549,7 +538,7 @@ class AnonymousUser implements RLUserInterface, EquatableInterface
     }
 
     /**
-     * @return mixed
+     * {@inheritdoc}
      */
     public function getCountry()
     {
@@ -557,8 +546,7 @@ class AnonymousUser implements RLUserInterface, EquatableInterface
     }
 
     /**
-     * @param $city
-     * @return mixed
+     * {@inheritdoc}
      */
     public function setCity($city)
     {
@@ -566,7 +554,7 @@ class AnonymousUser implements RLUserInterface, EquatableInterface
     }
 
     /**
-     * @return mixed
+     * {@inheritdoc}
      */
     public function getCity()
     {
@@ -574,8 +562,7 @@ class AnonymousUser implements RLUserInterface, EquatableInterface
     }
 
     /**
-     * @param $photo
-     * @return mixed
+     * {@inheritdoc}
      */
     public function setPhoto($photo)
     {
@@ -583,7 +570,7 @@ class AnonymousUser implements RLUserInterface, EquatableInterface
     }
 
     /**
-     * @return mixed
+     * {@inheritdoc}
      */
     public function getPhoto()
     {
@@ -591,8 +578,7 @@ class AnonymousUser implements RLUserInterface, EquatableInterface
     }
 
     /**
-     * @param $birthday
-     * @return mixed
+     * {@inheritdoc}
      */
     public function setBirthday($birthday)
     {
@@ -600,7 +586,7 @@ class AnonymousUser implements RLUserInterface, EquatableInterface
     }
 
     /**
-     * @return mixed
+     * {@inheritdoc}
      */
     public function getBirthday()
     {
@@ -608,8 +594,7 @@ class AnonymousUser implements RLUserInterface, EquatableInterface
     }
 
     /**
-     * @param $gender
-     * @return mixed
+     * {@inheritdoc}
      */
     public function setGender($gender)
     {
@@ -617,7 +602,7 @@ class AnonymousUser implements RLUserInterface, EquatableInterface
     }
 
     /**
-     * @return mixed
+     * {@inheritdoc}
      */
     public function getGender()
     {
@@ -625,8 +610,7 @@ class AnonymousUser implements RLUserInterface, EquatableInterface
     }
 
     /**
-     * @param $additional
-     * @return mixed
+     * {@inheritdoc}
      */
     public function setAdditional($additional)
     {
@@ -634,7 +618,7 @@ class AnonymousUser implements RLUserInterface, EquatableInterface
     }
 
     /**
-     * @return mixed
+     * {@inheritdoc}
      */
     public function getAdditional()
     {
@@ -642,8 +626,7 @@ class AnonymousUser implements RLUserInterface, EquatableInterface
     }
 
     /**
-     * @param $additionalRaw
-     * @return mixed
+     * {@inheritdoc}
      */
     public function setAdditionalRaw($additionalRaw)
     {
@@ -651,7 +634,7 @@ class AnonymousUser implements RLUserInterface, EquatableInterface
     }
 
     /**
-     * @return mixed
+     * {@inheritdoc}
      */
     public function getAdditionalRaw()
     {
@@ -659,8 +642,7 @@ class AnonymousUser implements RLUserInterface, EquatableInterface
     }
 
     /**
-     * @param $email
-     * @return mixed
+     * {@inheritdoc}
      */
     public function setEmail($email)
     {
@@ -668,7 +650,7 @@ class AnonymousUser implements RLUserInterface, EquatableInterface
     }
 
     /**
-     * @return mixed
+     * {@inheritdoc}
      */
     public function getEmail()
     {
@@ -676,8 +658,7 @@ class AnonymousUser implements RLUserInterface, EquatableInterface
     }
 
     /**
-     * @param $im
-     * @return mixed
+     * {@inheritdoc}
      */
     public function setIm($im)
     {
@@ -685,7 +666,7 @@ class AnonymousUser implements RLUserInterface, EquatableInterface
     }
 
     /**
-     * @return mixed
+     * {@inheritdoc}
      */
     public function getIm()
     {
@@ -693,8 +674,7 @@ class AnonymousUser implements RLUserInterface, EquatableInterface
     }
 
     /**
-     * @param $openid
-     * @return mixed
+     * {@inheritdoc}
      */
     public function setOpenid($openid)
     {
@@ -702,7 +682,7 @@ class AnonymousUser implements RLUserInterface, EquatableInterface
     }
 
     /**
-     * @return mixed
+     * {@inheritdoc}
      */
     public function getOpenid()
     {
@@ -710,8 +690,7 @@ class AnonymousUser implements RLUserInterface, EquatableInterface
     }
 
     /**
-     * @param $showEmail
-     * @return mixed
+     * {@inheritdoc}
      */
     public function setShowEmail($showEmail)
     {
@@ -719,16 +698,15 @@ class AnonymousUser implements RLUserInterface, EquatableInterface
     }
 
     /**
-     * @return mixed
+     * {@inheritdoc}
      */
-    public function getShowEmail()
+    public function isShowEmail()
     {
-        return $this->dbAnon->getShowEmail();
+        return $this->dbAnon->isShowEmail();
     }
 
     /**
-     * @param $showIm
-     * @return mixed
+     * {@inheritdoc}
      */
     public function setShowIm($showIm)
     {
@@ -736,16 +714,15 @@ class AnonymousUser implements RLUserInterface, EquatableInterface
     }
 
     /**
-     * @return mixed
+     * {@inheritdoc}
      */
-    public function getShowIm()
+    public function isShowIm()
     {
-        return $this->dbAnon->getShowIm();
+        return $this->dbAnon->isShowIm();
     }
 
     /**
-     * @param $active
-     * @return mixed
+     * {@inheritdoc}
      */
     public function setActive($active)
     {
@@ -753,8 +730,7 @@ class AnonymousUser implements RLUserInterface, EquatableInterface
     }
 
     /**
-     * @param $question
-     * @return mixed
+     * {@inheritdoc}
      */
     public function setQuestion($question)
     {
@@ -762,7 +738,7 @@ class AnonymousUser implements RLUserInterface, EquatableInterface
     }
 
     /**
-     * @return mixed
+     * {@inheritdoc}
      */
     public function getQuestion()
     {
@@ -770,8 +746,7 @@ class AnonymousUser implements RLUserInterface, EquatableInterface
     }
 
     /**
-     * @param $answer
-     * @return mixed
+     * {@inheritdoc}
      */
     public function setAnswer($answer)
     {
@@ -779,7 +754,7 @@ class AnonymousUser implements RLUserInterface, EquatableInterface
     }
 
     /**
-     * @return mixed
+     * {@inheritdoc}
      */
     public function getAnswer()
     {
@@ -787,7 +762,7 @@ class AnonymousUser implements RLUserInterface, EquatableInterface
     }
 
     /**
-     * @return \RL\MainBundle\Entity\User
+     * {@inheritdoc}
      */
     public function getDbAnonymous()
     {
@@ -795,7 +770,7 @@ class AnonymousUser implements RLUserInterface, EquatableInterface
     }
 
     /**
-     * @param \RL\MainBundle\Entity\UsersFilter $filter
+     * {@inheritdoc}
      */
     public function addFilter(UsersFilter $filter)
     {
@@ -803,19 +778,19 @@ class AnonymousUser implements RLUserInterface, EquatableInterface
     }
 
     /**
-     * @param \RL\MainBundle\Entity\UsersFilter $filter
+     * {@inheritdoc}
      */
     public function removeFilter(UsersFilter $filter)
     {
-        $key = array_search($filter,$this->attributes['filters']);
-        if($key!==false){
+        $key = array_search($filter, $this->attributes['filters']);
+        if ($key !== false) {
             unset($this->attributes['filters'][$key]);
         }
     }
 
 
     /**
-     * @return mixed
+     * {@inheritdoc}
      */
     public function getEditedComments()
     {
@@ -826,42 +801,42 @@ class AnonymousUser implements RLUserInterface, EquatableInterface
     }
 
     /**
-     * @param $editedComment
+     * {@inheritdoc}
      */
-    public function addEditedComment($editedComment)
+    public function addEditedComment(Message $editedComment)
     {
         $this->attributes['editedComments'][] = $editedComment;
     }
 
     /**
-     * @param $editedComment
+     * {@inheritdoc}
      */
-    public function removeEditedComment($editedComment)
+    public function removeEditedComment(Message $editedComment)
     {
-        $key = array_search($editedComment,$this->attributes['editedComments']);
-        if($key!==false){
+        $key = array_search($editedComment, $this->attributes['editedComments']);
+        if ($key !== false) {
             unset($this->attributes['editedComments'][$key]);
         }
     }
 
     /**
-     * @param \RL\MainBundle\Entity\Message $message
+     * {@inheritdoc}
      */
-    public function addMessage(\RL\MainBundle\Entity\Message $message)
+    public function addMessage(Message $message)
     {
         $this->dbAnon->addMessage($message);
     }
 
     /**
-     * @param \RL\MainBundle\Entity\Message $message
+     * {@inheritdoc}
      */
-    public function removeMessage(\RL\MainBundle\Entity\Message $message)
+    public function removeMessage(Message $message)
     {
         $this->dbAnon->removeMessage($message);
     }
 
     /**
-     * @return mixed
+     * {@inheritdoc}
      */
     public function getMessages()
     {
@@ -869,7 +844,7 @@ class AnonymousUser implements RLUserInterface, EquatableInterface
     }
 
     /**
-     * @param \RL\MainBundle\Entity\BlockPosition $position
+     * {@inheritdoc}
      */
     public function addPosition(BlockPosition $position)
     {
@@ -877,18 +852,18 @@ class AnonymousUser implements RLUserInterface, EquatableInterface
     }
 
     /**
-     * @param \RL\MainBundle\Entity\BlockPosition $position
+     * {@inheritdoc}
      */
     public function removePosition(BlockPosition $position)
     {
-        $key = array_search($position,$this->attributes['block_position']);
-        if($key!==false){
+        $key = array_search($position, $this->attributes['block_position']);
+        if ($key !== false) {
             unset($this->attributes['block_position'][$key]);
         }
     }
 
     /**
-     * @return mixed
+     * {@inheritdoc}
      */
     public function getPositions()
     {
@@ -899,9 +874,7 @@ class AnonymousUser implements RLUserInterface, EquatableInterface
     }
 
     /**
-     * Add reader
-     *
-     * @param \RL\MainBundle\Entity\Reader $reader
+     * {@inheritdoc}
      */
     public function addReadThread(Reader $reader)
     {
@@ -909,9 +882,7 @@ class AnonymousUser implements RLUserInterface, EquatableInterface
     }
 
     /**
-     * Remove reader
-     *
-     * @param \RL\MainBundle\Entity\Reader $reader
+     * {@inheritdoc}
      */
     public function removeReadThread(Reader $reader)
     {
@@ -919,12 +890,58 @@ class AnonymousUser implements RLUserInterface, EquatableInterface
     }
 
     /**
-     * Get readers
-     *
-     * @return \Doctrine\Common\Collections\Collection
+     * {@inheritdoc}
      */
     public function getReadThreads()
     {
-        $this->dbAnon->getReadThreads();
+        return $this->dbAnon->getReadThreads();
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function setMessages($messages)
+    {
+        $this->dbAnon->setMessages($messages);
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function setPositions($positions)
+    {
+        if (is_array($positions)) {
+            $this->attributes['block_position'] = $positions;
+        }
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function setReadThreads($readThreads)
+    {
+        if (is_array($readThreads)) {
+            $this->dbAnon->setReadThreads($readThreads);
+        }
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function setFilters($filters)
+    {
+        if (is_array($filters)) {
+            $this->attributes['filters'] = $filters;
+        }
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function setEditedComments($editedComments)
+    {
+        if (is_array($editedComments)) {
+            $this->attributes['editedComments'] = $editedComments;
+        }
     }
 }
