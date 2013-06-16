@@ -48,9 +48,8 @@ class MainController extends AbstractController
      */
     public function unconfirmedAction()
     {
-        $doctrine = $this->getDoctrine();
         /** @var $threadRepository \RL\ArticlesBundle\Entity\Repository\ThreadRepository */
-        $threadRepository = $doctrine->getRepository('RLNewsBundle:Thread');
+        $threadRepository = $this->getDoctrine()->getRepository('RLNewsBundle:Thread');
         $unconfirmedThreads = $threadRepository->getUnconfirmed();
 
         return $this->render(
@@ -63,7 +62,6 @@ class MainController extends AbstractController
      */
     public function trackerAction($hours)
     {
-        $doctrine = $this->getDoctrine();
         $request = $this->getRequest();
         $sbm = $request->request->get('submit');
         if (isset($sbm)) {
@@ -71,7 +69,7 @@ class MainController extends AbstractController
             $hours = (int) $tracker['hours'];
         }
         /** @var $messageRepository \RL\MainBundle\Entity\Repository\MessageRepository */
-        $messageRepository = $doctrine->getRepository('RLMainBundle:Message');
+        $messageRepository = $this->getDoctrine()->getRepository('RLMainBundle:Message');
         $messages = $messageRepository->getMessagesForLastHours($hours);
         $form = $this->createForm(new TrackerType(), new TrackerForm($hours));
 
@@ -85,8 +83,7 @@ class MainController extends AbstractController
      */
     public function rulesAction()
     {
-        $doctrine = $this->getDoctrine();
-        $settingsRepository = $doctrine->getRepository('RLMainBundle:Settings');
+        $settingsRepository = $this->getDoctrine()->getRepository('RLMainBundle:Settings');
         $rulesTitle = $settingsRepository->findOneBy(array("name" => 'rulesTitle'))->getValue();
         $rulesText = $settingsRepository->findOneBy(array("name" => 'rulesText'))->getValue();
 
@@ -100,9 +97,8 @@ class MainController extends AbstractController
      */
     public function linksAction()
     {
-        $doctrine = $this->getDoctrine();
         /** @var $linksRepository \Doctrine\Orm\EntityRepository */
-        $linksRepository = $doctrine->getRepository('RLMainBundle:Link');
+        $linksRepository = $this->getDoctrine()->getRepository('RLMainBundle:Link');
         $links = $linksRepository->findAll();
         $title = 'Links';
         $text = '<ul>';
@@ -140,13 +136,13 @@ class MainController extends AbstractController
     public function homepageAction($page)
     {
         $user = $this->getCurrentUser();
-        $doctrine = $this->get('doctrine');
-        $sectionRepository = $doctrine->getRepository('RLMainBundle:Section');
+        /** @var $sectionRepository \RL\MainBundle\Entity\Repository\SectionRepository */
+        $sectionRepository = $this->getDoctrine()->getRepository('RLMainBundle:Section');
         $section = $sectionRepository->findOneBy(array("rewrite" => 'news'));
         /** @var $threadRepository \RL\NewsBundle\Entity\Repository\ThreadRepository */
-        $threadRepository = $doctrine->getRepository('RLNewsBundle:Thread');
+        $threadRepository = $this->getDoctrine()->getRepository('RLNewsBundle:Thread');
         /** @var $blockPositionRepository \RL\MainBundle\Entity\Repository\BlockPositionRepository */
-        $blockPositionRepository = $doctrine->getRepository('RLMainBundle:BlockPosition');
+        $blockPositionRepository = $this->getDoctrine()->getRepository('RLMainBundle:BlockPosition');
         $itemsCount = $threadRepository->getNewsCount();
         $itemsOnPage = $user->getNewsOnPage();
         $pagesCount = ceil(($itemsCount) / $itemsOnPage);

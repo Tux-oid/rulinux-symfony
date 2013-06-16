@@ -39,12 +39,13 @@ use Symfony\Component\Form\FormBuilderInterface;
  */
 class PasswordChangingType extends AbstractType
 {
+
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder->add('oldPassword', 'password')
-            ->add('newPassword', 'password')
-            ->add('validation', 'password');
+            ->add('newPassword', 'repeated', array('type' => 'password'));
     }
+
     /**
      * Returns the name of this type.
      *
@@ -54,6 +55,7 @@ class PasswordChangingType extends AbstractType
     {
         return 'passwordChanging';
     }
+
     public function getDefaultOptions(array $options)
     {
         return array(

@@ -67,6 +67,7 @@ class OpenIDController extends AbstractController
             } elseif ($openid->mode == 'cancel') {
                 return $this->redirect($this->generateUrl('login'));
             } else {
+                /** @var $userRepository \RL\MainBundle\Entity\Repository\UserRepository */
                 $userRepository = $this->getDoctrine()->getRepository('RLMainBundle:User');
                 if ($openid->validate()) {
                     $identity = $openid->identity;
@@ -80,7 +81,7 @@ class OpenIDController extends AbstractController
                     } else {
                         $attr = $openid->getAttributes();
                         $email = '';
-                        $newUser = new User;
+                        $newUser = $userRepository->createDefaultEntity();
                         $form = $this->createForm(new RegisterType(), $newUser);
 
                         return $this->render(

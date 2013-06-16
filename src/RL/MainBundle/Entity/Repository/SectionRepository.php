@@ -1,8 +1,8 @@
 <?php
 /**
- * Copyright (c) 2009 - 2012, Peter Vasilevsky
+ * Copyright (c) 2008 - 2013, Peter Vasilevsky
  * All rights reserved.
- *
+ * 
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
  *     * Redistributions of source code must retain the above copyright
@@ -13,7 +13,7 @@
  *     * Neither the name of the RL nor the
  *       names of its contributors may be used to endorse or promote products
  *       derived from this software without specific prior written permission.
- *
+ * 
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND
  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
  * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
@@ -26,57 +26,15 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 
-namespace RL\MainBundle\Form\Model;
+namespace RL\MainBundle\Entity\Repository;
 
 /**
- * RL\MainBundle\Form\PasswordChangingForm
+ * RL\MainBundle\Entity\Repository\SectionRepository
  *
  * @author Peter Vasilevsky <tuxoiduser@gmail.com> a.k.a. Tux-oid
  * @license BSDL
  */
-class PasswordChangingForm
+class SectionRepository extends AbstractRepository
 {
-    /**
-     * @var
-     */
-    protected $oldPassword;
-
-    /**
-     * @var
-     */
-    protected $newPassword;
-
-
-    /**
-     * @param $newPassword
-     */
-    public function setNewPassword($newPassword)
-    {
-        $this->newPassword = $newPassword;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getNewPassword()
-    {
-        return $this->newPassword;
-    }
-
-    /**
-     * @param $oldPassword
-     */
-    public function setOldPassword($oldPassword)
-    {
-        $this->oldPassword = $oldPassword;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getOldPassword()
-    {
-        return $this->oldPassword;
-    }
 
 }

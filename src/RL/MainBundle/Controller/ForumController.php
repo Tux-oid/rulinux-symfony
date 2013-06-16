@@ -32,7 +32,6 @@ use Symfony\Component\Security\Core\SecurityContext;
 use RL\MainBundle\Entity\Reader;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use RL\MainBundle\Controller\AbstractController;
-use RL\MainBundle\Form\Type\AddCommentType;
 use RL\MainBundle\Form\Model\AddCommentForm;
 use RL\MainBundle\Form\Type\EditCommentType;
 use RL\MainBundle\Form\Model\EditCommentForm;
@@ -61,6 +60,13 @@ class ForumController extends AbstractController
         /** @var $subsectionRepository \RL\MainBundle\Entity\Repository\SubsectionRepository */
         $subsectionRepository = $doctrine->getRepository($section->getBundle() . ':Subsection');
         $subsection = $subsectionRepository->getSubsectionByRewrite($subsectionRewrite, $section);
+        if ($this->getRequest()->getMethod() === 'POST') {
+            if(null !== $this->getCurrentUser()->getCaptchaLevel()) {
+                if(!$this->getUcaptcha()->check($this->getRequest()->get('captchaKeystring'))) {
+                    return $this->renderMessage('Incorrect captcha', 'You have put incorrect captcha value. Please try again');
+                }
+            }
+        }
         //save thread in database
         $sbm = $request->request->get('submit');
         $hlpCls = $section->getBundleNamespace() . '\Form\Handler\ThreadHandler';
@@ -104,6 +110,7 @@ class ForumController extends AbstractController
                 'preview' => $preview,
                 'message' => $newThread,
                 'section' => $section,
+                'ucaptcha' => $this->getUcaptcha(),
             )
         );
     }
@@ -133,7 +140,7 @@ class ForumController extends AbstractController
         $threadComments = $threadRepository->getThreadCommentsById($id, $itemsOnPage, $offset);
         $pagesStr = $this->get('rl_main.paginator')->draw(
             $itemsOnPage,
-            $itemsCount - 1,
+                $itemsCount - 1,
             $page,
             'thread',
             array(
@@ -146,7 +153,7 @@ class ForumController extends AbstractController
         $readersRepository = $doctrine->getRepository('RLMainBundle:Reader');
         $readers = $readersRepository->getExpiredReaders($thread, $user, $this->getSession()->getId());
         /** @var $reader \RL\MainBundle\Entity\Reader */
-        foreach($readers as $reader) {
+        foreach ($readers as $reader) {
             $reader->getThread()->removeReader($reader);
             $reader->getUser()->removeReadThread($reader);
             $doctrine->getManager()->remove($reader);
@@ -174,16 +181,22 @@ class ForumController extends AbstractController
     public function commentAction($threadId, $commentId)
     {
         $user = $this->getCurrentUser();
-        $doctrine = $this->getDoctrine();
-        $request = $this->getRequest();
+        /** @var $threadRepository \RL\MainBundle\Entity\Repository\ThreadRepository */
+        $threadRepository = $this->getDoctrine()->getRepository('RLMainBundle:Thread');
+        /** @var $messageRepository \RL\MainBundle\Entity\Repository\MessageRepository */
+        $messageRepository = $this->getDoctrine()->getRepository('RLMainBundle:Message');
         //save comment in database
-        $sbm = $request->request->get('submit');
-        if (isset($sbm)) {
-            $em = $doctrine->getManager();
-            $thr = $request->request->get('addComment');
-            $threadRepository = $doctrine->getRepository('RLMainBundle:Thread');
+        if ($this->getRequest()->getMethod() === 'POST') {
+            if(null !== $this->getCurrentUser()->getCaptchaLevel()) {
+                if(!$this->getUcaptcha()->check($this->getRequest()->get('captchaKeystring'))) {
+                    return $this->renderMessage('Incorrect captcha', 'You have put incorrect captcha value. Please try again');
+                }
+            }
+        }
+        if (null !== $this->getRequest()->request->get('submit')) {
+            $thr = $this->getRequest()->request->get('addComment');
             $thread = $threadRepository->findOneBy(array("id" => $threadId));
-            $message = new Message();
+            $message = $messageRepository->createDefaultEntity();
             if ($user->isAnonymous()) {
                 $user = $user->getDbAnonymous();
             }
@@ -192,28 +205,27 @@ class ForumController extends AbstractController
             $message->setComment($user->getMark()->render($thr['comment']));
             $message->setRawComment($thr['comment']);
             $message->setThread($thread);
-            $message->setReferer($doctrine->getRepository('RLMainBundle:Message')->findOneBy(array("id" => $commentId)));
-            $em->persist($message);
+            $message->setReferer(
+                $messageRepository->findOneBy(array("id" => $commentId))
+            );
+            $messageRepository->update($message);
             $this->getMessageFilterChecker()->filter($message);
-            $em->flush();
+            $messageRepository->flush();
 
             return $this->redirect(
                 $this->generateUrl("thread", array("id" => $threadId, "page" => 1))
             ); //FIXME: set url for redirecting
         }
         //preview
-        $previewValue = $request->request->get('preview');
-        $preview = '';
         $newComment = new AddCommentForm($user);
-        if (isset($previewValue)) {
-            $previewThread = $request->request->get('addComment');
+        if (null !== $this->getRequest()->request->get('preview')) {
+            $previewThread = $this->getRequest()->request->get('addComment');
             $newComment->setSubject($previewThread['subject']);
             $newComment->setComment($previewThread['comment']);
             $preview = new AddCommentForm($user);
             $preview->setSubject($previewThread['subject']);
             $preview->setComment($user->getMark()->render($previewThread['comment']));
         } else {
-            $messageRepository = $doctrine->getRepository('RLMainBundle:Message');
             $preview = $messageRepository->findOneBy(array("id" => $commentId));
             $re = '';
             if (substr($preview->getSubject(), 0, 3) != 'Re:') {
@@ -221,13 +233,14 @@ class ForumController extends AbstractController
             }
             $newComment->setSubject($re . $preview->getSubject());
         }
-        $form = $this->createForm(new AddCommentType(), $newComment);
+        $form = $this->createForm($this->get('rl_main.form.add_comment'), $newComment);
 
         return $this->render(
             'RLMainBundle:Forum:addComment.html.twig',
             array(
                 'preview' => $preview,
                 'form' => $form->createView(),
+                'ucaptcha' => $this->getUcaptcha(),
             )
         );
     }
@@ -239,8 +252,8 @@ class ForumController extends AbstractController
     {
         $securityContext = $this->getSecurityContext();
         $user = $this->getCurrentUser();
-        $doctrine = $this->getDoctrine();
-        $messageRepository = $doctrine->getRepository('RLMainBundle:Message');
+        /** @var $messageRepository \RL\MainBundle\Entity\Repository\MessageRepository */
+        $messageRepository = $this->getDoctrine()->getRepository('RLMainBundle:Message');
         /** @var $message \RL\MainBundle\Entity\Message */
         $message = $messageRepository->findOneBy(array("id" => $messageId));
         //check access
@@ -248,16 +261,21 @@ class ForumController extends AbstractController
             return $this->renderMessage('Access denied', 'You haven\'t privileges to edit this message');
         }
         if ($user->isAnonymous()) {
-            if ($message->getSessionId() != $this->get('session')->getId()) {
+            if ($message->getSessionId() != $this->getSession()->getId()) {
                 return $this->renderMessage('Access denied', 'You haven\'t privileges to edit this message');
+            }
+        }
+        if ($this->getRequest()->getMethod() === 'POST') {
+            if(null !== $this->getCurrentUser()->getCaptchaLevel()) {
+                if(!$this->getUcaptcha()->check($this->getRequest()->get('captchaKeystring'))) {
+                    return $this->renderMessage('Incorrect captcha', 'You have put incorrect captcha value. Please try again');
+                }
             }
         }
         //save comment in database
         $request = $this->getRequest();
         $sbm = $request->request->get('submit');
         if (isset($sbm)) {
-            /** @var $em \Doctrine\ORM\EntityManager */
-            $em = $doctrine->getManager();
             $cmnt = $request->request->get('editComment');
             $message->setSubject($cmnt['subject']);
             $message->setComment($user->getMark()->render($cmnt['comment']));
@@ -268,7 +286,7 @@ class ForumController extends AbstractController
             $message->addChangedBy($user);
             $message->setChangedFor($cmnt['editionReason']);
             $this->getMessageFilterChecker()->filter($message);
-            $em->flush();
+            $messageRepository->flush();
 
             return $this->redirect(
                 $this->generateUrl("thread", array("id" => $message->getThread()->getId()))
@@ -285,6 +303,7 @@ class ForumController extends AbstractController
             array(
                 'message' => $message,
                 'form' => $form->createView(),
+                'ucaptcha' => $this->getUcaptcha(),
             )
         );
     }
@@ -294,15 +313,16 @@ class ForumController extends AbstractController
      */
     public function showMessage($id)
     {
-        $doctrine = $this->getDoctrine();
-        $messageRepository = $doctrine->getRepository('RLMainBundle:Message');
+        $messageRepository = $this->getDoctrine()->getRepository('RLMainBundle:Message');
         /** @var $message \RL\MainBundle\Entity\Message */
         $message = $messageRepository->findOneBy(array("id" => $id));
+
         return $this->render(
             'RLMainBundle:Forum:showMessage.html.twig',
             array(
                 'preview' => $message,
-            ));
+            )
+        );
     }
 
     /**
@@ -395,8 +415,7 @@ class ForumController extends AbstractController
         $pagesCount = ceil(($itemsCount) / $itemsOnPage);
         $pagesCount > 1 ? $offset = $itemsOnPage * ($page - 1) : $offset = 0;
         $messages = $userRepository->getLastMessages($pageUser, $itemsOnPage, $offset);
-        $pagesStr = $this->getPaginator()
-            ->draw(
+        $pagesStr = $this->getPaginator()->draw(
             $itemsOnPage,
             $itemsCount,
             $page,

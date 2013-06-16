@@ -30,6 +30,7 @@ namespace RL\MainBundle\Controller;
 
 use RL\MainBundle\Controller\AbstractController;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use RL\MainBundle\Form\Type\SearchType;
 use RL\MainBundle\Form\Model\SearchForm;
 
@@ -46,27 +47,34 @@ class SearchController extends AbstractController
      */
     public function searchAction()
     {
-        $searchForm = new SearchForm();
-        $form = $this->createForm(new SearchType(), $searchForm);
-        $request = $this->getRequest();
-        $sbm = $request->request->get('sbm');
-        if (isset($sbm)) {
-            $method = $request->getMethod();
-            if ($method == 'POST') {
-                $form->submit($request);
-                if ($form->isValid()) {
-                    /** @var $messageRepository \RL\MainBundle\Entity\Repository\MessageRepository */
-                    $messageRepository = $this->getDoctrine()->getRepository('RLMainBundle:Message');
-                    $messages = $messageRepository->search($searchForm->toArray());
+        return $this->render('RLMainBundle:Search:search.html.twig', array('form' => $this->getSearchForm()->createView()));
+    }
 
-                    return $this->render(
-                        'RLMainBundle:Search:search.html.twig',
-                        array('form' => $form->createView(), 'messages' => $messages)
-                    );
-                }
-            }
+    /**
+     * @Route("/found", name="found")
+     * @Method("POST")
+     */
+    public function foundAction()
+    {
+        $form = $this->getSearchForm();
+        $form->submit($this->getRequest());
+        if ($form->isValid()) {
+            /** @var $messageRepository \RL\MainBundle\Entity\Repository\MessageRepository */
+            $messageRepository = $this->getDoctrine()->getRepository('RLMainBundle:Message');
+            $messages = $messageRepository->search($form->getData()->toArray());
+
+            return $this->render(
+                'RLMainBundle:Search:search.html.twig',
+                array('form' => $form->createView(), 'messages' => $messages)
+            );
         }
+    }
 
-        return $this->render('RLMainBundle:Search:search.html.twig', array('form' => $form->createView()));
+    /**
+     * @return \Symfony\Component\Form\Form
+     */
+    public function getSearchForm()
+    {
+        return $this->createForm(new SearchType(), new SearchForm());
     }
 }

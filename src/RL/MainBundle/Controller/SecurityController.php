@@ -31,6 +31,7 @@ namespace RL\MainBundle\Controller;
 use Symfony\Component\Security\Core\SecurityContext;
 use RL\MainBundle\Controller\AbstractController;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Symfony\Component\Security\Core\Encoder\MessageDigestPasswordEncoder;
 use Symfony\Component\HttpFoundation\Request;
 use RL\MainBundle\Form\Type\RegistrationFirstType;
@@ -88,66 +89,59 @@ class SecurityController extends AbstractController
      */
     public function registrationAction()
     {
-        $newUser = new RegistrationFirstForm;
-        $form = $this->createForm(new RegistrationFirstType(), $newUser);
-
         return $this->render(
             'RLMainBundle:Security:registrationFirstPage.html.twig',
-            array('form' => $form->createView())
+            array('form' => $this->getRegistrationFirstForm()->createView())
         );
     }
 
     /**
      * @Route("/register_send", name="register_send")
+     * @Method("POST")
      */
     public function registrationSendAction(Request $request)
     {
-        $method = $request->getMethod();
-        if ($method == 'POST') {
-            $newUser = new RegistrationFirstForm;
-            $form = $this->createForm(new RegistrationFirstType(), $newUser);
-            $form->submit($request);
-            if ($form->isValid()) {
-                $mailer = $this->getMailer();
-                $mailer->send(
-                    $newUser->getEmail(),
-                    $this->getDoctrine()->getRepository('RLMainBundle:Settings')->findOneBy(
-                        array('name' => 'site_email')
-                    )->getValue(),
-                    'Registration letter',
-                    $this->renderView(
-                        'RLMainBundle:Security:registrationLetter.html.twig',
-                        array(
-                            'link' => $this->generateUrl(
-                                'register_confirm',
-                                array(
-                                    'username' => $newUser->getName(),
-                                    'password' => $newUser->getPassword(),
-                                    'email' => $newUser->getEmail(),
-                                    'hash' => md5(
-                                        md5(
-                                            $newUser->getName() . $newUser->getPassword() . $newUser->getEmail(
-                                            ) . $this->container->getParameter('secret')
-                                        )
+        $form = $this->getRegistrationFirstForm();
+        $form->submit($request);
+        if ($form->isValid()) {
+            $newUser = $form->getData();
+            $mailer = $this->getMailer();
+            $mailer->send(
+                $newUser->getEmail(),
+                $this->getDoctrine()->getRepository('RLMainBundle:Settings')->findOneBy(
+                    array('name' => 'site_email')
+                )->getValue(),
+                'Registration letter',
+                $this->renderView(
+                    'RLMainBundle:Security:registrationLetter.html.twig',
+                    array(
+                        'link' => $this->generateUrl(
+                            'register_confirm',
+                            array(
+                                'username' => $newUser->getName(),
+                                'password' => $newUser->getPassword(),
+                                'email' => $newUser->getEmail(),
+                                'hash' => md5(
+                                    md5(
+                                        $newUser->getName() . $newUser->getPassword() . $newUser->getEmail(
+                                        ) . $this->container->getParameter('secret')
                                     )
-                                ),
-                                true
+                                )
                             ),
-                            'user' => $newUser->getName(),
-                            'site' => $request->getHttpHost()
-                        )
+                            true
+                        ),
+                        'user' => $newUser->getName(),
+                        'site' => $request->getHttpHost()
                     )
-                );
+                )
+            );
 
-                return $this->renderMessage(
-                    'Registration mail was sent.',
-                    'Registration mail was sent. Please check your email.'
-                );
-            } else {
-                throw new \Exception('Registration form is invalid.');
-            }
+            return $this->renderMessage(
+                'Registration mail was sent.',
+                'Registration mail was sent. Please check your email.'
+            );
         } else {
-            return $this->redirect($this->generateUrl('index'));
+            throw new \Exception('Registration form is invalid.');
         }
     }
 
@@ -158,16 +152,13 @@ class SecurityController extends AbstractController
     {
         $secret = $this->container->getParameter('secret');
         if ($hash == md5(md5($username . $password . $email . $secret))) {
-            $newUser = new User;
-            $form = $this->createForm(new RegisterType(), $newUser);
-
             return $this->render(
                 'RLMainBundle:Security:registrationSecondPage.html.twig',
                 array(
                     'username' => $username,
                     'password' => $password,
                     'email' => $email,
-                    'form' => $form->createView()
+                    'form' => $this->getRegisterForm()->createView()
                 )
             );
         } else {
@@ -177,58 +168,54 @@ class SecurityController extends AbstractController
 
     /**
      * @Route("/registration_save", name="registration_save")
+     * @Method("POST")
      */
     public function registrationSaveAction(Request $request)
     {
-        $method = $request->getMethod();
-        if ($method == 'POST') {
-            $newUser = new User;
-            $form = $this->createForm(new RegisterType(), $newUser);
-            $form->submit($request);
-            if ($form->isValid()) {
-                $settingsRepository = $this->getDoctrine()->getRepository('RLMainBundle:Settings');
-                $groupsRepository = $this->getDoctrine()->getRepository('RLMainBundle:Group');
-                /** @var $userRole \RL\MainBundle\Entity\Group */
-                $userRole = $groupsRepository->findOneBy(array('name' => 'ROLE_USER'));
-                //TODO: set additional marked
-                //TODO: save image file
-                $newUser->setAdditionalRaw($newUser->getAdditional());
-                $newUser->setRegistrationDate(new \DateTime('now'));
-                $newUser->setLastVisitDate(new \DateTime('now'));
-                $newUser->setCaptchaLevel($settingsRepository->findOneBy(array('name' => 'captchaLevel'))->getValue());
-                $newUser->setTheme($settingsRepository->findOneBy(array('name' => 'theme'))->getValue());
-                $newUser->setSortingType($settingsRepository->findOneBy(array('name' => 'sortingType'))->getValue());
-                $newUser->setNewsOnPage($settingsRepository->findOneBy(array('name' => 'newsOnPage'))->getValue());
-                $newUser->setThreadsOnPage(
-                    $settingsRepository->findOneBy(array('name' => 'threadsOnPage'))->getValue()
-                );
-                $newUser->setCommentsOnPage(
-                    $settingsRepository->findOneBy(array('name' => 'commentsOnPage'))->getValue()
-                );
-                $newUser->setShowEmail($settingsRepository->findOneBy(array('name' => 'showEmail'))->getValue());
-                $newUser->setShowIm($settingsRepository->findOneBy(array('name' => 'showIm'))->getValue());
-                $newUser->setShowAvatars($settingsRepository->findOneBy(array('name' => 'showAvatars'))->getValue());
-                $newUser->setShowUa($settingsRepository->findOneBy(array('name' => 'showUa'))->getValue());
-                $newUser->setShowResp($settingsRepository->findOneBy(array('name' => 'showResp'))->getValue());
-                $encoder = new MessageDigestPasswordEncoder('md5', false, 1);
-                $password = $encoder->encodePassword($newUser->getPassword(), $newUser->getSalt());
-                $newUser->setPassword($password);
-                $newUser->setGroup($userRole);
-                $em = $this->getDoctrine()->getManager();
-                $em->persist($newUser);
-                $em->flush();
+        $form = $this->getRegisterForm();
+        $form->submit($request);
+        if ($form->isValid()) {
+            $newUser = $form->getData();
+            $settingsRepository = $this->getDoctrine()->getRepository('RLMainBundle:Settings');
+            $groupsRepository = $this->getDoctrine()->getRepository('RLMainBundle:Group');
+            /** @var $userRole \RL\MainBundle\Entity\Group */
+            $userRole = $groupsRepository->findOneBy(array('name' => 'ROLE_USER'));
+            //TODO: set additional marked
+            //TODO: save image file
+            $newUser->setAdditionalRaw($newUser->getAdditional());
+            $newUser->setRegistrationDate(new \DateTime('now'));
+            $newUser->setLastVisitDate(new \DateTime('now'));
+            $newUser->setCaptchaLevel($settingsRepository->findOneBy(array('name' => 'captchaLevel'))->getValue());
+            $newUser->setTheme($settingsRepository->findOneBy(array('name' => 'theme'))->getValue());
+            $newUser->setSortingType($settingsRepository->findOneBy(array('name' => 'sortingType'))->getValue());
+            $newUser->setNewsOnPage($settingsRepository->findOneBy(array('name' => 'newsOnPage'))->getValue());
+            $newUser->setThreadsOnPage(
+                $settingsRepository->findOneBy(array('name' => 'threadsOnPage'))->getValue()
+            );
+            $newUser->setCommentsOnPage(
+                $settingsRepository->findOneBy(array('name' => 'commentsOnPage'))->getValue()
+            );
+            $newUser->setShowEmail($settingsRepository->findOneBy(array('name' => 'showEmail'))->getValue());
+            $newUser->setShowIm($settingsRepository->findOneBy(array('name' => 'showIm'))->getValue());
+            $newUser->setShowAvatars($settingsRepository->findOneBy(array('name' => 'showAvatars'))->getValue());
+            $newUser->setShowUa($settingsRepository->findOneBy(array('name' => 'showUa'))->getValue());
+            $newUser->setShowResp($settingsRepository->findOneBy(array('name' => 'showResp'))->getValue());
+            $encoder = new MessageDigestPasswordEncoder('md5', false, 1);
+            $password = $encoder->encodePassword($newUser->getPassword(), $newUser->getSalt());
+            $newUser->setPassword($password);
+            $newUser->setGroup($userRole);
+            $em = $this->getDoctrine()->getManager();
+            $em->persist($newUser);
+            $em->flush();
 
-                return $this->renderMessage(
-                    'Registration complete.',
-                        'Registration complete. Now you can <a href="' . $this->generateUrl(
-                            'login'
-                        ) . '">login</a> on this site.'
-                );
-            } else {
-                throw new \Exception('Registration form is invalid.');
-            }
+            return $this->renderMessage(
+                'Registration complete.',
+                    'Registration complete. Now you can <a href="' . $this->generateUrl(
+                        'login'
+                    ) . '">login</a> on this site.'
+            );
         } else {
-            return $this->redirect($this->generateUrl('index'));
+            throw new \Exception('Registration form is invalid.');
         }
     }
 
@@ -237,8 +224,7 @@ class SecurityController extends AbstractController
      */
     public function restorePasswordAction()
     {
-        $resForm = new PasswordRestoringForm;
-        $form = $this->createForm(new PasswordRestoringType(), $resForm);
+        $form = $this->getPasswordRestoringForm();
 
         return $this->render(
             'RLMainBundle:Security:passwordRestoringForm.html.twig',
@@ -248,68 +234,59 @@ class SecurityController extends AbstractController
 
     /**
      * @Route("/restore_password_check", name="restore_password_check")
+     * @Method("POST")
      */
-    public function restorePasswordCheckAction(Request $request)
+    public function restorePasswordCheckAction()
     {
-        $method = $request->getMethod();
-        if ($method == 'POST') {
-            $resForm = new PasswordRestoringForm;
-            $form = $this->createForm(new PasswordRestoringType(), $resForm);
-            $form->submit($request);
-            if ($form->isValid()) {
-                /** @var $userRepository \Doctrine\ORM\EntityRepository */
-                $userRepository = $this->getDoctrine()->getRepository('RLMainBundle:User');
-                /** @var $user \RL\MainBundle\Security\User\RLUserInterface */
-                try {
-                    $user = $userRepository->findOneBy(array('username' => $resForm->getUsername()));
-                } catch(\ErrorException $e) {
-                    throw new \Exception($e->getMessage());
-                }
-                if ($user->getEmail() != $resForm->getEmail()) {
-                    return $this->renderMessage(
-                        'Email is wrong',
-                        'Please make sure that you entered correct address in email field'
-                    );
-                }
-                if ($user->getQuestion() != $resForm->getQuestion()) {
-                    return $this->renderMessage(
-                        'Question is wrong',
-                        'Please make sure that you entered correct question'
-                    );
-                }
-                if ($user->getAnswer() != $resForm->getAnswer()) {
-                    return $this->renderMessage('Answer is wrong', 'Please make sure that you entered correct answer');
-                }
-                $password = md5(uniqid(rand(), true));
-                $password = substr($password, 1, 9);
-                $encoder = new MessageDigestPasswordEncoder('md5', false, 1);
-                $encodedPassword = $encoder->encodePassword($password, $user->getSalt());
-                $user->setPassword($encodedPassword);
-                $em = $this->getDoctrine()->getManager();
-                $em->persist($user);
-                $em->flush();
-                $mailer = $this->getMailer();
-                $mailer->send(
-                    $resForm->getEmail(),
-                    $this->getDoctrine()->getRepository('RLMainBundle:Settings')->findOneBy(
-                        array('name' => 'site_email')
-                    )->getValue(),
-                    'Password restoring',
-                    $this->renderView(
-                        'RLMainBundle:Security:passwordRestoringLetter.html.twig',
-                        array('username' => $user->getUsername(), 'password' => $password)
-                    )
-                );
-
+        $form = $this->getPasswordRestoringForm();
+        $form->submit($this->getRequest());
+        if ($form->isValid()) {
+            /** @var $userRepository \Doctrine\ORM\EntityRepository */
+            $userRepository = $this->getDoctrine()->getRepository('RLMainBundle:User');
+            /** @var $user \RL\MainBundle\Security\User\RLUserInterface */
+            $user = $userRepository->findOneBy(array('username' => $form->getData()->getUsername()));
+            if ($user->getEmail() != $form->getData()->getEmail()) {
                 return $this->renderMessage(
-                    'Mail with your new password was sent.',
-                    'Mail with your new password was sent. Please check your email.'
+                    'Email is wrong',
+                    'Please make sure that you entered correct address in email field'
                 );
-            } else {
-                throw new \Exception('Password restoring form is invalid');
             }
+            if ($user->getQuestion() != $form->getData()->getQuestion()) {
+                return $this->renderMessage(
+                    'Question is wrong',
+                    'Please make sure that you entered correct question'
+                );
+            }
+            if ($user->getAnswer() != $form->getData()->getAnswer()) {
+                return $this->renderMessage('Answer is wrong', 'Please make sure that you entered correct answer');
+            }
+            $password = md5(uniqid(rand(), true));
+            $password = substr($password, 1, 9);
+            $encoder = new MessageDigestPasswordEncoder('md5', false, 1);
+            $encodedPassword = $encoder->encodePassword($password, $user->getSalt());
+            $user->setPassword($encodedPassword);
+            $em = $this->getDoctrine()->getManager();
+            $em->persist($user);
+            $em->flush();
+            $mailer = $this->getMailer();
+            $mailer->send(
+                $form->getData()->getEmail(),
+                $this->getDoctrine()->getRepository('RLMainBundle:Settings')->findOneBy(
+                    array('name' => 'site_email')
+                )->getValue(),
+                'Password restoring',
+                $this->renderView(
+                    'RLMainBundle:Security:passwordRestoringLetter.html.twig',
+                    array('username' => $user->getUsername(), 'password' => $password)
+                )
+            );
+
+            return $this->renderMessage(
+                'Mail with your new password was sent.',
+                'Mail with your new password was sent. Please check your email.'
+            );
         } else {
-            return $this->redirect($this->generateUrl('index'));
+            throw new \Exception('Password restoring form is invalid');
         }
     }
 
@@ -339,4 +316,30 @@ class SecurityController extends AbstractController
         );
     }
 
+    /**
+     * @return \Symfony\Component\Form\Form
+     */
+    public function getPasswordRestoringForm()
+    {
+        return $this->createForm(new PasswordRestoringType(), new PasswordRestoringForm());
+    }
+
+    /**
+     * @return \Symfony\Component\Form\Form
+     */
+    public function getRegisterForm()
+    {
+        /** @var $userRepository \RL\MainBundle\Entity\Repository\UserRepository */
+        $userRepository = $this->getDoctrine()->getRepository('RLMainBundle:User');
+
+        return $this->createForm(new RegisterType(), $userRepository->createDefaultEntity());
+    }
+
+    /**
+     * @return \Symfony\Component\Form\Form
+     */
+    public function getRegistrationFirstForm()
+    {
+        return $this->createForm(new RegistrationFirstType(), new RegistrationFirstForm());
+    }
 }

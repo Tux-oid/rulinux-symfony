@@ -1,38 +1,48 @@
-{% extends theme.path('RLMainBundle::layout.html.twig')%}
+{% extends theme.path('RLMainBundle::layout.html.twig') %}
 
-{%block title%}
-{{parent()}} - {%trans%}Add comment{%endtrans%}
-{%endblock title%}
+{% block title %}
+    {{ parent() }} - {% trans %}Add comment{% endtrans %}
+{% endblock title %}
 
-{%block content%}
-{% include theme.path('RLMainBundle:Forum:preview.html.twig')%}
-<br>
-<form action="" method="post" {{form_enctype(form)}}>
-{{form_errors(form)}}
-<table border="0">
-<tr>
-<td style="vertical-align:top;">{{form_label(form.subject)}}:</td>
-<td>
-{{form_widget(form.subject, {'attr':{'style':'width:100%'}})}}
-<p class="error">{{form_errors(form.subject)}}</p>
-</td>
-</tr><input type="hidden" name="subsection_id" value="8" />
+{% block content %}
+    {% include theme.path('RLMainBundle:Forum:preview.html.twig') %}
+    <br>
+    <form action="" method="post" {{ form_enctype(form) }}>
+        {{ form_errors(form) }}
+        <table border="0">
+            <tr>
+                <td style="vertical-align:top;">{{ form_label(form.subject) }}:</td>
+                <td>
+                    {{ form_widget(form.subject, {'attr':{'style':'width:100%' }})}}
+                    <p class="error">{{ form_errors(form.subject) }}</p>
+                </td>
+            </tr>
+            <input type="hidden" name="subsection_id" value="8"/>
 
-<tr>
-<td style="vertical-align:top;">{{form_label(form.comment)}}:</td>
-<td>
-{{form_widget(form.comment, {'attr': {'rows':'20', 'cols':'80'}})}}
-<p class="error">{{form_errors(form.comment)}}</p>
-</td>
-</tr>
-<tr>
-<td></td>
-<td>
-<input type="submit" name="submit" value="{%trans%}Send{%endtrans%}">
-<input type="submit" name="preview" value="{%trans%}Preview{%endtrans%}">
-</td>
-</tr>
-</table>
-{{form_rest(form)}}
-</form>
-{%endblock content%}
+            <tr>
+                <td style="vertical-align:top;">{{ form_label(form.comment) }}:</td>
+                <td>
+                    {{ form_widget(form.comment, {'attr': {'rows':'20', 'cols':'80' }})}}
+                    <p class="error">{{ form_errors(form.comment) }}</p>
+                </td>
+            </tr>
+            {% if app.user.captchaLevel is not null %}
+                <tr>
+                    <td></td>
+                    <td>
+                        <img src="{{ ucaptcha.draw(app.user.captchaLevel) }}" alt="captcha"><br>
+                        <input type="text" name="captchaKeystring" required="required">
+                    </td>
+                </tr>
+            {% endif %}
+            <tr>
+                <td></td>
+                <td>
+                    <input type="submit" name="submit" value="{% trans %}Send{% endtrans %}">
+                    <input type="submit" name="preview" value="{% trans %}Preview{% endtrans %}">
+                </td>
+            </tr>
+        </table>
+        {{ form_rest(form) }}
+    </form>
+{% endblock content %}

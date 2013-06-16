@@ -206,7 +206,7 @@ class User implements RLUserInterface, EquatableInterface, \Serializable
     protected $active;
 
     /**
-     * @ORM\Column(name="captcha", type="integer")
+     * @ORM\Column(name="captcha", type="integer", nullable=true)
      *
      * @var integer
      */

@@ -1,4 +1,4 @@
-<form action="{{path('user_edit', {'name':userInfo.username})}}" method="post" {{form_enctype(moderatorSettings)}}>
+<form action="{{path('save_moderator_settings', {'name':userInfo.username})}}" method="post" {{form_enctype(moderatorSettings)}}>
 	<fieldset>
 		<legend>{%trans%}Moderator settings{%endtrans%}</legend>
 		<table>
@@ -15,6 +15,5 @@
 		</table>
 		{{form_rest(moderatorSettings)}}
 	</fieldset>
-	<input type="hidden" name="action" value="moderatorSettings">
 	<input type="submit" name="sbm" value="{%trans%}Save settings{%endtrans%}">
 </form>

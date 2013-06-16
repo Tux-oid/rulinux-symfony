@@ -41,6 +41,10 @@ use RL\MainBundle\Entity\Block;
  */
 class BlockController extends AbstractController
 {
+    /**
+     * @param Block $block
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
     public function renderBlockAction(Block $block)
     {
         $services = array();

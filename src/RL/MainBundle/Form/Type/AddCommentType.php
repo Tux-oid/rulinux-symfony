@@ -30,24 +30,39 @@ namespace RL\MainBundle\Form\Type;
 
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Form\AbstractType;
+use JMS\DiExtraBundle\Annotation\Service;
 
 /**
  * RL\MainBundle\Form\AddCommentType
+ *
+ * @Service("rl_main.form.add_comment")
  *
  * @author Peter Vasilevsky <tuxoiduser@gmail.com> a.k.a. Tux-oid
  * @license BSDL
  */
 class AddCommentType extends AbstractType
 {
+
+    /**
+     * {@inheritDoc}
+     */
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder->add('subject', 'text', array('required' => true))
             ->add('comment', 'textarea', array('required' => true));
     }
+
+    /**
+     * {@inheritDoc}
+     */
     public function getName()
     {
         return 'addComment';
     }
+
+    /**
+     * {@inheritDoc}
+     */
     public function getDefaultOptions(array $options)
     {
         return array(

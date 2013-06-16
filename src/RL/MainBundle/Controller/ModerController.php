@@ -30,6 +30,7 @@ namespace RL\MainBundle\Controller;
 
 use RL\MainBundle\Controller\AbstractController;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
+use JMS\SecurityExtraBundle\Annotation\Secure;
 
 /**
  * RL\MainBundle\Controller\ModerController
@@ -41,44 +42,36 @@ class ModerController extends AbstractController
 {
     /**
      * @Route("/approve_thread_{id}", name="approve_thread", requirements = {"id"="[0-9]+"})
+     * @Secure("ROLE_MODER")
      */
     public function approveThreadAction($id)
     {
-        $securityContext = $this->getSecurityContext();
         $user = $this->getCurrentUser();
-        if (!$securityContext->isGranted('ROLE_MODER')) {
-            return $this->renderMessage('Access denied', 'You haven\'t privileges to edit this message');
-        }
-        $doctrine = $this->get('doctrine');
-        /** @var $em \Doctrine\ORM\EntityManager */
-        $em = $doctrine->getManager();
+        /** @var $threadRepository \RL\MainBundle\Entity\Repository\ThreadRepository */
+        $threadRepository = $this->getDoctrine()->getRepository('RLMainBundle:Thread');
         /** @var $thread \RL\MainBundle\Entity\Thread */
-        $thread = $doctrine->getRepository('RLMainBundle:Thread')->findOneBy(array("id" => $id));
+        $thread = $threadRepository->findOneBy(array("id" => $id));
         if (null === $thread) {
             return $this->renderMessage('Thread not found', 'Thread with specified id was not found');
         }
         $thread->setApproved(true);
         $thread->setApprovedBy($user);
         $thread->setApproveTimest(new \DateTime());
-        $em->flush();
+        $threadRepository->update($thread, true);
 
         return $this->redirect($this->generateUrl("unconfirmed", array()));
     }
 
     /**
      * @Route("/attach_thread_{id}_{state}", name="attach_thread", requirements = {"id"="[0-9]+", "state"="true|false"})
+     * @Secure("ROLE_MODER")
      */
     public function attachThreadAction($id, $state)
     {
-        $securityContext = $this->getSecurityContext();
-        if (!$securityContext->isGranted('ROLE_MODER')) {
-            return $this->renderMessage('Access denied', 'You haven\'t privileges to edit this message');
-        }
-        $doctrine = $this->getDoctrine();
-        /** @var $em \Doctrine\ORM\EntityManager */
-        $em = $doctrine->getManager();
+        /** @var $threadRepository \RL\MainBundle\Entity\Repository\ThreadRepository */
+        $threadRepository = $this->getDoctrine()->getRepository('RLMainBundle:Thread');
         /** @var $thread \RL\MainBundle\Entity\Thread */
-        $thread = $doctrine->getRepository('RLMainBundle:Thread')->findOneBy(array("id" => $id));
+        $thread = $threadRepository->findOneBy(array("id" => $id));
         if (null === $thread) {
             return $this->renderMessage('Thread not found', 'Thread with specified id was not found');
         }
@@ -87,7 +80,7 @@ class ModerController extends AbstractController
         } else {
             $thread->setAttached(false);
         }
-        $em->flush();
+        $threadRepository->update($thread, true);
 
         return $this->redirect(
             $this->generateUrl(

@@ -24,7 +24,7 @@
  * ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-*/
+ */
 
 namespace RL\MainBundle\Form\Type;
 
@@ -64,12 +64,23 @@ class ModeratorSettingsType extends AbstractType
         $this->ucaptcha = $ucaptcha;
     }
 
-
+    /**
+     * @param FormBuilderInterface $builder
+     * @param array $options
+     */
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        $builder->add('active', 'checkbox', array('required' => false))
-        ->add('captchaLevel', 'choice', array('required' => true, 'choices' => $this->ucaptcha->getPluginsLevels()));
+        $builder->add('active', 'checkbox', array('required' => false))->add(
+                    'captchaLevel',
+                    'choice',
+                    array(
+                        'required' => false,
+                        'choices' => $this->ucaptcha->getPluginsLevels(),
+                        'empty_value' => 'none'
+                    )
+                );
     }
+
     /**
      * Returns the name of this type.
      *
@@ -79,6 +90,11 @@ class ModeratorSettingsType extends AbstractType
     {
         return 'moderatorSettings';
     }
+
+    /**
+     * @param array $options
+     * @return array
+     */
     public function getDefaultOptions(array $options)
     {
         return array(

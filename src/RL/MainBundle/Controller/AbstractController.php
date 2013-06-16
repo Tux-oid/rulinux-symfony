@@ -36,6 +36,8 @@ use RL\MainBundle\Service\PaginatorService;
 use Symfony\Component\HttpFoundation\Session\Session;
 use RL\MainBundle\Service\MailerService;
 use RL\MainBundle\Service\MessageFilterCheckerService;
+use Symfony\Bundle\FrameworkBundle\Routing\Router;
+use RL\MainBundle\Service\UcaptchaDecoratorService;
 
 /**
  * RL\MainBundle\Controller\Controller
@@ -133,5 +135,21 @@ abstract class AbstractController extends BaseController
     public function  getMessageFilterChecker()
     {
         return $this->get('rl_main.message_filter_checker');
+    }
+
+    /**
+     * @return Router
+     */
+    public function getRouter()
+    {
+        return $this->get('router');
+    }
+
+    /**
+     * @return UcaptchaDecoratorService
+     */
+    public function getUcaptcha()
+    {
+        return $this->get('rl_main.ucaptcha');
     }
 }

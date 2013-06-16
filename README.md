@@ -21,6 +21,10 @@ Run:
 * php app/console assetic:dump
 * php app/console rl_main:generate:users:filters
 * php app/console clear:cache
+* ln -s vendor/rl/ucaptcha/RL/Ucaptcha/cpt/ web/cpt
+* sudo setfacl -dR -m u:wwwrun:rwX -m u:`whoami`:rwX vendor/rl/ucaptcha/RL/Ucaptcha/cpt/
+* sudo setfacl -R -m u:wwwrun:rwX -m u:`whoami`:rwX vendor/rl/ucaptcha/RL/Ucaptcha/cpt/
+
 
 Add to crontab the following lines
 

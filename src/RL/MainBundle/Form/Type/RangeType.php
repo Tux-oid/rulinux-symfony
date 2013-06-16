@@ -29,6 +29,9 @@
 namespace RL\MainBundle\Form\Type;
 
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\FormView;
+use Symfony\Component\Form\FormInterface;
+use Symfony\Component\OptionsResolver\OptionsResolverInterface;
 use JMS\DiExtraBundle\Annotation\Service;
 use JMS\DiExtraBundle\Annotation\Tag;
 
@@ -42,6 +45,26 @@ use JMS\DiExtraBundle\Annotation\Tag;
  */
 class RangeType extends AbstractType
 {
+
+    /**
+     * {@inheritDoc}
+     */
+    public function setDefaultOptions(OptionsResolverInterface $resolver)
+    {
+        $resolver->setDefaults(array('min' => 0, 'maxlength' => 100, 'step' => 1));
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function buildView(FormView $view, FormInterface $form, array $options)
+    {
+        $view->vars['min'] = $options['min'];
+        $view->vars['maxlength'] = $options['maxlength'];
+        $view->vars['step'] = $options['step'];
+        parent::buildView($view, $form, $options);
+    }
+
     /**
      * Get parent
      *

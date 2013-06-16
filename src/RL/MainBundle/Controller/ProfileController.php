@@ -28,9 +28,12 @@
 
 namespace RL\MainBundle\Controller;
 
+use RL\MainBundle\Security\User\RLUserInterface;
+use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\Security\Core\SecurityContext;
 use RL\MainBundle\Controller\AbstractController;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Symfony\Component\Security\Core\Encoder\MessageDigestPasswordEncoder;
 use Symfony\Component\HttpFoundation\Request;
 use RL\MainBundle\Form\Type\PasswordChangingType;
@@ -38,15 +41,17 @@ use RL\MainBundle\Form\Model\PasswordChangingForm;
 use RL\MainBundle\Form\Type\PersonalInformationType;
 use RL\MainBundle\Form\Type\PersonalSettingsType;
 use RL\MainBundle\Form\Type\AdministratorSettingsType;
-use RL\MainBundle\Form\Type\ModeratorSettingsType;
 use RL\MainBundle\Form\Type\FiltersSettingsType;
 use RL\MainBundle\Form\Type\MainPageSettingsType;
 use LightOpenID;
 use Gregwar\ImageBundle\Image;
+use Symfony\Component\HttpFoundation\File\UploadedFile;
 
 /**
  * RL\MainBundle\Controller\SecurityController
  * Security controller
+ *
+ * @Route("/user")
  *
  * @author Ax-xa-xa
  * @author Peter Vasilevsky <tuxoiduser@gmail.com> a.k.a. Tux-oid
@@ -55,178 +60,303 @@ use Gregwar\ImageBundle\Image;
 class ProfileController extends AbstractController
 {
     /**
-     * @Route("/user/{name}/edit", name="user_edit")
+     * @Route("/{name}/edit", name="user_edit")
      */
     public function editUserAction($name)
     {
         $user = $this->getCurrentUser();
-        /** @var $userInProfile \RL\MainBundle\Security\User\RLUserInterface */
-        if ($name == 'anonymous' && $user->isAnonymous()) {
-            $userInProfile = $this->getCurrentUser();
-        } else {
-            $userRepository = $this->getDoctrine()->getRepository('RLMainBundle:User');
-            $userInProfile = $userRepository->findOneBy(array("username" => $name));
-        }
+        $editedUser = $this->getEditedUser($name);
         if (!$this->getSecurityContext()->isGranted('ROLE_MODER')) {
-            if ($userInProfile->getUsername() != $user->getUsername()) {
+            if ($editedUser->getUsername() != $user->getUsername()) {
                 throw new \Exception('You can\'t edit profile of user ' . $name);
-            }
-        }
-        if (empty($userInProfile)) {
-            throw new \Exception('User ' . $name . ' not found');
-        }
-        //show info
-        $passwordChangingForm = new PasswordChangingForm();
-        $passwordChanging = $this->createForm(new PasswordChangingType(), $passwordChangingForm);
-        $filtersSettings = $this->createForm(new FiltersSettingsType(), $userInProfile);
-        $personalSettings = $this->createForm(new PersonalSettingsType(), $userInProfile);
-        $personalInformation = $this->createForm(new PersonalInformationType(), $userInProfile);
-        $moderatorSettings = $this->createForm($this->get("rl_main.form.moderator_settings"), $userInProfile);
-        $administratorSettings = $this->createForm(new AdministratorSettingsType(), $userInProfile);
-        $mainPageSettings = $this->createForm(new MainPageSettingsType(), $userInProfile);
-        //save settings in database
-        $request = $this->getRequest();
-        $sbm = $request->request->get('sbm');
-        if (isset($sbm)) {
-            $method = $request->getMethod();
-            if ($method == 'POST') {
-                if ($request->request->get('action') == 'passwordChanging') {
-                    $passwordChanging->submit($request);
-                    if ($passwordChanging->isValid()) {
-                        $encoder = new MessageDigestPasswordEncoder('md5', false, 1);
-                        $oldPassword = $encoder->encodePassword(
-                            $passwordChangingForm->getOldPassword(),
-                            $userInProfile->getSalt()
-                        );
-                        if ($userInProfile->getPassword() !== $oldPassword) {
-                            throw new \Exception('Your old password is invalid');
-                        }
-                        if ($passwordChangingForm->getNewPassword() !== $passwordChangingForm->getValidation()) {
-                            throw new \Exception('Your new password does not match with validation');
-                        }
-                        $newPassword = $encoder->encodePassword(
-                            $passwordChangingForm->getNewPassword(),
-                            $userInProfile->getSalt()
-                        );
-                        $userInProfile->setPassword($newPassword);
-                        $this->getDoctrine()->getManager()->flush();
-                    } else {
-                        throw new \Exception('Form is invalid');
-                    }
-                } elseif ($request->request->get('action') == 'personalInformation') {
-                    $personalInformation->submit($request);
-                    if ($personalInformation->isValid()) {
-                        $photo = $userInProfile->getPhoto();
-                        if (!empty($photo)) {
-                            $filename = $userInProfile->getUsername() . '_' . $photo->getClientOriginalName();
-                            $userInProfile->getPhoto()->move(
-                                __DIR__ . '/../../../../web/bundles/rlmain/images/avatars',
-                                $filename
-                            );
-                            $absolutePath = __DIR__ . '/../../../../web/bundles/rlmain/images/avatars/' . $filename;
-                            $imgCls = new Image();
-                            $image = $imgCls->open($absolutePath);
-                            $width = $image->width();
-                            $height = $image->height();
-                            if ($width > 150 || $height > 150) {
-                                unlink($absolutePath);
-                                throw new \Exception('Image size is very big.');
-                            }
-                            $userInProfile->setPhoto($filename);
-                        }
-                        $userInProfile->setAdditional(
-                            $user->getMark()->render($userInProfile->getAdditionalRaw())
-                        );
-                        $this->getDoctrine()->getManager()->flush();
-                    } else {
-                        throw new \Exception('Form is invalid');
-                    }
-                } elseif ($request->request->get('action') == 'personalSettings') {
-                    $personalSettings->submit($request);
-                    if ($personalSettings->isValid()) {
-                        $this->get('session')->set('_locale', $userInProfile->getLanguage());
-                        $this->getDoctrine()->getManager()->flush();
-                    } else {
-                        throw new \Exception('Form is invalid');
-                    }
-                } elseif ($request->request->get('action') == 'filtersSettings') {
-                    $filtersSettings->submit($request);
-                    if ($filtersSettings->isValid()) {
-                        $this->getDoctrine()->getManager()->flush();
-                    } else {
-                        throw new \Exception('Form is invalid');
-                    }
-                } elseif ($request->request->get('action') == 'moderatorSettings') {
-                    $moderatorSettings->submit($request);
-                    if ($moderatorSettings->isValid()) {
-                        if (!$userInProfile->isActive()) {
-                            /** @var $mailer \RL\MainBundle\Helper\Mailer */
-                            $mailer = $this->get('rl_main.mailer');
-                            $mailer->send(
-                                $userInProfile->getEmail(),
-                                $this->getDoctrine()->getRepository('RLMainBundle:Settings')->findOneBy(
-                                    array("name" => 'site_email')
-                                )->getValue(),
-                                'Account block',
-                                $this->renderView(
-                                    'RLMainBundle:Security:accountBlockingLetter.html.twig',
-                                    array('username' => $user->getUsername())
-                                )
-                            );
-                        }
-                        $this->getDoctrine()->getManager()->flush();
-                    } else {
-                        throw new \Exception('Form is invalid');
-                    }
-                } elseif ($request->request->get('action') == 'administratorSettings') {
-                    $administratorSettings->submit($request);
-                    if ($administratorSettings->isValid()) {
-                        $this->getDoctrine()->getManager()->flush();
-                    } else {
-                        throw new \Exception('Form is invalid');
-                    }
-                } elseif ($request->request->get('action') == 'mainPageSettings') {
-                    $mainPageSettings->submit($request);
-                    if ($mainPageSettings->isValid()) {
-                        $this->getDoctrine()->getManager()->flush();
-                    } else {
-                        throw new \Exception('Form is invalid');
-                    }
-                }
             }
         }
 
         return $this->render(
             'RLMainBundle:Profile:profileEdit.html.twig',
             array(
-                'userInfo' => $userInProfile,
-                'personalInformation' => $personalInformation->createView(),
-                'personalSettings' => $personalSettings->createView(),
-                'passwordChanging' => $passwordChanging->createView(),
-                'moderatorSettings' => $moderatorSettings->createView(),
-                'administratorSettings' => $administratorSettings->createView(),
-                'filtersSettings' => $filtersSettings->createView(),
-                'mainPageSettings' => $mainPageSettings->createView()
+                'userInfo' => $editedUser,
+                'personalInformation' => $this->getPersonalInformationForm($editedUser)->createView(),
+                'personalSettings' => $this->getPersonalSettingsForm($editedUser)->createView(),
+                'passwordChanging' => $this->getPasswordChangingForm()->createView(),
+                'moderatorSettings' => $this->getModeratorSettingsForm($editedUser)->createView(),
+                'administratorSettings' => $this->getAdministratorSettingsForm($editedUser)->createView(),
+                'filtersSettings' => $this->getFiltersSettingsForm($editedUser)->createView(),
+                'mainPageSettings' => $this->getMainPageSettingsForm($editedUser)->createView()
             )
         );
     }
 
     /**
-     * @Route("/user/{name}", name="user")
+     * @Route("/{name}/moderator_settings/save", name="save_moderator_settings")
+     * @Method("POST")
+     */
+    public function moderatorSettingsSaveAction($name)
+    {
+        $editedUser = $this->getEditedUser($name);
+        $moderatorSettings = $this->getModeratorSettingsForm($editedUser);
+        $moderatorSettings->submit($this->getRequest());
+        if ($moderatorSettings->isValid()) {
+            if (!$editedUser->isActive()) {
+                $mailer = $this->getMailer();
+                $mailer->send(
+                    $editedUser->getEmail(),
+                    $this->getDoctrine()->getRepository('RLMainBundle:Settings')->findOneBy(
+                        array("name" => 'site_email')
+                    )->getValue(),
+                    'Account block',
+                    $this->renderView(
+                        'RLMainBundle:Security:accountBlockingLetter.html.twig',
+                        array('username' => $editedUser->getUsername())
+                    )
+                );
+            }
+            $this->getDoctrine()->getManager()->flush();
+        } else {
+            throw new \Exception('Form is invalid');
+        }
+
+        return new RedirectResponse($this->generateUrl('user_edit', array('name' => $name)));
+    }
+
+    /**
+     * @Route("/{name}/personal_settings/save", name="save_personal_settings")
+     * @Method("POST")
+     */
+    public function personalSettingsSaveAction($name)
+    {
+        $editedUser = $this->getEditedUser($name);
+        $personalSettings = $this->getPersonalSettingsForm($editedUser);
+        $personalSettings->submit($this->getRequest());
+        if ($personalSettings->isValid()) {
+            $this->get('session')->set('_locale', $editedUser->getLanguage());
+            $this->getDoctrine()->getManager()->flush();
+        } else {
+            throw new \Exception('Form is invalid');
+        }
+
+        return new RedirectResponse($this->generateUrl('user_edit', array('name' => $name)));
+    }
+
+    /**
+     * @Route("/{name}/filters_settings/save", name="save_filters_settings")
+     * @Method("POST")
+     */
+    public function filtersSettingsSaveAction($name)
+    {
+        $editedUser = $this->getEditedUser($name);
+        $filtersSettings = $this->getFiltersSettingsForm($editedUser);
+        $filtersSettings->submit($this->getRequest());
+        if ($filtersSettings->isValid()) {
+            $this->getDoctrine()->getManager()->flush();
+        } else {
+            throw new \Exception('Form is invalid');
+        }
+
+        return new RedirectResponse($this->generateUrl('user_edit', array('name' => $name)));
+    }
+
+    /**
+     * @Route("/{name}/administrator_settings/save", name="save_administrator_settings")
+     * @Method("POST")
+     */
+    public function administratorSettingsSaveAction($name)
+    {
+        $editedUser = $this->getEditedUser($name);
+        $administratorSettings = $this->getAdministratorSettingsForm($editedUser);
+        $administratorSettings->submit($this->getRequest());
+        if ($administratorSettings->isValid()) {
+            $this->getDoctrine()->getManager()->flush();
+        } else {
+            throw new \Exception('Form is invalid');
+        }
+
+        return new RedirectResponse($this->generateUrl('user_edit', array('name' => $name)));
+    }
+
+    /**
+     * @Route("/{name}/main_page_settings/save", name="save_main_page_settings")
+     * @Method("POST")
+     */
+    public function mainPageSettingsSaveAction($name)
+    {
+        $editedUser = $this->getEditedUser($name);
+        $mainPageSettings = $this->getMainPageSettingsForm($editedUser);
+        $mainPageSettings->submit($this->getRequest());
+        if ($mainPageSettings->isValid()) {
+            $this->getDoctrine()->getManager()->flush();
+        } else {
+            throw new \Exception('Form is invalid');
+        }
+
+        return new RedirectResponse($this->generateUrl('user_edit', array('name' => $name)));
+    }
+
+    /**
+     * @Route("/{name}/personal_information/save", name="save_personal_information")
+     * @Method("POST")
+     */
+    public function personalInformationSaveAction($name)
+    {
+        $editedUser = $this->getEditedUser($name);
+        $personalInformation = $this->getPersonalInformationForm($editedUser);
+        $personalInformation->submit($this->getRequest());
+        if ($personalInformation->isValid()) {
+            /** @var $photo UploadedFile */
+            $photo = $editedUser->getPhoto();
+            if (!empty($photo)) {
+                $filename = $editedUser->getUsername() . '_' . $photo->getClientOriginalName();
+                $photo->move(
+                    __DIR__ . '/../../../../web/bundles/rlmain/images/avatars',
+                    $filename
+                );
+                $imgCls = new Image();
+                $image = $imgCls->open($photo->getRealPath());
+                $width = $image->width();
+                $height = $image->height();
+                if ($width > 150 || $height > 150) {
+                    unlink($photo->getRealPath());
+                    throw new \Exception('Image size is very big.');
+                }
+                $editedUser->setPhoto($filename);
+            }
+            $editedUser->setAdditional(
+                $editedUser->getMark()->render($editedUser->getAdditionalRaw())
+            );
+            $this->getDoctrine()->getManager()->flush();
+        } else {
+            throw new \Exception('Form is invalid');
+        }
+
+        return new RedirectResponse($this->generateUrl('user_edit', array('name' => $name)));
+    }
+
+    /**
+     * @Route("/{name}/password_edit/save", name="save_edited_password")
+     * @Method("POST")
+     */
+    public function passwordEditSaveAction($name)
+    {
+        $editedUser = $this->getEditedUser($name);
+        $passwordChanging = $this->getPasswordChangingForm();
+        $passwordChanging->submit($this->getRequest());
+        if ($passwordChanging->isValid()) {
+            $encoder = new MessageDigestPasswordEncoder('md5', false, 1);
+            $oldPassword = $encoder->encodePassword(
+                $passwordChanging->getData()->getOldPassword(),
+                $editedUser->getSalt()
+            );
+            if ($editedUser->getPassword() !== $oldPassword) {
+                throw new \Exception('Your old password is invalid');
+            }
+            $newPassword = $encoder->encodePassword(
+                $passwordChanging->getData()->getNewPassword(),
+                $editedUser->getSalt()
+            );
+            $editedUser->setPassword($newPassword);
+            $this->getDoctrine()->getManager()->flush();
+        } else {
+            throw new \Exception('Form is invalid');
+        }
+
+        return new RedirectResponse($this->generateUrl('user_edit', array('name' => $name)));
+    }
+
+    /**
+     * @Route("/{name}", name="user")
      */
     public function userAction($name)
     {
+        /** @var $userRepository \RL\MainBundle\Entity\Repository\UserRepository */
         $userRepository = $this->getDoctrine()->getRepository('RLMainBundle:User');
-        $userInProfile = $userRepository->findOneBy(array("username" => $name));
-        if (empty($userInProfile)) {
-            throw new \Exception('user ' . $name . ' not found');
-        }
-        $userComments = $userRepository->getUserCommentsInformation($userInProfile);
+        $editedUser = $this->getEditedUser($name);
+        $userComments = $userRepository->getUserCommentsInformation($editedUser);
 
         return $this->render(
             'RLMainBundle:Profile:profile.html.twig',
-            array('userInfo' => $userInProfile, 'commentsInfo' => $userComments,)
+            array('userInfo' => $editedUser, 'commentsInfo' => $userComments,)
         );
     }
 
+    /**
+     * @param $name
+     * @return \RL\MainBundle\Security\User\RLUserInterface
+     * @throws \Exception
+     */
+    public function getEditedUser($name)
+    {
+        if ($name == 'anonymous' && $this->getCurrentUser()->isAnonymous()) {
+            $editedUser = $this->getCurrentUser();
+        } else {
+            $userRepository = $this->getDoctrine()->getRepository('RLMainBundle:User');
+            $editedUser = $userRepository->findOneBy(array("username" => $name));
+            if (empty($editedUser)) {
+                throw new \Exception('User ' . $name . ' not found');
+            }
+        }
+
+        return $editedUser;
+    }
+
+    /**
+     * @param RLUserInterface $editedUser
+     * @return \Symfony\Component\Form\Form
+     */
+    public function getModeratorSettingsForm(RLUserInterface $editedUser)
+    {
+        return $this->createForm($this->get("rl_main.form.moderator_settings"), $editedUser);
+    }
+
+    /**
+     * @param RLUserInterface $editedUser
+     * @return \Symfony\Component\Form\Form
+     */
+    public function getPersonalSettingsForm(RLUserInterface $editedUser)
+    {
+        return $this->createForm(new PersonalSettingsType(), $editedUser);
+    }
+
+    /**
+     * @param RLUserInterface $editedUser
+     * @return \Symfony\Component\Form\Form
+     */
+    public function getFiltersSettingsForm(RLUserInterface $editedUser)
+    {
+        return $this->createForm(new FiltersSettingsType(), $editedUser);
+    }
+
+    /**
+     * @param RLUserInterface $editedUser
+     * @return \Symfony\Component\Form\Form
+     */
+    public function getAdministratorSettingsForm(RLUserInterface $editedUser)
+    {
+        return $this->createForm(new AdministratorSettingsType(), $editedUser);
+    }
+
+    /**
+     * @param RLUserInterface $editedUser
+     * @return \Symfony\Component\Form\Form
+     */
+    public function getMainPageSettingsForm(RLUserInterface $editedUser)
+    {
+        return $this->createForm(new MainPageSettingsType(), $editedUser);
+    }
+
+    /**
+     * @param RLUserInterface $editedUser
+     * @return \Symfony\Component\Form\Form
+     */
+    public function getPersonalInformationForm(RLUserInterface $editedUser)
+    {
+        return $this->createForm(new PersonalInformationType(), $editedUser);
+    }
+
+    /**
+     * @return \Symfony\Component\Form\Form
+     */
+    public function getPasswordChangingForm()
+    {
+        return $this->createForm(new PasswordChangingType(), new PasswordChangingForm());
+    }
 }

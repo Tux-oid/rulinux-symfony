@@ -35,7 +35,7 @@ use RL\MainBundle\Entity\Subsection;
 /**
  * RL\MainBundle\Entity\Section
  *
- * @ORM\Entity()
+ * @ORM\Entity(repositoryClass="RL\MainBundle\Entity\Repository\SectionRepository")
  * @ORM\Table(name="sections")
  *
  * @author Peter Vasilevsky <tuxoiduser@gmail.com> a.k.a. Tux-oid

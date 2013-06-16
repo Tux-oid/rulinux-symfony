@@ -6,7 +6,7 @@
 
 {%block content%}
     <br><h1>{% trans %}Search by site{% endtrans %}</h1><br>
-    <form action="{{ path('search') }}" method="post" {{form_enctype(form)}}>
+    <form action="{{ path('found') }}" method="post" {{form_enctype(form)}}>
         <table>
             <tr>
                 <td>{{ form_label(form.query) }}:</td>

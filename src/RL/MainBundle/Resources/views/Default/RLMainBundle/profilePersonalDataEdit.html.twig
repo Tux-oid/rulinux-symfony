@@ -1,4 +1,4 @@
-<form action="{{path('user_edit', {'name':userInfo.username})}}" method="post" {{form_enctype(personalInformation)}}>
+<form action="{{path('save_personal_information', {'name':userInfo.username})}}" method="post" {{form_enctype(personalInformation)}}>
 	<fieldset>
 		<legend>{%trans%}Personal information{%endtrans%}</legend>
 		{%if userInfo.photo is not null%}
@@ -68,6 +68,5 @@
 		{{form_errors(personalInformation.additionalRaw)}}
 		{{form_rest(personalInformation)}}
 	</fieldset>
-	<input type="hidden" name="action" value="personalInformation">
 	<input type="submit" name = "sbm" value="{%trans%}Save settings{%endtrans%}">
 </form>
