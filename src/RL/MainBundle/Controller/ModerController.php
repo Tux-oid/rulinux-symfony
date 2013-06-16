@@ -41,7 +41,7 @@ use JMS\SecurityExtraBundle\Annotation\Secure;
 class ModerController extends AbstractController
 {
     /**
-     * @Route("/approve_thread_{id}", name="approve_thread", requirements = {"id"="[0-9]+"})
+     * @Route("/approve_thread/{id}", name="approve_thread", requirements = {"id"="[0-9]+"})
      * @Secure("ROLE_MODER")
      */
     public function approveThreadAction($id)
@@ -59,11 +59,21 @@ class ModerController extends AbstractController
         $thread->setApproveTimest(new \DateTime());
         $threadRepository->update($thread, true);
 
-        return $this->redirect($this->generateUrl("unconfirmed", array()));
+        return $this->redirect($this->generateUrl("unconfirmed"));
     }
 
     /**
-     * @Route("/attach_thread_{id}_{state}", name="attach_thread", requirements = {"id"="[0-9]+", "state"="true|false"})
+     * @Route("/move_thread/{id}", name="move_thread", requirements = {"id"="[0-9]+"})
+     * @Secure("ROLE_MODER")
+     */
+    public function moveThreadAction($id)
+    {
+        //TODO: implement moveThreadAction()
+        return $this->redirect($this->generateUrl("index"));
+    }
+
+    /**
+     * @Route("/attach_thread/{id}/{state}", name="attach_thread", requirements = {"id"="[0-9]+", "state"="true|false"})
      * @Secure("ROLE_MODER")
      */
     public function attachThreadAction($id, $state)

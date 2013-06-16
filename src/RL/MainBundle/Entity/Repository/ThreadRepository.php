@@ -43,31 +43,37 @@ class ThreadRepository extends AbstractRepository
     public function getThreads($subsection, $limit, $offset)
     {
         $em = $this->_em;
-        $q = $em->createQuery(
-            'SELECT t, m FROM RL\MainBundle\Entity\Thread AS t
+
+        $query = $em->createQuery(
+            'SELECT t, m FROM RLMainBundle:Thread AS t
               INNER JOIN t.messages AS m
               WHERE m.id = (
-                SELECT MIN(msg.id) AS msg_id FROM RL\MainBundle\Entity\MESSAGE AS msg WHERE msg.thread = t.id
+                SELECT MIN(msg.id) AS msg_id FROM RLMainBundle:Message AS msg WHERE msg.thread = t.id
               )
               AND t.subsection = (
-                SELECT s.id FROM RL\MainBundle\Entity\Subsection s WHERE s.id = ?1
-              ) ORDER BY t.id DESC'
+                SELECT s.id FROM RLMainBundle:Subsection s WHERE s.id = :id
+              )
+              AND t.attached = :attached
+              ORDER BY t.id DESC'
         )
             ->setFirstResult($offset)
             ->setMaxResults($limit)
-            ->setParameter(1, $subsection->getId());
+            ->setParameter('id', $subsection->getId());
+        $q = clone $query;
+        $query->setParameter('attached', true);
+        $q->setParameter('attached', false);
 
-        return $q->getResult();
+        return array_merge($query->getResult(), $q->getResult());
     }
 
     public function getThreadStartMessageById($id)
     {
         $em = $this->_em;
         $q = $em->createQuery(
-            "SELECT m FROM RL\MainBundle\Entity\MESSAGE AS m
+            "SELECT m FROM RL\MainBundle\Entity\Message AS m
               INNER JOIN m.thread AS t
               WHERE t.id = :id
-              AND m.id = (SELECT MIN(msg.id) FROM RL\MainBundle\Entity\MESSAGE AS msg WHERE msg.thread=:id)"
+              AND m.id = (SELECT MIN(msg.id) FROM RL\MainBundle\Entity\Message AS msg WHERE msg.thread=:id)"
         )
             ->setMaxResults(1)
             ->setFirstResult(0)
@@ -80,10 +86,10 @@ class ThreadRepository extends AbstractRepository
     {
         $em = $this->_em;
         $q = $em->createQuery(
-            "SELECT m, t FROM RL\MainBundle\Entity\MESSAGE AS m
+            "SELECT m, t FROM RL\MainBundle\Entity\Message AS m
               INNER JOIN m.thread AS t
               WHERE t.id = :id
-              AND m.id NOT IN (SELECT MIN(msg.id) FROM RL\MainBundle\Entity\MESSAGE AS msg WHERE msg.thread = :id )
+              AND m.id NOT IN (SELECT MIN(msg.id) FROM RL\MainBundle\Entity\Message AS msg WHERE msg.thread = :id )
               ORDER BY m.postingTime ASC"
         )
             ->setMaxResults($limit)
@@ -141,7 +147,7 @@ class ThreadRepository extends AbstractRepository
     {
         $ret = array();
         $all = $this->_em->createQuery(
-            'SELECT t.id, COUNT(m.id) AS allCnt FROM RLMainBundle:MESSAGE AS m
+            'SELECT t.id, COUNT(m.id) AS allCnt FROM RLMainBundle:Message AS m
               INNER JOIN m.thread AS t
               WHERE t.subsection = :subsection GROUP BY t.id ORDER BY t.id'
         )
@@ -154,7 +160,7 @@ class ThreadRepository extends AbstractRepository
         }
         $yesterday = new \DateTime('-1 day');
         $day = $this->_em->createQuery(
-            'SELECT t.id, COUNT(m.id) AS dayCnt FROM RLMainBundle:MESSAGE AS m
+            'SELECT t.id, COUNT(m.id) AS dayCnt FROM RLMainBundle:Message AS m
               INNER JOIN m.thread AS t
               WHERE m.postingTime > :postingTime
               AND t.subsection = :subsection GROUP BY t.id ORDER BY t.id'
@@ -169,7 +175,7 @@ class ThreadRepository extends AbstractRepository
         }
         $lastHour = new \DateTime('-1 hour');
         $hour = $this->_em->createQuery(
-            'SELECT t.id, COUNT(m.id) AS hourCnt FROM RLMainBundle:MESSAGE AS m
+            'SELECT t.id, COUNT(m.id) AS hourCnt FROM RLMainBundle:Message AS m
               INNER JOIN m.thread AS t
               WHERE m.postingTime > :postingTime
               AND t.subsection = :subsection GROUP BY t.id ORDER BY t.id'
@@ -208,10 +214,10 @@ class ThreadRepository extends AbstractRepository
             ->getOneOrNullResult();
         if (isset($previous_thread)) {
             $previous_id = $em->createQuery(
-                "SELECT m, t FROM RL\MainBundle\Entity\MESSAGE AS m
+                "SELECT m, t FROM RL\MainBundle\Entity\Message AS m
                   INNER JOIN m.thread AS t
                   WHERE t=:thread
-                  AND m.id = (SELECT MIN(msg.id) FROM RL\MainBundle\Entity\MESSAGE AS msg WHERE msg.thread=:thread)"
+                  AND m.id = (SELECT MIN(msg.id) FROM RL\MainBundle\Entity\Message AS msg WHERE msg.thread=:thread)"
             )
                 ->setMaxResults(1)
                 ->setFirstResult(0)
@@ -237,10 +243,10 @@ class ThreadRepository extends AbstractRepository
             ->getOneOrNullResult();
         if (isset($next_thread)) {
             $next_id = $em->createQuery(
-                "SELECT m, t FROM RL\MainBundle\Entity\MESSAGE AS m
+                "SELECT m, t FROM RL\MainBundle\Entity\Message AS m
                   INNER JOIN m.thread AS t
                   WHERE t=:thread
-                  AND m.id = (SELECT MIN(msg.id) FROM RL\MainBundle\Entity\MESSAGE AS msg WHERE msg.thread=:thread)"
+                  AND m.id = (SELECT MIN(msg.id) FROM RL\MainBundle\Entity\Message AS msg WHERE msg.thread=:thread)"
             )
                 ->setMaxResults(1)
                 ->setFirstResult(0)

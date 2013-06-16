@@ -178,6 +178,7 @@ class SecurityController extends AbstractController
             $newUser = $form->getData();
             $settingsRepository = $this->getDoctrine()->getRepository('RLMainBundle:Settings');
             $groupsRepository = $this->getDoctrine()->getRepository('RLMainBundle:Group');
+            $themeRepository = $this->getDoctrine()->getRepository('RLMainBundle:Theme');
             /** @var $userRole \RL\MainBundle\Entity\Group */
             $userRole = $groupsRepository->findOneBy(array('name' => 'ROLE_USER'));
             //TODO: set additional marked
@@ -186,7 +187,8 @@ class SecurityController extends AbstractController
             $newUser->setRegistrationDate(new \DateTime('now'));
             $newUser->setLastVisitDate(new \DateTime('now'));
             $newUser->setCaptchaLevel($settingsRepository->findOneBy(array('name' => 'captchaLevel'))->getValue());
-            $newUser->setTheme($settingsRepository->findOneBy(array('name' => 'theme'))->getValue());
+            $themeName = $settingsRepository->findOneBy(array('name' => 'theme'))->getValue();
+            $newUser->setTheme($themeRepository->findOneBy(array('name' => $themeName)));
             $newUser->setSortingType($settingsRepository->findOneBy(array('name' => 'sortingType'))->getValue());
             $newUser->setNewsOnPage($settingsRepository->findOneBy(array('name' => 'newsOnPage'))->getValue());
             $newUser->setThreadsOnPage(

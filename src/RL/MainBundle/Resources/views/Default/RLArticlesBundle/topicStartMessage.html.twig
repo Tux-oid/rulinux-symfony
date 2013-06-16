@@ -5,7 +5,7 @@
 <td width="120">
     <a href="#{{'msg'~startMessage.id}}"><img border="0" src="{{ asset('/bundles/rlmain/images/'~app.user.theme.directory~'/id.png') }}" alt="[#]"></a>
     {%if is_granted('ROLE_MODER')%}
-        <a href="move_thread_37329"><img border="0" src="{{ asset('/bundles/rlmain/images/'~app.user.theme.directory~'/move.png' )}}" alt="{%trans%}Move{%endtrans%}"></a>
+        <a href="{{ path('move_thread', {'id': startMessage.thread.id}) }}"><img border="0" src="{{ asset('/bundles/rlmain/images/'~app.user.theme.directory~'/move.png' )}}" alt="{%trans%}Move{%endtrans%}"></a>
         {%if startMessage.thread.attached == false%}
             <a href="{{ path('attach_thread', {'id': startMessage.thread.id, 'state' : 'true'}) }}"><img border="0" src="{{ asset('/bundles/rlmain/images/'~app.user.theme.directory~'/attach.png') }}" alt="{%trans%}Attach{%endtrans%}"></a>
         {%else%}
@@ -13,7 +13,6 @@
         {%endif%}
     {%endif%}
     {%if is_granted('ROLE_MODER') or startMessage.user == app.user%}
-        <a href="set_filter_142891"><img border="0" src="{{ asset( '/bundles/rlmain/images/'~app.user.theme.directory~'/filter.png') }}" alt="{%trans%}Add filter{%endtrans%}"></a>
         <a href="{{path('editMessage', {'messageId':startMessage.id})}}"><img border="0" src="{{ asset('/bundles/rlmain/images/'~app.user.theme.directory~'/edit.png') }}" alt="{%trans%}Edit{%endtrans%}"></a>
     {%endif%}
     <a class="filter-link opened" data-fblock="#filters-{{ startMessage.id }}" href="#">{% trans %}Filters{% endtrans %}</a>

@@ -3,7 +3,6 @@
 <div class=title>
 <a href="#{{'msg'~message.id}}"><img border="0" src="{{ asset('/bundles/rlmain/images/'~app.user.theme.directory~'/id.png') }}" alt="[#]"></a>
 {%if is_granted('ROLE_MODER') or message.user == app.user%}
-	<a href="set_filter_142880"><img border="0" src="{{ asset('/bundles/rlmain/images/'~app.user.theme.directory~'/filter.png') }}" alt="{%trans%}Add filter{%endtrans%}"></a>
 	<a href="{{path('editMessage', {'messageId':message.id})}}"><img border="0" src="{{ asset('/bundles/rlmain/images/'~app.user.theme.directory~'/edit.png') }}" alt="{%trans%}Edit{%endtrans%}"></a>
     <a class="filter-link opened" data-fblock="#filters-{{ message.id }}" href="#">{% trans %}Filters{% endtrans %}</a>
 {%endif%}

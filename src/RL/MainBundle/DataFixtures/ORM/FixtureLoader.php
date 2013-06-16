@@ -313,6 +313,11 @@ class FixtureLoader implements FixtureInterface
         $emailSetting->setValue('service@rulinux.net');
         $manager->persist($emailSetting);
 
+        $themeSetting = new Settings();
+        $themeSetting->setName('theme');
+        $themeSetting->setValue('Ubertechno');
+        $manager->persist($themeSetting);
+
         /*****************************************Marks****************************************************************/
         $texMark = new TexMark();
         $texMark->setName('Tex-Mark');

@@ -36,6 +36,7 @@ use RL\MainBundle\Entity\User;
 use RL\MainBundle\Form\Type\RegisterType;
 use LightOpenID;
 use Gregwar\ImageBundle\Image;
+use Symfony\Component\Security\Core\Authentication\Token\UsernamePasswordToken;
 
 /**
  * RL\MainBundle\Controller\OpenIDController
@@ -74,23 +75,25 @@ class OpenIDController extends AbstractController
                     $identity = preg_replace('#^http://(.*)#sim', '$1', $identity);
                     $identity = preg_replace('#^https://(.*)#sim', '$1', $identity);
                     $identity = preg_replace('#(.*)\/$#sim', '$1', $identity);
+                    /** @var $user \RL\MainBundle\Entity\User */
                     $user = $userRepository->findOneBy(array("openid" => $identity));
-                    if (isset($user)) {
-                        //FIXME: login user by openid
-                        return $this->renderMessage('login user', 'login user');
-                    } else {
-                        $attr = $openid->getAttributes();
-                        $email = '';
-                        $newUser = $userRepository->createDefaultEntity();
-                        $form = $this->createForm(new RegisterType(), $newUser);
+                    if (null !== $user) {
+                        $this->getSecurityContext()->setToken(
+                            new UsernamePasswordToken($user, $user->getPassword(), 'default', array($user->getGroup()))
+                        );
 
+                        return $this->redirect($this->generateUrl('index'));
+                    } else {
                         return $this->render(
                             'RLMainBundle:OpenID:openIDRegistration.html.twig',
                             array(
                                 'openid' => $identity,
                                 'password' => '',
-                                'email' => $email,
-                                'form' => $form->createView()
+                                'email' => '',
+                                'form' => $this->createForm(
+                                    new RegisterType(),
+                                    $userRepository->createDefaultEntity()
+                                )->createView()
                             )
                         );
                     }

@@ -93,12 +93,18 @@
             <tr>
                 {% if is_granted('ROLE_MODER') %}
                     <td align=center>
-                        <img src="{{ asset('/bundles/rlmain/images/'~app.user.theme.directory~'/move.png') }}">
-                        {% if thread.attached == false %}
-                            <img src="{{ asset('/bundles/rlmain/images/'~app.user.theme.directory~'/attach.png') }}">
-                        {% else %}
-                            <img src="{{ asset('/bundles/rlmain/images/'~app.user.theme.directory~'/detach.png') }}">
-                        {% endif %}
+                        <a href="{{ path('move_thread', {'id': thread.id}) }}">
+                            <img border="0" src="{{ asset('/bundles/rlmain/images/'~app.user.theme.directory~'/move.png') }}" alt="{%trans%}Move{%endtrans%}">
+                        </a>
+                        {%if thread.attached == false%}
+                            <a href="{{ path('attach_thread', {'id': thread.id, 'state' : 'true'}) }}">
+                                <img border="0" src="{{ asset('/bundles/rlmain/images/'~app.user.theme.directory~'/attach.png') }}" alt="{%trans%}Attach{%endtrans%}">
+                            </a>
+                        {%else%}
+                            <a href="{{ path('attach_thread', {'id': thread.id, 'state' : 'false'}) }}">
+                                <img border="0" src="{{ asset('/bundles/rlmain/images/'~app.user.theme.directory~'/detach.png') }}" alt="{%trans%}Detach{%endtrans%}">
+                            </a>
+                        {%endif%}
                     </td>
                 {% endif %}
                 <td>
