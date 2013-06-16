@@ -27,6 +27,7 @@ class AppKernel extends Kernel
             new RL\ArticlesBundle\RLArticlesBundle(),
             new RL\NewsBundle\RLNewsBundle(),
             new RL\GalleryBundle\RLGalleryBundle(),
+            new FOS\JsRoutingBundle\FOSJsRoutingBundle(),
         );
 
         if (in_array($this->getEnvironment(), array('dev', 'test'))) {

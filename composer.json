@@ -31,7 +31,8 @@
 		"rl/geshibundle": "dev-master",
 		"rl/mathbundle": "dev-master",
 		"rl/phpmathpublisher": "dev-master",
-		"easybook/geshi": "dev-master"
+		"easybook/geshi": "dev-master",
+		"friendsofsymfony/jsrouting-bundle": "~1.1"
 	},
 	"scripts": {
 		"post-install-cmd": [

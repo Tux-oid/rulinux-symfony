@@ -44,6 +44,9 @@ class UserRepository extends AbstractRepository
      */
     public function getUserCommentsInformation($user)
     {
+        if($user->isAnonymous()) {
+            $user = $user->getDbAnonymous();
+        }
         $ret = array();
         $q = $this->_em->createQuery('SELECT COUNT(m) AS cnt FROM RL\MainBundle\Entity\Message AS m WHERE m.user = :user')
             ->setParameter('user', $user);

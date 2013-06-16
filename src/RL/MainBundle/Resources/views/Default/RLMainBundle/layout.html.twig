@@ -11,6 +11,8 @@
     {% javascripts   '@RLMainBundle/Resources/public/js/jquery.js'
     '@RLMainBundle/Resources/public/js/common.js' %}
     <script src="{{ asset_url }}" type="text/javascript"></script>
+    <script src="{{ asset('bundles/fosjsrouting/js/router.js') }}"></script>
+    <script src="{{ path('fos_js_routing_js', {"callback": "fos.Router.setData"}) }}"></script>
     {% endjavascripts %}
     <title>
         {% block title %}

@@ -68,14 +68,4 @@ class FiltersSettingsType extends AbstractType
         );
     }
 
-    /**
-     * {@inheritdoc}
-     */
-    public function setDefaultOptions(OptionsResolverInterface $resolver)
-    {
-        $resolver->setDefaults(array(
-                'data_class' => 'RL\MainBundle\Entity\User',
-                'csrf_protection' => false,
-            ));
-    }
 }

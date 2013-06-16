@@ -3,7 +3,7 @@
         "This file locks the dependencies of your project to a known state",
         "Read more about it at http://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file"
     ],
-    "hash": "36329a354702106b2de42343287992dc",
+    "hash": "d200aed45b5e42fb69d2d3f8482fe80c",
     "packages": [
         {
             "name": "doctrine/common",
@@ -475,6 +475,60 @@
                 "security"
             ],
             "time": "2012-04-04 08:39:51"
+        },
+        {
+            "name": "friendsofsymfony/jsrouting-bundle",
+            "version": "1.1.5",
+            "target-dir": "FOS/JsRoutingBundle",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/FriendsOfSymfony/FOSJsRoutingBundle.git",
+                "reference": "1.1.5"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/FriendsOfSymfony/FOSJsRoutingBundle/zipball/1.1.5",
+                "reference": "1.1.5",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.3.2",
+                "symfony/console": ">=2.0,<3.0",
+                "symfony/framework-bundle": ">=2.0,<3.0",
+                "symfony/serializer": ">=2.0,<3.0"
+            },
+            "type": "symfony-bundle",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "1.1-dev"
+                }
+            },
+            "autoload": {
+                "psr-0": {
+                    "FOS\\JsRoutingBundle": ""
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "William Durand",
+                    "email": "william.durand1@gmail.com",
+                    "homepage": "http://www.willdurand.fr"
+                },
+                {
+                    "name": "FriendsOfSymfony Community",
+                    "homepage": "https://github.com/friendsofsymfony/FOSJsRoutingBundle/contributors"
+                }
+            ],
+            "description": "Symfony FOSJsRoutingBundle",
+            "homepage": "http://friendsofsymfony.github.com",
+            "keywords": [
+                "Js Routing"
+            ],
+            "time": "2013-04-05 20:13:12"
         },
         {
             "name": "gregwar/image-bundle",
@@ -1276,7 +1330,7 @@
             "source": {
                 "type": "git",
                 "url": "git://gitorious.org/rulinux-engine/ucaptcha.git",
-                "reference": "a9d314edec67417a0a825b9935f26521114d21b2"
+                "reference": "338e15d7dc91e3fc44073bf5451021d56b976595"
             },
             "require": {
                 "php": ">=5.3.3"
@@ -1304,7 +1358,7 @@
                 "robots",
                 "ucaptcha"
             ],
-            "time": "2013-06-16 12:29:12"
+            "time": "2013-06-16 12:56:28"
         },
         {
             "name": "sensio/distribution-bundle",

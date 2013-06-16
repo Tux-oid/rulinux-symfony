@@ -327,7 +327,7 @@ class ForumController extends AbstractController
     }
 
     /**
-     * @Route("/view/{sectionRewrite}/{subsectionRewrite}/{page}", name="subsection", defaults={"page" = 1}, requirements = {"subsectionRewrite"=".*"})
+     * @Route("/view/{sectionRewrite}/{subsectionRewrite}/{page}", name="subsection", defaults={"page" = 1}, requirements = {"subsectionRewrite"=".*"}, options={"expose"=true})
      */
     public function subsectionAction($sectionRewrite, $subsectionRewrite, $page)
     {
