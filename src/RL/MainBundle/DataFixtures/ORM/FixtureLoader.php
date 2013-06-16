@@ -245,9 +245,9 @@ class FixtureLoader implements FixtureInterface
         $adminRole->setName('ROLE_ADMIN');
         $adminRole->setDescription('administrator');
         $manager->persist($adminRole);
-        $captchaLevel = 0;
 
         /*****************************************Settings*************************************************************/
+        $captchaLevel = 0;
         $captchaSetting = new Settings();
         $captchaSetting->setName('captchaLevel');
         $captchaSetting->setValue($captchaLevel);

@@ -284,6 +284,7 @@ class ForumController extends AbstractController
                 $user = $user->getDbAnonymous();
             }
             $message->addChangedBy($user);
+            $user->addEditedComment($message);
             $message->setChangedFor($cmnt['editionReason']);
             $this->getMessageFilterChecker()->filter($message);
             $messageRepository->flush();
